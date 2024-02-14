@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="id">
+			<column>intID</column>
+		</property>
+		<property name="nome_api">
+			<column>Nome</column>
+		</property>
+		<property name="cognome_api">
+			<column>Cognome</column>
+		</property>
+		<property name="eta_api">
+			<column>Eta</column>
+		</property>
+
+	</properties>
+
+	<operations>
+		<operation name="AddAPITest">
+			<query>
+				
+				EXEC @ReturnValue = [InsertAPITest]
+							@nome_api,@cognome_api, @eta_api, @ReturnValue OUTPUT
+
+
+			</query>
+		</operation>
+
+		<operation name="GetAPITest">
+			<query>
+
+				SELECT [intID]
+				,[Nome]
+				,[Cognome]
+				,[Eta]
+				FROM [APITest]
+
+
+			</query>
+		</operation>
+	</operations>
+
+</typemappers>

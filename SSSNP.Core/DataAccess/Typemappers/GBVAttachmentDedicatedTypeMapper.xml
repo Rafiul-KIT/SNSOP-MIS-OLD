@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="GBVAttachmentID"></property>
+		<property name="GBVID"></property>
+		<property name="Filename"></property>
+		<property name="FileAttached"></property>
+		<property name="ContentType"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+				
+	</properties>
+
+	<operations>
+		<operation name="GetGBVAttachmentDedicated">
+			<query>
+
+				SELECT [GBVAttachmentID]
+						,[GBVID]
+						,[Filename]
+						,[FileAttached]
+						,[ContentType]
+						,[CreationUserID]
+						,[LastModificationTimestamp]
+						,[LastModificationUserID]
+			
+				FROM [GBVAttachmentDedicated]
+				WHERE  [Deleted] = 0 AND [GBVAttachmentID] = @GBVAttachmentID
+
+			</query>
+		</operation>
+		<operation name="InsertGBVAttachmentDedicated">
+			<query>
+				SET @ReturnValue = 0;
+
+				INSERT INTO [GBVAttachmentDedicated]
+				([GBVID]
+				,[Filename]
+				,[FileAttached]
+				,[ContentType]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				,[Deleted])
+				VALUES
+				(@GBVID
+				,@Filename
+				,@FileAttached
+				,@ContentType
+				,@CreationUserID
+				,@LastModificationTimestamp
+				,@LastModificationUserID
+				,0);
+
+				SET @ReturnValue = SCOPE_IDENTITY();
+
+			</query>
+		</operation>
+		<operation name="DeleteGBVAttachmentDedicated">
+			<query>
+				IF(NOT EXISTS (SELECT GBVAttachmentID FROM GBVAttachmentDedicated WHERE DELETED = 0 AND GBVAttachmentID = @GBVAttachmentID))
+				SET @ReturnValue = 0;
+
+				ELSE
+
+				BEGIN
+
+				UPDATE [GBVAttachmentDedicated]
+				SET [LastModificationTimestamp] = GETDATE()
+				,[LastModificationUserID] = @UserID
+				,[Deleted] = 1
+				WHERE GBVAttachmentID = @GBVAttachmentID
+				
+				SET @ReturnValue = 1;
+
+				END
+
+
+			</query>
+		</operation>
+	</operations>
+
+</typemappers>

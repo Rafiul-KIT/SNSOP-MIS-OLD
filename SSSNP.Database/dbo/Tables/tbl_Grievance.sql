@@ -1,0 +1,27 @@
+﻿CREATE TABLE [dbo].[tbl_Grievance] (
+    [GrievanceId]                      INT           IDENTITY (1000, 1) NOT NULL,
+    [Grievance_RegistrationNo]         VARCHAR (500) NOT NULL,
+    [intStateid]                       INT           NULL,
+    [intCountieid]                     INT           NULL,
+    [intPayamid]                       INT           NULL,
+    [intBomasid]                       INT           NULL,
+    [Complainant_Name]                 VARCHAR (MAX) NULL,
+    [Complainant_EnrolmentNo]          VARCHAR (500) NULL,
+    [TypeOfComplaints]                 VARCHAR (MAX) NULL,
+    [DetailsComplainsReported]         VARCHAR (MAX) NULL,
+    [ComplaintRegisteredDate]          DATE          NULL,
+    [Accused_Name]                     VARCHAR (500) NULL,
+    [Accused_EnrolmentNo]              VARCHAR (500) NULL,
+    [Accused_Complaints_Specification] VARCHAR (MAX) NULL,
+    [Accused_ComplainsReferred]        VARCHAR (MAX) NULL,
+    [Created_by]                       INT           NULL,
+    [Created_dt]                       DATETIME      NULL,
+    [Modified_by]                      INT           NULL,
+    [Modied_dt]                        DATETIME      NULL,
+    [AddressedDate]                    DATETIME      NULL,
+    [DocumentName]                     VARCHAR (80)  NULL,
+    [DocumentPath]                     VARCHAR (280) NULL,
+    [AddressedHow]                     VARCHAR (680) NULL,
+    CONSTRAINT [PK_tbl_Grievance] PRIMARY KEY CLUSTERED ([GrievanceId] ASC)
+);
+

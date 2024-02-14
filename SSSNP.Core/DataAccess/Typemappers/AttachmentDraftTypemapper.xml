@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="AttachmentID"></property>
+		<property name="Filename"></property>
+		<property name="FileAttached"></property>
+		<property name="ContentType"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+	
+	</properties>
+
+	<operations>
+		<operation name="InsertAttachmentDraft">
+			<query>
+				Declare @idGenerated uniqueidentifier = newid();
+
+				INSERT INTO [AttachmentDraft]
+							([AttachmentID]
+							,[Filename]
+							,[FileAttached]
+							,[ContentType]
+							,[CreationUserID]
+							,[LastModificationTimestamp]
+							,[LastModificationUserID]
+							)
+							VALUES
+							(@idGenerated
+							,@Filename
+							,@FileAttached
+							,@ContentType
+							,@CreationUserID
+							,@LastModificationTimestamp
+							,@LastModificationUserID
+							)
+
+						set @ReturnValue = @idGenerated;
+						
+			</query>
+		</operation>
+		<operation name="GetAttachmentDraft">
+			<query>
+				SELECT [AttachmentID]
+						,[Filename]
+						,[FileAttached]
+						,[ContentType]
+						,[CreationUserID]
+						,[LastModificationTimestamp]
+						,[LastModificationUserID]
+					FROM [AttachmentDraft] where deleted = 0 and [AttachmentID] = @AttachmentID
+
+			</query>
+		</operation>
+		
+	</operations>
+</typemappers>

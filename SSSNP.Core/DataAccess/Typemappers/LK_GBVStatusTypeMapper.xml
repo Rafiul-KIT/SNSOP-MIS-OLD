@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="StatusID"></property>
+		<property name="StatusName"></property>
+		<property name="GBVStatus"></property>
+		<property name="NonGBVStatus"></property>
+	</properties>
+
+	<operations>
+		<operation name="GetStatusAll">
+			<query>
+				SELECT [StatusID]
+						,[StatusName]
+						,[GBVStatus]
+						,[NonGBVStatus]
+							FROM [LK_GBVStatus]
+								ORDER BY StatusName ASC
+			</query>
+		</operation>
+		<operation name="GetGBVStatus">
+			<query>
+				SELECT [StatusID]
+					,[StatusName]
+					,[GBVStatus]
+					,[NonGBVStatus]
+					FROM [LK_GBVStatus]
+						WHERE StatusID = @StatusID
+			</query>
+		</operation>
+		
+
+	</operations>
+
+</typemappers>

@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="IntAttendanceID"></property>
+		<property name="IntWorkActivityID"></property>
+		<property name="IntBenID"></property>
+		<property name="AttendanceRifYear"></property>
+		<property name="AttendanceRifMonth"></property>
+		<property name="AttendanceRifTotalDay"></property>
+		<property name="Status"></property>
+		<property name="Created_by"></property>
+		<property name="Created_dt"></property>
+		<property name="Modified_by"></property>
+		<property name="Modified_dt"></property>
+		<property name="AttendanceYear"></property>
+		<property name="PortYear"></property>
+		<property name="PortPhase"></property>
+		<property name="PortedSheetName"></property>
+		<property name="PaymentFlag"></property>
+		<property name="WageApplyFlag"></property>
+		<property name="IntWageReqID"></property>
+	</properties>
+	
+	<operations>
+		<operation name="CreateAttendance_LOC">
+			<query>
+				INSERT INTO [tr_BenAttendanceDet_LOC]
+				([intWorkActivityId]
+				,[intBenid]
+				,[AttendanceRifYear]
+				,[AttendanceRifMonth]
+				,[AttendanceRifTotalDay]
+				,[Status]
+				,[Created_by]
+				,[Created_dt]
+				,[Modified_by]
+				,[Modified_dt]
+				,[AttendanceYear]
+				,[PortYear]
+				,[PortPhase]
+				,[PortedSheetName]
+				,[PaymentFlag]
+				,[WageApplyFlag]
+				,[intWageReqid])
+				VALUES
+				(@intWorkActivityId
+				,@intBenid
+				,@AttendanceRifYear
+				,@AttendanceRifMonth
+				,@AttendanceRifTotalDay
+				,@Status
+				,@Created_by
+				,@Created_dt
+				,@Modified_by
+				,@Modified_dt
+				,@AttendanceYear
+				,@PortYear
+				,@PortPhase
+				,@PortedSheetName
+				,@PaymentFlag
+				,@WageApplyFlag
+				,@intWageReqid) set @ReturnValue = SCOPE_IDENTITY()
+
+			</query>
+		</operation>
+		<operation name="UpdateAttendance_LOC">
+			<query>
+				UPDATE [dbo].[tr_BenAttendanceDet_LOC]
+					SET [intWorkActivityId] = @intWorkActivityId
+						,[intBenid] = @intBenid
+						,[AttendanceRifYear] = @AttendanceRifYear
+						,[AttendanceRifMonth] = @AttendanceRifMonth
+						,[AttendanceRifTotalDay] = @AttendanceRifTotalDay
+						,[Status] = @Status
+						,[Created_by] = @Created_by
+						,[Created_dt] = @Created_dt
+						,[Modified_by] = @Modified_by
+						,[Modified_dt] = @Modified_dt
+						,[AttendanceYear] = @AttendanceYear
+						,[PortYear] = @PortYear
+						,[PortPhase] = @PortPhase
+						,[PortedSheetName] = @PortedSheetName
+						,[PaymentFlag] = @PaymentFlag
+						,[WageApplyFlag] = @WageApplyFlag
+						,[intWageReqid] = @intWageReqid
+							WHERE intattendanceID = @IntAttendanceID
+
+
+			</query>
+		</operation>
+		<operation name="GetAttendance_LOC">
+			<query>
+				SELECT [intAttendanceid]
+				,[intWorkActivityId]
+				,[intBenid]
+				,[AttendanceRifYear]
+				,[AttendanceRifMonth]
+				,[AttendanceRifTotalDay]
+				,[Status]
+				,[Created_by]
+				,[Created_dt]
+				,[Modified_by]
+				,[Modified_dt]
+				,[AttendanceYear]
+				,[PortYear]
+				,[PortPhase]
+				,[PortedSheetName]
+				,[PaymentFlag]
+				,[WageApplyFlag]
+				,[intWageReqid]
+				FROM [tr_BenAttendanceDet_LOC] where intAttendanceID = @IntAttendanceID
+			</query>
+		</operation>
+		<operation name="GetAttendanceByWorkActivity_LOC">
+			<query>
+				SELECT [intAttendanceid]
+				,[intWorkActivityId]
+				,[intBenid]
+				,[AttendanceRifYear]
+				,[AttendanceRifMonth]
+				,[AttendanceRifTotalDay]
+				,[Status]
+				,[Created_by]
+				,[Created_dt]
+				,[Modified_by]
+				,[Modified_dt]
+				,[AttendanceYear]
+				,[PortYear]
+				,[PortPhase]
+				,[PortedSheetName]
+				,[PaymentFlag]
+				,[WageApplyFlag]
+				,[intWageReqid]
+				FROM [tr_BenAttendanceDet_LOC] where intWorkActivityId = @intWorkActivityID
+			</query>
+		</operation>
+		<operation name="CreateAttendanceBulk_LOC">
+			<query>
+				EXEC BeneficiaryAttendanceNewModel_LOC @intWorkActivityId, @ids,	@AttendanceRifYear, @AttendanceRifMonth, @AttendanceRifTotalDay, @Created_by, @ReturnValue OUTPUT
+
+			</query>
+		</operation>
+	</operations>
+</typemappers>

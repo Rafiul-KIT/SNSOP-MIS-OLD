@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="StateID"></property>
+		<property name="StateName"></property>
+		<property name="StateCode"></property>
+	</properties>
+
+	<operations>
+		<operation name="GetStateLookupByName">
+			<query>
+				select intStateid as StateID, StateName, StateCode
+						from tm_States WHERE statename = @Statename
+			</query>
+		</operation>
+		<operation name="GetStateLookupByID">
+			<query>
+				select intStateid as StateID, StateName, StateCode
+				from tm_States WHERE intStateid = @StateID
+			</query>
+		</operation>
+		
+	</operations>
+</typemappers>

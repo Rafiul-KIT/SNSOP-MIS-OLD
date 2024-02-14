@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="PayamID"></property>
+		<property name="PayamName"></property>
+		<property name="PayamCode"></property>
+		<property name="CountyID"></property>
+		
+	</properties>
+
+	<operations>
+		<operation name="GetPayamLookupByName">
+			<query>
+				select intPayamid as PayamID, PayamName, PayamCode, intCountieid as CountyID
+				from tm_Payams
+				where PayamName = @PayamName
+			</query>
+		</operation>
+		<operation name="GetPayamLookupByID">
+			<query>
+				select intPayamid as PayamID, PayamName, PayamCode, intCountieid as CountyID
+				from tm_Payams
+				where intPayamid = @PayamID
+			</query>
+		</operation>
+		
+	</operations>
+</typemappers>

@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[td_WorkWageRequestPA] (
+    [intWagePaymentReqPAid] INT             IDENTITY (1000, 1) NOT NULL,
+    [intWagePaymentReqid]   INT             NULL,
+    [intWorkid]             INT             NULL,
+    [WageRateUSD]           DECIMAL (18, 2) NULL,
+    [ReqFromDate]           DATETIME        NULL,
+    [ReqToDate]             DATETIME        NULL,
+    [ReqYear]               VARCHAR (5)     NULL,
+    [ReqMonth]              VARCHAR (10)    NULL,
+    [intPayingAgentid]      INT             NULL,
+    [intCoOrdinatorid]      INT             NULL,
+    [intSpecialistid]       INT             NULL,
+    [intManagerid]          INT             NULL,
+    [Exchangerateattime]    DECIMAL (18, 4) NULL,
+    [ReqNo]                 VARCHAR (40)    NULL,
+    [Status]                INT             NULL,
+    [Remarks]               VARCHAR (350)   NULL,
+    [DefinedExchangeRate]   DECIMAL (18, 2) NULL,
+    [Created_by]            INT             NULL,
+    [Created_dt]            DATETIME        CONSTRAINT [DF_td_WorkWageRequestPA_Created_dt] DEFAULT (getdate()) NULL,
+    [Modified_by]           INT             NULL,
+    [Modified_dt]           DATETIME        NULL,
+    [UploadSignedDoc]       VARCHAR (480)   NULL,
+    CONSTRAINT [PK_td_WorkWageRequestPA] PRIMARY KEY CLUSTERED ([intWagePaymentReqPAid] ASC)
+);
+

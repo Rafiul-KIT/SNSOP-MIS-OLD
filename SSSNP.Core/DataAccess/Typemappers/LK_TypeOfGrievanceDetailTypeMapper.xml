@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="TypeOfGrievanceDetailID"></property>perties>
+		<property name="TypeOfGrievanceMainID"></property>
+		<property name="Name"></property>
+		<property name="Active"></property>
+
+	</properties>
+
+	<operations>
+		<operation name="GetTypeOfGrievances">
+			<query>
+				SELECT [TypeOfGrievanceDetailID]
+						,[TypeOfGrievanceMainID]
+						,[Name]
+						,[Active]
+						FROM [LK_TypeOfGrievanceDetail]
+				where active = 1 and TypeOfGrievanceMainID = @TypeOfGrievanceMainID
+				order by Name Asc
+			</query>
+		</operation>
+		<operation name="GetTypeOfGrievance">
+			<query>
+				SELECT [TypeOfGrievanceDetailID]
+					,[TypeOfGrievanceMainID]
+					,[Name]
+					,[Active]
+						FROM [LK_TypeOfGrievanceDetail]
+							where active = 1 and TypeOfGrievanceDetailID = @TypeOfGrievanceDetailID
+						order by Name Asc
+			</query>
+		</operation>
+
+		<operation name="GetTypeOfGrievancesAll">
+			<query>
+				SELECT [TypeOfGrievanceDetailID]
+						,[TypeOfGrievanceMainID]
+						,[Name]
+						,[Active]
+							FROM [LK_TypeOfGrievanceDetail]
+								where active = 1 
+							order by Name Asc
+			</query>
+		</operation>
+	
+
+
+	</operations>
+
+</typemappers>

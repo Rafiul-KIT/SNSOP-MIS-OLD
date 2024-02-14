@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="NonGBVAttachmentID"></property>
+		<property name="NonGBVDetailID"></property>
+		<property name="Filename"></property>
+		<property name="FileAttached"></property>
+		<property name="ContentType"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+
+	</properties>
+
+	<operations>
+		<operation name="GetNonGBVAttachments_ELRP">
+			<query>
+				SELECT [NonGBVAttachmentID]
+				,[NonGBVDetailID]
+				,[Filename]
+				,[FileAttached]
+				,[ContentType]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				FROM [NonGBVAttachment_ELRP]
+				WHERE  [Deleted] = 0 AND [NonGBVDetailID] = @NonGBVDetailID
+				order by [NonGBVAttachmentID] ASC
+			</query>
+		</operation>
+		<operation name="GetNonGBVAttachment_ELRP">
+			<query>
+				SELECT [NonGBVAttachmentID]
+				,[NonGBVDetailID]
+				,[Filename]
+				,[FileAttached]
+				,[ContentType]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				FROM [NonGBVAttachment_ELRP]
+				WHERE  [Deleted] = 0 AND [NonGBVAttachmentID] = @NonGBVAttachmentID
+			</query>
+		</operation>
+		<operation name="InsertNonGBVAttachment_ELRP">
+			<query>
+				SET @ReturnValue = 0;
+				INSERT INTO [NonGBVAttachment_ELRP]
+				([NonGBVDetailID]
+				,[Filename]
+				,[FileAttached]
+				,[ContentType]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				,[Deleted])
+				VALUES
+				(@NonGBVDetailID
+				,@Filename
+				,@FileAttached
+				,@ContentType
+				,@CreationUserID
+				,@LastModificationTimestamp
+				,@LastModificationUserID
+				,0);
+				SET @ReturnValue = SCOPE_IDENTITY();
+			</query>
+		</operation>
+		<operation name="UpdateNonGBVAttachment_ELRP">
+			<query>
+				IF(NOT EXISTS (SELECT NonGBVAttachmentID FROM NonGBVAttachment_ELRP WHERE DELETED = 0 AND NonGBVAttachmentID = @NonGBVAttachmentID))
+				SET @ReturnValue = 0;
+				ELSE
+				BEGIN
+				UPDATE [NonGBVAttachment_ELRP]
+				SET
+				[Filename] = @Filename
+				,[FileAttached] = @FileAttached
+				,[ContentType] = @ContentType
+				,[LastModificationTimestamp] = @LastModificationTimestamp
+				,[LastModificationUserID] = @LastModificationUserID
+				,[Deleted] = 0
+				WHERE [Deleted] = 0 and NonGBVAttachmentID = @NonGBVAttachmentID
+				SET @ReturnValue = 1;
+				END
+			</query>
+		</operation>
+		<operation name="DeleteNonGBVAttachment_ELRP">
+			<query>
+				IF(NOT EXISTS (SELECT NonGBVAttachmentID FROM NonGBVAttachment_ELRP WHERE DELETED = 0 AND NonGBVAttachmentID = @NonGBVAttachmentID))
+				SET @ReturnValue = 0;
+				ELSE
+				BEGIN
+				UPDATE [NonGBVAttachment_ELRP]
+				SET [LastModificationTimestamp] = GETDATE()
+				,[LastModificationUserID] = @UserID
+				,[Deleted] = 1
+				WHERE NonGBVAttachmentID = @NonGBVAttachmentID
+				SET @ReturnValue = 1;
+				END
+			</query>
+		</operation>
+	</operations>
+</typemappers>

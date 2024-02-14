@@ -1,0 +1,269 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" Inherits="CCMaster1" Codebehind="CCMaster1.master.cs" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head runat="server">
+
+<script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    
+<style type="text/css">
+.overlay
+{
+position: fixed;
+z-index: 999;
+height: 100%;
+width: 100%;
+top: 1px;
+background-color:Gray;
+filter: alpha(opacity=60);
+opacity: 0.9;
+-moz-opacity: 0.9;
+}
+</style>
+    <script src="../../Resource/Styles/SideMenu/script.js" type="text/javascript"></script>
+    <link href="../../Resource/Styles/SideMenu/styles.css" rel="stylesheet" type="text/css" />
+    
+<script src="../../Resource/Scripts/js/validation.js" type="text/javascript"></script>
+    <script src="../../Resource/Scripts/js/jquery.js" type="text/javascript"></script>
+    <script src="../../Resource/Scripts/js/bootstrap.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../Resource/Scripts/js/plugins/morris/raphael.min.js"></script>
+    <script src="../../Resource/Scripts/js/plugins/morris/morris.min.js" type="text/javascript"></script>
+    <script src="../../Resource/Scripts/js/plugins/morris/morris-data.js" type="text/javascript"></script>
+    
+    
+ 
+    <%--<script src="../../Resource/js/bootstrap.min.js"></script>   
+    <script src="../../Resource/js/plugins/morris/raphael.min.js"></script>
+    <script src="../../Resource/js/plugins/morris/morris.min.js"></script>
+    <script src="../../Resource/js/plugins/morris/morris-data.js"></script>--%>
+    
+    <link href="../../Resource/Styles/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../Resource/Styles/css/sb-admin.css" rel="stylesheet" type="text/css" />
+    <link href="../../Resource/Styles/css/plugins/morris.css" rel="stylesheet" type="text/css" />
+    <link href="../../Resource/Styles/font-awesome/css/font-awesome.css" rel="stylesheet"
+        type="text/css" />
+    
+    
+    <%--<link href="../../Resource/css/bootstrap.min.css"rel="stylesheet" type="text/css" />   
+    <link href="../../Resource/css/sb-admin.css" rel="stylesheet" type="text/css" />   
+    <link href="../../Resource/css/plugins/morris.css" rel="stylesheet" type="text/css" />--%>
+    
+    <%--<link href="../../Resource/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />--%>
+
+    <style type="text/css">
+        .style1
+        {
+            width: 99.8%;
+        }
+        .style3
+        {
+            width: 206px;
+        }
+        .style4
+        {
+        }
+        </style>
+
+  
+
+</head>
+<body>
+
+    <form id="form1" runat="server">
+
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
+    <table cellpadding="0" cellspacing="0" class="style1"  >
+        <tr>
+            <td >
+            <table cellpadding="3" cellspacing="5" class="style1">
+        <tr>
+            <td class="style4">
+                <asp:Image ID="Image1" runat="server" ImageUrl="~/Resource/Images/bgheader.jpg" 
+                    Width="100%" />
+            </td>
+        </tr>
+        <tr>
+            <td class="style4" align="right" 
+                style="padding: 5px; margin: 5px; background-color: #333333">
+                &nbsp;<i class="fa fa-user" style=" color:White"></i> <asp:Label id="lblwecome" Text="Admin" 
+                    runat="server" ForeColor="White" ></asp:Label>
+                    
+                    <a style="padding: 5px; margin: 5px; color : #FFFFFF" href='../../frmuserlogin.aspx'><i class="fa fa-fw fa-power-off"></i>Log out</a>
+                     
+                                
+            </td>
+        </tr>
+    </table>       
+                     
+                    
+                                       
+                    
+               
+            
+            
+               </td>
+        </tr>
+        <tr>
+            <td>
+                <table cellspacing="1" class="style1">
+                    <tr>
+                        <td class="style3" valign="top" style=" background-color:#337ab7">
+                            <div>
+    <div id='cssmenu'>
+<ul>
+   <li id="TSTDashboard" runat="server" visible="false"><a href='Dashboard.aspx'><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
+   <li id="IPDashboard" runat="server" visible="false"><a href="IPDashboard1.aspx"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
+   
+   <li id="Masters" class='has-sub' runat="server" visible="false"><a href='#'><i class="fa fa-fw fa-table"></i> Master Setup</a>
+      <ul>
+        
+         <li> <a href="Addstates.aspx"  >States</a></li>
+         <li> <a href="AddCounties.aspx"  >Counties / Municipalities</a></li>
+                                          <li><a href="AddPayams.aspx"  >Payams / Blocks </a></li>
+                                            <li><a href="AddBomas.aspx"  >Bomas / Quarter Council </a></li>
+                                            <%--<li><a href="AddQualification.aspx" >Education Qualification</a></li>--%>
+                                            <li><a href="AddDisability.aspx"  >Vulnerability</a></li>
+                                            <li><a href="AddDesignations.aspx"  >Designations</a></li>
+                                            <li><a href="AddAreaofWork.aspx"  >Type of Work</a></li>
+                                            <li><a href="AddWorkActivities.aspx"  >Work Activities</a></li>
+                                            <li><a href="AddTSTTeam.aspx"  >TST Team</a></li>
+         
+         <%--<li class='has-sub'><a href='#'>Product 2</a>
+            <ul>☻
+               <li><a href='#'>Sub Product</a></li>
+               <li><a href='#'>Sub Product</a></li>
+            </ul>
+         </li>--%>
+      </ul>
+   </li>
+   
+   
+   <li id="TST" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-edit"></i> Registration</a>
+      <ul>
+        
+         
+         <li><a href="TSTIPregistration.aspx" >Implementation Partner</a> </li>
+                        <li><a href="TSTCountyAdmistratorReg.aspx" >County Administration</a> </li>
+                        <li><a href="TSTPDCReg.aspx" >Payam / Block Development Committee</a> </li>
+                        <li><a href="TSTBDCReg.aspx" >Boma/Quarter Council  Development Committee</a> </li>
+                        <%--<li><a href="PublicWorksApproval.aspx" >Work Approvals</a> </li>--%>
+                        <li><a href="IPWOrkProposals.aspx" >Work Approvals</a> </li>
+                          <li><a href="PDCHouseholdAttendance.aspx" >Beneficiary Attendance</a> </li> 
+                        <li><a href="TSTFinancialApproval.aspx" >Invoice Approval</a> </li>
+                        <li><a href="TSTPhysicalMonitoring.aspx" >Field Monitoring</a> </li>
+                        
+      </ul>
+   </li>
+   
+   
+   <li id="IP" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-desktop"></i> Menu</a>
+      <ul>
+        
+         <%--<li><a href="IPDetails.aspx" >IP Details</a> </li>--%>
+         <li><a href="IPProjectRegistration.aspx" >Project Registration</a> </li>
+         <li><a href="IPWOrkProposals.aspx" >Work Proposals</a> </li>
+          <li><a href="SearchMasterDetailsNew.aspx" >Search Master ID's</a> </li>
+          <li><a href="IPBeneficiaryRegistration.aspx" >Beneficiary Enrollment</a> </li>
+            <li><a href="IPJobCard.aspx" >Job Card</a> </li>
+                        <li><a href="PDCWorkProgress.aspx" >Work Progress</a> </li>     
+         <%--<li><a href="IPApprovalWorkActivities.aspx" >Approved Works</a> </li>--%>
+         <li><a href="IPRaiseFunds.aspx" >Invoice Requests</a> </li>                       
+                                         
+         <li><a href="PDCHouseholdAttendance.aspx" >Beneficiary Attendance</a> </li>   
+          <li><a href="PDCHouseholdAttendanceRpt.aspx" >Beneficiary Attendance Report</a> </li>                                           
+         <li><a href="PDCHouseholdWages.aspx" >Wages Payment</a> </li>  
+             <li><a href="PDCHouseholdWagesRpt.aspx" >Wages Payment Report</a> </li>             
+                        
+      </ul>
+   </li>
+   
+   
+    <li id="BDC" runat="server" visible="false" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i> BDC</a>
+      <ul>
+        
+         
+         <li><a href="BDCMobilizationReg.aspx" >Mobilization</a> </li>
+                        
+                        
+      </ul>
+   </li>
+   
+   <li id="PDC" runat="server" visible="false" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i> PDC</a>
+      <ul>
+        
+         
+         <li><a href="PublicWorksApproval.aspx" >Projects Sanctioned</a> </li>                        
+         <li><a href="PDCWorkProgress.aspx" >Work Progress</a> </li>                        
+         <li><a href="PDCHouseholdAttendance.aspx" >Attendance Tracking</a> </li>                        
+         <li><a href="PDCHouseholdWages.aspx" >Wages Payment</a> </li>                        
+         
+                        
+      </ul>
+   </li>
+   
+   
+  <li id="Li1" runat="server"   class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i> Helpdesk</a>
+      <ul>
+        
+         
+         <li><a href="Helpdesk.aspx" >Helpdesk Registration</a> </li>                        
+        
+         <li><a href="viewHelpdesk.aspx"  > Status </a></li> 
+                                                 
+  <li><a href="HDPiaRpt.aspx"  >Summary </a></li> 
+                        
+      </ul>
+   </li> 
+   
+
+<li id="pnlreport" runat="server"  class='has-sub'><a href='#'><i class="fa fa-fw fa-dashboard"></i> Reports</a>
+      <ul>
+      <li><a href="Dashboard.aspx" >Dashboard</a> </li>   
+         <li><a href="IPwiseStatus.aspx" >IP Wise Report</a> </li>  
+         <li><a href="WorkwiseStatusreportNew.aspx" >IP Work Wise Report</a> </li>   
+        <li><a href="CountyWiseReportNew.aspx" >Country Wise Report</a> </li>   
+           
+            <li><a href="PayamWiseReportNew.aspx" >Payam Wise Report</a> </li>   
+            <li><a href="BomaWiseReportNew.aspx" >Boma Wise Report</a> </li> 
+             <li><a href="TypesOfWorksrReport.aspx" >Types Of Works Report</a> </li>  
+              
+              
+              <li><a href="FundDisbursedReports.aspx" >Fund Disbursed Reports</a> </li>   
+              <li><a href="WagePaymentReport.aspx" >Wage Payment Report</a> </li>
+         <li><a href="FundDisbursedReportsByTrans.aspx" >Ip wise Fund Disbursed</a> </li>   
+         
+                        
+      </ul>
+   </li>
+
+   
+<%--   <li><a href='frmChangePassword.aspx'><i class="fa fa-fw fa-lock"></i>Change Password</a></li>--%>
+   <li><a href='../../frmuserlogin.aspx'><i class="fa fa-fw fa-power-off"></i>Log out</a></li>
+</ul>
+</div>
+    </div></td>
+                        <td align="center" style="padding: 10px;  margin: 10px" bgcolor="White">
+                            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                            
+                                
+                            
+                            </asp:ContentPlaceHolder>
+                            
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;</td>
+        </tr>
+    </table>
+
+    </form>
+
+    </body>
+</html>

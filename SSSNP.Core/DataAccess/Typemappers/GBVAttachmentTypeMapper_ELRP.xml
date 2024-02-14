@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="GBVAttachmentID"></property>
+		<property name="GBVMainID"></property>
+		<property name="Filename"></property>
+		<property name="FileAttached"></property>
+		<property name="ContentType"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+		
+	</properties>
+
+	<operations>
+		<operation name="InsertGBVAttachment_ELRP">
+			<query>
+				SET @ReturnValue = 0;
+				INSERT INTO [GBVAttachment_ELRP]
+				([GBVmainID]
+				,[Filename]
+				,[FileAttached]
+				,[ContentType]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				,[Deleted])
+				VALUES
+				(@GBVMainID
+				,@Filename
+				,@FileAttached
+				,@ContentType
+				,@CreationUserID
+				,@LastModificationTimestamp
+				,@LastModificationUserID
+				,0);
+				SET @ReturnValue = SCOPE_IDENTITY();
+				UPDATE [GBVMain_ELRP]
+				SET [LastModificationTimestamp] = GETDATE()
+				,[LastModificationUserID] = @CreationUserID
+				,[ConsentSigned] = 1
+				WHERE GBVMainID = @GBVMainID
+			</query>
+		</operation>
+		<operation name="GetGBVAttachments_ELRP">
+			<query>
+				SELECT [GBVAttachmentID]
+						,[GBVMainID]
+						,[Filename]
+						,[FileAttached]
+						,[ContentType]
+						,[CreationUserID]
+						,[LastModificationTimestamp]
+						,[LastModificationUserID]
+						FROM [GBVAttachment_ELRP]
+				WHERE  [Deleted] = 0 AND [GBVMainID] = @GBVMainID
+				order by [GBVAttachmentID] ASC
+			</query>
+		</operation>
+		<operation name="DeleteGBVAttachment_ELRP">
+			<query>
+				IF(NOT EXISTS (SELECT GBVAttachmentID FROM GBVAttachment_ELRP WHERE DELETED = 0 AND GBVMainID = @GBVMainID))
+				SET @ReturnValue = 0;
+				ELSE
+				BEGIN
+				UPDATE [GBVAttachment_ELRP]
+				SET [LastModificationTimestamp] = GETDATE()
+				,[LastModificationUserID] = @UserID
+				,[Deleted] = 1
+				WHERE GBVMainID = @GBVMainID
+				UPDATE [GBVMain_ELRP]
+				SET [LastModificationTimestamp] = GETDATE()
+				,[LastModificationUserID] = @UserID
+				,[ConsentSigned] = 0
+				WHERE GBVMainID = @GBVMainID
+				SET @ReturnValue = 1;
+				END
+			</query>
+		</operation>
+		<operation name="GetGBVAttachment_ELRP">
+			<query>
+
+				SELECT top 1 [GBVAttachmentID]
+				,[GBVmainID]
+				,[Filename]
+				,[FileAttached]
+				,[ContentType]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				FROM [GBVAttachment_ELRP]
+				WHERE  [Deleted] = 0 AND [GBVMainID] = @GBVMainID
+				order by GBVAttachmentID desc
+			</query>
+		</operation>				
+	</operations>
+</typemappers>

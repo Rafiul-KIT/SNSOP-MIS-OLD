@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="ImportedID"></property>
+		<property name="CreationTimestamp"></property>
+		<property name="UserID"></property>
+		<property name="SourceFilename"></property>
+		<property name="DestinationFilename"></property>
+		<property name="UploadedFile"></property>
+		<property name="GBVType"></property>
+		<property name="GBVImported"></property>
+			
+	</properties>
+	
+	<operations>
+		<operation name="CreateGBVImportedFile_ELRP">
+			<query>
+				INSERT INTO [GBVImportedFiles_ELRP]
+				([CreationTimestamp]
+				,[UserID]
+				,[SourceFilename]
+				,[UploadedFile]
+				,[DestinationFilename]
+				,[GBVType]
+				,[Deleted]
+				,[GBVImported])
+				VALUES
+				(@CreationTimestamp
+				,@UserID
+				,@SourceFilename
+				,@UploadedFile
+				,@DestinationFilename
+				,@GBVType
+				,0
+				,0)
+				Set @returnValue = SCOPE_IDENTITY();
+			</query>
+		</operation>
+		<operation name="GetGBVImportedFile_ELRP">
+			<query>
+				SELECT [ImportedID]
+				,[CreationTimestamp]
+				,[UserID]
+				,[SourceFilename]
+				,[UploadedFile]
+				,[DestinationFilename]
+				,[GBVType]
+				,[GBVImported]
+				FROM [GBVImportedFiles_ELRP]
+				WHERE DELETED = 0 AND ImportedID = @id
+			</query>
+		</operation>
+		<operation name="CheckGBVImportedFile_ELRP">
+			<query>
+				Set @returnValue = (select top 1 ImportedID
+							from GBVImportedFiles_ELRP
+								WHERE GBVImported = 1 and HASHBYTES('MD5', UploadedFile) = HASHBYTES('MD5', @UploadedFile)
+							)
+			</query>
+		</operation>
+		<operation name="UpdateStatusGBVImportedFile_ELRP">
+			<query>
+				set @ReturnValue = 0;
+				Update GBVImportedFiles_ELRP set GBVImported = 1 where  ImportedID = @ID
+				set @ReturnValue = 1;
+
+			</query>
+		</operation>
+	</operations>
+</typemappers>

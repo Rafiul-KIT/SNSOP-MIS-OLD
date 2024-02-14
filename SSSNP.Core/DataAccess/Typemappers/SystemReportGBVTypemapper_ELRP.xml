@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="PropertyName"></property>
+		<property name="PropertyValue"></property>
+		<property name="PropertyValue1"></property>
+		<property name="PropertyValue2"></property>
+		<property name="PropertyValue3"></property>
+		<property name="PropertyValue4"></property>
+		<property name="PropertyValue5"></property>
+
+	</properties>
+
+	<operations>
+		<operation name="GetGrievanceByStatus_ELRP">
+			<query>
+				with CTE(status, countValue)
+				as (
+				select status, count(*) as [Count] from
+				(
+				select NEWID() as id , Status  from NonGBVMain_ELRP where deleted = 0
+				and (@year=0 OR year(creationTimestamp)=@year )
+				and (@month=0 or  month(creationTimestamp)=@month)
+				union
+				select NEWID() as id, status from GBVMain_ELRP a
+				left join gbvdetails_ELRP b
+				on a.GBVMainID=b.GBVMainID
+				where a.deleted = 0
+				and (@year=0 OR year(isnull(creationtimestamp, a.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, a.lastmodificationtimestamp))=@month)
+				) as test
+				group by status
+				)
+				select s.StatusName as PropertyName , cte.countValue as PropertyValue1, format(   (convert(decimal, cte.countValue) /   convert(int, (select sum(countValue) from cte))  ),'P') as PropertyValue2
+				from cte as cte inner join LK_GBVStatus as s
+				on s.StatusID = cte.status
+			</query>
+		</operation>
+		<operation name="GetGrievanceByTypeGBV_NonGBV_ELRP">
+			<query>
+				with CTE(TypeName, countValue)
+				as (
+				select TypeName,  CountValue from
+				(
+				select 'Non-GBV'  as TypeName, count(*) as CountValue   from NonGBVMain_ELRP
+				where deleted = 0
+				and (@year=0 OR year(creationTimestamp)=@year )
+				and (@month=0 or  month(creationTimestamp)=@month)
+				union
+				select 'GBV'  as TypeName, count(*) as CountValue  from GBVMain_ELRP  a
+				left join gbvdetails_ELRP b
+				on a.GBVMainID=b.GBVMainID
+				where a.deleted = 0
+				and (@year=0 OR year(isnull(creationtimestamp, a.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, a.lastmodificationtimestamp))=@month)
+				) as test
+				)
+				select typename as PropertyName, countValue as PropertyValue1,
+				format((convert(decimal, cte.countValue) / convert(int, (select sum(countValue) from cte))),'P') as PropertyValue2
+				from cte
+			</query>
+		</operation>
+		<operation name="GetNon_GBVGrievanceByType_ELRP">
+			<query>
+				with CTE(TypeName, countValue)
+				as (
+				select tg.Name   , count(*) as CountValue
+				from NonGBVMain_ELRP as g inner join LK_TypeOfGrievance as tg on tg.TypeOfGrievanceID = g.TypeOfGrievanceID
+				where deleted = 0
+				and 	 (@year=0 OR year(creationTimestamp)=@year )
+				and (@month=0 or  month(creationTimestamp)=@month)
+				group by tg.Name
+				)
+				select typename as PropertyName, countValue as PropertyValue1,
+				format(
+				(convert(decimal, cte.countValue) / convert(int, (select sum(countValue) from cte))
+				),'P') as PropertyValue2
+				from cte
+			</query>
+		</operation>
+		<operation name="GetGrievancesByProgram_ELRP">
+			<query>
+				with CTE(Programme, countValue)
+				as (
+				select Programmet, sum(countvalue) as PropertyValue1
+				from
+				(
+				select 'ELRP' as ProgrammeT, count(*) as CountValue
+				from NonGBVMain_ELRP
+				where deleted = 0
+				and  (@year=0 OR year(creationTimestamp)=@year )
+				and (@month=0 or  month(creationTimestamp)=@month)
+				union
+				select 'ELRP'as programmeT,count(*) as CountValue
+				from GBVMain_ELRP  a
+				left join gbvdetails_ELRP b
+				on a.GBVMainID=b.GBVMainID
+				where a.deleted = 0
+				and (@year=0 OR year(isnull(creationtimestamp, a.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, a.lastmodificationtimestamp))=@month)
+				) as tmp
+				group by tmp.Programmet
+				)
+				select Programme as PropertyName, countValue as PropertyValue1,
+				format(
+				(convert(decimal, cte.countValue) / convert(int, (select sum(countValue) from cte))
+				),'P') as PropertyValue2
+				from cte
+			</query>
+		</operation>
+		<operation name="GetGrievancesByLocationAndType_ELRP">
+			<query>
+				<![CDATA[
+				with CTE(LocationName,GrType, countValue,FemaleCount,MaleCount)
+				as (
+				select Countiename, GRtype, total,FemaleCount,MaleCount from
+				(select CountieName, 'GBV' as GrType, count(g.GBVMainID) as total
+				,SUM(case when (gender ='F'  or gender='Female') then 1 else 0 end ) as FemaleCount
+				,SUM(case when (gender ='M'  or gender='Male') then 1 else 0 end) as MaleCount
+				from GBVMain_ELRP g
+				left join gbvdetails_ELRP b
+				on g.GBVMainID=b.GBVMainID
+				inner join tm_counties c
+				on c.intCountieid=g.CountyID
+				where g.deleted=0 
+				and (@year=0 OR year(isnull(creationtimestamp, g.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, g.lastmodificationtimestamp))=@month)--and Gender is not null and Gender <>'' and Gender <>'0'
+				group by CountieName
+				union
+				select CountieName, 'NGBV' as GrType, count(ng.nonGBVMainID) as total
+				,SUM(case when (gender ='F'  or gender='Female') then 1 else 0 end ) as FemaleCount
+				,SUM(case when (gender ='M'  or gender='Male') then 1 else 0 end) as MaleCount
+				from nonGBVMain_ELRP ng
+				inner join tm_counties c
+				on c.intCountieid=ng.CountyID
+				where deleted=0 --and Gender is not null and Gender <>'' and Gender <>'0'
+				and  (@year=0 OR year(creationTimestamp)=@year )
+				and (@month=0 or  month(creationTimestamp)=@month)
+				group by CountieName
+				)
+				as GrTemp
+				)
+				select
+				LocationName  as PropertyName
+				, GrType as PropertyValue1
+				,countValue as PropertyValue2
+				,format((convert(decimal, cte.countValue) / convert(int, (select sum(countValue) from cte))),'P') as PropertyValue3
+				,format((convert(decimal,MaleCount)/Convert(decimal,(FemaleCount+MaleCount))),'P') as PropertyValue4 
+				,format((convert(decimal,FemaleCount)/Convert(decimal,(FemaleCount+MaleCount))),'P') as PropertyValue5
+				from cte
+				order by PropertyName
+				]]>
+			</query>
+		</operation>
+		<operation name="GetGBVByProgramStatus_ELRP">
+			<query>
+				with CTE(program, status, countValue)
+				as (
+				select 'ELRP',status, count(*) as [Count] from
+				(
+				select NEWID() as id, status from GBVMain_ELRP a
+				left join gbvdetails_elrp b
+				on a.GBVMainID=b.GBVMainID
+				where a.deleted = 0
+				and (@year=0 OR year(isnull(creationtimestamp, a.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, a.lastmodificationtimestamp))=@month)
+				) as tmp
+				group by status
+				)
+				select program as PropertyName, s.StatusName as PropertyValue1, cte.countValue as PropertyValue2, format(   (convert(decimal, cte.countValue) /  convert(int, (select sum(countValue) from cte))  ),'P') as PropertyValue3
+				from cte as cte inner join LK_GBVStatus as s
+				on s.StatusID = cte.status
+			</query>
+		</operation>
+		<operation name="GetSSNPRelatedComplaintLog_ELRP">
+			<query>
+				select
+				Countiename as PropertyName
+				,format([date],'dd/MM/yyyy') as PropertyValue1
+				,Statusname as PropertyValue2
+				,gender as PropertyValue3
+				,AgeOfSurvivor  as PropertyValue4
+				from gbvmain_ELRP gbv
+				inner join tm_counties c
+				on gbv.CountyID=c.intCountieid
+				inner join LK_GBVStatus lkStatus
+				on gbv.Status=lkstatus.StatusID
+				left join gbvdetails_ELRP b
+				on gbv.GBVMainID=b.GBVMainID
+				where gbv.deleted=0
+				and SuspectAssociatedWithProject=1
+				and (@year=0 OR year(isnull(creationtimestamp, gbv.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, gbv.lastmodificationtimestamp))=@month)
+			</query>
+		</operation>
+		<operation name="GetAgeBreakdownSSSNP_ELRP">
+			<query>
+				<![CDATA[
+				with CTE(TypeName, countValue)
+				as (
+				select 'Minors (17 yers and under)', count(*) as CountValue  from GBVMain_ELRP a
+				left join gbvdetails_ELRP b
+				on a.GBVMainID=b.GBVMainID
+				where a.deleted = 0
+				and (@year=0 OR year(isnull(creationtimestamp, a.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, a.lastmodificationtimestamp))=@month)
+				and AgeOfSurvivor  <= 17
+				union
+				select 'Adults (18 and above)', count(*) as CountValue  from GBVMain_ELRP a
+				left join gbvdetails_ELRP b
+				on a.GBVMainID=b.GBVMainID
+				where a.deleted = 0
+				and (@year=0 OR year(isnull(creationtimestamp, a.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, a.lastmodificationtimestamp))=@month)
+				and AgeOfSurvivor  > 17
+				)
+				select typename as PropertyName, countValue as PropertyValue1,
+				format(
+				(convert(decimal, cte.countValue) / convert(int, (select sum(countValue) from cte))
+				),'P') as PropertyValue2  from cte
+				]]>
+			</query>
+		</operation>
+		<operation name="GetGBVLocationAgeGroup_ELRP">
+			<query>
+				<![CDATA[
+				with CTE(LocationId, countValue)
+				as (
+				select g.CountyID  as LocationID , count(*) as CountValue
+				from GBVMain_ELRP as g
+				inner join tm_Counties   as c on c.intCountieid = g.CountyID
+				left join gbvdetails_ELRP b
+				on g.GBVMainID=b.GBVMainID
+				where g.deleted = 0
+				and (@year=0 OR year(isnull(creationtimestamp, g.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, g.lastmodificationtimestamp))=@month)
+				group by g.CountyID
+				)
+				select tc.CountieName  as PropertyName, countValue as PropertyValue1,
+				format(
+				(convert(decimal, c.countValue) / convert(int, (select sum(countValue) from cte))
+				),'P') as PropertyValue2
+				,(
+				select count(*) from GBVMain where AgeOfSurvivor  <=17 and CountyID = c.LocationId
+				) as PropertyValue3
+				from cte as c inner join tm_Counties as tc on tc.intCountieid = c.LocationId
+				]]>
+			</query>
+		</operation>
+		<operation name="GetResolutionTimes_ELRP">
+			<query>
+				<![CDATA[
+				with CTE(TypeName,GRType ,countValue)
+				as (
+				select '15 Days or less','GBV',  count(*) as CountValue  
+				from GBVMain_ELRP as G 
+				left join GBVDetails_ELRP as d on g.GBVMainID=d.GBVMainID
+				where g.deleted = 0 and (d.Deleted is null or d.Deleted=0)
+							and datediff(day, g.date, (isnull(g.StatusLastModificationDate, d.LastModificationTimestamp))) <=15  and g.Status = 5
+							and (@year=0 OR year(isnull(creationtimestamp, g.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, g.lastmodificationtimestamp))=@month)
+				union
+				select '15 Days or less','NGBV', count(*) as CountValue  
+				from nonGBVMain_ELRP as G 
+				left join nonGBVDetails_ELRP as d on g.NonGBVMainID=d.NonGBVMainID
+				where g.deleted = 0 and (d.Deleted is null or d.Deleted=0)
+							and datediff(day, g.date, d.DataOfResolution) <=15  and g.Status = 5
+							and  (@year=0 OR year(G.creationTimestamp)=@year )
+				and (@month=0 or  month(G.creationTimestamp)=@month)
+				union
+				select '16 Days or more','GBV', count(*) as CountValue  
+				from GBVMain_ELRP as G 
+				left join GBVDetails_ELRP as d on g.GBVMainID=d.GBVMainID
+				where g.deleted = 0 and (d.Deleted is null or d.Deleted=0)
+					and datediff(day, g.date, (isnull(g.StatusLastModificationDate, d.LastModificationTimestamp))) > 15  and g.Status = 5
+						and (@year=0 OR year(isnull(creationtimestamp, g.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, g.lastmodificationtimestamp))=@month)
+				union
+				select '16 Days or more','NGBV', count(*) as CountValue  
+				from nonGBVMain_ELRP as G 
+				left join nonGBVDetails_ELRP as d on g.NonGBVMainID=d.NonGBVMainID
+				where g.deleted = 0 and (d.Deleted is null or d.Deleted=0)
+				and datediff(day, g.date, d.DataOfResolution) > 15  and g.Status = 5
+				and  (@year=0 OR year(G.creationTimestamp)=@year )
+				and (@month=0 or  month(G.creationTimestamp)=@month)
+				)
+				select typename as PropertyName, GRType as PropertyValue1,countValue as PropertyValue2,
+				CASE countValue 
+					WHEN 0 THEN FORMAT(0,'P')
+					ELSE
+				format(
+				(convert(decimal, cte.countValue) / convert(int, (select sum(countValue) from cte))
+				),'P') 
+				END as PropertyValue3
+				from cte
+				]]>
+			</query>
+		</operation>
+		<operation name="GetAverageResolutionTimeByLocation_ELRP">
+			<query>
+				select countiename as PropertyName
+				, 'Non-GBV' as PropertyValue1
+				,(sum(datediff(day, n.DateOfComplaint , d.DataOfResolution))/count(*)) as PropertyValue2
+				from nonGBVMain_ELRP as n
+				inner join NonGBVDetails_ELRP as d on (n.NonGBVMainID = d.NonGBVMainID  and d.Deleted = 0)
+				inner join tm_Counties on n.CountyID=tm_counties.intCountieid
+				where n.Deleted=0
+				and n.status=5
+				and  (@year=0 OR year(n.creationTimestamp)=@year )
+				and (@month=0 or  month(n.creationTimestamp)=@month)
+				group by countiename
+				order by countiename
+			</query>
+		</operation>
+		<operation name="DelayedGrievanceByType_ELRP">
+			<query>
+				<![CDATA[
+				select 'GBV' as PropertyName,
+				count(*) as PropertyValue
+				from GBVMain_ELRP a
+				left join gbvdetails_ELRP b
+				on a.GBVMainID=b.GBVMainID
+				where a.Deleted=0
+				and status<>5
+				and datediff(day,isnull(statuslastmodificationdate, a.lastmodificationtimestamp), getdate())>15
+				and (@year=0 OR year(isnull(creationtimestamp, a.lastmodificationtimestamp))=@year )
+				and (@month=0 or  month(isnull(creationtimestamp, a.lastmodificationtimestamp))=@month)
+				union
+				select 'NGBV' as PropertyName,
+				count(*) as PropertyValue
+				from nonGBVMain_ELRP
+				where Deleted=0
+				and  (@year=0 OR year(creationTimestamp)=@year )
+				and (@month=0 or  month(creationTimestamp)=@month)
+				and status<>5
+				and datediff(day,isnull(statuslastmodificationdate, lastmodificationtimestamp), getdate())>15
+				]]>
+			</query>
+		</operation>
+	</operations>
+</typemappers>

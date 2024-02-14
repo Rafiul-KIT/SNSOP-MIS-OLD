@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="intBenID"></property>
+		<property name="EnrollmentNo"></property>
+		<property name="NameofHousehold"></property>
+		<property name="Sex"></property>
+		<property name="Age"></property>
+		<property name="SelectionCriteria"></property>
+		<property name="ContactNo"></property>
+		<property name="Email"></property>
+		<property name="FamilyIncome"></property>
+		<property name="intStateID"></property>
+		<property name="intCountieID"></property>
+		<property name="intPayamID"></property>
+		<property name="intBomasID"></property>
+		<property name="StateName"></property>
+		<property name="CountieName"></property>
+		<property name="PayamName"></property>
+		<property name="BomaName"></property>
+				
+	</properties>
+	
+	<operations>
+		<operation name="GetBeneficiaries_LOC">
+			<query>
+				select distinct
+				B.intBenID
+				,B.EnrollmentNo
+				,B.NameofHousehold
+				,B.Sex
+				,B.Age
+				,B.SelectionCriteria
+				,B.ContactNo
+				,B.Email
+				,B.FamilyIncome
+				,B.intStateID
+				,s.StateName
+				,B.intCountieID
+				,c.CountieName
+				,B.intPayamID
+				,p.PayamName
+				,B.intBomasID
+				,bo.BomaName
+
+				from tbl_BeneficiaryDet_LOC as B
+				inner join tm_States as s on s.intStateid = b.intStateid
+				inner join tm_Counties as c on c.intCountieid = b.intCountieid
+				inner join tm_Payams as P on p.intPayamid = b.intPayamid
+				inner join tm_Bomas as BO on bo.intBomasid = b.intBomasid
+				where intbenid not in(
+				select a.intbenid from td_WageReqBenDet_LOC a
+				inner join td_WorkWageRequest_LOC c on c.intWagePaymentReqid= a.intWagePaymentReqid
+				where a.intworkid=888
+				and c.ReqYear=@Year
+				and c.ReqMonth=@Month
+				)
+				and intbenid not in (
+				select a.intbenid from td_WageReqBenDet_LOC a
+				inner join td_WorkWageRequest_LOC c on c.intWagePaymentReqid= a.intWagePaymentReqid
+				where a.intworkid=888 and c.PaymentCycle = @PaymentCycle
+				)				
+
+			</query>
+		</operation>
+	</operations>
+</typemappers>

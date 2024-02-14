@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="NonGBVDetailID"></property>
+		<property name="NonGBVMainID"></property>
+		<property name="ActionResponseComplaint"></property>
+		<property name="ActionResolutionDesignation"></property>
+		<property name="FeedbackComplainant"></property>
+		<property name="DataOfResolution"></property>
+		<property name="PendingActionRequered"></property>
+		<property name="EscaletedReferredExternally"></property>
+		<property name="AppealLodged"></property>
+		<property name="AppealDate"></property>
+		<property name="AppealOutcomeSatisfactory"></property>
+		<property name="UnresolvedReccommended"></property>
+		<property name="ClosingDate"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+		
+		<property name="PendingActionRequeredNote"></property>
+		<property name="DetailOfTheAccused"></property>
+		<property name="Status"></property>
+		<property name="ActionResolutionDesignationID"></property>
+		<property name="FeedbackComplainantID"></property>
+		<property name="HasInvestigation"></property>
+		<property name="NameInvestigation"></property>
+		<property name="DesignationInvestigation"></property>
+		<property name="InvestigationCompletedDate"></property>
+		<property name="MainFindingsInvestigation"></property>
+		<property name="InvestigationAttachID"></property>
+		<property name="InvestigationAction"></property>
+		<property name="NameOfTheAccused"></property>
+		<property name="StateID"></property>
+		<property name="CountyID"></property>
+		<property name="PayamID"></property>
+		<property name="BomaID"></property>
+		<property name="SSSNPAccused"></property>
+		<property name ="DetailOfTheAccusedOther"></property>
+		
+	</properties>
+
+	<operations>
+		<operation name="CreateNonGBVDetail">
+			<query>
+
+				IF (NOT EXISTS (SELECT NonGBVMainID FROM [NonGBVMain] WHERE Deleted  = 0 AND NonGBVMainID =@NonGBVMainID ))
+				SET @ReturnValue = 0
+				ELSE
+				BEGIN
+				INSERT INTO [NonGBVDetails]
+				([NonGBVMainID]
+
+				,[ActionResponseComplaint]
+				,[ActionResolutionDesignation]
+				,[ActionResolutionDesignationID]
+				,[FeedbackComplainant]
+				,[FeedbackComplainantID]
+				,[DataOfResolution]
+				,[PendingActionRequered]
+				,[EscaletedReferredExternally]
+				,[AppealLodged]
+				,[AppealDate]
+				,[AppealOutcomeSatisfactory]
+				,[UnresolvedReccommended]
+				,[ClosingDate]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				,[PendingActionRequeredNote]
+				,[DetailOfTheAccused]
+				,[DetailOfTheAccusedOther]
+				,[HasInvestigation]
+				,[NameInvestigation]
+				,[DesignationInvestigation]
+				,[InvestigationCompletedDate]
+				,[MainFindingsInvestigation]
+				,[InvestigationAttachID]
+				,[InvestigationAction]
+				,[NameOfTheAccused]
+				,[StateID]
+				,[CountyID]
+				,[PayamID]
+				,[BomaID]
+				,[SSSNPAccused]
+				,[Deleted])
+				VALUES
+				(@NonGBVMainID
+
+				,@ActionResponseComplaint
+				,@ActionResolutionDesignation
+				,@ActionResolutionDesignationID
+				,@FeedbackComplainant
+				,@FeedbackComplainantID
+				,@DataOfResolution
+				,@PendingActionRequered
+				,@EscaletedReferredExternally
+				,@AppealLodged
+				,@AppealDate
+				,@AppealOutcomeSatisfactory
+				,@UnresolvedReccommended
+				,@ClosingDate
+				,@CreationUserID
+				,@LastModificationTimestamp
+				,@LastModificationUserID
+				,@PendingActionRequeredNote
+				,@DetailOfTheAccused
+				,@DetailOfTheAccusedOther
+				,@HasInvestigation
+				,@NameInvestigation
+				,@DesignationInvestigation
+				,@InvestigationCompletedDate
+				,@MainFindingsInvestigation
+				,@InvestigationAttachID
+				,@InvestigationAction
+				,@NameOfTheAccused
+				,@StateID
+				,@CountyID
+				,@PayamID
+				,@BomaID
+				,@SSSNPAccused
+				,0)
+
+				SET @ReturnValue = SCOPE_IDENTITY()
+				END
+
+
+			</query>
+		</operation>
+		<operation name="UpdateNonGBVDetail">
+			<query>
+				IF (NOT EXISTS (SELECT NonGBVMainID FROM [NonGBVDetails] WHERE Deleted  = 0 AND NonGBVDetailID = @NonGBVDetailID ))
+				SET @ReturnValue = 0
+				ELSE
+				BEGIN
+
+				UPDATE [NonGBVDetails]
+				SET
+
+				[ActionResponseComplaint] = @ActionResponseComplaint
+				,[ActionResolutionDesignation] = @ActionResolutionDesignation
+				,[ActionResolutionDesignationID] = @ActionResolutionDesignationID
+				,[FeedbackComplainant] = @FeedbackComplainant
+				,[FeedbackComplainantID] = @FeedbackComplainantID
+				,[DataOfResolution] = @DataOfResolution
+				,[PendingActionRequered] = @PendingActionRequered
+				,[EscaletedReferredExternally] = @EscaletedReferredExternally
+				,[AppealLodged] = @AppealLodged
+				,[AppealDate] = @AppealDate
+				,[AppealOutcomeSatisfactory] = @AppealOutcomeSatisfactory
+				,[UnresolvedReccommended] = @UnresolvedReccommended
+				,[ClosingDate] = @ClosingDate
+				,[LastModificationTimestamp] = @LastModificationTimestamp
+				,[LastModificationUserID] = @LastModificationUserID
+				,[PendingActionRequeredNote] = @PendingActionRequeredNote
+				,[DetailOfTheAccused] = @DetailOfTheAccused
+				,[DetailOfTheAccusedOther] = @DetailOfTheAccusedOther
+				,[HasInvestigation] = @HasInvestigation
+				,[NameInvestigation] = @NameInvestigation
+				,[DesignationInvestigation] = @DesignationInvestigation
+				,[InvestigationCompletedDate] = @InvestigationCompletedDate
+				,[MainFindingsInvestigation] = @MainFindingsInvestigation
+				,[InvestigationAttachID] = @InvestigationAttachID
+				,[InvestigationAction] = @InvestigationAction
+				,[NameOfTheAccused] = @NameOfTheAccused
+				,[StateID] = @StateID
+				,[CountyID] = @CountyID
+				,[PayamID] = @PayamID
+				,[BomaID] = @BomaID
+				,[SSSNPAccused] = @SSSNPAccused
+				WHERE Deleted = 0 and NonGBVDetailID = @NonGBVDetailID
+
+				SET @ReturnValue = 1
+
+				END
+			</query>
+		</operation>
+		<operation name="GetNonGBVDetails">
+			<query>
+
+				SELECT [NonGBVDetailID]
+				,D.[NonGBVMainID]
+
+				,D.[ActionResponseComplaint]
+				,D.[ActionResolutionDesignation]
+				,d.[ActionResolutionDesignationID]
+				,D.[FeedbackComplainant]
+				,D.[FeedbackComplainantID]
+				,D.[DataOfResolution]
+				,D.[PendingActionRequered]
+				,D.[EscaletedReferredExternally]
+				,D.[AppealLodged]
+				,D.[AppealDate]
+				,D.[AppealOutcomeSatisfactory]
+				,D.[UnresolvedReccommended]
+				,D.[ClosingDate]
+				,D.[CreationUserID]
+				,D.[LastModificationTimestamp]
+				,D.[LastModificationUserID]
+				,D.[PendingActionRequeredNote]
+				,D.[DetailOfTheAccused]
+				,d.[DetailOfTheAccusedOther]
+				,D.HasInvestigation
+				,D.NameInvestigation
+				,D.DesignationInvestigation
+				,D.InvestigationCompletedDate
+				,D.MainFindingsInvestigation
+				,D.InvestigationAttachID
+				,d.InvestigationAction
+				,d.[NameOfTheAccused]
+				,d.[StateID]
+				,d.[CountyID]
+				,d.[PayamID]
+				,d.[BomaID]
+				,d.[SSSNPAccused]
+				,m.[Status]
+				FROM [NonGBVDetails] as D
+				inner join NonGBVMain as M on M.NonGBVMainID = d.NonGBVMainID
+				WHERE D.DELETED = 0 AND D.NonGBVMainID  = @NonGBVMainID
+				ORDER BY NonGBVDetailID ASC
+
+			</query>
+		</operation>
+		<operation name="GetNonGBVDetail">
+			<query>
+				SELECT [NonGBVDetailID]
+				,[NonGBVMainID]
+
+				,[ActionResponseComplaint]
+				,[ActionResolutionDesignation]
+				,[ActionResolutionDesignationID]
+				,[FeedbackComplainant]
+				,[FeedbackComplainantID]
+				,[DataOfResolution]
+				,[PendingActionRequered]
+				,[EscaletedReferredExternally]
+				,[AppealLodged]
+				,[AppealDate]
+				,[AppealOutcomeSatisfactory]
+				,[UnresolvedReccommended]
+				,[ClosingDate]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				,[PendingActionRequeredNote]
+				,[DetailOfTheAccused]
+				,[DetailOfTheAccusedOther]
+				,HasInvestigation
+				,NameInvestigation
+				,DesignationInvestigation
+				,InvestigationCompletedDate
+				,MainFindingsInvestigation
+				,InvestigationAttachID
+				,InvestigationAction
+				,[NameOfTheAccused]
+				,[StateID]
+				,[CountyID]
+				,[PayamID]
+				,[BomaID]
+				,[SSSNPAccused]
+				FROM [NonGBVDetails]
+				WHERE DELETED = 0 AND NonGBVDetailID  = @NonGBVDetailID
+
+			</query>
+		</operation>
+		<operation name="DeleteNonGBVDetail">
+			<query>
+				IF (NOT EXISTS (SELECT NonGBVMainID FROM [NonGBVDetails] WHERE Deleted  = 0 AND NonGBVDetailID = @NonGBVDetailID ))
+					SET @ReturnValue = 0
+				ELSE
+				BEGIN
+
+				UPDATE [NonGBVDetails]
+					SET
+						[LastModificationTimestamp] = GETDATE()
+						,[LastModificationUserID] = @UserID
+						,[Deleted] = 1
+					WHERE NonGBVDetailID = @NonGBVDetailID
+
+					SET @ReturnValue = 1
+
+				END
+			</query>
+		</operation>
+	</operations>
+
+</typemappers>

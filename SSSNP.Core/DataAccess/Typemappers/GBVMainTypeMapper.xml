@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="GBVMainID"></property>
+		<property name="Date"></property>
+		<property name="SerialNumber"></property>
+		<property name="StateID"></property>
+		<property name="CountyID"></property>
+		<property name="PayamID"></property>
+		<property name="BomaID"></property>
+		<property name="Status"></property>
+		<property name="DateOfIncident"></property>
+		<property name="ContactFocalPointPersonName"></property>
+		<property name="IncidentReportedBy"></property>
+		<property name="IncidentReportedByOther"></property>
+		<property name="ContactNumber"></property>
+		<property name="Gender"></property>
+		<property name="AgeOfSurvivor"></property>
+		<property name="SSSNPBeneficiary"></property>
+		<property name="SuspectAssociatedWithProject"></property>
+		<property name="SuspectAssosiatedWithProjectNotes"></property>
+		<property name="SuspectKnown"></property>
+		<property name="SuspectKnownDetail"></property>
+		<property name="ReferralServicesRecommended"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+		<property name="ConsentSigned"></property>
+		<property name="ConsentSignedID"></property>
+		<property name="DescriptionOfTheIncident"></property>
+		<property name="DescriptionOfTheIncidentID"></property>
+		<property name="ReportingChannel"></property>
+		<property name="ReportingChannelOther"></property>
+		<property name="StatusAfterReferral"></property>
+		<property name="RecommendedDetails"></property>
+		<property name="VerbalConsentGranted"></property>
+	
+	</properties>
+
+	<operations>
+		<operation name="CreateGBVMain">
+			<query>
+
+
+				SET @ReturnValue = 0;
+
+				INSERT INTO [dbo].[GBVMain]
+				([Date]
+				,[StateID]
+				,[CountyID]
+				,[PayamID]
+				,[BomaID]
+				,[Status]
+				,[DateOfIncident]
+				,[ContactFocalPointPersonName]
+				,[VerbalConsentGranted]
+				,[ConsentSigned]
+				,[ConsentSignedID]
+				,[DescriptionOfTheIncident]
+				,[DescriptionOfTheIncidentID]
+				,[IncidentReportedBy]
+				,[IncidentReportedByOther]
+				,[ReportingChannel]
+				,[ReportingChannelOther]
+				,[ContactNumber]
+				,[Gender]
+				,[AgeOfSurvivor]
+				,[SSSNPBeneficiary]
+				,[SuspectAssociatedWithProject]
+				,[SuspectAssosiatedWithProjectNotes]
+				,[SuspectKnown]
+				,[SuspectKnownDetail]
+				,[ReferralServicesRecommended]
+				,[CreationUserID]
+				,[StatusAfterReferral]
+				,[RecommendedDetails]
+				,[Deleted])
+				VALUES
+				(@Date
+				,@StateID
+				,@CountyID
+				,@PayamID
+				,@BomaID
+				,@Status
+				,@DateOfIncident
+				,@ContactFocalPointPersonName
+				,@VerbalConsentGranted
+				,@ConsentSigned
+				,@ConsentSignedID
+				,@DescriptionOfTheIncident
+				,@DescriptionOfTheIncidentID
+				,@IncidentReportedBy
+				,@IncidentReportedByOther
+				,@ReportingChannel
+				,@ReportingChannelOther
+				,@ContactNumber
+				,@Gender
+				,@AgeOfSurvivor
+				,@SSSNPBeneficiary
+				,@SuspectAssociatedWithProject
+				,@SuspectAssosiatedWithProjectNotes
+				,@SuspectKnown
+				,@SuspectKnownDetail
+				,@ReferralServicesRecommended
+				,@CreationUserID
+				,@StatusAfterReferral
+				,@RecommendedDetails
+				,0)
+
+				SET @ReturnValue = SCOPE_IDENTITY()
+
+
+			</query>
+		</operation>
+		<operation name="UpdateGBVMain">
+			<query>
+				IF (NOT EXISTS (SELECT GBVMainID FROM [GBVMain] WHERE Deleted  = 0 AND GBVMainID = @GBVMainID ))
+				SET @ReturnValue = 0
+				ELSE
+				BEGIN
+
+				UPDATE [GBVMain]
+				SET [StateID] = @StateID
+				,[CountyID] = @CountyID
+				,[PayamID] = @PayamID
+				,[BomaID] = @BomaID
+				,[DateOfIncident] = @DateOfIncident
+				,[ContactFocalPointPersonName] = @ContactFocalPointPersonName
+				,[VerbalConsentGranted] = @VerbalConsentGranted 
+				,[ConsentSigned] = @ConsentSigned
+				,[ConsentSignedID] = @ConsentSignedID
+				,[DescriptionOfTheIncident] = @DescriptionOfTheIncident
+				,[DescriptionOfTheIncidentID] = @DescriptionOfTheIncidentID
+				,[IncidentReportedBy] = @IncidentReportedBy
+				,[IncidentReportedByOther] = @IncidentReportedByOther
+				,[ReportingChannel] = @ReportingChannel
+				,[ReportingChannelOther] = @ReportingChannelOther
+				,[ContactNumber] = @ContactNumber
+				,[Gender] = @Gender
+				,[AgeOfSurvivor] = @AgeOfSurvivor
+				,[SSSNPBeneficiary] = @SSSNPBeneficiary
+				,[SuspectAssociatedWithProject] = @SuspectAssociatedWithProject
+				,[SuspectAssosiatedWithProjectNotes] = @SuspectAssosiatedWithProjectNotes
+				,[SuspectKnown] = @SuspectKnown
+				,[SuspectKnownDetail] = @SuspectKnownDetail
+				,[ReferralServicesRecommended] = @ReferralServicesRecommended
+				,[LastModificationTimestamp] = @LastModificationTimestamp
+				,[LastModificationUserID] = @LastModificationUserID
+				,[StatusAfterReferral] = @StatusAfterReferral
+				,[RecommendedDetails] = @RecommendedDetails
+
+				WHERE Deleted = 0 and GBVMainID = @GBVMainID
+				SET @ReturnValue = 1
+
+				END
+			</query>
+		</operation>
+		<operation name="GetGBVMain">
+			<query>
+
+				SELECT [GBVMainID]
+				,[Date]
+				,[SerialNumber]
+				,[StateID]
+				,[CountyID]
+				,[PayamID]
+				,[BomaID]
+				,[Status]
+				,[DateOfIncident]
+				,[ContactFocalPointPersonName]
+				,[VerbalConsentGranted]
+				,[ConsentSigned]
+				,[ConsentSignedID]
+				,[DescriptionOfTheIncident]
+				,[DescriptionOfTheIncidentID]
+				,[IncidentReportedBy]
+				,[IncidentReportedByOther]
+				,[ReportingChannel]
+				,[ReportingChannelOther]
+				,[ContactNumber]
+				,[Gender]
+				,[AgeOfSurvivor]
+				,[SSSNPBeneficiary]
+				,[SuspectAssociatedWithProject]
+				,[SuspectAssosiatedWithProjectNotes]
+				,[SuspectKnown]
+				,[SuspectKnownDetail]
+				,[ReferralServicesRecommended]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				,[StatusAfterReferral]
+				,[RecommendedDetails]
+				FROM [GBVMain]
+
+				WHERE Deleted =0 AND GBVMainID = @GBVMainID
+			</query>
+		</operation>
+		<operation name="DeleteGBVMain">
+			<query>
+				IF (NOT EXISTS (SELECT GBVMainID FROM [GBVMain] WHERE Deleted  = 0 AND GBVMainID = @GBVMainID ))
+					SET @ReturnValue = 0
+				ELSE
+				BEGIN
+
+				UPDATE [GBVMain]
+					SET
+					[LastModificationTimestamp] = GETDATE()
+					,[LastModificationUserID] = @UserID
+					,[Deleted] = 1
+					WHERE GBVMainID = @GBVMainID
+
+						SET @ReturnValue = 1
+
+				END
+			</query>
+		</operation>
+		<operation name="UpdateGBVStatus">
+			<query>
+				UPDATE [GBVMain]
+					SET	[Status] = @Status
+						,[StatusLastModificationDate] = GETDATE()
+						,[LastModificationTimestamp] = getdate()
+						,[LastModificationUserID] = @userID
+							WHERE GBVMainID = @GBVMainID and Deleted = 0
+								set @ReturnValue = 1
+
+			</query>
+		</operation>
+		<operation name="GetGBVMainIDByDetailID">
+			<query>
+				set @ReturnValue = (SELECT top 1 m.GBVMainID
+
+					FROM [GBVMain] as M left join GBVDetails as d on (d.GBVMainID = m.GBVMainID and d.Deleted = 0)
+						where d.Deleted = 0 and d.GBVDetailID =  @GBVDetailID)
+			</query>
+		</operation>
+		
+	</operations>
+
+</typemappers>

@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[tr_BenAttendanceDetTrans] (
+    [intAttendanceTransid] INT           IDENTITY (1000, 1) NOT NULL,
+    [intAttendanceid]      INT           NULL,
+    [intWorkActivityId]    INT           NULL,
+    [intBenid]             INT           NULL,
+    [AttendanceDate]       DATETIME      NULL,
+    [Status]               VARCHAR (10)  NULL,
+    [Created_by]           INT           NULL,
+    [Created_dt]           DATETIME      NULL,
+    [Modified_by]          INT           NULL,
+    [Modified_dt]          DATETIME      NULL,
+    [AttendanceYear]       INT           NULL,
+    [PortYear]             INT           NULL,
+    [PortPhase]            INT           NULL,
+    [PortedSheetName]      VARCHAR (180) NULL,
+    [PaymentFlag]          INT           NULL,
+    [Deletedby]            INT           NULL,
+    [DeletedDt]            DATETIME      NULL,
+    [DeletedRemarks]       VARCHAR (280) NULL,
+    [DeletedStaffid]       INT           NULL,
+    [DeletedStaffDt]       DATETIME      NULL,
+    [InsertedStaffid]      INT           NULL,
+    [InsertedStaffDt]      DATETIME      NULL,
+    CONSTRAINT [PK_tr_BenAttendanceDetTrans] PRIMARY KEY CLUSTERED ([intAttendanceTransid] ASC)
+);
+

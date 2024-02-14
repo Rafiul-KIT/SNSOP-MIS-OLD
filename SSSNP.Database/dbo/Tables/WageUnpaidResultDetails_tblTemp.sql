@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[WageUnpaidResultDetails_tblTemp] (
+    [intWagePaymentReqid] VARCHAR (50)    NULL,
+    [IPName]              VARCHAR (40)    NULL,
+    [intIP]               INT             NULL,
+    [StateName]           VARCHAR (40)    NULL,
+    [CountieName]         VARCHAR (40)    NULL,
+    [PayamName]           VARCHAR (40)    NULL,
+    [BomaName]            VARCHAR (40)    NULL,
+    [WorkCode]            VARCHAR (140)   NULL,
+    [RequestNo]           VARCHAR (30)    NULL,
+    [FromDate]            VARCHAR (15)    NULL,
+    [ToDate]              VARCHAR (15)    NULL,
+    [TotalMembers]        DECIMAL (18)    NULL,
+    [TotalWorkDays]       DECIMAL (18)    NULL,
+    [AmountPaidUSD]       DECIMAL (18, 2) NULL,
+    [ExchangeRate]        DECIMAL (18, 2) NULL,
+    [WageStatus]          VARCHAR (50)    NULL,
+    [PaymentCycle]        VARCHAR (50)    NULL,
+    [AmountPaidSSP]       DECIMAL (18, 2) NULL,
+    [intStateId]          INT             NULL,
+    [intCountyId]         INT             NULL,
+    [intPayamId]          INT             NULL,
+    [intBomaId]           INT             NULL,
+    [WorkRemarks]         VARCHAR (350)   NULL
+);
+

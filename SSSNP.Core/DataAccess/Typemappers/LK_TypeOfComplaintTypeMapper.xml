@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="TypeOfComplaintID"></property>
+		<property name="Name"></property>
+		<property name="Active"></property>
+		
+	</properties>
+
+	<operations>
+		<operation name="GetTypeOfComplaint">
+			<query>
+				SELECT [TypeOfComplaintID]
+				,[Name]
+				,[Active]
+					FROM [LK_TypeOfComplaint]
+						WHERE ACTIVE = 1
+							ORDER BY NAME ASC
+			</query>
+		</operation>
+		<operation name="GetTypeOfComplaintByID">
+			<query>
+				SELECT [TypeOfComplaintID]
+				,[Name]
+				,[Active]
+				FROM [LK_TypeOfComplaint]
+				WHERE ACTIVE = 1 AND [TypeOfComplaintID] = @TypeOfComplaintID
+				
+			</query>
+		</operation>
+
+	</operations>
+
+</typemappers>

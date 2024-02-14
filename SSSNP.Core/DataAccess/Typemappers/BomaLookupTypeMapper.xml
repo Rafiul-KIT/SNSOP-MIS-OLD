@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="BomaID"></property>
+		<property name="BomaName"></property>
+		<property name="BomaCode"></property>
+		<property name="PayamID"></property>
+		
+	</properties>
+
+	<operations>
+		<operation name="GetBomaLookupByName">
+			<query>
+				select intBomasid as BomaID, BomaName, BomaCode , intPayamid as PayamID
+				from tm_Bomas
+					where BomaName = @BomaName
+			</query>
+		</operation>
+		<operation name="GetBomaLookupByID">
+			<query>
+				select intBomasid as BomaID, BomaName, BomaCode , intPayamid as PayamID
+				from tm_Bomas
+					where intBomasid = @BomaID
+			</query>
+		</operation>
+		<operation name="GetBomasLookup">
+			<query>
+				select intBomasid as BomaID, BomaName, BomaCode , intPayamid as PayamID
+					from tm_Bomas
+							where intPayamID = @PayamID
+			</query>
+		</operation>
+	</operations>
+</typemappers>

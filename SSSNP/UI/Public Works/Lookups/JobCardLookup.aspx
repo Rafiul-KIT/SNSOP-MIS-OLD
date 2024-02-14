@@ -1,0 +1,342 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/Lookups/CCLookupsMaster.master" AutoEventWireup="true" Inherits="JobCardLookup" Title=":: SSSNP Online Management System ::" EnableEventValidation="false" Codebehind="JobCardLookup.aspx.cs" %>
+
+<%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
+<%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+
+    <%--<script type="text/javascript">
+        function PrintPanel() {
+            var panel = document.getElementById("<%=pnlContents.ClientID %>");
+	        var printWindow = window.open('', '', 'height=400,width=800');
+	        printWindow.document.write('<html><head><title>DIV Contents</title>');
+	        printWindow.document.write('</head><body >');
+	        printWindow.document.write(panel.innerHTML);
+	        printWindow.document.write('</body></html>');
+	        printWindow.document.close();
+	        setTimeout(function () {
+	            printWindow.print();
+	        }, 500);
+	        return false;
+        }
+    </script>--%>
+<script type="text/javascript">
+    
+   function GetRowValue(val)
+   {   
+    if(val != '&nbsp;')
+    {   
+       
+        val1 = 0;
+        window.opener.ApplyChanges(val, val1);
+            
+    }
+    
+    self.close();
+   
+    }
+    
+   </script>
+
+    <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
+        <tr>
+            <td style="padding-top: 10px; padding-bottom: 20px; padding-left: 9px; height: 675px;"
+                valign="top" align="center">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            &nbsp;Beneficiary Enrollment Lookup</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table align="center" cellpadding="10" cellspacing="5" style="width: 95%">
+                            <tr>
+                                <td style="padding: 5px; margin: 5px" valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 83%" 
+                                                __designer:mapid="17eb">
+                                                <tr __designer:mapid="17ec">
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17ed">
+                                                        <asp:Label ID="Label1" runat="server" CssClass="LBLBLACK" Width="144px">State Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17ef">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f0">
+                                                        <asp:DropDownList ID="ddlState" runat="server" class="form-control txtbox" 
+                                                            Height="33px" Width="180px" AutoPostBack="True" 
+                                                            onselectedindexchanged="ddlState_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f4">
+                                                        &nbsp;</td>
+                                                </tr>
+                                                <tr __designer:mapid="17f5">
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f6">
+                                                        <asp:Label ID="Label300" runat="server" CssClass="LBLBLACK" Width="124px">County / Municipality Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f8">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f9">
+                                                        <asp:DropDownList ID="ddlCounties" runat="server" class="form-control txtbox" 
+                                                            Height="33px" AutoPostBack="True" 
+                                                            onselectedindexchanged="ddlCounties_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17fd">
+                                                        &nbsp;</td>
+                                                </tr>
+                                                <tr __designer:mapid="17f5">
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f6">
+                                                        <asp:Label ID="Label402" runat="server" CssClass="LBLBLACK" Width="144px">Enrollment Number</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f8">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f9">
+                                                        <asp:TextBox ID="txtEnrollment" runat="server" class="form-control txtbox" 
+                                                            Height="28px" MaxLength="40"  TabIndex="1" 
+                                                            ValidationGroup="group" Width="180px"></asp:TextBox>
+                                                            
+                                                            
+                                                            
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17fd">
+                                                        &nbsp;</td>
+                                                </tr>
+
+                                                <tr >
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f6">
+                                                        <asp:Label ID="Label2" runat="server" CssClass="LBLBLACK" Width="124px">Group Type</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f8">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17f9">
+                                                        <asp:DropDownList ID="ddl_group_type" runat="server" class="form-control txtbox" 
+                                                            Height="33px" AutoPostBack="True" 
+                                                            onselectedindexchanged="ddl_group_type_SelectedIndexChanged">
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
+                                                             <asp:ListItem Value="Group">Group</asp:ListItem>
+                                                             <asp:ListItem Value="CST">CST</asp:ListItem>
+                                                            
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="17fd">
+                                                        &nbsp;</td>
+                                                </tr>
+                                            </table>
+                                </td>
+                                <td style="width: 27px">
+                                    <asp:Label ID="Label348" runat="server" CssClass="LBLBLACK" Width="65px"></asp:Label>
+                                </td>
+                                <td valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 100%" 
+                                                __designer:mapid="1800">
+                                                <tr __designer:mapid="1801">
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="1802">
+                                                        <asp:Label ID="Label353" runat="server" CssClass="LBLBLACK" Width="124px">Payam / Block Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="1804">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="1805">
+                                                        <asp:DropDownList ID="ddlPayam" runat="server" class="form-control txtbox" 
+                                                            Height="28px" Width="180px" AutoPostBack="True" 
+                                                            onselectedindexchanged="ddlPayam_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="1809">
+                                                        &nbsp;</td>
+                                                </tr>
+                                                <tr __designer:mapid="180a">
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180b">
+                                                        <asp:Label ID="Label400" runat="server" CssClass="LBLBLACK" Width="144px">Boma / Quarter Council Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180d">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180e">
+                                                        <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox" 
+                                                            Height="28px" Width="180px">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="1812">
+                                                        &nbsp;</td>
+                                                </tr>
+                                                <tr __designer:mapid="180a">
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180b">
+                                                        <asp:Label ID="Label401" runat="server" CssClass="LBLBLACK" Width="144px">Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180d">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180e">
+                                                        <asp:TextBox ID="txtName" runat="server" class="form-control txtbox" 
+                                                            Height="28px" MaxLength="40"  TabIndex="1" 
+                                                            ValidationGroup="group" Width="180px"></asp:TextBox>
+                                                            
+                                                            
+                                                            
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="1812">
+                                                        &nbsp;</td>
+                                                </tr>
+
+                                                  <tr __designer:mapid="180a" runat="server" id="tr_group_code" visible="false">
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180b">
+                                                        <asp:Label ID="Label3" runat="server" CssClass="LBLBLACK" Width="144px">Group Code</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180d">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180e">
+                                                        <asp:DropDownList ID="ddl_group_code" runat="server" class="form-control txtbox" 
+                                                            Height="33px" Width="180px" AutoPostBack="True">
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
+                                                              
+                                                             <asp:ListItem Value="01">01</asp:ListItem>
+                                                             <asp:ListItem Value="02">02</asp:ListItem>
+                                                             <asp:ListItem Value="03">03</asp:ListItem>
+                                                             <asp:ListItem Value="04">04</asp:ListItem>
+                                                             <asp:ListItem Value="05">05</asp:ListItem>
+                                                             <asp:ListItem Value="06">06</asp:ListItem>
+                                                             <asp:ListItem Value="07">07</asp:ListItem>
+                                                             <asp:ListItem Value="08">08</asp:ListItem>
+                                                             <asp:ListItem Value="09">09</asp:ListItem>
+                                                             <asp:ListItem Value="10">10</asp:ListItem>
+                                                             <asp:ListItem Value="11">11</asp:ListItem>
+                                                             <asp:ListItem Value="12">12</asp:ListItem>
+                                                             <asp:ListItem Value="13">13</asp:ListItem>
+                                                             <asp:ListItem Value="14">14</asp:ListItem>
+                                                             <asp:ListItem Value="15">15</asp:ListItem>
+                                                             <asp:ListItem Value="16">16</asp:ListItem>
+                                                             <asp:ListItem Value="17">17</asp:ListItem>
+                                                             <asp:ListItem Value="18">18</asp:ListItem>
+                                                             <asp:ListItem Value="19">19</asp:ListItem>
+                                                             <asp:ListItem Value="20">20</asp:ListItem>
+                                                             <asp:ListItem Value="21">21</asp:ListItem>
+                                                             <asp:ListItem Value="22">22</asp:ListItem>
+                                                             <asp:ListItem Value="23">23</asp:ListItem>
+                                                             <asp:ListItem Value="24">24</asp:ListItem>
+                                                             <asp:ListItem Value="25">25</asp:ListItem>
+                                                             <asp:ListItem Value="26">26</asp:ListItem>
+                                                             <asp:ListItem Value="27">27</asp:ListItem>
+                                                             <asp:ListItem Value="28">28</asp:ListItem>
+                                                             <asp:ListItem Value="29">29</asp:ListItem>
+                                                             <asp:ListItem Value="30">30</asp:ListItem>
+                                                             <asp:ListItem Value="31">31</asp:ListItem>
+                                                             <asp:ListItem Value="32">32</asp:ListItem>
+                                                             <asp:ListItem Value="33">33</asp:ListItem>
+                                                             <asp:ListItem Value="34">34</asp:ListItem>
+                                                             <asp:ListItem Value="35">35</asp:ListItem>
+                                                             <asp:ListItem Value="36">36</asp:ListItem>
+                                                             <asp:ListItem Value="37">37</asp:ListItem>
+                                                             <asp:ListItem Value="38">38</asp:ListItem>
+                                                             <asp:ListItem Value="39">39</asp:ListItem>
+                                                             <asp:ListItem Value="40">40</asp:ListItem>
+                                                             <asp:ListItem Value="41">41</asp:ListItem>
+                                                             <asp:ListItem Value="42">42</asp:ListItem>
+                                                             <asp:ListItem Value="43">43</asp:ListItem>
+                                                             <asp:ListItem Value="44">44</asp:ListItem>
+                                                             <asp:ListItem Value="45">45</asp:ListItem>
+                                                             <asp:ListItem Value="46">46</asp:ListItem>
+                                                             <asp:ListItem Value="47">47</asp:ListItem>
+                                                             <asp:ListItem Value="48">48</asp:ListItem>
+                                                             <asp:ListItem Value="49">49</asp:ListItem>
+                                                             <asp:ListItem Value="50">50</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="1812">
+                                                        &nbsp;</td>
+                                                </tr>
+                                                
+                                            </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3" style="padding: 5px; margin: 5px">
+                                    <asp:Label ID="lblMsg" runat="server" Font-Bold="True" Font-Names="verdana" 
+                                        Font-Size="13px" ForeColor="#006600"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3" style="padding: 5px; margin: 5px">
+                                    <asp:Button ID="BtnSave1" runat="server" CssClass="btn btn-primary" 
+                                        Height="32px" onclick="BtnSave_Click" TabIndex="10" Text="Search" 
+                                        Width="90px" />
+                                    <asp:Button ID="BtnClear" runat="server" CausesValidation="False" 
+                                        CssClass="btn btn-danger" Height="32px" onclick="BtnClear_Click" TabIndex="10" 
+                                        Text="Cancel" ToolTip="To Clear  the Screen" Width="90px" />
+
+                                    <%--<asp:Button ID="BtnPrint" runat="server" CssClass="btn btn-warning" Visible="false" 
+                                                Height="32px"  OnClientClick="return PrintPanel();" ToolTip="Print" TabIndex="10" Text="Print" 
+                                                ValidationGroup="group" Width="90px" />--%>
+
+                                   <%--  <asp:Button ID="btnExportoexcel" runat="server" CssClass="btn btn-success" Visible="false"  
+                                                Height="32px"  onclick="btnExportoexcel_Click" ToolTip="Export To Excel" TabIndex="10" Text="Export" 
+                                                ValidationGroup="group" Width="90px" />--%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3" style="padding: 5px; margin: 5px">
+                                     <div runat="server" id="div_print">
+   <asp:Panel ID="pnlContents" runat="server">
+
+           <telerik:radgrid id="RadLookup"  autogeneratecolumns="false" runat="server" PageSize="10"  Visible="false"
+                                        AllowMultiRowSelection="true" AllowSorting="true" gridlines="Both" AllowPaging="true" 
+                                        MasterTableView-TableLayout="Fixed" OnNeedDataSource="RadLookup_NeedDataSource" OnItemDataBound="RadLookup_ItemDataBound" > 
+                                        <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                         
+                                     <ClientSettings  EnableRowHoverStyle="true">
+                                              <Selecting AllowRowSelect="True" />
+                                     </ClientSettings>    
+                                         
+                                        
+                                <MasterTableView TableLayout="Fixed" 
+                                        DataKeyNames="intBenid" 
+                                        ClientDataKeyNames="intBenid" >                             
+                                        <NoRecordsTemplate>&nbsp;&nbsp;&nbsp;No results found</NoRecordsTemplate>    
+                                <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                               			        
+                                <Columns>
+                                    <telerik:GridTemplateColumn UniqueName="TemplateColumn" HeaderText="Select" >
+                                       <ItemTemplate>
+                                            <asp:LinkButton ID="lnkLookupID" class="fa fa-edit" runat="server" CommandArgument='<%# Eval("intBenid") %>' CommandName="selectBenID">Select</asp:LinkButton>
+                                         <%--  <asp:Button ID="btnLookupID" runat="server" class="fa fa-edit" Text="Select" CommandArgument='<%# Eval("intBenid") %>' CommandName="selectBenID" />--%>
+                                        </ItemTemplate>
+                                            <HeaderStyle Width="80px" />
+                                    </telerik:GridTemplateColumn>
+                                 
+                                        <telerik:GridBoundColumn DataField="intBenid" HeaderText="intBenid" HeaderStyle-Width="15%" Visible="false"></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="StateName" HeaderText="State Name" HeaderStyle-Width="12%"></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="CountieName" HeaderText="County Name" HeaderStyle-Width="12%"></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="PayamName" HeaderText="Payam Name" HeaderStyle-Width="15%"></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="BomaName" HeaderText="Boma Name" HeaderStyle-Width="15%"></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Name" HeaderStyle-Width="28%"></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="Sex" HeaderText="Sex" HeaderStyle-Width="7%"></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="Age" HeaderText="Age" HeaderStyle-Width="7%"></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="ContactNo" HeaderText="Contact No" HeaderStyle-Width="10%" ></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="Email" HeaderText="Email" HeaderStyle-Width="12%" ></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="EnrollmentNo" HeaderText="Enrollment No" HeaderStyle-Width="10%" ></telerik:GridBoundColumn>
+                                        <telerik:GridBoundColumn DataField="SelectionCriteria" HeaderText="Component" HeaderStyle-Width="15%" Visible="true"></telerik:GridBoundColumn>
+                                       
+                                                                  
+                                 </Columns>
+                            </MasterTableView>
+
+                        </telerik:radgrid>
+
+                            
+        </asp:Panel>
+                                         </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</asp:Content>
+

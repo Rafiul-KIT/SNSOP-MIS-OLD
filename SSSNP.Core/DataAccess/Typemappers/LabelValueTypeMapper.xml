@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="DisplayName"></property>
+		<property name="DisplayValue"></property>
+	</properties>
+
+	<operations>
+		<operation name="GetNonGBVDashboardStatusCount">
+			<query>
+				SELECt stat.StatusName as DisplayName, COUNT(NONgbvmainid) as DisplayValue
+				from NonGBVMain main
+				inner join LK_GBVStatus stat on main.Status=stat.StatusID
+				where stat.NonGBVStatus=1
+				and main.Deleted=0
+				group by [statusID],StatusName
+			</query>
+		</operation>
+		<operation name="GetNonGBVDashboardTypeCount">
+			<query>
+				SELECt typ.Name as DisplayName, COUNT(NONgbvmainid) as DisplayValue
+				from NonGBVMain main
+				inner join LK_TypeOfGrievance typ on main.typeofgrievanceid=typ.typeofgrievanceid
+				where  main.Deleted=0
+				group by typ.name
+			</query>
+		</operation>
+		<operation name="GetNonGBVDashboardTypeDelayedCount">
+			<query>
+				<![CDATA[SELECt typ.Name as DisplayName, COUNT(NONgbvmainid) as DisplayValue
+				from NonGBVMain main
+				inner join LK_TypeOfGrievance typ on main.typeofgrievanceid=typ.typeofgrievanceid
+				where  main.Deleted=0
+				and Status<>5
+				and dateadd(DAY,14, [Date]) < getdate()
+				group by typ.name]]>
+			</query>
+		</operation>
+		<operation name="GetGBVDashboardStatusCount">
+			<query>
+				SELECt stat.StatusName as DisplayName, COUNT(gbvmainid) as DisplayValue
+				from GBVMain main
+				inner join LK_GBVStatus stat on main.Status=stat.StatusID
+				where stat.GBVStatus=1
+				and main.Deleted=0
+				group by [statusID],StatusName
+			</query>
+		</operation>
+		<operation name="GetNonGBVDashboardTypeDelayedCount">
+			<query>
+				SELECt stat.StatusName as DisplayName, COUNT(gbvmainid) as DisplayValue
+				from GBVMain main
+				inner join LK_GBVStatus stat on main.Status=stat.StatusID
+				where stat.GBVStatus=1
+				and main.Deleted=0
+				group by [statusID],StatusName
+			</query>
+		</operation>
+		<operation name="GetGBVDashboardByCountyAll">
+			<query>
+				select CountieName +' - GBV'  as DisplayName, count(*) as DisplayValue from GBVmain
+				inner join tm_Counties on GBVmain.CountyID=intCountieid
+				WHERE deleted=0
+				GROUP BY CountieName
+				union
+				select countiename+' - NGBV' as DisplayName, count(*) as DisplayValue from NonGBVMain
+				inner join tm_Counties on NonGBVMain.CountyID=intCountieid
+				WHERE deleted=0
+				GROUP BY CountieName
+				order by DisplayName
+			</query>
+		</operation>
+		<operation name="GetGBVDashboardByStatusAll">
+			<query>
+				select LK_GBVStatus.StatusName + ' (GBV)' as DisplayName, count(*) as DisplayValue from gbvmain
+				inner join LK_GBVStatus
+				on LK_GBVStatus.StatusID=gbvmain.Status
+				where deleted=0
+				group by LK_GBVStatus.StatusName
+				union
+				select LK_GBVStatus.StatusName+ ' (NGBV)' as DisplayName, count(*) as DisplayValue from NonGBVMain
+				inner join LK_GBVStatus
+				on LK_GBVStatus.StatusID=nongbvmain.Status
+				where deleted=0
+				group by LK_GBVStatus.StatusName
+				order by DisplayName
+			</query>
+		</operation>
+		<operation name="GetAvgToCloseByCountyAll">
+			<query>
+				select countiename + ' (GBV)' as DisplayName, (sum(datediff(day, date,lastmodificationtimestamp))/count(*)) as DisplayValue
+				from gbvmain
+				inner join tm_Counties on tm_Counties.intCountieid=GBVMain.CountyID
+				where deleted=0
+				and status =5  --CLosed
+				and LastModificationTimestamp is not null
+				group by countiename
+				union
+				select countiename + ' (NGBV)'as DisplayLabel, (sum(datediff(day, date,lastmodificationtimestamp))/count(*)) as DisplayValue
+				from nongbvmain
+				inner join tm_Counties on tm_Counties.intCountieid=nonGBVMain.CountyID
+				where deleted=0
+				and status =5  --CLosed
+				and LastModificationTimestamp is not null
+				group by countiename
+			</query>
+		</operation>
+		<operation name="GetTypesOfReferral">
+			<query>
+				<![CDATA[select ReferralServicesRecommended as DisplayName,count(*) as DisplayValue from GBVMain
+				where deleted=0
+				and ReferralServicesRecommended<>'0'
+				group by ReferralServicesRecommended]]>
+			</query>
+		</operation>
+		<operation name="GetSentToReferralService">
+			<query>
+				<![CDATA[select 'Sent to referral service' as DisplayName,count(*) as DisplayValue from GBVMain
+					where 
+					deleted=0 
+					and ReferralServicesRecommended<>'0'
+					union
+					select 'Not Sent to referral service' as DisplayName,count(*) as DisplayValue from GBVMain
+					where deleted=0
+					and ReferralServicesRecommended='0'
+					Union
+					select 'Total' as DisplayName,count(*) as DisplayValue from GBVMain
+					where deleted=0]]>
+			</query>
+		</operation>
+		<operation name="GetGBVPerpetratorProject">
+			<query>
+				<![CDATA[
+				select 'Perpetrator Associated With Project' as DisplayName,count(*) as DisplayValue from GBVMain
+				where deleted=0
+				and SuspectAssociatedWithProject=1
+				union
+				select 'Perpetrator Not Associated With Project' as DisplayName,count(*) as DisplayValue from GBVMain
+				where deleted=0
+				and SuspectAssociatedWithProject<>1
+				union
+				select 'Total' as DisplayName,count(*) as DisplayValue from GBVMain
+				where deleted=0]]>
+			</query>
+		</operation>
+		
+		
+		<!--ELRP-->
+		<operation name="GetNonGBVDashboardStatusCount_ELRP">
+			<query>
+				SELECt stat.StatusName as DisplayName, COUNT(NONgbvmainid) as DisplayValue
+				from NonGBVMain_ELRP main
+				inner join LK_GBVStatus stat on main.Status=stat.StatusID
+				where stat.NonGBVStatus=1
+				and main.Deleted=0
+				group by [statusID],StatusName
+			</query>
+		</operation>
+		<operation name="GetNonGBVDashboardTypeCount_ELRP">
+			<query>
+				SELECt typ.Name as DisplayName, COUNT(NONgbvmainid) as DisplayValue
+				from NonGBVMain_ELRP main
+				inner join LK_TypeOfGrievance typ on main.typeofgrievanceid=typ.typeofgrievanceid
+				where  main.Deleted=0
+				group by typ.name
+			</query>
+		</operation>
+		<operation name="GetNonGBVDashboardTypeDelayedCount_ELRP">
+			<query>
+				<![CDATA[SELECt typ.Name as DisplayName, COUNT(NONgbvmainid) as DisplayValue
+				from NonGBVMain_ELRP main
+				inner join LK_TypeOfGrievance typ on main.typeofgrievanceid=typ.typeofgrievanceid
+				where  main.Deleted=0
+				and Status<>5
+				and dateadd(DAY,14, [Date]) < getdate()
+				group by typ.name]]>
+			</query>
+		</operation>
+		<operation name="GetGBVDashboardStatusCount_ELRP">
+			<query>
+				SELECt stat.StatusName as DisplayName, COUNT(gbvmainid) as DisplayValue
+				from GBVMain_ELRP main
+				inner join LK_GBVStatus stat on main.Status=stat.StatusID
+				where stat.GBVStatus=1
+				and main.Deleted=0
+				group by [statusID],StatusName
+			</query>
+		</operation>
+		<operation name="GetNonGBVDashboardTypeDelayedCount_ELRP">
+			<query>
+				SELECt stat.StatusName as DisplayName, COUNT(gbvmainid) as DisplayValue
+				from GBVMain_ELRP main
+				inner join LK_GBVStatus stat on main.Status=stat.StatusID
+				where stat.GBVStatus=1
+				and main.Deleted=0
+				group by [statusID],StatusName
+			</query>
+		</operation>
+		<operation name="GetGBVDashboardByCountyAll_ELRP">
+			<query>
+				select CountieName +' - GBV'  as DisplayName, count(*) as DisplayValue from GBVmain_ELRP
+				inner join tm_Counties on GBVmain_ELRP.CountyID=intCountieid
+				WHERE deleted=0
+				GROUP BY CountieName
+				union
+				select countiename+' - NGBV' as DisplayName, count(*) as DisplayValue from NonGBVMain_ELRP
+				inner join tm_Counties on NonGBVMain_ELRP.CountyID=intCountieid
+				WHERE deleted=0
+				GROUP BY CountieName
+				order by DisplayName
+			</query>
+		</operation>
+		<operation name="GetGBVDashboardByStatusAll_ELRP">
+			<query>
+				select LK_GBVStatus.StatusName + ' (GBV)' as DisplayName, count(*) as DisplayValue from gbvmain_ELRP
+				inner join LK_GBVStatus
+				on LK_GBVStatus.StatusID=gbvmain_ELRP.Status
+				where deleted=0
+				group by LK_GBVStatus.StatusName
+				union
+				select LK_GBVStatus.StatusName+ ' (NGBV)' as DisplayName, count(*) as DisplayValue from NonGBVMain_ELRP
+				inner join LK_GBVStatus
+				on LK_GBVStatus.StatusID=NonGBVMain_ELRP.Status
+				where deleted=0
+				group by LK_GBVStatus.StatusName
+				order by DisplayName
+			</query>
+		</operation>
+		<operation name="GetAvgToCloseByCountyAll_ELRP">
+			<query>
+				select countiename + ' (GBV)' as DisplayName, (sum(datediff(day, date,lastmodificationtimestamp))/count(*)) as DisplayValue
+				from gbvmain_ELRP
+				inner join tm_Counties on tm_Counties.intCountieid=gbvmain_ELRP.CountyID
+				where deleted=0
+				and status =5  --CLosed
+				and LastModificationTimestamp is not null
+				group by countiename
+				union
+				select countiename + ' (NGBV)'as DisplayLabel, (sum(datediff(day, date,lastmodificationtimestamp))/count(*)) as DisplayValue
+				from nongbvmain_ELRP
+				inner join tm_Counties on tm_Counties.intCountieid=nongbvmain_ELRP.CountyID
+				where deleted=0
+				and status =5  --CLosed
+				and LastModificationTimestamp is not null
+				group by countiename
+			</query>
+		</operation>
+		<operation name="GetTypesOfReferral_ELRP">
+			<query>
+				<![CDATA[select ReferralServicesRecommended as DisplayName,count(*) as DisplayValue from GBVMain_ELRP
+				where deleted=0
+				and ReferralServicesRecommended<>'0'
+				group by ReferralServicesRecommended]]>
+			</query>
+		</operation>
+		<operation name="GetSentToReferralService_ELRP">
+			<query>
+				<![CDATA[select 'Sent to referral service' as DisplayName,count(*) as DisplayValue from GBVMain_ELRP
+					where 
+					deleted=0 
+					and ReferralServicesRecommended<>'0'
+					union
+					select 'Not Sent to referral service' as DisplayName,count(*) as DisplayValue from GBVMain_ELRP
+					where deleted=0
+					and ReferralServicesRecommended='0'
+					Union
+					select 'Total' as DisplayName,count(*) as DisplayValue from GBVMain_ELRP
+					where deleted=0]]>
+			</query>
+		</operation>
+		<operation name="GetGBVPerpetratorProject_ELRP">
+			<query>
+				<![CDATA[
+				select 'Perpetrator Associated With Project' as DisplayName,count(*) as DisplayValue from GBVMain_ELRP
+				where deleted=0
+				and SuspectAssociatedWithProject=1
+				union
+				select 'Perpetrator Not Associated With Project' as DisplayName,count(*) as DisplayValue from GBVMain_ELRP
+				where deleted=0
+				and SuspectAssociatedWithProject<>1
+				union
+				select 'Total' as DisplayName,count(*) as DisplayValue from GBVMain_ELRP
+				where deleted=0]]>
+			</query>
+		</operation>
+	</operations>
+</typemappers>

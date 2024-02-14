@@ -1,0 +1,1059 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" Inherits="CCMaster" CodeBehind="CCMaster.master.cs" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<asp:ContentPlaceHolder ID="cntHead" runat="server">
+    <head runat="server">
+        <title></title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script type="text/javascript" src="./assets/js/jquery.min.js"></script>
+        <script src="./assets/js/fullcalendar.js"></script>
+        <script type="text/javascript" src="./assets/js/popper.min.js"></script>
+        <script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="./assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script type="text/javascript" src="./assets/js/jquery.dcjqaccordion.2.7.js"></script>
+        <script type="text/javascript" src="./assets/js/jquery.validate.js"></script>
+        <%--<script src="./assets/js/MEAPValidation.js"></script>--%>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet" />
+        <link href="./assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="./assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="./assets/css/ionicons.css" rel="stylesheet" type="text/css">
+        <link href="./assets/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+        <link href="./assets/css/jquery.mCustomScrollbar.css" rel="stylesheet">
+        <link href="./assets/css/style.css" rel="stylesheet">
+        <link href="./assets/css/responsive.css" rel="stylesheet">
+        <link type="text/css" href="./assets/fonts/Meap_Fonts/styleFA.css" rel="stylesheet" />
+        <link href="./assets/css/fullcalendar.css" rel='stylesheet' />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet" type="text/css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+        <script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+        <style type="text/css">
+            .overlay {
+                position: fixed;
+                z-index: 999;
+                height: 100%;
+                width: 100%;
+                top: 1px;
+                background-color: Gray;
+                filter: alpha(opacity=60);
+                opacity: 0.9;
+                -moz-opacity: 0.9;
+            }
+
+            .changeBrightnessButton {
+                border: 1px solid #563d7c;
+                border-radius: 5px;
+                color: white;
+                padding: 5px 10px 5px 25px;
+                background: url(~/Resource/Images/brightnessIcon.png) left 3px top 5px no-repeat #563d7c;
+            }
+
+            .MyGridHeader {
+                background-color: #dedede !important;
+                font-family: Poppins;
+                vertical-align: middle;
+                /*background-image:none !important;*/
+            }
+
+            /*.RadGrid_Default .rgRow > td {
+                font-family: Poppins;
+                background-color: #fff;
+            }*/
+
+            .RadGrid_Default .rgRow {
+                font-family: Poppins;
+                background-color: #fff;
+            }
+
+            .MyGridAlternatingRow {
+                font-family: Poppins;
+                background-color: #D1DDF1 !important;
+            }
+
+            .rgSelectedRow {
+                background-image: none !important;
+                background-color:  #d8e4f3 !important;
+                color: #fff !important;
+            }
+
+            div.RadGrid_Default .rgHeader, div.RadGrid_Default th.rgResizeCol .HeaderTitle {
+                background-image: none;
+                font-size: 12px !important;
+                font-family: Poppins;
+            }
+
+                div.RadGrid_Default .rgHeader a {
+                    color: #333 !important;
+                    font-size: 12px !important;
+                    font-family: Poppins;
+                }
+
+            div.RadGrid_Default .rgHeader {
+                color: #333 !important;
+                font-size: 12px !important;
+                font-family: Poppins;
+            }
+
+            .rgHoveredRow {
+                background-image: none !important;
+                background-color:  #ebf1f9 !important;
+                color: blue !important;
+            }
+        </style>
+
+        <script src="../../Resource/Styles/SideMenu/script.js" type="text/javascript"></script>
+
+        <link href="../../Resource/Styles/SideMenu/styles.css" rel="stylesheet" type="text/css" />
+
+        <script src="../Resource/Scripts/js/validation.js" type="text/javascript"></script>
+
+        <script src="../../Resource/Scripts/js/jquery.js" type="text/javascript"></script>
+
+        <script src="../../Resource/Scripts/js/bootstrap.min.js" type="text/javascript"></script>
+
+        <script type="text/javascript" src="../../Resource/Scripts/js/plugins/morris/raphael.min.js"></script>
+
+        <script src="../../Resource/Scripts/js/plugins/morris/morris.min.js" type="text/javascript"></script>
+
+        <script src="../../Resource/Scripts/js/plugins/morris/morris-data.js" type="text/javascript"></script>
+
+        <%--<script src="../../Resource/js/bootstrap.min.js"></script>   
+    <script src="../../Resource/js/plugins/morris/raphael.min.js"></script>
+    <script src="../../Resource/js/plugins/morris/morris.min.js"></script>
+    <script src="../../Resource/js/plugins/morris/morris-data.js"></script>--%>
+        <link href="../../Resource/Styles/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../../Resource/Styles/css/sb-admin.css" rel="stylesheet" type="text/css" />
+        <link href="../../Resource/Styles/css/plugins/morris.css" rel="stylesheet" type="text/css" />
+        <link href="../../Resource/Styles/font-awesome/css/font-awesome.css" rel="stylesheet"
+            type="text/css" />
+        <%--<link href="../../Resource/css/bootstrap.min.css"rel="stylesheet" type="text/css" />   
+    <link href="../../Resource/css/sb-admin.css" rel="stylesheet" type="text/css" />   
+    <link href="../../Resource/css/plugins/morris.css" rel="stylesheet" type="text/css" />--%>
+        <%--<link href="../../Resource/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />--%>
+        <style type="text/css">
+            .style1 {
+                width: 100%;
+                max-height: 60 px;
+            }
+
+            .style3 {
+                width: 200px;
+                background-color: #56bfe7;
+            }
+
+            .style4 {
+                max-height: 60px;
+            }
+        </style>
+
+    </head>
+</asp:ContentPlaceHolder>
+
+<body>
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server">
+        </asp:ScriptManager>
+        <table cellpadding="0" cellspacing="0" class="style1">
+            <tr>
+                <td>
+                    <table cellpadding="3" cellspacing="5" class="style1">
+                        <tr class="main-header SSSNPBanner">
+                            <td class="container_header">
+                                <div class="logo align-items-center">
+                                    <span class="logo-default">
+                                        <img src="../../Resource/Images/SNSOP_Logo.png" style="height:50px" alt="" /></span>
+                                    <div class="right_detail">
+                                        <div class="dropdown dropdown-user">
+                                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true" style="font-family: Poppins; font-size: 16px;">
+                                                <asp:Label ID="lblwecome" Text="Admin" runat="server" ForeColor="#ffffff"></asp:Label>&nbsp;<i style="color: #ffffff" class="fa fa-caret-down"></i></a>
+                                            <ul style="min-width: 178px !important;" class="dropdown-menu dropdown-menu-default">
+                                                <li><a href='../../frmuserlogin.aspx'><i class="fa fa-sign-out"></i><span>&nbsp; Log Out</span></a>
+                                                </li>
+                                            </ul>
+                                            <img class="img-circle pro_pic" src="../../Resource/Images/user.png" style="max-height: 50px;" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellspacing="1" class="style1">
+                        <tr>
+                            <td class="style3" valign="top">
+                                <div>
+                                    <div id='cssmenu'>
+                                        <ul id="dc_accordion" class="sidebar-menu">
+                                            <li id="Masters1" class='has-sub' runat="server" visible="false"><a href='#'><i class="fa fa-fw fa-table"></i>Master Setup</a>
+                                                <ul>
+                                                    <li><a href="Addstates.aspx">States</a></li>
+                                                    <li><a href="AddCounties.aspx">Counties / Municipalities</a></li>
+                                                    <li><a href="AddPayams.aspx">Payams / Blocks </a></li>
+                                                    <li><a href="AddBomas.aspx">Bomas / Quarter Council </a></li>
+                                                    <%--<li><a href="AddQualification.aspx" >Education Qualification</a></li>--%>
+                                                    <li><a href="AddDisability.aspx">Vulnerability</a></li>
+                                                    <li><a href="AddDesignations.aspx">Designations</a></li>
+                                                    <li><a href="AddAreaofWork.aspx">Type of Work</a></li>
+                                                    <li><a href="AddWorkActivities.aspx">Work Activities</a></li>
+                                                    <li><a href="AddTSTTeam.aspx">TST Team</a></li>
+                                                    <li><a href="ManageUsers.aspx">Manage Users</a></li>
+                                                    <%--  <li><a href="Payingagent.aspx">Paying Agent</a></li>--%>
+                                                </ul>
+                                            </li>
+
+                                            <li id="Masters2" class='has-sub' runat="server" visible="false"><a href='#'><i class="fa fa-fw fa-table"></i>API Activities</a>
+                                                <ul>
+                                                    <li><a href="#" style="font-weight: bold">Pull data to  MIS:</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Daily Acitivities:</a> </li>
+                                                    <li><a href="ImportFromServiceBenfDetFinalWithFailureTbl.aspx" target="_blank">Import Benficiaries</a></li>
+                                                    <li><a href="ImportFromServiceBenfAlternateDetLatestwithValidation.aspx" target="_blank">Import Alternate Benficiaries</a></li>
+                                                    <li><a href="ImportFromServiceBenfAttandanceLatest.aspx" target="_blank">Import Attendance</a></li>
+                                                    <li><a href="ImportFromServiceBenfBomawiseWagesLatest.aspx" target="_blank">Import Wages</a></li>
+                                                    <li><a href="ImportFromServiceBenfBomawiseWagesAll.aspx" target="_blank">Import Wages All Dump</a></li>
+                                                    <li><a href="ImportFromServiceBenfAlternateDetLatestForAll.aspx" target="_blank">Import Alternate All Dump</a></li>
+                                                    <li><a href="#" style="font-weight: bold">Weekly Acitivities:</a> </li>
+                                                    <li><a href="ImportUpdatePhoto.aspx" target="_blank">Import Beneficiary Photos</a></li>
+                                                    <li><a href="ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx" target="_blank">Import Alternate Photos</a></li>
+
+                                                    <li><a href="#" style="font-weight: bold">To PayConnect : </a></li>
+                                                    <li><a href="#" style="font-weight: bold">Masters : </a></li>
+                                                    <li><a href="../../WSgetIPsDet.aspx" target="_blank">IPs</a></li>
+                                                    <li><a href="../../WSgetMastersDet.aspx" target="_blank">Boma,Payam,County,State Masters</a></li>
+
+                                                    <li><a href="#" style="font-weight: bold">Pre Enrollment : </a></li>
+                                                    <li><a href="../../WSgetPreEnrolledBenDet.aspx" target="_blank">Show PreEnrolled Benficiary</a></li>
+                                                    <li><a href="../../WSPreEnrolledAlternateHouseHold.aspx" target="_blank">Show PreEnrolled Alternate Details</a></li>
+
+
+
+                                                    <li><a href="#" style="font-weight: bold">Permanent Enrollment : </a></li>
+                                                    <li><a href="../../WSgetBenDet.aspx" target="_blank">Show Benficiary Details</a></li>
+                                                    <li><a href="../../WSAlternateHouseHold.aspx" target="_blank">Show Benficiary Alternate Details</a></li>
+                                                    <li><a href="../../WSgetBenWorkDet.aspx" target="_blank">Show Allocation Details</a></li>
+                                                    <li><a href="../../WSgetBenWorkWagesDet.aspx" target="_blank">Show Wages Details</a></li>
+                                                    <li><a href="../../WSgetBenWorkWagesPaidDet.aspx" target="_blank">Show Wages Paid Details</a></li>
+
+                                                    <li><a href="#" style="font-weight: bold">Failure APIs : </a></li>
+                                                    <li><a href="../../WSgetBenFailureDet.aspx" target="_blank">Failed Benficiary Details</a></li>
+                                                    <li><a href="../../WSgetBenAlternateFailureDet.aspx" target="_blank">Failed Benficiary Alternate Details</a></li>
+                                                    <li><a href="../../WSgetAttendanceFailureDet.aspx" target="_blank">Failed Attendance Details</a></li>
+                                                    <li><a href="../../WSgetPaymentFailureDet.aspx" target="_blank">Failed Wages Payment Details</a></li>
+                                                    <li><a href="#" style="font-weight: bold">Deleted APIs : </a></li>
+                                                    <li><a href="../../WSgetBeneficiaryDeleteAPI.aspx" target="_blank">Deleted Benficiary Details</a></li>
+                                                    <li><a href="../../WSgetAllocationBeneficiaryDeleteAPI.aspx" target="_blank">Deleted Benficiary Allocation Details</a></li>
+                                                    <li><a href="../../WSgetAttendanceBeneficiaryDeleteAPI.aspx" target="_blank">Deleted Attendance Details</a></li>
+                                                    <li><a href="../../WSgetWageBeneficiaryDeleteAPI.aspx" target="_blank">Delted Wages request Details</a></li>
+
+                                                    <li><a href="../../WSgetAlternatenotregPaidAPI.aspx" target="_blank">Paid to Alternate not registered in MIS</a></li>
+
+                                                    <li><a href="../../WSgetTrasferedBenDet.aspx" target="_blank">Transfered Beneficiaries API</a></li>
+
+                                                    <li><a href="../../WSgetAlternatePaidDet.aspx" target="_blank">Paid to alternate API</a></li>
+                                                    <li><a href="../../WSgetHouseholdPhotosnotinMISDet.aspx" target="_blank">Household Photos not in MIS API</a></li>
+                                                    <li><a href="../../WSgetPhotosnotinMISAlternateoneDet.aspx" target="_blank">Alternate one Photos not in MIS API</a></li>
+                                                    <li><a href="../../WSgetPhotosnotinMISAlternatetwoDet.aspx" target="_blank">Alternate two Photos not in MIS API</a></li>
+                                                    <li><a href="../../WSgetHouseholdAlternatesonetwosameDet.aspx" target="_blank">Principal Household and alternate one and two same names in MIS</a></li>
+                                                    <li><a href="../../WSgetHouseholdAlternatesonesameDet.aspx" target="_blank">Principal Household and alternate one same names in MIS</a></li>
+                                                    <li><a href="../../WSgetHouseholdAlternatestwosameDet.aspx" target="_blank">Principal Household and two same names in MIS</a></li>
+                                                    <li><a href="../../WSgetAlternatesonetwosameDet.aspx" target="_blank">Alternate one and two same names in MIS</a></li>
+                                                    <li><a href="../../WSgetDuplicateNamesofDifferentHHNoDet.aspx" target="_blank">Duplicate HH Names with Differnt household number API</a></li>
+
+                                                    <%-- <li><a href="DeleteBenfAfterConfirmation.aspx" target="_blank">Delete Benficiary Allotment and Attendance and Wages</a></li>
+                                                        <li><a href="TransferBenfAfterConfirmation.aspx" target="_blank">Transfer Benficiary After Confirmation</a></li>--%>
+                                                </ul>
+                                            </li>
+
+
+
+
+                                            <li id="LiIp1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-bar-chart"></i>Dashboard</a>
+                                                <ul class="down_menu">
+                                                    <li id="IPDashboard" runat="server"><a href="IPDashboardNew.aspx">IP Dashboard</a></li>
+                                                    <li id="IPInvoiceDashboard" runat="server"><a href="IPDashboard.aspx">Invoice Dashboard</a></li>
+                                                    <li id="APIDashboard" runat="server"><a href="APIDashboard.aspx">API Dashboard</a></li>
+                                                </ul>
+                                            </li>
+                                            <li id="LiIp2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-star"></i>Masters</a>
+                                                <ul class="down_menu">
+                                                    <%--<li><a href="IPDetails.aspx">IP Details</a> </li>--%>
+                                                    <li><a href="IPProjectRegistration.aspx">Project Registration</a> </li>
+                                                    <li><a href="SearchMasterDetailsNew.aspx">Search Master ID's</a> </li>
+                                                    <li><a href="IPUserCreation.aspx">IP Staff Creation</a> </li>
+                                                </ul>
+                                            </li>
+
+                                            <li id="LiIp3" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Works</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="IPWOrkProposals.aspx">Work Proposals</a> </li>
+
+                                                    <li><a href="IPBeneficiaryRegistration.aspx">Beneficiary Enrollment</a> </li>
+                                                    <li><a href="IPJobCard.aspx">Job Card</a> </li>
+                                                    <li><a href="IPPrintCardID.aspx">Print ID Card</a> </li>
+                                                    <li><a href="PDCWorkProgress.aspx">Work Progress</a> </li>
+                                                    <li><a href="LIPWExports.aspx">LIPW Exports</a> </li>
+                                                </ul>
+                                            </li>
+                                            <li id="LiIp4" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-check-square-o"></i>Attendance</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="PDCHouseholdAttendance.aspx">Beneficiary Attendance</a> </li>
+                                                    <li><a href="pdchouseholdattendancedeleting.aspx">Attendance deleting</a> </li>
+                                                </ul>
+                                            </li>
+                                            <li id="LiIp5" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-pencil-square-o"></i>Wage Request</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="PDCHouseholdWagesApply.aspx">Apply for Wage Request LIPW</a> </li>
+                                                    <li><a href="PDCHouseholdWagesApplyDIS.aspx">Apply for Wage Request DIS</a> </li>
+                                                    <li><a href="WagesDasboardDrildown.aspx?Status=0">Wage Request Drafts</a> </li>
+                                                    <li><a href="WageDraftRejectedList.aspx">Rejected Wages</a> </li>
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiIp6" visible="false" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-comments"></i>Grievances and Safeguards</a>
+                                                <ul class="down_menu">
+                                                    <li id="nongbvMenu" visible="false" runat="server"><a href="NonGBVManagement.aspx?oType=1">NGBV Grievances</a></li>
+                                                    <li id="nongbvDashboardMenu" visible="false" runat="server"><a href="NonGBVDashboard.aspx">Non-GBV Dashboard</a></li>
+                                                    <li id="gbvNewMenu" runat="server" visible="false"><a href="GBVManagement.aspx?oType=1">GBV Grievances</a>
+                                                    </li>
+                                                    <li id="gbvNewMenuDashboard" runat="server" visible="false">
+                                                        <a href="GBVDashboard.aspx">GBV Dashboard</a>
+                                                    </li>
+                                                    <li id="GRMMenuDashboard" visible="false" runat="server"></li>
+                                                    <li id="grmReport" visible="false" runat="server"><a href="GrievancesDashboard.aspx">Grievances Status Report</a></li>
+                                                    <li id="grmImporting" visible="false" runat="server"><a href="GBVExcelImporting.aspx">Excel Importing</a></li>
+                                                </ul>
+                                            </li>
+                                                                                      
+
+                                            <li id="LiIp7" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-clipboard"></i>Materials Invoice</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="IPRaiseFunds.aspx">Invoice Requests</a> </li>
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiIp10" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-list"></i>Funds Utilization</a>
+                                                <ul class="down_menu">
+
+                                                    <li><a href="FundsUtilization.aspx">Funds Utilization</a> </li>
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiIp8" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-text"></i>General Reports</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="#" style="font-weight: bold">Beneficiary:</a> </li>
+                                                    <li><a href="frmbenfsearchrpt.aspx">Beneficiary Details</a> </li>
+                                                    <li><a href="frmMainBenDet.aspx">Search beneficiary</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Works:</a> </li>
+                                                    <li><a href="WorkwiseStatusreportNew.aspx">IP Work Wise Report</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Attendance:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptLatestModel.aspx">Beneficiary Attendance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptNewFormat.aspx">Beneficiary Attendance Report All</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attendance Report</a> </li>
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiIp11" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-print"></i>Invoice Prints</a>
+                                                <ul class="down_menu">
+
+                                                    <li><a href="WageAbstractReportsPaidAPI.aspx">Wage Paid and Invoice Print </a></li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                </ul>
+                                            </li>
+                                            <li id="LiIp9" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-powerpoint-o"></i>Payment Reports</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="#" style="font-weight: bold">Abstracts:</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_LIPW.aspx">Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_DIS.aspx">Wage Request Abstract DIS</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI.aspx">Unpaid Wage Request Abstract</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_LIPW.aspx">Unpaid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_DIS.aspx">Unpaid Wage Request Abstract DIS</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_LIPW.aspx">Paid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_DIS.aspx">Paid Wage Request Abstract DIS</a> </li>
+                                                    <li><a href="WageAbstractReports.aspx">Wage Paid Abstract</a></li>
+                                                    <li><a href="WageAbstractReports_LIPW.aspx">Wage Paid Abstract LIPW</a></li>
+                                                    <li><a href="WageAbstractReports_DIS.aspx">Wage Paid Abstract DIS</a></li>
+                                                    <li><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Detailed Reports:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiple.aspx">Multiple Wages Report</a> </li>
+                                                    <li><a href="WagePaidInvoiceCyclewise.aspx">Wage Paid Cycle wise Report </a></li>
+
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+
+
+                                                </ul>
+                                            </li>
+
+                                            <li id="LiTST1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Dashboard</a>
+                                                <ul class="down_menu">
+                                                    <li id="TSTDashboard" runat="server"><a href='Dashboard.aspx'><i></i>TST Dashboard</a></li>
+
+                                                    <li><a href="#" style="font-weight: bold">Wage Request:</a> </li>
+                                                    <li runat="server" id="trCo"><a href="AdminWageProcessDashboard.aspx?ids=Cordinator">Co-ordinator Dashboard</a> </li>
+                                                    <li runat="server" id="trSp"><a href="AdminWageProcessDashboard.aspx?ids=Specialist">Specialist Dashboard</a> </li>
+                                                    <li runat="server" id="trMa"><a href="AdminWageProcessDashboard.aspx?ids=Manager">Manager Dashboard</a> </li>
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiTST2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-star"></i>Masters</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="TSTIPregistration.aspx">Implementation Partner</a> </li>
+                                                    <li><a href="TSTCountyAdmistratorReg.aspx">County Administration</a> </li>
+                                                    <li><a href="TSTPDCReg.aspx">Payam / Block Development Committee</a> </li>
+                                                    <li><a href="TSTBDCReg.aspx">Boma/Quarter Council Development Committee</a> </li>
+                                                    <li><a href="WageRate.aspx">Master for Wage Rate</a> </li>
+                                                    <li><a href="AddGroup.aspx">Add Group</a></li>
+                                                    <li><a href="IPUserCreation.aspx">IP Staff Creation</a></li>
+
+                                                </ul>
+                                            </li>
+
+                                            <li id="LiTST3" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-check"></i>Approvals</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="IPWOrkProposals.aspx">Work Approvals</a> </li>
+                                                    <li><a href="IPBeneficiaryRegistration.aspx">Beneficiary Enrollment</a> </li>
+
+                                                    <%-- <li><a href="TSTFinancialApproval.aspx">Invoice Approval</a> </li>--%>
+                                                </ul>
+                                            </li>
+                                            <li id="LiTST4" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-trash"></i>Deletions</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="IPBeneficiaryRegistration.aspx">Beneficiary Deletion</a> </li>
+                                                    <li><a href="WageInvoices.aspx">Delete Wage Attachments </a></li>
+                                                    <li><a href="frmBenDetTrans.aspx">Deleted Benficiary Details</a></li>
+                                                    <li><a href="frmDeletedAllocatedBenf.aspx">Deleted Benficiary Allocation Details</a></li>
+                                                    <li><a href="frmDeletedAttendanceBen.aspx">Deleted Attendance Details</a></li>
+                                                    <li><a href="frmdeletedunpaidtransrpt.aspx">Delted Wages request Details</a></li>
+
+                                                </ul>
+                                            </li>
+                                              <li id="LiTST5" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Works</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="LIPWExports.aspx">LIPW Exports</a> </li>
+                                                </ul>
+                                            </li>
+
+                                            <li id="LiTST6" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-text"></i>General Reports</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="#" style="font-weight: bold">Beneficiary:</a> </li>
+
+                                                    <li><a href="frmbenfsearchrpt.aspx">Beneficiary Details</a> </li>
+                                                    <li><a href="frmMainBenDet.aspx">Search beneficiary</a> </li>
+                                                    <li><a href="frmbenficiarysearchFullrpt.aspx">Beneficiary Details with Alternates</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Works:</a> </li>
+                                                    <li><a href="WorkwiseStatusreportNew.aspx">IP Work Wise Report</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Attendance:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptLatestModel.aspx">Beneficiary Attendance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptNewFormat.aspx">Beneficiary Attendance Report All</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attendance Report</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Grievance:</a> </li>
+                                                    <li><a href="GrievanceReport.aspx">Grievance Report</a></li>
+                                                    <li><a href="#" style="font-weight: bold">ESMP:</a> </li>
+                                                    <li><a href="ESMPReport.aspx">ESMP Report </a></li>
+                                                    <li><a href="#" style="font-weight: bold">Fund Disbursement:</a> </li>
+                                                    <li><a href="MonthlyIPFundsDisbursementReport.aspx">Monthly Report</a></li>
+                                                    <li><a href="TSTPhysicalMonitoring.aspx">Field Monitoring</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Activity Data:</a> </li>
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+                                                    <li><a href="frmBenDetTrans.aspx">Deleted Beneficiaries </a></li>
+
+                                                    <li><a href="frmbenftranferdet.aspx">Transfer Beneficiaries </a></li>
+                                                    <li><a href="frmNophotosList.aspx">Beneficiary and Alternate Photos not in MIS</a> </li>
+
+
+                                                </ul>
+                                            </li>
+
+                                            <li id="LiTST7" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-powerpoint-o"></i>Payment Reports</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="#" style="font-weight: bold">Abstracts:</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_LIPW.aspx">Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_DIS.aspx">Wage Request Abstract DIS</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI.aspx">Unpaid Wage Request Abstract</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_LIPW.aspx">Unpaid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_DIS.aspx">Unpaid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_LIPW.aspx">Paid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_DIS.aspx">Paid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li>
+                                                    <li><a href="WageAbstractReports.aspx">Wage Paid Abstract </a></li>
+                                                    <li><a href="WageAbstractReports_LIPW.aspx">Wage Paid Abstract LIPW</a></li>
+                                                    <li><a href="WageAbstractReports_DIS.aspx">Wage Paid Abstract DIS</a></li>
+
+                                                    <li><a href="WageInvoiceAbstractAPIWithDates.aspx">Wage Cycle Date wise Request Abstract </a></li>
+                                                    <li><a href="#" style="font-weight: bold">Detailed:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PaymentCyclewisePaidReport.aspx">Payment Cycle Date wise Paid details from PayConnect </a></li>
+                                                    <li><a href="frmAltenatesPaidrpt.aspx">Alternate Paid Report</a> </li>
+                                                    <li><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li>
+                                                    <li><a href="PaymentCyclewisePaidReportAll.aspx">Payment Cycle Date wise All Paid details </a></li>
+                                                    <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attandance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiple.aspx">Multiple Wages Report</a> </li>
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiTST8" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-print"></i>Invoice Prints</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="WageAbstractReportsPaidAPI.aspx">Wage Paid and Invoice Print </a></li>
+                                                    <li><a href="InvoicePrintView.aspx">Payment Cycle wise Invoice Print </a></li>
+
+
+                                                    <%-- <li><a href="WagePaidInvoiceCyclewise.aspx">Wage Paid Wage Cycle wise Report </a> </li> --%>
+                                                    <%-- <li><a href="BomaPaidInvoiceCyclewise.aspx">Boma wise Wage Cycle Abstract </a> </li> --%>
+                                                </ul>
+                                            </li>
+
+                                            <li id="LiCO1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Dashboard</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="WageProcessDashboard.aspx">Wages Dashboard</a> </li>
+                                                    <li><a href="CoordinatorInvoiceDashboard.aspx">Invoice Dashboard</a> </li>
+
+
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiCO2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Review Invoice</a>
+                                                <ul class="down_menu">
+
+                                                    <li><a href="Review_Invoice.aspx">Review Invoice</a> </li>
+
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiSpeccialist1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Dashboard</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="WageProcessDashboard.aspx">Wages Dashboard</a> </li>
+                                                    <li><a href="SpecialistInvoiceDashboard.aspx">Invoice Dashboard</a> </li>
+
+
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiSpeccialist2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Verify Invoice</a>
+                                                <ul class="down_menu">
+
+                                                    <li><a href="Verify_Invoice.aspx">Verify Invoice</a> </li>
+
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiManger1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Dashboard</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="WageProcessDashboard.aspx">Wages Dashboard</a> </li>
+                                                    <li><a href="ManagerInvoiceDashboard.aspx">Invoice Dashboard</a> </li>
+
+
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiManger2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Approve Invoice</a>
+                                                <ul class="down_menu">
+
+                                                    <li><a href="ApproveInvoice.aspx">Approve Invoice</a> </li>
+
+
+
+                                                </ul>
+                                            </li>
+
+
+                                            <li id="LiReviewVerify" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Reports</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="#" style="font-weight: bold">Abstracts:</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_LIPW.aspx">Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_DIS.aspx">Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI.aspx">Unpaid Wage Request Abstract</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_LIPW.aspx">Unpaid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_DIS.aspx">Unpaid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_LIPW.aspx">Paid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_DIS.aspx">Paid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageAbstractReports.aspx">Wage Paid Abstract </a></li>
+                                                    <li><a href="WageAbstractReports_LIPW.aspx">Wage Paid Abstract LIPW</a></li>
+                                                    <li><a href="WageAbstractReports_DIS.aspx">Wage Paid Abstract DIS</a></li>
+
+                                                    <li><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Detailed:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptLatestModel.aspx">Beneficiary Attendance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptLatestModel.aspx">Beneficiary Attendance Report</a> </li>
+
+                                                </ul>
+                                            </li>
+
+                                            <li id="LiPA1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>PA Dashboard</a>
+                                                <ul>
+                                                    <li><a href="WageProcessDashboard.aspx">Dashboard</a> </li>
+
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiPA2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-print"></i>Invoice Prints</a>
+                                                <ul>
+                                                    <li><a href="WageAbstractReportsPaidAPI.aspx">Wage Paid and Invoice Print </a></li>
+
+                                                    <li><a href="InvoicePrintView.aspx">Payment Cycle wise Invoice Print </a></li>
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiPA8" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-text"></i>General Reports</a>
+                                                <ul>
+                                                    <li><a href="#" style="font-weight: bold">Beneficiary:</a> </li>
+
+                                                    <li><a href="frmbenfsearchrpt.aspx">Beneficiary Details</a> </li>
+                                                    <li><a href="frmMainBenDet.aspx">Search beneficiary</a> </li>
+                                                    <li><a href="frmbenficiarysearchFullrpt.aspx">Beneficiary Details with Alternates</a> </li>
+
+                                                    <li><a href="#" style="font-weight: bold">Attendance:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptLatestModel.aspx">Beneficiary Attendance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptNewFormat.aspx">Beneficiary Attendance Report All</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attendance Report</a> </li>
+
+                                                    <li><a href="#" style="font-weight: bold">Activity Data:</a> </li>
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+                                                    <li><a href="frmBenDetTrans.aspx">Deleted Beneficiaries </a></li>
+
+                                                    <li><a href="frmbenftranferdet.aspx">Transfer Beneficiaries </a></li>
+                                                    <li><a href="frmNophotosList.aspx">Beneficiary and Alternate Photos not in MIS</a> </li>
+
+
+
+
+                                                </ul>
+                                            </li>
+
+
+                                            <li id="LiPA3" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Reports</a>
+                                                <ul>
+
+                                                    <li><a href="#" style="font-weight: bold">Abstracts:</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_LIPW.aspx">Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_DIS.aspx">Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI.aspx">Unpaid Wage Request Abstract</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_LIPW.aspx">Unpaid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_DIS.aspx">Unpaid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_LIPW.aspx">Paid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_DIS.aspx">Paid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageAbstractReports.aspx">Wage Paid Abstract </a></li>
+                                                    <li><a href="WageAbstractReports_LIPW.aspx">Wage Paid Abstract LIPW</a></li>
+                                                    <li><a href="WageAbstractReports_DIS.aspx">Wage Paid Abstract DIS</a></li>
+
+                                                    <li><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIWithDates.aspx">Wage Cycle Date wise Request Abstract </a></li>
+
+
+                                                    <li><a href="#" style="font-weight: bold">Detailed:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PaymentCyclewisePaidReport.aspx">Payment Cycle Date wise Paid details from PayConnect </a></li>
+                                                    <li><a href="frmAltenatesPaidrpt.aspx">Alternate Paid Report</a> </li>
+                                                    <li><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li>
+                                                    <li><a href="PaymentCyclewisePaidReportAll.aspx">Payment Cycle Date wise All Paid details </a></li>
+                                                    <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attandance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiple.aspx">Multiple Wages Report</a> </li>
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+
+                                                </ul>
+                                            </li>
+
+
+                                            <li id="LiWB4" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-powerpoint-o"></i>Payment Reports</a>
+                                                <ul>
+                                                    <li><a href="#" style="font-weight: bold">Abstracts:</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_LIPW.aspx">Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_DIS.aspx">Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI.aspx">Unpaid Wage Request Abstract</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_LIPW.aspx">Unpaid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_DIS.aspx">Unpaid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_LIPW.aspx">Paid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_DIS.aspx">Paid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageAbstractReports.aspx">Wage Paid Abstract </a></li>
+                                                    <li><a href="WageAbstractReports_LIPW.aspx">Wage Paid Abstract LIPW</a></li>
+                                                    <li><a href="WageAbstractReports_DIS.aspx">Wage Paid Abstract DIS</a></li>
+
+                                                    <li><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIWithDates.aspx">Wage Cycle Date wise Request Abstract </a></li>
+                                                    <li><a href="#" style="font-weight: bold">Detailed:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PaymentCyclewisePaidReport.aspx">Payment Cycle Date wise Paid details from PayConnect </a></li>
+                                                    <li><a href="frmAltenatesPaidrpt.aspx">Alternate Paid Report</a> </li>
+                                                    <li><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li>
+                                                    <li><a href="PaymentCyclewisePaidReportAll.aspx">Payment Cycle Date wise All Paid details </a></li>
+                                                    <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attandance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiple.aspx">Multiple Wages Report</a> </li>
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+
+                                                </ul>
+                                            </li>
+
+
+
+                                            <li id="LiWB2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-print"></i>Invoice Prints</a>
+                                                <ul>
+                                                    <li><a href="WageAbstractReportsPaidAPI.aspx">Wage Paid and Invoice Print </a></li>
+                                                    <li><a href="InvoicePrintView.aspx">Payment Cycle wise Invoice Print </a></li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiWB1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>WB Dashboard</a>
+                                                <ul>
+                                                    <li><a href="WBWageProcessDashboard.aspx">WB Process Dashboard</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                    z                                
+                                                                            
+                                            
+                                                </ul>
+                                            </li>
+
+                                            <li id="LiWB3" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-text"></i>General Reports</a>
+                                                <ul>
+                                                    <li><a href="#" style="font-weight: bold">Beneficiary:</a> </li>
+
+                                                    <li><a href="frmbenfsearchrpt.aspx">Beneficiary Details</a> </li>
+                                                    <li><a href="frmMainBenDet.aspx">Search beneficiary</a> </li>
+                                                    <li><a href="frmbenficiarysearchFullrpt.aspx">Beneficiary Details with Alternates</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Works:</a> </li>
+                                                    <li><a href="WorkwiseStatusreportNew.aspx">IP Work Wise Report</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Attendance:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptLatestModel.aspx">Beneficiary Attendance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptNewFormat.aspx">Beneficiary Attendance Report All</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attendance Report</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Grievance:</a> </li>
+                                                    <li><a href="GrievanceReport.aspx">Grievance Report</a></li>
+                                                    <li><a href="#" style="font-weight: bold">ESMP:</a> </li>
+                                                    <li><a href="ESMPReport.aspx">ESMP Report </a></li>
+                                                    <li><a href="#" style="font-weight: bold">Fund Disbursement:</a> </li>
+                                                    <li><a href="MonthlyIPFundsDisbursementReport.aspx">Monthly Report</a></li>
+                                                    <li><a href="TSTPhysicalMonitoring.aspx">Field Monitoring</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Activity Data:</a> </li>
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+                                                    <li><a href="frmBenDetTrans.aspx">Deleted Beneficiaries </a></li>
+
+                                                    <li><a href="frmbenftranferdet.aspx">Transfer Beneficiaries </a></li>
+                                                    <li><a href="frmNophotosList.aspx">Beneficiary and Alternate Photos not in MIS</a> </li>
+
+
+                                                </ul>
+                                            </li>
+
+                                            <li id="PayConnect2" class='has-sub' runat="server" visible="false"><a href='#'><i class="fa fa-fw fa-table"></i>Reports</a>
+                                                <ul>
+
+                                                    <li><a href="#" style="font-weight: bold">Deleted Data Report : </a></li>
+                                                    <li><a href="frmBenDetTrans.aspx">Deleted Benficiary Details</a></li>
+                                                    <li><a href="frmDeletedAllocatedBenf.aspx">Deleted Benficiary Allocation Details</a></li>
+                                                    <li><a href="frmDeletedAttendanceBen.aspx">Deleted Attendance Details</a></li>
+                                                    <li><a href="frmdeletedunpaidtransrpt.aspx">Delted Wages request Details</a></li>
+
+                                                    <li><a href="#" style="font-weight: bold">API Failure Report : </a></li>
+                                                    <li><a href="rptBeneficiaryFailure.aspx">Failure Benficiary Details</a></li>
+                                                    <li><a href="rptBeneficiaryFailureAlt.aspx">Failure Alternate Details</a></li>
+                                                    <li><a href="rptAttendanceFailure.aspx">Failure Attendance Details</a></li>
+                                                    <li><a href="rptPaymentFailure.aspx">Faiure Wages Payment Details</a></li>
+                                                    <li><a href="frmNophotosList.aspx">Beneficiary and Alternate Photos not in MIS</a> </li>
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+                                                    <li><a href="frmbenftranferdet.aspx">Transfered Beneficiaries </a></li>
+
+                                                    <%-- <li><a href="DeleteBenfAfterConfirmation.aspx" target="_blank">Delete Benficiary Allotment and Attendance and Wages</a></li>
+                                                        <li><a href="TransferBenfAfterConfirmation.aspx" target="_blank">Transfer Benficiary After Confirmation</a></li>--%>
+                                                </ul>
+                                            </li>
+
+
+
+                                            <li id="PayConnect1" class='has-sub' runat="server" visible="false"><a href='#'><i class="fa fa-fw fa-table"></i>APIs</a>
+                                                <ul>
+
+                                                    <li><a href="#" style="font-weight: bold">To PayConnect : </a></li>
+                                                    <li><a href="#" style="font-weight: bold">Masters : </a></li>
+                                                    <li><a href="../../WSgetIPsDet.aspx" target="_blank">IPs</a></li>
+                                                    <li><a href="../../WSgetMastersDet.aspx" target="_blank">Boma,Payam,County,State Masters</a></li>
+
+                                                    <li><a href="#" style="font-weight: bold">Pre Enrollment : </a></li>
+                                                    <li><a href="../../WSgetPreEnrolledBenDet.aspx" target="_blank">Show PreEnrolled Benficiary</a></li>
+                                                    <li><a href="../../WSPreEnrolledAlternateHouseHold.aspx" target="_blank">Show PreEnrolled Alternate Details</a></li>
+
+
+
+                                                    <li><a href="#" style="font-weight: bold">Permanent Enrollment : </a></li>
+                                                    <li><a href="../../WSgetBenDet.aspx" target="_blank">Show Benficiary Details</a></li>
+                                                    <li><a href="../../WSAlternateHouseHold.aspx" target="_blank">Show Benficiary Alternate Details</a></li>
+                                                    <li><a href="../../WSgetBenWorkDet.aspx" target="_blank">Show Allocation Details</a></li>
+                                                    <li><a href="../../WSgetBenWorkWagesDet.aspx" target="_blank">Show Wages Details</a></li>
+                                                    <li><a href="../../WSgetBenWorkWagesPaidDet.aspx" target="_blank">Show Wages Paid Details</a></li>
+
+                                                    <li><a href="#" style="font-weight: bold">Failure APIs : </a></li>
+                                                    <li><a href="../../WSgetBenFailureDet.aspx" target="_blank">Failed Benficiary Details</a></li>
+                                                    <li><a href="../../WSgetBenAlternateFailureDet.aspx" target="_blank">Failed Benficiary Alternate Details</a></li>
+                                                    <li><a href="../../WSgetAttendanceFailureDet.aspx" target="_blank">Failed Attendance Details</a></li>
+                                                    <li><a href="../../WSgetPaymentFailureDet.aspx" target="_blank">Failed Wages Payment Details</a></li>
+
+                                                    <li><a href="#" style="font-weight: bold">Delete APIs : </a></li>
+                                                    <li><a href="../../WSgetBeneficiaryDeleteAPI.aspx" target="_blank">Deleted Benficiary Details</a></li>
+                                                    <li><a href="../../WSgetAllocationBeneficiaryDeleteAPI.aspx" target="_blank">Deleted Benficiary Allocation Details</a></li>
+                                                    <li><a href="../../WSgetAttendanceBeneficiaryDeleteAPI.aspx" target="_blank">Deleted Attendance Details</a></li>
+                                                    <li><a href="../../WSgetWageBeneficiaryDeleteAPI.aspx" target="_blank">Delted Wages request Details</a></li>
+
+                                                    <li><a href="../../WSgetAlternatenotregPaidAPI.aspx" target="_blank">Paid to Alternate not registered in MIS</a></li>
+
+                                                    <li><a href="../../WSgetTrasferedBenDet.aspx" target="_blank">Transfered Beneficiaries API</a></li>
+
+                                                    <li><a href="../../WSgetAlternatePaidDet.aspx" target="_blank">Paid to alternate API</a></li>
+                                                    <li><a href="../../WSgetHouseholdPhotosnotinMISDet.aspx" target="_blank">Household Photos not in MIS API</a></li>
+                                                    <li><a href="../../WSgetPhotosnotinMISAlternateoneDet.aspx" target="_blank">Alternate one Photos not in MIS API</a></li>
+                                                    <li><a href="../../WSgetPhotosnotinMISAlternatetwoDet.aspx" target="_blank">Alternate two Photos not in MIS API</a></li>
+                                                    <li><a href="../../WSgetHouseholdAlternatesonetwosameDet.aspx" target="_blank">Principal Household and alternate one and two same names in MIS</a></li>
+                                                    <li><a href="../../WSgetHouseholdAlternatesonesameDet.aspx" target="_blank">Principal Household and alternate one same names in MIS</a></li>
+                                                    <li><a href="../../WSgetHouseholdAlternatestwosameDet.aspx" target="_blank">Principal Household and two same names in MIS</a></li>
+                                                    <li><a href="../../WSgetAlternatesonetwosameDet.aspx" target="_blank">Alternate one and two same names in MIS</a></li>
+                                                    <li><a href="../../WSgetDuplicateNamesofDifferentHHNoDet.aspx" target="_blank">Duplicate HH Names with Differnt household number API</a></li>
+
+
+                                                    <%-- <li><a href="DeleteBenfAfterConfirmation.aspx" target="_blank">Delete Benficiary Allotment and Attendance and Wages</a></li>
+                                                        <li><a href="TransferBenfAfterConfirmation.aspx" target="_blank">Transfer Benficiary After Confirmation</a></li>--%>
+                                                </ul>
+                                            </li>
+
+
+
+                                            <li id="LiAlpha1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-powerpoint-o"></i>Payment Reports</a>
+                                                <ul>
+                                                    <li><a href="#" style="font-weight: bold">Abstracts:</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_LIPW.aspx">Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPI_DIS.aspx">Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI.aspx">Unpaid Wage Request Abstract</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_LIPW.aspx">Unpaid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_DIS.aspx">Unpaid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_LIPW.aspx">Paid Wage Request Abstract LIPW</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIPaid_DIS.aspx">Paid Wage Request Abstract DIS</a> </li>
+
+                                                    <li><a href="WageAbstractReports.aspx">Wage Paid Abstract </a></li>
+                                                    <li><a href="WageAbstractReports_LIPW.aspx">Wage Paid Abstract LIPW</a></li>
+                                                    <li><a href="WageAbstractReports_DIS.aspx">Wage Paid Abstract DIS</a></li>
+
+                                                    <li><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li>
+                                                    <li><a href="WageInvoiceAbstractAPIWithDates.aspx">Wage Cycle Date wise Request Abstract </a></li>
+                                                    <li><a href="#" style="font-weight: bold">Detailed:</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages Details from PayConnect API</a> </li>
+                                                    <li><a href="PaymentCyclewisePaidReport.aspx">Payment Cycle Date wise Paid details from PayConnect </a></li>
+                                                    <li><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li>
+                                                    <li><a href="PaymentCyclewisePaidReportAll.aspx">Payment Cycle Date wise All Paid details </a></li>
+                                                    <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attandance Report</a> </li>
+                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiple.aspx">Multiple Wages Report</a> </li>
+                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+
+                                                </ul>
+                                            </li>
+                                            <li id="LiAlpha2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-print"></i>Invoice Prints</a>
+                                                <ul>
+                                                    <li><a href="WageAbstractReportsPaidAPI.aspx">Wage Paid and Invoice Print </a></li>
+                                                    <li><a href="InvoicePrintView.aspx">Payment Cycle wise Invoice Print </a></li>
+
+
+                                                    <%-- <li><a href="WagePaidInvoiceCyclewise.aspx">Wage Paid Wage Cycle wise Report </a> </li> --%>
+                                                    <%-- <li><a href="BomaPaidInvoiceCyclewise.aspx">Boma wise Wage Cycle Abstract </a> </li> --%>
+                                                </ul>
+                                            </li>
+
+
+
+
+
+
+                                            <li id="Li" runat="server" visible="false" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Admin Activities</a>
+                                                <ul>
+                                                    <li><a href="#" style="font-weight: bold">Deletion Activities:</a> </li>
+                                                    <li><a href="frmBenDeletionNew.aspx?s=4">Beneficiary Wage Deletion</a> </li>
+                                                    <li><a href="frmBenDeletionNew.aspx?s=3">Beneficiary Attendance Deletion</a> </li>
+                                                    <li><a href="frmBenDeletionNew.aspx?s=2">Beneficiary Allocation Deletion</a> </li>
+                                                    <li><a href="frmBenDeletionNew.aspx?s=1">Beneficiary Deletion</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Deletion Reports:</a> </li>
+                                                    <li><a href="frmdeletedunpaidtransrpt.aspx">Wage Deletion Report</a> </li>
+                                                    <li><a href="frmDeletedAttendanceBen.aspx">Attendance Deletion Report</a> </li>
+                                                    <li><a href="frmDeletedAllocatedBenf.aspx">Allocation Deletion Report</a> </li>
+                                                    <li><a href="frmBenDetTrans.aspx">Deleted Beneficiaries Report </a></li>
+                                                    <li><a href="#" style="font-weight: bold">Wage Duplicate Verification:</a> </li>
+                                                    <li><a href="frmDuplicateWagesverif.aspx">Wages Duplicate Verification Report </a>
+                                                    </li>
+                                                    <li><a href="#" style="font-weight: bold">Update Alternates:</a> </li>
+                                                    <li><a href="UpdationofAlternate.aspx">Update Alternates </a></li>
+                                                    <li><a href="frmAlternateModfyTotalrpt.aspx">Updated Alternates Report </a></li>
+                                                    <li><a href="frmAlternateExistUpdrpt.aspx">Updated Alternates Existing Transactions
+                                                    </a></li>
+                                                </ul>
+                                            </li>
+
+
+                                            <li id="BDC" runat="server" visible="false" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>BDC</a>
+                                                <ul>
+                                                    <li><a href="BDCMobilizationReg.aspx">Mobilization</a> </li>
+                                                </ul>
+                                            </li>
+                                            <li id="PDC" runat="server" visible="false" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>PDC</a>
+                                                <ul>
+                                                    <li><a href="PublicWorksApproval.aspx">Projects Sanctioned</a> </li>
+                                                    <li><a href="PDCWorkProgress.aspx">Work Progress</a> </li>
+                                                    <li><a href="PDCHouseholdAttendance.aspx">Attendance Tracking</a> </li>
+                                                    <li><a href="PDCHouseholdWages.aspx">Wages Payment</a> </li>
+                                                </ul>
+                                            </li>
+                                             <li id="liEnvSpec" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-check"></i>Approvals</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="IPWOrkProposalsDraft.aspx">Work Approvals</a> </li>
+                                                    
+                                                </ul>
+                                            </li>
+                                            <li id="Li1" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-question-circle"></i>Helpdesk</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="Helpdesk.aspx">Helpdesk Registration</a> </li>
+                                                    <li><a href="viewHelpdesk.aspx">Status </a></li>
+                                                    <li><a href="HDPiaRpt.aspx">Summary </a></li>
+                                                </ul>
+                                            </li>
+                                            <%-- <li id="pnlreport" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-dashboard">
+                                        </i>Reports</a>
+                                            <ul>
+                                                <li><a href="Dashboard.aspx">Dashboard</a> </li>
+                                                <li><a href="IPwiseStatus.aspx">IP Wise Report</a> </li>
+                                                <li><a href="WorkwiseStatusreportNew.aspx">IP Work Wise Report</a> </li>
+                                                <li><a href="CountyWiseReportNew.aspx">Country Wise Report</a> </li>
+                                                <li><a href="PayamWiseReportNew.aspx">Payam Wise Report</a> </li>
+                                                <li><a href="BomaWiseReportNew.aspx">Boma Wise Report</a> </li>
+                                                <li><a href="TypesOfWorksrReport.aspx">Types Of Works Report</a> </li>
+                                                <li><a href="FundDisbursedReports.aspx">Fund Disbursed Reports</a> </li>
+                                                <li><a href="WagePaymentReport.aspx">Wage Payment Report</a> </li>
+                                                <li><a href="FundDisbursedReportsByTrans.aspx">Ip wise Fund Disbursed</a> </li>
+                                                <li><a href="WagePaymentGraphReport.aspx" target="_blank">Graph Report</a> </li>
+                                                 <li><a href="WagePaymentGraphReport.aspx" target="_blank">Graph Report</a> </li>
+                                                  <li><a href="PDCHouseholdAttendanceRptMultiple.aspx">Multiple Attendance Report</a> </li>
+                                                              <li><a href="PDCHouseholdAttendanceRptWagesMultiple.aspx">Multiple Wages Report</a> </li>
+                                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Total Wages from PayConnect API</a> </li> 
+                                                                     <li><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages from PayConnect API</a> </li>
+                                                                       <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages from PayConnect API</a> </li>
+                                                                         <li><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
+                                                                           <li><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li> 
+                                                                           <li><a href="WageAbstractReports.aspx">Wage Paid Abstract </a> </li> 
+                                                                            <li><a href="WageAbstractReportsPaidAPI.aspx">Wage Paid and Invoice Print </a> </li> 
+                                                                               <li><a href="WagePaidInvoiceCyclewise.aspx">Wage Paid Cycle wise Report </a> </li> 
+                                                                                  <li><a href="ESMPReport.aspx">ESMP Report </a> </li> 
+                                                                                    <li><a href="GrievanceReport.aspx">Grievance Report</a></li>
+                                                                                        <li><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li> 
+                                                                               
+                                                                             <li><a href="frmbenfsearchrpt.aspx">Beneficiary Details</a> </li>       
+
+                                 
+                                            </ul>
+                                        </li>--%>
+                                            <%-- <li><a href='frmChangePassword.aspx'><i class="fa fa-fw fa-lock"></i>Change Password</a></li>--%>
+                                            <li><a href='../../frmuserlogin.aspx'><i class="fa fa-fw fa-sign-out"></i>Log out</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                            <td align="left" style="padding: 10px; margin: 10px; vertical-align: top;"
+                                bgcolor="White" valign="top">
+                                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                                </asp:ContentPlaceHolder>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128375426-1"></script>
+                    <script>
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag() { dataLayer.push(arguments); }
+                        gtag('js', new Date());
+
+                        gtag('config', 'UA-128375426-1');
+                    </script>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <!-- Piwik -->
+    <!-- Matomo -->
+    <script type="text/javascript">
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '143']);
+            _paq.push(['setUserId', '<%= Username()  %>']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript'; g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+
+    <noscript>
+        <p>
+            <img src="/" style="border: 0;" alt="" />
+        </p>
+    </noscript>
+    <!-- End Piwik Code -->
+
+
+</body>
+</html>

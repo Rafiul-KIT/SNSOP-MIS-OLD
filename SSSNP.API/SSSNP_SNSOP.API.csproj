@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>f7a86667-2cd0-4e35-ad8c-603a25d89bb5</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Typemappers\APITestTypeMapper.xml" />
+    <None Remove="Typemappers\BeneficiaryAPITypeMapper.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Typemappers\APITestTypeMapper.xml" />
+    <EmbeddedResource Include="Typemappers\BeneficiaryAPITypeMapper.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SSSNP.Core\SSSNP_SNSOP.Core.csproj" />
+    <ProjectReference Include="..\SSSNP.Entity\SSSNP_SNSOP.Entity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CSDS.Core.Framework">
+      <HintPath>..\Libraries\CSDS.Core.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

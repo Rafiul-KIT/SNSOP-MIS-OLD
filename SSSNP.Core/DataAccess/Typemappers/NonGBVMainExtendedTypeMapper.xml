@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="NonGBVMainID"></property>
+		<property name="Date"></property>
+		<property name="SerialNumber"></property>
+		<property name="StateID"></property>
+		<property name="CountyID"></property>
+		<property name="PayamID"></property>
+		<property name="BomaID"></property>
+		<property name="DateOfComplaint"></property>
+		<property name="ReportingChannel"></property>
+		<property name="ReportingChannelOther"></property>
+		<property name="ComplainantName"></property>
+		<property name="ContactNumber"></property>
+		<property name="PhysicalAddress"></property>
+		<property name="Gender"></property>
+		<property name="Age"></property>
+		<property name="SSSNPBeneficiary"></property>
+		<property name="TypeOfGrievanceID"></property>
+		<property name="TypeOfGrievanceDetailID"></property>
+		<property name="TypeOfGrievanceOther"></property>
+		<property name="Status"></property>
+		<property name="StatusLastModificationDate"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+		<property name="Expired"></property>
+		<property name="StateName"></property>
+		<property name="CountieName"></property>
+		<property name="PayamName"></property>
+		<property name="BomaName"></property>
+		<property name="StatusName"></property>
+
+	</properties>
+
+	<operations>
+		<operation name="GetNonGBVMainExtended">
+			<query>
+				<![CDATA[
+				SELECT distinct M.[NonGBVMainID]
+				,M.[Date]
+				,M.[SerialNumber]
+				,M.[StateID]
+				,M.[CountyID]
+				,M.[PayamID]
+				,M.[BomaID]
+				,M.[DateOfComplaint]
+				,M.[ReportingChannel]
+				,M.[ComplainantName]
+				,M.[SSSNPBeneficiary]
+				,M.[TypeOfGrievanceID]
+				,M.[TypeOfGrievanceDetailID]
+				,M.[TypeOfGrievanceOther]
+				,M.[Status]
+				,M.[StatusLastModificationDate]
+				,CASE
+				WHEN  (dateadd(DAY,14, [Date]) < getdate() and m.Status <> 5) then '1'
+					else  '0'
+				END as Expired,
+				s.StateName ,
+				c.CountieName ,
+				p.PayamName,
+				b.BomaName,
+				stat.StatusName				
+
+				FROM [NonGBVMain] as M left join NonGBVDetails as d on (d.NonGBVMainID = m.NonGBVMainID and d.Deleted = 0)
+						inner join tm_States as S on s.intStateid = m.StateID 
+						inner join tm_Counties as c on c.intCountieid = m.CountyID 
+						inner join tm_Payams as P on p.intPayamid = m.PayamID 
+						inner join tm_Bomas as B on b.intBomasid = m.BomaID 
+						inner join LK_GBVStatus as Stat on (stat.StatusID = m.Status  and stat.NonGBVStatus = 1)
+				WHERE M.Deleted = 0
+				
+				]]>
+				
+			</query>
+		</operation>
+		
+	</operations>
+
+</typemappers>

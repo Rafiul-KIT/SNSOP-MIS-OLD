@@ -1,0 +1,28 @@
+﻿CREATE TABLE [dbo].[EnvironmentManagmentPlan] (
+    [intID]                        INT           IDENTITY (1, 1) NOT NULL,
+    [intIP]                        VARCHAR (50)  NULL,
+    [IPName]                       VARCHAR (200) NULL,
+    [projectID]                    VARCHAR (10)  NULL,
+    [projectName]                  VARCHAR (200) NULL,
+    [StateID]                      VARCHAR (10)  NULL,
+    [StateName]                    VARCHAR (200) NULL,
+    [CountryID]                    VARCHAR (10)  NULL,
+    [CountryName]                  VARCHAR (200) NULL,
+    [PayamId]                      VARCHAR (10)  NULL,
+    [PayamName]                    VARCHAR (200) NULL,
+    [BomaId]                       VARCHAR (10)  NULL,
+    [BomaName]                     VARCHAR (200) NULL,
+    [WorkCodeID]                   VARCHAR (8)   NULL,
+    [workCodeName]                 VARCHAR (200) NULL,
+    [EnvironmentSocialImpact]      VARCHAR (500) NULL,
+    [ProposedMitigationMeasure]    VARCHAR (500) NULL,
+    [MitigationMeasureImplemented] VARCHAR (500) NULL,
+    [PerformanceIndicators]        VARCHAR (500) NULL,
+    [FilePath]                     VARCHAR (200) NULL,
+    [FileName]                     VARCHAR (200) NULL,
+    [Created_by]                   INT           CONSTRAINT [DF_EnvironmentManagmentPlan_Created_by] DEFAULT ((1000)) NULL,
+    [Created_dt]                   DATETIME      CONSTRAINT [DF_EnvironmentManagmentPlan_Created_dt] DEFAULT (getdate()) NULL,
+    [Modified_by]                  INT           NULL,
+    [Modified_dt]                  DATETIME      NULL
+);
+

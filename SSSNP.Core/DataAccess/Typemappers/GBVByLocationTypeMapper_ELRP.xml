@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="StateName"></property>
+		<property name="CountyName"></property>
+		<property name="PayamName"></property>
+		<property name="BomaName"></property>
+		<property name="GRsCounter"></property>
+	</properties>
+
+	<operations>
+		<operation name="GetGBVDashboardByLocation_ELRP">
+			<query>
+				SELECt StateName as StateName
+				,CountieName as CountyName
+				,PayamName as PayamName
+				,BomaName as BomaName
+				, COUNT(gbvmainid) as GRsCounter
+				from GBVMain_ELRP main
+				inner join tm_States st on st.intstateid=main.StateID
+				inner join tm_Counties county on county.intCountieid=main.CountyID
+				inner join tm_Payams payam on payam.intPayamid=main.PayamID
+				inner join tm_Bomas boma on boma.intBomasid=main.BomaID
+				where  main.Deleted=0
+				group by StateName,CountieName,PayamName,BomaName
+
+			</query>
+		</operation>
+		<operation name="GetGBVDashboardByLocationResTimeAVG_ELRP">
+			<query>
+				SELECt StateName as StateName
+				,CountieName as CountyName
+				,PayamName as PayamName
+				,BomaName as BomaName
+				,AVG(DATEDIFF(day, main.Date,GBVDetail.ClosingDateAfterManagementAction)) as GRsCounter
+				from NonGBVMain_ELRP main
+				inner join GBVDetails_ELRP GBVDetail on GBVDetail.GBVMainID=main.NonGBVMainID
+				inner join tm_States st on st.intstateid=main.StateID
+				inner join tm_Counties county on county.intCountieid=main.CountyID
+				inner join tm_Payams payam on payam.intPayamid=main.PayamID
+				inner join tm_Bomas boma on boma.intBomasid=main.BomaID
+				where  main.Deleted=0
+				and Status=5 --check status
+				and ClosingDateAfterManagementAction is not null
+				group by StateName,CountieName,PayamName,BomaName
+			</query>
+		</operation>		
+	</operations>
+
+</typemappers>

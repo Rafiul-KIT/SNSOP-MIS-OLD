@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="CountyID"></property>
+		<property name="StateID"></property>
+		<property name="CountyName"></property>
+		<property name="CountyCode"></property>
+	</properties>
+
+	<operations>
+		<operation name="GetCountyLookupByName">
+			<query>
+				select intCountieid as CountyID , intStateid as StateID, CountieCode as CountyCode , CountieName as CountyName
+				from tm_Counties
+				where CountieName = @CountyName
+			</query>
+		</operation>
+		<operation name="GetCountyLookupByID">
+			<query>
+				select intCountieid as CountyID , intStateid as StateID, CountieCode as CountyCode , CountieName as CountyName
+				from tm_Counties
+				where intCountieid = @CountyID
+			</query>
+		</operation>
+		
+	</operations>
+</typemappers>

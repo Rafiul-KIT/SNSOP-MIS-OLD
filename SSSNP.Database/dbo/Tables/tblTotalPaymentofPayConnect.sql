@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[tblTotalPaymentofPayConnect] (
+    [supervisor_id]    VARCHAR (8)     NULL,
+    [household_number] VARCHAR (250)   NULL,
+    [paid_to]          VARCHAR (250)   NULL,
+    [enrolment_number] VARCHAR (30)    NULL,
+    [date_from]        DATETIME        NULL,
+    [date_to]          DATETIME        NULL,
+    [exchange_rate]    DECIMAL (18, 2) NULL,
+    [wage]             DECIMAL (18, 2) NULL,
+    [amount]           DECIMAL (18, 2) NULL,
+    [work_id]          VARCHAR (8)     NULL,
+    [work_code]        VARCHAR (240)   NULL,
+    [attendance]       VARCHAR (8)     NULL,
+    [trans_id]         VARCHAR (8)     NULL,
+    [uuid]             VARCHAR (8)     NULL,
+    [status]           VARCHAR (8)     NULL,
+    [payment_centre]   VARCHAR (180)   NULL,
+    [matched_fp]       VARCHAR (MAX)   NULL,
+    [latitude]         VARCHAR (30)    NULL,
+    [longitude]        VARCHAR (30)    NULL,
+    [sync]             VARCHAR (1)     NULL,
+    [created_at]       DATETIME        NULL,
+    [updated_at]       DATETIME        NULL
+);
+

@@ -1,0 +1,86 @@
+<%@ Master Language="C#" AutoEventWireup="true" Inherits="UI_masterAtmslog" Codebehind="ImportmasterPageLogin.master.cs" %>
+
+<%--<%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>--%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="Head1" runat="server">
+    <title>::SSSNP ::</title>
+    <link href="resources/styles/cms.css" rel="stylesheet" type="text/css" />
+    <script src="resources/scripts/jquery-1.3.2.min.js" type="text/javascript"></script>
+    <script src="resources/scripts/jquery-1.4.3.min.js" type="text/javascript"></script>
+    <script src="resources/scripts/homepage.js" type="text/javascript"></script>
+    <%--<script src="resources/scripts/PopUpCalenderLeft.js" type="text/javascript"></script>--%>
+
+    <link href="resources/styles/homepage.css" rel="stylesheet" type="text/css" />
+    
+    <script src="resources/scripts/validations.js" type="text/javascript" ></script>
+</head>
+<body  style="color: #000000">
+    <form id="form1" runat="server">
+    <%--<script src="../Resources/menu source/Common/Resources/Scripts/urchin.js" type="text/javascript">
+
+</script>
+
+<script type="text/javascript">
+
+_uacct = "UA-4064304-1";
+
+urchinTracker();
+
+</script>--%>
+    <div style="vertical-align: top; padding-top: 15px; text-align: center; margin-left:auto; margin-right:auto; ">
+      
+        <table cellpadding="0" cellspacing="0" style="margin-right:auto; margin-left:auto; border-right: #333333 1px solid; border-top: #333333 1px solid; border-left: #333333 1px solid; border-bottom: #333333 1px solid;" width="99%" >
+            <tr>
+                <td colspan="2" style="background-repeat: no-repeat; text-align: left; background-position-x: right; border-bottom-width: 1px; border-bottom-color: #093461;" valign="top">
+                    <span style="font-size: 16pt; font-family: Verdana">
+                    <strong style="color: #093461">
+                    <span
+                        style="font-size: 24pt"><span style="font-size: 16pt">
+                    <img height="140" src="../../Resource/Images/bgheader.jpg"
+                        width="100%" /></span></span></strong></span></td>
+            </tr>
+            <tr>
+                <td bgcolor="#666666" colspan="2" height="12" style="height: 20px">
+                </td>
+            </tr>
+            <tr>
+                
+                <td valign="top" style="padding-right: 10px; padding-left: 10px;  margin-left:auto; margin-right:auto; padding-bottom: 10px; padding-top: 10px; height: 300px; vertical-align: top; text-align: center; width: 100%;">
+       <asp:contentplaceholder id="ContentPlaceHolder1" runat="server">
+        </asp:contentplaceholder>
+       
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" valign="middle" style="height: 26px" bgcolor="#666666">
+                    <span class="Apple-style-span" style="word-spacing: 0px; font: medium 'Times New Roman';
+                        text-transform: none; text-indent: 0px; white-space: normal; letter-spacing: normal;
+                        border-collapse: separate; orphans: 2; widows: 2"><span class="Apple-style-span"
+                            style="font-size: 11px; font-family: Verdana; text-align: right">
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
+                                <tr>
+                                    <td style="width: 50%; height: 13px; text-align: left">
+                                        <span style="color: #ffffff">
+                            </span></td>
+                                    <td style="width: 50%; height: 13px; text-align: right">
+                                        <span style="color: #ffffff">Designed and Developed By: </span>&nbsp;<a href="www.www.www"><span
+                                            style="color: #ffffff">,</span></a></td>
+                                </tr>
+                            </table>
+                        </span></span>
+                          
+                        </td>
+            </tr>
+        </table>
+        <br />
+<marquee scrollamount="3" scrolldelay="1" id="marquee1" style="font-family:Verdana; font-size:11px; color:Navy" >For any 
+Tenchnical Issues or Queries please mail to /Register in Helpdesk</marquee>
+<br />   
+    </div>
+      
+    </form>
+</body>
+</html>

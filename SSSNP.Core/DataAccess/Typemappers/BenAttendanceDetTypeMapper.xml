@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="IntAttendanceID"></property>
+		<property name="IntWorkActivityID"></property>
+		<property name="IntBenID"></property>
+		<property name="AttendanceDate"></property>
+		<property name="Status"></property>
+		<property name="Created_by"></property>
+		<property name="Created_dt"></property>
+		<property name="Modified_by"></property>
+		<property name="Modified_dt"></property>
+		<property name="AttendanceYear"></property>
+		<property name="PortYear"></property>
+		<property name="PortPhase"></property>
+		<property name="PortedSheetName"></property>
+		<property name="PaymentFlag"></property>
+		<property name="WageApplyFlag"></property>
+		<property name="IntWageReqID"></property>
+	</properties>
+	
+	<operations>
+		<operation name="GetAttendanceByWorkActivity">
+			<query>
+				SELECT [intAttendanceid]
+						,[intWorkActivityId]
+						,[intBenid]
+						,[AttendanceDate]
+						,[Status]
+						,[Created_by]
+						,[Created_dt]
+						,[Modified_by]
+						,[Modified_dt]
+						,[AttendanceYear]
+						,[PortYear]
+						,[PortPhase]
+						,[PortedSheetName]
+						,[PaymentFlag]
+						,[WageApplyFlag]
+						,[intWageReqid]
+								FROM [tr_BenAttendanceDet]
+									where [intWorkActivityId] = @intWorkActivityId
+
+			</query>
+		</operation>
+		
+	</operations>
+</typemappers>

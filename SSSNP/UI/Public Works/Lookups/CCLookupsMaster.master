@@ -1,0 +1,67 @@
+<%@ Master Language="C#" AutoEventWireup="true" Inherits="UI_masterAtms" Codebehind="CCLookupsMaster.master.cs" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="Head1" runat="server">
+    <title>:: SSSNP online Public Works Management System ::</title>    
+   
+    <link href="../../../Resource/Styles/font-awesome/css/font-awesome.css" rel="stylesheet"
+        type="text/css" />
+    <link href="../../../Resource/Styles/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    
+    
+    <%--<link href="../../../Resource/font-awesome/css/font-awesome.css" rel="stylesheet"        type="text/css" />
+    <link href="../../../Resource/css/bootstrap.min.css" rel="stylesheet" type="text/css" />--%>
+
+<style type="text/css">
+
+.GRD
+{
+	width:200px;
+	height:auto;
+	border-color:#013161;
+	border-style:solid;
+	border-width:1px;
+}
+</style>    
+</head>
+
+
+<body  style="color: #000000">
+    <form id="form1" runat="server">  
+            <asp:ScriptManager ID="ScriptManager1" runat="server">
+        </asp:ScriptManager>
+
+    <div>
+        <table cellpadding="0" cellspacing="0" 
+            style="margin-right:auto; margin-left:auto; " >
+            <tr>
+                <td colspan="1" align="center" style="background-repeat: no-repeat; padding: 5px; text-align: left; background-position-x: right; border-bottom-width: 1px; border-bottom-color: #013161;" valign="top">
+                    <span style="font-size: 16pt; font-family: Poppins"><strong style="color: #013161"><span
+                        style="font-size: 24pt"><span style="font-size: 16pt">
+                            </span></span></strong></span></td>
+            </tr>
+             <tr>
+                <td valign="top" 
+                    style="padding: 5px; text-align: center; height: 400px; vertical-align: top;" 
+                    width="100%">
+                    
+                   <%-- <asp:ScriptManager ID="ScriptManager1" runat="server">
+                    </asp:ScriptManager>
+                    <asp:UpdatePanel runat="server" ID="UpdatePanel1">
+                    <ContentTemplate--%>
+        <asp:contentplaceholder id="ContentPlaceHolder1" runat="server">
+        
+        </asp:contentplaceholder>
+                   <%-- </ContentTemplate>
+        </asp:UpdatePanel>--%>
+                </td>
+            </tr>
+        </table>        
+    </div>
+        <br />
+      
+    </form>
+</body>
+</html>

@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="NonGBVMainID"></property>
+		<property name="Date"></property>
+		<property name="SerialNumber"></property>
+		<property name="StateID"></property>
+		<property name="CountyID"></property>
+		<property name="PayamID"></property>
+		<property name="BomaID"></property>
+		<property name="DateOfComplaint"></property>
+		<property name="ReportingChannel"></property>
+		<property name="ReportingChannelOther"></property>
+		<property name="ComplainantName"></property>
+		<property name="ContactNumber"></property>
+		<property name="PhysicalAddress"></property>
+		<property name="Gender"></property>
+		<property name="Age"></property>
+		<property name="SSSNPBeneficiary"></property>
+		<property name="TypeOfGrievanceID"></property>
+		<property name="TypeOfGrievanceDetailID"></property>
+		<property name="TypeOfGrievanceOther"></property>
+		<property name="Status"></property>
+		<property name="StatusLastModificationDate"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+		<property name="DescriptionCompliant"></property>
+		<property name="DescriptionCompliantAttachmentID"></property>
+		<property name="TypeOfComplaintID"></property>
+
+	</properties>
+
+	<operations>
+		<operation name="CreateNonGBVMain_ELRP">
+			<query>
+
+				IF (EXISTS (SELECT NonGBVMainID FROM [NonGBVMain_ELRP] WHERE Deleted  = 0 AND SerialNumber=@SerialNumber ))
+				SET @ReturnValue = 0
+				ELSE
+				BEGIN
+
+				INSERT INTO [NonGBVMain_ELRP]
+				([Date]
+				,[StateID]
+				,[CountyID]
+				,[PayamID]
+				,[BomaID]
+				,[DateOfComplaint]
+				,[ReportingChannel]
+				,[ReportingChannelOther]
+				,[ComplainantName]
+				,[ContactNumber]
+				,[PhysicalAddress]
+				,[Gender]
+				,[Age]
+				,[SSSNPBeneficiary]
+				,[TypeOfGrievanceID]
+				,[TypeOfGrievanceDetailID]
+				,[TypeOfGrievanceOther]
+				,[Status]
+				,[StatusLastModificationDate]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				,[DescriptionCompliant]
+				,[DescriptionCompliantAttachmentID]
+				,[TypeOfComplaintID]
+				,[Deleted])
+				VALUES
+				(@Date
+				,@StateID
+				,@CountyID
+				,@PayamID
+				,@BomaID
+				,@DateOfComplaint
+				,@ReportingChannel
+				,@ReportingChannelOther
+				,@ComplainantName
+				,@ContactNumber
+				,@PhysicalAddress
+				,@Gender
+				,@Age
+				,@SSSNPBeneficiary
+				,@TypeOfGrievanceID
+				,@TypeOfGrievanceDetailID
+				,@TypeOfGrievanceOther
+				,@Status
+				,@StatusLastModificationDate
+				,@CreationUserID
+				,@LastModificationTimestamp
+				,@LastModificationUserID
+				,@DescriptionCompliant
+				,@DescriptionCompliantAttachmentID
+				,@TypeOfComplaintID
+				,0)
+				SET @ReturnValue = SCOPE_IDENTITY()
+				END
+
+			</query>
+		</operation>
+		<operation name="UpdateNonGBVMain_ELRP">
+			<query>
+				IF (NOT EXISTS (SELECT NonGBVMainID FROM [NonGBVMain_ELRP] WHERE Deleted  = 0 AND NonGBVMainID = @NonGBVMainID ))
+				SET @ReturnValue = 0
+				ELSE
+				BEGIN
+				UPDATE [NonGBVMain_ELRP]
+				SET
+				--  [Date] = @Date
+				-- ,[SerialNumber] = @SerialNumber
+				[StateID] = @StateID
+				,[CountyID] = @CountyID
+				,[PayamID] = @PayamID
+				,[BomaID] = @BomaID
+				,[DateOfComplaint] = @DateOfComplaint
+				,[ReportingChannel] = @ReportingChannel
+				,[ReportingChannelOther] = @ReportingChannelOther
+				,[ComplainantName] = @ComplainantName
+				,[ContactNumber] = @ContactNumber
+				,[PhysicalAddress] = @PhysicalAddress
+				,[Gender] = @Gender
+				,[Age] = @Age
+				,[SSSNPBeneficiary] = @SSSNPBeneficiary
+				,[TypeOfGrievanceID] = @TypeOfGrievanceID
+				,[TypeOfGrievanceDetailID] = @TypeOfGrievanceDetailID
+				,[TypeOfGrievanceOther] = @TypeOfGrievanceOther
+				,[Status] = @Status
+				,[StatusLastModificationDate] = @StatusLastModificationDate
+				,[LastModificationTimestamp] = @LastModificationTimestamp
+				,[LastModificationUserID] = @LastModificationUserID
+				,[DescriptionCompliant] = @DescriptionCompliant
+				,[DescriptionCompliantAttachmentID] = @DescriptionCompliantAttachmentID
+				,[TypeOfComplaintID] =@TypeOfComplaintID
+				WHERE Deleted = 0 and NonGBVMainID = @NonGBVMainID
+
+				SET @ReturnValue = 1
+
+				END
+			</query>
+		</operation>
+		<operation name="GetNonGBVMain_ELRP">
+			<query>
+				SELECT [NonGBVMainID]
+				,[Date]
+				,[SerialNumber]
+				,[StateID]
+				,[CountyID]
+				,[PayamID]
+				,[BomaID]
+				,[DateOfComplaint]
+				,[ReportingChannel]
+				,[ReportingChannelOther]
+				,[ComplainantName]
+				,[ContactNumber]
+				,[PhysicalAddress]
+				,[Gender]
+				,[Age]
+				,[SSSNPBeneficiary]
+				,[TypeOfGrievanceID]
+				,[TypeOfGrievanceDetailID]
+				,[TypeOfGrievanceOther]
+				,[Status]
+				,[StatusLastModificationDate]
+				,[CreationUserID]
+				,[LastModificationTimestamp]
+				,[LastModificationUserID]
+				,[DescriptionCompliant]
+				,[DescriptionCompliantAttachmentID]
+				,[TypeOfComplaintID]
+				FROM [NonGBVMain_ELRP]
+				WHERE Deleted =0 AND NonGBVMainID = @NonGBVMainID
+			</query>
+		</operation>
+		<operation name="DeleteNonGBVMain_ELRP">
+			<query>
+				IF (NOT EXISTS (SELECT NonGBVMainID FROM [NonGBVMain_ELRP] WHERE Deleted  = 0 AND NonGBVMainID = @NonGBVMainID ))
+				SET @ReturnValue = 0
+				ELSE
+				BEGIN
+
+				UPDATE [NonGBVMain_ELRP]
+				SET
+				[LastModificationTimestamp] = GETDATE()
+				,[LastModificationUserID] = @UserID
+				,[Deleted] = 1
+				WHERE NonGBVMainID = @NonGBVMainID
+
+				SET @ReturnValue = 1
+
+				END
+			</query>
+		</operation>
+		<operation name="UpdateNonGBVStatus_ELRP">
+			<query>
+				UPDATE [NonGBVMain_ELRP]
+				SET	[Status] = @Status
+				,[StatusLastModificationDate] = GETDATE()
+				,[LastModificationTimestamp] = getdate()
+				,[LastModificationUserID] = @userID
+				WHERE NonGBVMainID = @NonGBVMainID and Deleted = 0
+				set @ReturnValue = 1
+
+			</query>
+		</operation>
+		<operation name="GetNonGBVMainIDByDetailID_ELRP">
+			<query>
+				set @ReturnValue = (SELECT top 1 m.NonGBVMainID
+
+				FROM [NonGBVMain_ELRP] as M left join NonGBVDetails_elrp as d on (d.NonGBVMainID = m.NonGBVMainID and d.Deleted = 0)
+				where d.Deleted = 0 and d.NonGBVDetailID =  @NonGBVDetailID)
+			</query>
+		</operation>
+	</operations>
+
+</typemappers>

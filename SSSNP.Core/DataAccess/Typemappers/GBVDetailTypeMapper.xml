@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="GBVDetailID"></property>
+		<property name="GBVMainID"></property>
+		<property name="ReportedToManagementHR"></property>
+		<property name="ReportedDetails"></property>
+		<property name="FollowUpActionFeedback"></property>
+		<property name="IsSurvivorSatisfied"></property>
+		<property name="SurvivorDetails"></property>
+		<property name="ClosingDateAfterManagementAction"></property>
+		<property name="CreationUserID"></property>
+		<property name="LastModificationTimestamp"></property>
+		<property name="LastModificationUserID"></property>
+	
+	</properties>
+
+	<operations>
+		<operation name="CreateGBVDetail">
+			<query>
+
+				IF (NOT EXISTS (SELECT GBVMainID FROM [GBVMain] WHERE Deleted  = 0 AND GBVMainID =@GBVMainID ))
+				SET @ReturnValue = 0
+				ELSE
+				BEGIN
+				INSERT INTO [dbo].[GBVDetails]
+				([GBVMainID]
+				,[ReportedToManagementHR]
+				,[ReportedDetails]
+				,[FollowUpActionFeedback]
+				,[IsSurvivorSatisfied]
+				,[SurvivorDetails]
+				,[ClosingDateAfterManagementAction]
+				,[CreationUserID]
+				,[Deleted])
+				VALUES
+				(@GBVMainID
+				,@ReportedToManagementHR
+				,@ReportedDetails
+				,@FollowUpActionFeedback
+				,@IsSurvivorSatisfied
+				,@SurvivorDetails
+				,@ClosingDateAfterManagementAction
+				,@CreationUserID
+				,0)
+				
+
+				SET @ReturnValue = SCOPE_IDENTITY()
+				END
+
+			</query>
+		</operation>
+		<operation name="UpdateGBVDetail">
+			<query>
+				IF (NOT EXISTS (SELECT GBVMainID FROM [GBVDetails] WHERE Deleted  = 0 AND GBVDetailID = @GBVDetailID ))
+				SET @ReturnValue = 0
+				ELSE
+				BEGIN
+
+				UPDATE [dbo].[GBVDetails]
+					SET 
+						 [ReportedToManagementHR] = @ReportedToManagementHR
+						,[ReportedDetails] = @ReportedDetails
+						,[FollowUpActionFeedback] = @FollowUpActionFeedback
+						,[IsSurvivorSatisfied] = @IsSurvivorSatisfied
+						,[SurvivorDetails] = @SurvivorDetails
+						,[ClosingDateAfterManagementAction] = @ClosingDateAfterManagementAction
+						,[LastModificationTimestamp] = @LastModificationTimestamp
+						,[LastModificationUserID] = @LastModificationUserID
+
+					WHERE Deleted = 0 and GBVDetailID = @GBVDetailID
+
+				SET @ReturnValue = 1
+
+				END
+			</query>
+		</operation>
+		<operation name="GetGBVDetails">
+			<query>
+				SELECT [GBVDetailID]
+						,[GBVMainID]
+						,[ReportedToManagementHR]
+						,[ReportedDetails]
+						,[FollowUpActionFeedback]
+						,[IsSurvivorSatisfied]
+						,[SurvivorDetails]
+						,[ClosingDateAfterManagementAction]
+						,[CreationUserID]
+						,[LastModificationTimestamp]
+						,[LastModificationUserID]
+
+					FROM [GBVDetails]
+						WHERE DELETED = 0 AND GBVMainID  = @GBVMainID
+							ORDER BY GBVDetailID ASC
+
+			</query>
+		</operation>
+		<operation name="GetGBVDetail">
+			<query>
+				SELECT [GBVDetailID]
+						,[GBVMainID]
+						,[ReportedToManagementHR]
+						,[ReportedDetails]
+						,[FollowUpActionFeedback]
+						,[IsSurvivorSatisfied]
+						,[SurvivorDetails]
+						,[ClosingDateAfterManagementAction]
+						,[CreationUserID]
+						,[LastModificationTimestamp]
+						,[LastModificationUserID]
+
+				FROM [GBVDetails]
+				WHERE DELETED = 0 AND GBVDetailID  = @GBVDetailID
+
+			</query>
+		</operation>
+		<operation name="DeleteGBVDetail">
+			<query>
+				IF (NOT EXISTS (SELECT GBVMainID FROM [GBVDetails] WHERE Deleted  = 0 AND GBVDetailID = @GBVDetailID ))
+					SET @ReturnValue = 0
+				ELSE
+				BEGIN
+
+				UPDATE [GBVDetails]
+					SET
+						[LastModificationTimestamp] = GETDATE()
+						,[LastModificationUserID] = @UserID
+						,[Deleted] = 1
+							WHERE GBVDetailID = @GBVDetailID
+
+					SET @ReturnValue = 1
+
+				END
+			</query>
+		</operation>
+		
+	</operations>
+
+</typemappers>

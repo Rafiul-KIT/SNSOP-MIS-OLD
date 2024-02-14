@@ -1,0 +1,13 @@
+﻿
+CREATE procedure [dbo].[RemoveAlternatesingles]
+As
+Begin
+update tbl_BeneficiaryServiceDet set Name1stAlternatePayee=NULL,Name2ndAlternatePayee=NULL,FirstAlternatePayeeGender=NULL,
+FirstAlternatePayeeAge=NULL,FirstAlternatePayeeNationID=NULL,FirstAlternatePayeeMobile=NULL,FirstAlternatePayeePhotoName=NULL,FirstAlternatePayeePhotoPath=NULL,
+SecondAlternatePayeeGender=NULL,SecondAlternatePayeeAge=NULL,SecondAlternateNationalID=NULL,SecondAlternatePayeeMobile=NULL,
+SecondAlternatepayeePhotoName=NULL,SecondAlternatePayeePhotoPath=NULL,alternate_number=NULL,Secondalternate_number=NULL
+where Name1stAlternatePayee is null or Name2ndAlternatePayee is null
+
+select 1000
+return 1000
+End

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="StateName"></property>
+		<property name="CountyName"></property>
+		<property name="PayamName"></property>
+		<property name="BomaName"></property>
+		<property name="GRsCounter"></property>
+	</properties>
+
+	<operations>
+		<operation name="GetNonGBVDashboardByLocation">
+			<query>
+				SELECt StateName as StateName
+				,CountieName as CountyName
+				,PayamName as PayamName
+				,BomaName as BomaName
+				, COUNT(NONgbvmainid) as GRsCounter
+				from NonGBVMain main
+				inner join tm_States st on st.intstateid=main.StateID
+				inner join tm_Counties county on county.intCountieid=main.CountyID
+				inner join tm_Payams payam on payam.intPayamid=main.PayamID
+				inner join tm_Bomas boma on boma.intBomasid=main.BomaID
+				where  main.Deleted=0
+				group by StateName,CountieName,PayamName,BomaName
+			</query>
+		</operation>
+		<operation name="GetNonGBVDashboardByLocationResTimeAVG">
+			<query>
+				SELECt StateName as StateName
+				,CountieName as CountyName
+				,PayamName as PayamName
+				,BomaName as BomaName
+				,AVG(DATEDIFF(day, main.Date,NGBVDetail.ClosingDate)) as GRsCounter
+				from NonGBVMain main
+				inner join NonGBVDetails NGBVDetail on NGBVDetail.NonGBVMainID=main.NonGBVMainID
+				inner join tm_States st on st.intstateid=main.StateID
+				inner join tm_Counties county on county.intCountieid=main.CountyID
+				inner join tm_Payams payam on payam.intPayamid=main.PayamID
+				inner join tm_Bomas boma on boma.intBomasid=main.BomaID
+				where  main.Deleted=0
+				and Status=5
+				and ClosingDate is not null
+				group by StateName,CountieName,PayamName,BomaName
+			</query>
+		</operation>		
+	</operations>
+
+</typemappers>

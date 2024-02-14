@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<typemappers>
+	<properties>
+		<property name="IntUserId"></property>
+		<property name="User_name"></property>
+		<property name="Email"></property>
+		<property name="User_Id"></property>
+		<property name="User_Level"></property>
+		<property name="User_Type"></property>
+		<property name="User_Code"></property>
+		<property name="GBVUser"></property>
+		
+	</properties>
+
+	<operations>
+		<operation name="GetUserByID">
+			<query>
+				select intUserId, user_name, email, User_Id, User_level, User_Type, User_code, GBVUser 
+				from tbl_Users where intUserId = @UserId
+
+			</query>
+		</operation>
+		<operation name="GetUsers">
+			<query>
+				select intUserId, user_name, email, User_Id, User_level, User_Type, User_code, GBVUser
+						from tbl_Users order by intUserId asc 
+
+			</query>
+		</operation>
+
+	</operations>
+
+</typemappers>

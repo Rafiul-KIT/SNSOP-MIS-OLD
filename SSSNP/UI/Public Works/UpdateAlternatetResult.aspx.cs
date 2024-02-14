@@ -1,0 +1,44 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Data.SqlClient;
+using System.Xml.Linq;
+using System.Web.Configuration;
+using System.Threading;
+using System.ComponentModel;
+using System.Text;
+
+public partial class UpdateAlternatetResult : System.Web.UI.Page
+{
+   
+
+    
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+
+        Label1.Text = "Alternate updated Successfully";
+        
+    }
+
+    protected override void OnPreRender(EventArgs e)
+    {
+
+        base.OnPreRender(e);
+
+        StringBuilder javaScript = new StringBuilder();
+        javaScript.Append("\n<script language=JavaScript>\n");
+        javaScript.Append("window.history.forward(1);\n");
+        javaScript.Append("</script>\n");
+
+        Page.RegisterClientScriptBlock("HistoryScript", javaScript.ToString());
+    }
+   
+}
