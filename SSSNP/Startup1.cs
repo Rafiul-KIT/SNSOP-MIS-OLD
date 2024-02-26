@@ -34,6 +34,25 @@ namespace SSSNP
 
             app.Use(typeof(CookieSameSiteNoneMiddleware));
 
+            string azureADEnv = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_ENV"];
+            string azureClientId = "";
+            string azurePostLogoutRedirectUri = "";
+            string azureRedirectUri = "";
+            if (azureADEnv.Equals("dev"))
+            {
+                azureClientId = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_CLIENTID_LOCAL"];
+                azurePostLogoutRedirectUri = System.Configuration.ConfigurationManager.
+                    AppSettings["AZUREAD_LOGOUT_REDIRECT_URI_LOCAL"];
+                azureRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_REDIRECT_URI_LOCAL"];
+            }
+            else
+            {
+                azureClientId = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_CLIENTID"];
+                azurePostLogoutRedirectUri = System.Configuration.ConfigurationManager.
+                    AppSettings["AZUREAD_LOGOUT_REDIRECT_URI"];
+                azureRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_REDIRECT_URI"];
+            }
+
 
             app.UseOpenIdConnectAuthentication(
 
@@ -41,10 +60,10 @@ namespace SSSNP
 
                             new OpenIdConnectAuthenticationOptions
                             {
-                                ClientId = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_CLIENTID"], //clientId,
+                                ClientId = azureClientId, //clientId,
                                 Authority = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_AUTHORITY"], //authority,
-                                PostLogoutRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_LOGOUT_REDIRECT_URI"], //redirectUri,
-                                RedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_REDIRECT_URI"], //redirectUri,
+                                PostLogoutRedirectUri = azurePostLogoutRedirectUri, //redirectUri,
+                                RedirectUri = azureRedirectUri, //redirectUri,
                                 Scope = OpenIdConnectScope.OpenIdProfile,                   //new
                                 ResponseType = OpenIdConnectResponseType.IdToken,           //new
                                 Notifications = new OpenIdConnectAuthenticationNotifications
