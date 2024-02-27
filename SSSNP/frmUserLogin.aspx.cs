@@ -228,9 +228,20 @@ public partial class index : System.Web.UI.Page
 
     protected void btnSignIn_Click(object sender, EventArgs e)
     {
+        string azureADEnv = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_ENV"];
+        string azureADLandingRedirectUri = "";
+        if (azureADEnv.Equals("dev"))
+        {
+            azureADLandingRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_LANDING_REDIRECT_URI_LOCAL"];
+        }
+        else
+        {
+            azureADLandingRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_LANDING_REDIRECT_URI"];
+        }
+
         HttpContext.Current.GetOwinContext().Authentication.Challenge(new Microsoft.Owin.Security.AuthenticationProperties
         {
-            RedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_LANDING_REDIRECT_URI"] //+ "?try=" + User.Identity.Name
+            RedirectUri = azureADLandingRedirectUri //+ "?try=" + User.Identity.Name
             //RedirectUri = "/"
         }, OpenIdConnectAuthenticationDefaults.AuthenticationType);
 
