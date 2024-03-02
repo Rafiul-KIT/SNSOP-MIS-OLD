@@ -602,7 +602,8 @@ public partial class PDCWorkProgress : System.Web.UI.Page
         //string to = anothermail; //Replace this with the Email Address to whom you want to send the mail
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
-         string anothermail = "";
+        // string anothermail = "";
+        string anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {

@@ -547,18 +547,22 @@ public partial class ViewBenfWages : System.Web.UI.Page
         if (Session["user_type"].ToString() == "Cordinator")
         {
             anothermail = "";
+            anothermail = System.Configuration.ConfigurationManager.AppSettings["FourEmailRecipients"];
         }
         else if (Session["user_type"].ToString() == "Specialist")
         {
             anothermail = "";
+            anothermail = System.Configuration.ConfigurationManager.AppSettings["ThreeEmailRecipients"];
         }
         else if (Session["user_type"].ToString() == "Manager")
         {
             anothermail = "";
+            anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
         }
         else
         {
             anothermail = "";
+            anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
         }
 
         string[] multi = anothermail.Split(',');

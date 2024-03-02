@@ -592,7 +592,8 @@ public partial class IPProjectRegistration : System.Web.UI.Page
 
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
-        string anothermail = "";
+        // string anothermail = "";
+        string anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {

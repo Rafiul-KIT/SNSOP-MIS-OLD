@@ -85,8 +85,10 @@ public partial class AutoMaticAlertBeneficiaryMonthlyFundsDisbursementReport : S
         string from = string.Format("\"SSSNP System\" <{0}>", sssnpmail);
         
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
-        string anothermail = "";
-        
+        // string anothermail = "";
+        string anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
+
+
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {
@@ -134,7 +136,8 @@ public partial class AutoMaticAlertBeneficiaryMonthlyFundsDisbursementReport : S
         string from = string.Format("\"SSSNP System\" <{0}>", sssnpmail);
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
-          string anothermail = "";
+        //  string anothermail = "";
+        string anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {
@@ -185,7 +188,8 @@ public partial class AutoMaticAlertBeneficiaryMonthlyFundsDisbursementReport : S
         //string to = anothermail; //Replace this with the Email Address to whom you want to send the mail
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
-          string anothermail = "";
+        //  string anothermail = "";
+        string anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {

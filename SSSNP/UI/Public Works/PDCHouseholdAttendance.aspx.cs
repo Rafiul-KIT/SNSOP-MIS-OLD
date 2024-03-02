@@ -443,7 +443,8 @@ public partial class PDCHouseholdAttendance : System.Web.UI.Page
         string sssnpmail = System.Configuration.ConfigurationManager.AppSettings["SSSNPMAIL"]; // Config email
         string from = string.Format("\"SSSNP System\" <{0}>", sssnpmail);
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
-        string anothermail = "";
+        // string anothermail = "";
+        string anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {

@@ -531,6 +531,7 @@ public partial class IPRaiseFunds : System.Web.UI.Page
 
         string anothermail="";
         anothermail = "";
+        anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)

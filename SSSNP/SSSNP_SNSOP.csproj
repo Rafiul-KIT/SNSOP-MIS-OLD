@@ -181,6 +181,7 @@
     <Content Include="Alternatetwo\readme.txt" />
     <Content Include="assets\Background.png" />
     <Content Include="assets\Loading.gif" />
+    <Content Include="error.txt" />
     <Content Include="Tools.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Errorpages\oops.aspx" />
