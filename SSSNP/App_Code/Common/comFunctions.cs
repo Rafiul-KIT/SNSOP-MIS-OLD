@@ -104,7 +104,7 @@ public class comFunctions
 
             mail.To.Add(toAddress);
 
-            mail.Bcc.Add("");
+            mail.Bcc.Add("[supportEmail]");
             mail.From = new System.Net.Mail.MailAddress(srvMailID, dispName.ToString(), System.Text.Encoding.UTF8);
             mail.Subject = mailSubject.ToString();
             mail.SubjectEncoding = System.Text.Encoding.UTF8;
@@ -143,7 +143,7 @@ public class comFunctions
         try
         {
 
-            Uri objUri = new Uri("" + HttpUtility.UrlEncode(strMsg) + "&PhoneNumber=" + strReceip);
+            Uri objUri = new Uri("[URI]" + HttpUtility.UrlEncode(strMsg) + "&PhoneNumber=" + strReceip);
             WebRequest objWebRequest = WebRequest.Create(objUri);
             WebResponse objWebResponse = objWebRequest.GetResponse();
             Stream objStream = objWebResponse.GetResponseStream();
@@ -202,8 +202,8 @@ public class comFunctions
             System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
             
             mail.To.Add(toAddress);
-            
-            mail.Bcc.Add("");
+
+            mail.Bcc.Add("[supportEmail]");
             mail.From = new System.Net.Mail.MailAddress(srvMailID, dispName.ToString(), System.Text.Encoding.UTF8);
             mail.Subject = mailSubject.ToString();
             mail.SubjectEncoding = System.Text.Encoding.UTF8;

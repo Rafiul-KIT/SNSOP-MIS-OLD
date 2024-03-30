@@ -211,7 +211,7 @@
 
                                             <li id="Masters2" class='has-sub' runat="server" visible="false"><a href='#'><i class="fa fa-fw fa-table"></i>API Activities</a>
                                                 <ul>
-                                                    <li><a href="#" style="font-weight: bold">Pull data to  MIS:</a> </li>
+                                                    <li><a href="#" style="font-weight: bold">Pull data to MIS:</a> </li>
                                                     <li><a href="#" style="font-weight: bold">Daily Acitivities:</a> </li>
                                                     <li><a href="ImportFromServiceBenfDetFinalWithFailureTbl.aspx" target="_blank">Import Benficiaries</a></li>
                                                     <li><a href="ImportFromServiceBenfAlternateDetLatestwithValidation.aspx" target="_blank">Import Alternate Benficiaries</a></li>
@@ -915,7 +915,7 @@
 
 
 
-                                            <li id="Li" runat="server" visible="false" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Admin Activities</a>
+                                            <li id="liFrim" runat="server" visible="false" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Admin Activities</a>
                                                 <ul>
                                                     <li><a href="#" style="font-weight: bold">Deletion Activities:</a> </li>
                                                     <li><a href="frmBenDeletionNew.aspx?s=4">Beneficiary Wage Deletion</a> </li>
@@ -1037,7 +1037,7 @@
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
         (function () {
-            var u = "";
+            var u = "[URL]";
             _paq.push(['setTrackerUrl', u + 'matomo.php']);
             _paq.push(['setSiteId', '143']);
             _paq.push(['setUserId', '<%= Username()  %>']);
@@ -1049,7 +1049,7 @@
 
     <noscript>
         <p>
-            <img src="/" style="border: 0;" alt="" />
+            <img src="" style="border: 0;" alt="" />
         </p>
     </noscript>
     <!-- End Piwik Code -->

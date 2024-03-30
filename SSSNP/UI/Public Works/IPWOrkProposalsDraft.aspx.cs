@@ -45,7 +45,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
                 if (ddlEnvSpecStatus.SelectedValue == "QE-Approved")
                 {
                     btnEnvSpecAppRej.Enabled = false;
-                    txtComments.Enabled = false;
+                    txtComments.Enabled = true;
                 }
             }
             else if (Session["user_type"].ToString() == "QualEng")
@@ -330,7 +330,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
                 }
                 else if (Session["user_type"].ToString() == "QualEng")
                 {
-                    if (ds.Tables[0].Rows[0]["status"].ToString()=="IP-Submitted")
+                    if (ds.Tables[0].Rows[0]["status"].ToString() == "IP-Submitted")
                     {
                         ddlQualEngStatus.Items.Remove("ES-Rejected");
                     }
@@ -339,6 +339,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             }
             if (ddlEnvSpecStatus.SelectedValue == "ES-Approved")
             {
+
             }
             else if (ddlEnvSpecStatus.SelectedValue == "QE-Rejected")
             {
@@ -369,8 +370,26 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             else if (ddlQualEngStatus.SelectedValue == "QE-Approved")
             {
                 btnQualEngAppRej.Enabled = true;
-                txtComments.Enabled = false;
+                txtComments.Enabled = true;
             }
+
+            //Disable updates for status not compatible for being changed by the role
+            if (Session["user_type"].ToString() == "QualEng"
+                && ddlQualEngStatus.SelectedValue != "ES-Rejected"
+                && ddlQualEngStatus.SelectedValue == "IP-Submitted")
+            {
+                txtComments.Enabled = false;
+                btnQualEngAppRej.Enabled = false;
+            }
+            if (Session["user_type"].ToString() == "QualEng"
+                && ddlEnvSpecStatus.SelectedValue != "QE-Approved"
+                && ddlEnvSpecStatus.SelectedValue != "TST-Rejected"
+                )
+            {
+                txtComments.Enabled = false;
+                btnEnvSpecAppRej.Enabled = false;
+            }
+
 
             if (ds.Tables[0].Rows[0]["TypeofMeeting"].ToString() != "")
                 ddlMeeting.SelectedValue = ds.Tables[0].Rows[0]["TypeofMeeting"].ToString();
@@ -885,6 +904,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
 
     protected void ddlEnvSpecStatus_SelectedIndexChanged(object sender, EventArgs e)
     {
+
         if (ddlEnvSpecStatus.SelectedValue == "QE-Approved")
         {
             btnEnvSpecAppRej.Enabled = false;
@@ -903,7 +923,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
         else if (ddlEnvSpecStatus.SelectedValue == "ES-Approved")
         {
             btnEnvSpecAppRej.Enabled = true;
-            txtComments.Enabled = false;
+            txtComments.Enabled = true;
         }
     }
 
@@ -922,7 +942,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
         else if (ddlQualEngStatus.SelectedValue == "QE-Approved")
         {
             btnQualEngAppRej.Enabled = true;
-            txtComments.Enabled = false;
+            txtComments.Enabled = true;
         }
         else if (ddlQualEngStatus.SelectedValue == "ES-Rejected")
         {
@@ -952,53 +972,35 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             //save new status
             try
             {
+                string strSelectedStatus = string.Empty;
                 //If rejected, it stores the comments
-                if (
-                    (ddlQualEngStatus.SelectedValue == "QE-Rejected") ||
-                    (ddlEnvSpecStatus.SelectedValue == "ES-Rejected"))
+                //if (
+                //    (ddlQualEngStatus.SelectedValue == "QE-Rejected") ||
+                //    (ddlEnvSpecStatus.SelectedValue == "ES-Rejected"))
+                //{
+                if (txtComments.Text == string.Empty
+                   &&
+                   ((ddlQualEngStatus.SelectedValue == "QE-Rejected") ||
+                   (ddlEnvSpecStatus.SelectedValue == "ES-Rejected"))
+                   )
                 {
-                    if (txtComments.Text != string.Empty)
-                    {
-                        if (Session["user_type"].ToString() == "EnvSpec")
-                        {
-                            Gen.UpdateSubProjectDraft(Session["intWorkId"].ToString(), ddlEnvSpecStatus.SelectedValue, Session["uid"].ToString());
-                            Gen.insertWorkComment(Session["intWorkId"].ToString(), txtComments.Text, ddlEnvSpecStatus.SelectedValue, Session["uid"].ToString());
-                        }
-                        else if (Session["user_type"].ToString() == "QualEng")
-                        {
-                            Gen.UpdateSubProjectDraft(Session["intWorkId"].ToString(), ddlQualEngStatus.SelectedValue, Session["uid"].ToString());
-                            Gen.insertWorkComment(Session["intWorkId"].ToString(), txtComments.Text, ddlQualEngStatus.SelectedValue, Session["uid"].ToString());
-                        }
-                        if (fuWorkProposalAttachment.HasFile)
-                        {
-                            string strWork_Photo_Name = "WorkProposalAttachment_";
-                            string strWorkProposalAttachmentFileName = fuWorkProposalAttachment.FileName;
-                            Gen.InsertAttachements_Sp("WorkProposalAttachment", "WorkProposalAttachment", strWork_Photo_Name, Session["uid"].ToString(), strWorkProposalAttachmentFileName, hdn_work_activity_id.Value);
-                            string WorkPhotoStr = ("~/WorkProposalAttachment/" + ddlProject.SelectedValue + "/" + txtWorkCode.Text + "/") + strWorkProposalAttachmentFileName;
-                            fuWorkProposalAttachment.SaveAs(Server.MapPath("~/WorkProposalAttachment/" + ddlProject.SelectedValue + "/" + txtWorkCode.Text + "/") + strWorkProposalAttachmentFileName);
-                        }
-                        lblmsg.Text = "Sub-project Saved as: " + ddlEnvSpecStatus.SelectedValue;
-                        lblmsg.Visible = true;
-                        success.Visible = true;
-                    }
-                    else
-                    {
-                        lblmsg0.Text = "Please add a comment for rejection";
-                        lblmsg0.Visible = true;
-                        Failure.Visible = true;
-                    }
+                    lblmsg0.Text = "Please add a comment for rejection";
+                    lblmsg0.Visible = true;
+                    Failure.Visible = true;
                 }
                 else
                 {
                     if (Session["user_type"].ToString() == "EnvSpec")
                     {
                         Gen.UpdateSubProjectDraft(Session["intWorkId"].ToString(), ddlEnvSpecStatus.SelectedValue, Session["uid"].ToString());
+                        Gen.insertWorkComment(Session["intWorkId"].ToString(), txtComments.Text, ddlEnvSpecStatus.SelectedValue, Session["uid"].ToString());
+                        strSelectedStatus = ddlEnvSpecStatus.SelectedValue;
                     }
                     else if (Session["user_type"].ToString() == "QualEng")
                     {
                         Gen.UpdateSubProjectDraft(Session["intWorkId"].ToString(), ddlQualEngStatus.SelectedValue, Session["uid"].ToString());
+                        Gen.insertWorkComment(Session["intWorkId"].ToString(), txtComments.Text, ddlQualEngStatus.SelectedValue, Session["uid"].ToString());
                     }
-                    
                     if (fuWorkProposalAttachment.HasFile)
                     {
                         string strWork_Photo_Name = "WorkProposalAttachment_";
@@ -1006,11 +1008,41 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
                         Gen.InsertAttachements_Sp("WorkProposalAttachment", "WorkProposalAttachment", strWork_Photo_Name, Session["uid"].ToString(), strWorkProposalAttachmentFileName, hdn_work_activity_id.Value);
                         string WorkPhotoStr = ("~/WorkProposalAttachment/" + ddlProject.SelectedValue + "/" + txtWorkCode.Text + "/") + strWorkProposalAttachmentFileName;
                         fuWorkProposalAttachment.SaveAs(Server.MapPath("~/WorkProposalAttachment/" + ddlProject.SelectedValue + "/" + txtWorkCode.Text + "/") + strWorkProposalAttachmentFileName);
+                        strSelectedStatus = ddlQualEngStatus.SelectedValue;
                     }
-                    lblmsg.Text = "Sub-project Saved as: " + ddlEnvSpecStatus.SelectedValue;
+                    lblmsg.Text = "Sub-project Saved as: " + strSelectedStatus;
                     lblmsg.Visible = true;
                     success.Visible = true;
                 }
+
+
+
+                //}
+                //else
+                //{
+                //    if (Session["user_type"].ToString() == "EnvSpec")
+                //    {
+                //        Gen.UpdateSubProjectDraft(Session["intWorkId"].ToString(), ddlEnvSpecStatus.SelectedValue, Session["uid"].ToString());
+                //        strSelectedStatus = ddlEnvSpecStatus.SelectedValue;
+                //    }
+                //    else if (Session["user_type"].ToString() == "QualEng")
+                //    {
+                //        Gen.UpdateSubProjectDraft(Session["intWorkId"].ToString(), ddlQualEngStatus.SelectedValue, Session["uid"].ToString());
+                //        strSelectedStatus = ddlQualEngStatus.SelectedValue;
+                //    }
+
+                //    if (fuWorkProposalAttachment.HasFile)
+                //    {
+                //        string strWork_Photo_Name = "WorkProposalAttachment_";
+                //        string strWorkProposalAttachmentFileName = fuWorkProposalAttachment.FileName;
+                //        Gen.InsertAttachements_Sp("WorkProposalAttachment", "WorkProposalAttachment", strWork_Photo_Name, Session["uid"].ToString(), strWorkProposalAttachmentFileName, hdn_work_activity_id.Value);
+                //        string WorkPhotoStr = ("~/WorkProposalAttachment/" + ddlProject.SelectedValue + "/" + txtWorkCode.Text + "/") + strWorkProposalAttachmentFileName;
+                //        fuWorkProposalAttachment.SaveAs(Server.MapPath("~/WorkProposalAttachment/" + ddlProject.SelectedValue + "/" + txtWorkCode.Text + "/") + strWorkProposalAttachmentFileName);
+                //    }
+                //    lblmsg.Text = "Sub-project Saved as: " + strSelectedStatus;
+                //    lblmsg.Visible = true;
+                //    success.Visible = true;
+                //}
             }
             catch (Exception ex)
             {
@@ -1020,14 +1052,14 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
 
             if (Session["user_type"].ToString() == "QualEng")
             {
-                if (ddlEnvSpecStatus.SelectedValue == "QE-Rejected")
+                if (ddlQualEngStatus.SelectedValue == "QE-Rejected")
                 {
                     //send email to the IP that created the Work Proposal
                     DataSet dsWorkProposal = Gen.GetWorkProposalCreatorByIntWorkId(Session["intWorkId"].ToString());
                     string strCreatroEmailAddr = dsWorkProposal.Tables[0].Rows[0]["Email"].ToString();
                     Gen.SendMail(strCreatroEmailAddr, "SNSOP Notifications - Rowk Proposal Status", string.Format("Notification <br>: the Work propossal with ID {0} you created has been rejected by the PMU QUality Engineer. <br> Please check and review it according to comments provided.", Session["intWorkId"].ToString()));
                 }
-                else if (ddlEnvSpecStatus.SelectedValue == "QE-Approved")
+                else if (ddlQualEngStatus.SelectedValue == "QE-Approved")
                 {
                     DataSet dsEnvironmentSpecialistEmails = Gen.GetUsersDetailsByRole("EnvSpec");
                     string strEmailList = string.Empty;

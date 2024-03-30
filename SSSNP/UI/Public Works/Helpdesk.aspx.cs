@@ -347,14 +347,13 @@ public partial class Helpdesk : System.Web.UI.Page
             if (returnValue == -1)
             {
                 string mesg1 = "Successfully Registered - Ref. No : " + newhdCode.Trim();
-    
+        
                 if (txtemail.Text != "")
                     SendMailAnother(newhdCode, txtemail.Text.Trim());
 
 
                 Session.Remove("letterUploadFileName");
                 Session.Remove("letterUpload");
-                //Response.Redirect("FrmResult.aspx?Msg=" + mesg1);
 
                 Response.Redirect("FrmHDResult.aspx?Msg=" + mesg1);
                 //  ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('" + mesg1 + "');", true);
@@ -396,6 +395,7 @@ public partial class Helpdesk : System.Web.UI.Page
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
         mail.To.Add(to);
+  
         mail.From = new MailAddress(from, ":: CAP Foundation  MIS ::", System.Text.Encoding.UTF8);
         if (Session["user_type"].ToString().Trim() == "MORD")
         {
@@ -406,7 +406,7 @@ public partial class Helpdesk : System.Web.UI.Page
             mail.Subject = "CAP Foundation  - Help Desk Registration From " + Label57.Text;
         }
         mail.SubjectEncoding = System.Text.Encoding.UTF8;
-        mail.Body = "<H2>CAP Foundation  MIS - Help Desk Registration</H2><br><br>To : t,  <br> <br> <b> NAME: " + Label57.Text + "</b> <br><br> USER NAME: " + Label58.Text + "<br> Feed Back Type: " + ddlfeedback.SelectedItem.Text + " <br> <br> Our  Comments : " + txtsubjet.Text + " <br><br> Help Desk Our Reference Number is <b>" + numbers + "</b> <br> Please Rectify this as early as possible<br>";
+        mail.Body = "<H2>CAP Foundation  MIS - Help Desk Registration</H2><br><br>To : FIRM,  <br> <br> <b> NAME: " + Label57.Text + "</b> <br><br> USER NAME: " + Label58.Text + "<br> Feed Back Type: " + ddlfeedback.SelectedItem.Text + " <br> <br> Our  Comments : " + txtsubjet.Text + " <br><br> Help Desk Our Reference Number is <b>" + numbers + "</b> <br> Please Rectify this as early as possible<br>";
         mail.BodyEncoding = System.Text.Encoding.UTF8;
         object a = (byte[])Session["File1"];
         mail.Attachments.Add(new Attachment(new MemoryStream((byte[])Session["letterUpload"]), Session["letterUploadFileName"].ToString()));
@@ -434,15 +434,14 @@ public partial class Helpdesk : System.Web.UI.Page
             HttpContext.Current.Response.Write(errorMessage);
         } // end try
 
-    }
-
+    }    
 
     public void SendMailAnother(string numbers, string anothermail)
     {
 
         string sssnpmail = System.Configuration.ConfigurationManager.AppSettings["SUPPORTMAIL"]; // Config email
         string from = string.Format("\"SSSNP System\" <{0}>", sssnpmail);
-        
+
         string to = anothermail; //Replace this with the Email Address to whom you want to send the mail
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
@@ -458,7 +457,7 @@ public partial class Helpdesk : System.Web.UI.Page
             mail.Subject = "SSSNP Public works  - MIS Help Desk Registration From " + Label57.Text;
         }
         mail.SubjectEncoding = System.Text.Encoding.UTF8;
-        mail.Body = "<H2>SSSNP Public works MIS Help Desk Registration</H2><br><br>To : t,  <br> <br> <b> NAME: " + Label57.Text + "</b> <br><br> USER NAME: " + Label58.Text + "<br> Feed Back Type: " + ddlfeedback.SelectedItem.Text + " <br> <br> Our  Comments : " + txtsubjet.Text + " <br><br> Help Desk Our Reference Number is <b>" + numbers + "</b> <br> Please Rectify this as early as possible<br>";
+        mail.Body = "<H2>SSSNP Public works MIS Help Desk Registration</H2><br><br>To : FIRM,  <br> <br> <b> NAME: " + Label57.Text + "</b> <br><br> USER NAME: " + Label58.Text + "<br> Feed Back Type: " + ddlfeedback.SelectedItem.Text + " <br> <br> Our  Comments : " + txtsubjet.Text + " <br><br> Help Desk Our Reference Number is <b>" + numbers + "</b> <br> Please Rectify this as early as possible<br>";
         mail.BodyEncoding = System.Text.Encoding.UTF8;
         object a = (byte[])Session["File5"];
         mail.Attachments.Add(new Attachment(new MemoryStream((byte[])Session["letterUpload"]), Session["letterUploadFileName"].ToString()));
@@ -467,7 +466,6 @@ public partial class Helpdesk : System.Web.UI.Page
 
         string smtpserver = System.Configuration.ConfigurationManager.AppSettings["SMTPSERVER"]; // Config smtp
         var client = new SmtpClient(smtpserver);
-
 
         try
         {

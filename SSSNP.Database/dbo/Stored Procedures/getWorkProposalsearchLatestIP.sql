@@ -10,7 +10,8 @@
 @Status varchar(50) ,
 @AreaofWork  varchar(50) ,          
 @WorkActivity varchar(50),
-@ProjectId varchar(10)       
+@ProjectId varchar(10) ,
+@intUserId varchar(10)
 )                    
 as begin                    
                     
@@ -22,7 +23,7 @@ SELECT distinct td_IPDetails.IPName ,tbl_WorkMaster.Status, tbl_WorkMaster.intWo
 
         
          
-                      tbl_WorkMaster.PDC_ApprvDate, tbl_WorkMaster.Status                    
+                      tbl_WorkMaster.PDC_ApprvDate, tbl_WorkMaster.Status                
 FROM         tbl_WorkMaster INNER JOIN                    
                       tm_States on tm_States.intStateid=tbl_WorkMaster.intStateid      
 inner join tm_Counties  on tm_Counties.intCountieid=tbl_WorkMaster.intCountieid      
@@ -34,9 +35,10 @@ left outer join  tr_ProposedWorkAct on tbl_WorkMaster.intWorkid=tr_ProposedWorkA
                                           
                       where tbl_WorkMaster.intStateid like @intStateid and tbl_WorkMaster.intCountieid like @intCountieid and tbl_WorkMaster.intPayamid like @intPayamid                    
                       and tbl_WorkMaster.intBomasid  like @intBomasid   and tbl_WorkMaster.intTSTid like @intTSTid and tbl_WorkMaster.IPid like @IPid  and tbl_WorkMaster.Status like @Status 
-					  and tbl_WorkMaster.Status !='IP-Submitted' 
-					  and tbl_WorkMaster.Status !='ES-Rejected' 
-					  and tbl_WorkMaster.Status !='QE-Approved' 
+					 and tbl_WorkMaster.created_by like @intUserId 
+					  --and tbl_WorkMaster.Status !='IP-Submitted' 
+					  --and tbl_WorkMaster.Status !='ES-Rejected' 
+					  --and tbl_WorkMaster.Status !='QE-Approved' 
                       and (tbl_WorkMaster.WorkCode like '%'+@WorkCode+'%' )
 					  and (isnull(tr_ProposedWorkAct.intAreaofWork,'') like  @AreaofWork  )
 					  and (isnull(tr_ProposedWorkAct.intWorkActivity,'') like @WorkActivity  )

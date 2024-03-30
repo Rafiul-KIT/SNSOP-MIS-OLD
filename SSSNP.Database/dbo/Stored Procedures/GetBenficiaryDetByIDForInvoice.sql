@@ -42,9 +42,9 @@ b.SecondAlternatePayeeMobile,b.SecondAlternateNationalID,
 b.SecondAlternatepayeePhotoName,b.SecondAlternatePayeePhotoPath,
 b.female_dependants,b.male_dependants,b.latitude,b.longitude,convert(varchar(11),  b.Created_dt,106) as ConfirmedorCreatedDate,
 case when b.PhotoPath is null then @BiometricFilePaths + b.PhotoName else  REPLACE(b.PhotoPath,   '~/',@FilePaths) end as PhotoURL,
- case when b.FirstAlternatePayeePhotoPath is null then @BiometricFilePaths + b.FirstAlternatePayeePhotoName else REPLACE(b.FirstAlternatePayeePhotoPath,   '\',@FilePaths) end
+ case when b.FirstAlternatePayeePhotoPath is null then @BiometricFilePaths + b.FirstAlternatePayeePhotoName else REPLACE(b.FirstAlternatePayeePhotoPath,   '[path]',@FilePaths) end
   as FirstAlternatePayeePhotoURL,
-case when b.SecondAlternatePayeePhotoPath is null then @BiometricFilePaths + b.SecondAlternatepayeePhotoName else REPLACE(  b.SecondAlternatePayeePhotoPath,'\',      @FilePaths) end as SecondAlternatePayeePhotoURL
+case when b.SecondAlternatePayeePhotoPath is null then @BiometricFilePaths + b.SecondAlternatepayeePhotoName else REPLACE(  b.SecondAlternatePayeePhotoPath,'[path]',      @FilePaths) end as SecondAlternatePayeePhotoURL
 from dbo.tbl_BeneficiaryDet as b
 inner join tm_Bomas as bom on bom.intBomasid=b.intBomasid
 inner join tm_Payams as p on p.intPayamid=bom.intPayamid

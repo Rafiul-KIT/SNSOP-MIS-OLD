@@ -18117,7 +18117,7 @@ public class General
         }
     }
 
-    public DataSet getWorkProposalsearchLatestIP(string intStateid, string intCountieid, string intPayamid, string intBomasid, string WorkCode, string IPid, string intTSTid, string Status, string AreaofWork, string WorkActivity, string ProjectId)
+    public DataSet getWorkProposalsearchLatestIP(string intUserid, string intStateid, string intCountieid, string intPayamid, string intBomasid, string WorkCode, string IPid, string intTSTid, string Status, string AreaofWork, string WorkActivity, string ProjectId)
     {
         con.OpenConnection();
         SqlDataAdapter da;
@@ -18126,6 +18126,8 @@ public class General
         {
             da = new SqlDataAdapter("getWorkProposalsearchLatestIP", con.GetConnection);
             da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            da.SelectCommand.Parameters.Add("@intUserId", SqlDbType.VarChar).Value = intUserid.ToString();
 
 
             if (Status.Trim() == "" || Status.Trim() == null || Status.Trim() == "--Select--")

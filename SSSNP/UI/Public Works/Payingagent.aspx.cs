@@ -324,67 +324,74 @@ public partial class Payingagent : System.Web.UI.Page
                     //int j = Gen.InsertUpdateAttachements_Sp("TST Photo", i.ToString(), TSTPhoto, Session["uid"].ToString(), filename);
 
 
-
-                    Failure.Visible = false;
-                    success.Visible = true;
-                    lblmsg.Text = "Added Successfully..!";
-
-
-                    clear();
                 }
-                else
-                {
-                    lblmsg0.Text = "Already Exist. ";
-                    success.Visible = true;
-                    Failure.Visible = false;
-                }
+
+
+                //string msgs = "Dear " + txtname.Text + "<br><br> you are successfully registered SNSDP Public works Online Management System.<br><br> User Id : " + txtuser.Text + "<br><br> Password : " + txtpass.Text + "<br>";
+                //msgs = msgs + "<br><br><br>Thanks and Regards ,<br> FIRM" ;
+
+                //string body = msgs;
+                //SendMailAnother(txtemail.Text);
+
+                Failure.Visible = false;
+                success.Visible = true;
+                lblmsg.Text = "Added Successfully..!";
+
+
+                clear();
             }
             else
             {
-                //int i = Gen.insertpayingagent(hdfID.Value, Session["uid"].ToString(), txtuser1.Text.ToString(), txtpass1.Text.ToString());
+                lblmsg0.Text = "Already Exist. ";
+                success.Visible = true;
+                Failure.Visible = false;
+            }
+        }
+        else
+        {
+            int i = Gen.insertpayingagent(hdfID.Value, Session["uid"].ToString(), txtuser1.Text.ToString(), txtpass1.Text.ToString());
 
-                if (i != 999)
+            if (i != 999)
+            {
+                string s = HiddenFieldFilePath.Value;
+                if (HiddenFieldFilePath.Value != "")
                 {
-                    string s = HiddenFieldFilePath.Value;
-                    if (HiddenFieldFilePath.Value != "")
+
+                    string filename = System.IO.Path.GetFileName(HiddenFieldFilePath.Value);
+                    // filename = hdn_Material_Photo.Value.ToString();//Material_Photo_Name + filename;
+                    string TSTPhoto = Server.MapPath("~/TSTPhoto/" + hdfID.Value + "/" + filename);
+                    string Directory = Server.MapPath("~/TSTPhoto/" + hdfID.Value);
+                    if (System.IO.Directory.Exists(Directory))
                     {
 
-                        string filename = System.IO.Path.GetFileName(HiddenFieldFilePath.Value);
-                        // filename = hdn_Material_Photo.Value.ToString();//Material_Photo_Name + filename;
-                        string TSTPhoto = Server.MapPath("~/TSTPhoto/" + hdfID.Value + "/" + filename);
-                        string Directory = Server.MapPath("~/TSTPhoto/" + hdfID.Value);
-                        if (System.IO.Directory.Exists(Directory))
-                        {
+                        if (System.IO.File.Exists(TSTPhoto))
+                        { System.IO.File.Delete(TSTPhoto); }
+                        System.IO.File.Move(HiddenFieldFilePath.Value, TSTPhoto);
+                    }
+                    else
+                    {
 
-                            if (System.IO.File.Exists(TSTPhoto))
-                            { System.IO.File.Delete(TSTPhoto); }
-                            System.IO.File.Move(HiddenFieldFilePath.Value, TSTPhoto);
-                        }
-                        else
-                        {
+                        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Server.MapPath("~/TSTPhoto"), hdfID.Value));
 
-                            System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Server.MapPath("~/TSTPhoto"), hdfID.Value));
-
-                            System.IO.File.Move(HiddenFieldFilePath.Value, TSTPhoto);
-                        }
-
-                        //int j = Gen.InsertUpdateAttachements_Sp("TST Photo", hdfID.Value, TSTPhoto, Session["uid"].ToString(), filename);
-
-
+                        System.IO.File.Move(HiddenFieldFilePath.Value, TSTPhoto);
                     }
 
-                    lblmsg.Text = "Updated Successfully..!";
-                    success.Visible = true;
-                    Failure.Visible = false;
-                    clear();
+                    //int j = Gen.InsertUpdateAttachements_Sp("TST Photo", hdfID.Value, TSTPhoto, Session["uid"].ToString(), filename);
+
+
                 }
-                else
-                {
-                    lblmsg0.Text = "Already Exist. ";
-                    success.Visible = false;
-                    Failure.Visible = true;
-                    //lblmsg.Text = "Added Successfully..!";
-                }
+
+                lblmsg.Text = "Updated Successfully..!";
+                success.Visible = true;
+                Failure.Visible = false;
+                clear();
+            }
+            else
+            {
+                lblmsg0.Text = "Already Exist. ";
+                success.Visible = false;
+                Failure.Visible = true;
+                //lblmsg.Text = "Added Successfully..!";
             }
         }
     }

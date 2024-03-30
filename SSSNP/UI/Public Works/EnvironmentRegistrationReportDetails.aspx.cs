@@ -69,10 +69,7 @@ public partial class UI_Public_Works_EnvironmentRegistrationReportDetails : Syst
             string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
             string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
             aa = aa.Replace(@"\", @"/");
-            //aa = aa.Replace("E:/Nagasree", "http://www.snsdpmis.com");
             aa = aa.Replace(sssnpdir, sssnpweb);
-            aa = aa.Replace("", sssnpweb);
-            aa = aa.Replace("", sssnpweb);
             string url = aa;
             string cc = bb.Text;
             hlink.NavigateUrl = aa + "/" + cc.ToString();

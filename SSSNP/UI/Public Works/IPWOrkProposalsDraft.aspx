@@ -899,8 +899,11 @@
                                                                     OnSelectedIndexChanged="ddlEnvSpecStatus_SelectedIndexChanged">
                                                                     <asp:ListItem>ES-Approved</asp:ListItem>
                                                                     <asp:ListItem>QE-Approved</asp:ListItem>
+                                                                    <asp:ListItem>QE-Rejected</asp:ListItem>
                                                                     <asp:ListItem>TST-Rejected</asp:ListItem>
                                                                     <asp:ListItem>ES-Rejected</asp:ListItem>
+                                                                    <asp:ListItem>IP-Submitted</asp:ListItem>
+                                                                    <asp:ListItem>InProgress</asp:ListItem>
                                                                 </asp:DropDownList>
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px; width: 192px;">
@@ -933,10 +936,13 @@
                                                                     class="form-control txtbox" Height="36px" AutoPostBack="True"
                                                                     OnSelectedIndexChanged="ddlQualEngStatus_SelectedIndexChanged">
                                                                     <%--<asp:ListItem>New Proposal</asp:ListItem>--%>
-                                                                    <asp:ListItem>IP-Submitted</asp:ListItem>
-                                                                    <asp:ListItem>ES-Rejected</asp:ListItem>
+                                                                    <asp:ListItem>ES-Approved</asp:ListItem>
                                                                     <asp:ListItem>QE-Approved</asp:ListItem>
                                                                     <asp:ListItem>QE-Rejected</asp:ListItem>
+                                                                    <asp:ListItem>TST-Rejected</asp:ListItem>
+                                                                    <asp:ListItem>ES-Rejected</asp:ListItem>
+                                                                    <asp:ListItem>IP-Submitted</asp:ListItem>
+                                                                    <asp:ListItem>InProgress</asp:ListItem>
                                                                 </asp:DropDownList>
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px; width: 192px;">

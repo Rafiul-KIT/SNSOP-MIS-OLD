@@ -85,7 +85,7 @@ public partial class WorkProposalLookup : System.Web.UI.Page
         }
         else if (Session["user_type"].ToString() == "IP")
         {
-            ds = clsGeneral.getWorkProposalsearchLatestIP(ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, User, ddlstatus.SelectedValue, ddlAreaofWork.SelectedValue, ddlWorkActivity.SelectedValue, ddlProject.SelectedValue);
+            ds = clsGeneral.getWorkProposalsearchLatestIP(Session["uid"].ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, User, ddlstatus.SelectedValue, ddlAreaofWork.SelectedValue, ddlWorkActivity.SelectedValue, ddlProject.SelectedValue);
         }
 
 

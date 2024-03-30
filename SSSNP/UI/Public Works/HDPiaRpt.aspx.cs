@@ -36,17 +36,28 @@ public partial class HDPiaRpt : System.Web.UI.Page
 
             //}
             //usertype = Session["user_type"].ToString().Trim();
-            if (Session["user_id"].ToString() == "Helpdesk")
+            if (Session["user_id"].ToString() == "")
                 usertype = "ADMN";
             else
                 usertype = "USER";
 
+            //usertype = Session["usertype"].ToString().Trim();
+
+
+            //this.txtFromdate.Attributes.Add("onfocus", "popUpCalendarLeft(this,document.getElementById('ctl00_ContentPlaceHolder1_txtFromdate'), 'dd-mmm-yyyy')");
+            //this.txtTodate.Attributes.Add("onfocus", "popUpCalendarLeft(this,document.getElementById('ctl00_ContentPlaceHolder1_txtTodate'), 'dd-mmm-yyyy')");
+
+            //this.imgCalendarStartDate.Attributes.Add("onclick", "popUpCalendarLeft(this,document.getElementById('ctl00_ContentPlaceHolder1_txtFromdate'), 'dd-mmm-yyyy')");
+            //this.imgCalendarEndDate.Attributes.Add("onclick", "popUpCalendarLeft(this,document.getElementById('ctl00_ContentPlaceHolder1_txtTodate'), 'dd-mmm-yyyy')");
             
             LblStatus.Text = "";
+            //HttpSessionState mySession = ((HttpSessionState)HttpContext.Current.Session);
             if (usertype == "ADMN" || usertype == "MORD")
                 piano = "%";
             if (usertype == "USER")
+                //if (Session["user_type"].ToString().Trim() == "Head")
                 piano = Session["user_id"].ToString();
+                //piano = Session["user_code"].ToString();
             
             if (!IsPostBack)
             {
