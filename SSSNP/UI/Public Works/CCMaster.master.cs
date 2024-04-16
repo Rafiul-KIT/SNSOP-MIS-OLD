@@ -77,7 +77,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         Masters2.Visible = false;
         LiAlpha1.Visible = false;
         LiAlpha2.Visible = false;
-        Li.Visible = false;
+        liFrim.Visible = false;
         LiPA8.Visible = false;
 
         if (Session.Count > 0)
@@ -291,17 +291,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiTST8.Visible = true;
             }
 
-            if (Session["user_type"].ToString() == "")
-            {
-                // Masters1.Visible = true;
-                Masters2.Visible = true;
-                PayConnect2.Visible = true;
-                PayConnect1.Visible = true;
-                Li.Visible = true;
-                // LiTST6.Visible = true;
-                // LiTST7.Visible = true;
-                // LiTST8.Visible = true;
-            }
+            
             if (Session["user_type"].ToString() == "PC")
             {
                 // Masters1.Visible = true;
@@ -344,6 +334,200 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 PDC.Visible = true;
             }
 
+            #region old code
+            //////    LiTST.Visible = false;
+            //////    lblwecome.Text = Session["username"].ToString();
+            //////    pnlreport.Visible = false;
+            //////    if (Session["user_type"].ToString() == "Adm")
+            //////    {
+            //////        TST.Visible = false;
+            //////        Masters.Visible = true;
+            //////        IP.Visible = false;
+            //////        APIDashboard.Visible = false;
+
+            //////        //lblwecome.Text = "Admin";
+            //////    }
+            //////    else if (Session["user_type"].ToString() == "TST" || Session["user_type"].ToString() == "Adm")
+            //////    {
+            //////        Masters.Visible = false;
+            //////        TST.Visible = true;
+            //////        IP.Visible = false;
+            //////        TSTDashboard.Visible = true;
+            //////        //lblwecome.Text = "Technical Support Team";
+            //////        APIDashboard.Visible = false;
+            //////        LiTST.Visible = true;
+
+            //////    }
+            //////    else if (Session["user_type"].ToString() == "IP")
+            //////    {
+            //////        Masters.Visible = false;
+            //////        TST.Visible = false;
+            //////        IP.Visible = true;
+            //////        IPDashboard.Visible = true;
+            //////        IPInvoiceDashboard.Visible = true;
+            //////       // ipDeleting.Visible = true;
+            //////        //lblwecome.Text = "Implementing Partner";
+            //////        APIDashboard.Visible = true;
+
+            //////    }
+            //////    else if (Session["user_type"].ToString() == "BDC")
+            //////    {
+            //////        BDC.Visible = true;
+            //////        TST.Visible = false;
+            //////        //Master.Visible = false;
+            //////        IP.Visible = false;
+            //////        PDC.Visible = false;
+            //////        //lblwecome.Text = "Implementing Partner";
+            //////        APIDashboard.Visible = false;
+
+            //////    }
+            //////    else if (Session["user_type"].ToString() == "PDC")
+            //////    {
+            //////        PDC.Visible = true;
+            //////        TST.Visible = false;
+            //////        //Master.Visible = false;
+            //////        IP.Visible = false;
+            //////        BDC.Visible = false;
+            //////       //lblwecome.Text = "Implementing Partner";
+            //////        APIDashboard.Visible = false;
+
+            //////    }
+            //////    else if (Session["user_type"].ToString() == "PA")
+            //////    {
+            //////        LiPA.Visible = true;
+            //////        TST.Visible = false;
+            //////        IP.Visible = false;
+            //////        pnlreport.Visible = false;
+
+            //////        WagePayment.Visible = false;
+            //////        wageAtten.Visible = false;
+            //////        Wagep.Visible = false;
+            //////        APIDashboard.Visible = false;
+
+            //////    }
+            //////    else if (Session["user_type"].ToString() == "Cordinator" || Session["user_type"].ToString() == "Specialist" || Session["user_type"].ToString() == "Manager")
+            //////    {
+            //////        LiPA.Visible = true;
+            //////        TST.Visible = false;
+            //////        IP.Visible = false;
+            //////        pnlreport.Visible = false;
+
+            //////        WagePayment.Visible = false;
+            //////        wageAtten.Visible = false;
+            //////        Wagep.Visible = false;
+            //////        APIDashboard.Visible = false;
+
+            //////    }
+
+            //////    if (Session["user_type"].ToString() == "Help" || Session["user_type"].ToString() == "Admin")
+            //////    {
+            //////        pnlreport.Visible = true;
+            //////        APIDashboard.Visible = false;
+
+
+            //////    }
+            //////    else
+            //////    {
+            //////        pnlreport.Visible = false;
+            //////    }
+
+            //////    if (Session["user_type"].ToString() == "TST" || Session["user_type"].ToString() == "Help")
+            //////    {
+            //////        WagePayment.Visible = true;
+            //////        wageAtten.Visible = true;
+            //////        Wagep.Visible = true;
+
+            //////    }
+            //////    else
+            //////    {
+            //////        WagePayment.Visible = false;
+            //////        wageAtten.Visible = false;
+            //////        Wagep.Visible = false;
+
+
+            //////    }
+            //////    LiWB.Visible = false;
+            //////     if (Session["user_type"].ToString() == "WB")
+            //////    {
+            //////        LiPA.Visible = false;
+            //////        TST.Visible = false;
+            //////        IP.Visible = false;
+            //////        pnlreport.Visible = false;
+            //////        WagePayment.Visible = false;
+            //////        wageAtten.Visible = false;
+            //////        Wagep.Visible = false;
+            //////        LiWB.Visible = true;
+            //////        APIDashboard.Visible = false;
+
+            //////    }
+
+            //////    if(Session["user_type"].ToString() == "IP")
+            //////    {
+            //////        LiDashboardIP.Visible=true;
+            //////    }
+            //////    if (Session["Desgid"].ToString() == "1000" || Session["Desgid"].ToString() == "1004" || Session["Desgid"].ToString() == "1007")
+            //////    {
+            //////        trCo.Visible = true;
+            //////        trSp.Visible = true;
+            //////        trMa.Visible = true;
+            //////    }
+            //////    if (Session["Desgid"].ToString() == "1001")
+            //////    {
+            //////        trCo.Visible = true;
+            //////        trSp.Visible = true;
+            //////        trMa.Visible = true;
+            //////    }
+
+            //////    if (Session["Desgid"].ToString() == "1002")
+            //////    {
+            //////        trCo.Visible = true;
+            //////        trSp.Visible = false;
+            //////        trMa.Visible = false;
+            //////    }
+            //////    if (Session["Desgid"].ToString() == "1003" || Session["Desgid"].ToString() == "1005" || Session["Desgid"].ToString() == "1011" || Session["Desgid"].ToString() == "1007" || Session["Desgid"].ToString() == "1009")
+            //////    {
+            //////        trCo.Visible = false;
+            //////        trSp.Visible = true;
+            //////        trMa.Visible = false;
+            //////    }
+            //////    if (Session["Desgid"].ToString() == "1006" || Session["Desgid"].ToString() == "1010")
+            //////    {
+            //////        trCo.Visible = false;
+            //////        trSp.Visible = false;
+            //////        trMa.Visible = true;
+            //////    }
+            //////    if (Session["Desgid"].ToString() == "1002")
+            //////    {
+            //////        trCo.Visible = true;
+            //////        trSp.Visible = false;
+            //////        trMa.Visible = false;
+            //////    }
+            //////    if (Session["Desgid"].ToString() == "1002")
+            //////    {
+            //////        trCo.Visible = true;
+            //////        trSp.Visible = false;
+            //////        trMa.Visible = false;
+            //////    }
+            //////    if (Session["Desgid"].ToString() == "1002")
+            //////    {
+            //////        trCo.Visible = true;
+            //////        trSp.Visible = false;
+            //////        trMa.Visible = false;
+            //////    }
+            //////    liFrim.Visible = false;
+            //////    if (Session["user_type"].ToString() == "IP")
+            //////    {
+            //////        liFrim.Visible = false;
+            //////    }
+            //////    else
+            //////    {
+            //////        liFrim.Visible = true;
+            //////    }
+            //////    WagePayment.Visible = false;
+            //////    wageAtten.Visible = false;
+            //////    Wagep.Visible = false;
+
+            #endregion
 
         }
         else

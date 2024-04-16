@@ -9,7 +9,7 @@
 <body>
     <form id="form1" runat="server">
     <div align="center" style="text-align: center">
-    <asp:Label ID="Label2" runat="server" Text="Some Technical with azure login Error happend.Please contact to us.Mail to : ---" Font-Bold="True" Font-Size="18" ForeColor="LightBlue" Font-Names="Verdana"></asp:Label>
+    <asp:Label ID="Label2" runat="server" Text="Some Technical with azure login Error happend.Please contact to us.Mail to : [supportEmail] " Font-Bold="True" Font-Size="18" ForeColor="LightBlue" Font-Names="Verdana"></asp:Label>
     <br />
     <br />
      <br />

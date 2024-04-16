@@ -535,13 +535,13 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiAlpha2;
 
     /// <summary>
-    /// Li control.
+    /// liFrim control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl Li;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liFrim;
 
     /// <summary>
     /// BDC control.

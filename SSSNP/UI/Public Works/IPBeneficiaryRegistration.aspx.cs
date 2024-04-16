@@ -344,6 +344,7 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                     string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
                     string dd = Session["Photo"].ToString().Trim();
                     dd = dd.Replace(@"\", @"/");
+                 
                     dd = dd.Replace(sssnpdir, sssnpweb);
                     dd = dd.Replace("~/", sssnpweb);
                     // lblFileName.Text = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
@@ -506,10 +507,9 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                     string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
                     string dd = Session["Photo2"].ToString().Trim();
                     dd = dd.Replace(@"\", @"/");
-                    
                     dd = dd.Replace(sssnpdir, sssnpweb);
                     // lblFileName.Text = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
-                    
+                    //dd = dd.Replace("~/", "http://www.snsdpmis.com/");
                     dd = dd.Replace("~/", sssnpweb);
                     Image3.ImageUrl = dd + "/" + lblFileName.Text;
                     // Image1.ImageUrl = Session["Photo"] + "\\"+ lblFileName.Text ;
@@ -733,12 +733,11 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                 string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
                 string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
                 dd = dd.Replace(@"\", @"/");
-                
-                
+    
                 dd = dd.Replace(sssnpdir, sssnpweb);
                 dd = dd.Replace("~", sssnpweb);
                 //  dd = dd.Replace("~/", sssnpweb);
-                
+                //  dd = "http://www.snsdpmis.com/Photo/" + hdfID.Value + "/Household/"; 
                 lblFileName.Text = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
                 //Image1.ImageUrl = dd + "/" + lblFileName.Text;
                 Image1.ImageUrl = dd;
@@ -751,7 +750,7 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                 string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
                 string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
                 dd = dd.Replace(@"\", @"/");
-                dd = dd.Replace("", sssnpweb);
+    
                 dd = dd.Replace(sssnpdir, sssnpweb);
                 dd = dd.Replace("~/", sssnpweb);
                 lblFileName1.Text = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
@@ -776,10 +775,10 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                 string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
                 string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
                 dd = dd.Replace(@"\", @"/");
-                dd = dd.Replace("", sssnpweb);
+
+             
                 dd = dd.Replace(sssnpdir, sssnpweb);
                 dd = dd.Replace("~/", sssnpweb);
-                
                 lblFileName2.Text = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
                 //  Image3.ImageUrl = dd + "/" + lblFileName2.Text;
                 //   Image3.ImageUrl = dd;
@@ -790,7 +789,6 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                 }
                 else
                 {
-                    //Image3.ImageUrl = "http:/54.68.125.132:8181/snsdp/public/attachments/" + ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
                     Image3.ImageUrl = System.Configuration.ConfigurationManager.AppSettings["GetAttachments"] + ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim(); // API_V_1.2
                 }
             }

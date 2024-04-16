@@ -877,6 +877,15 @@ public partial class IPWOrkProposals
     protected global::AjaxControlToolkit.CalendarExtender CalendarExtender3;
 
     /// <summary>
+    /// EndToStartWorkStartValidator control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CompareValidator EndToStartWorkStartValidator;
+
+    /// <summary>
     /// RequiredFieldValidator37 control.
     /// </summary>
     /// <remarks>

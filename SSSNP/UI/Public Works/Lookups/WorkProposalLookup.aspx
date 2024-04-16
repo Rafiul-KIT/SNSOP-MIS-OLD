@@ -173,7 +173,11 @@
                                                         <asp:DropDownList ID="ddlstatus" runat="server" 
                                                             class="form-control txtbox" Height="28px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem>IP-Submitted</asp:ListItem>
+                                                            <asp:ListItem>QE-Approved</asp:ListItem>
+                                                            <asp:ListItem>QE-Rejected</asp:ListItem>
                                                             <asp:ListItem>ES-Approved</asp:ListItem>
+                                                            <asp:ListItem>ES-Rejected</asp:ListItem>
                                                             <asp:ListItem>Approved</asp:ListItem>
                                                             <asp:ListItem>Funds Allocation</asp:ListItem>
                                                             <asp:ListItem>Fund Released</asp:ListItem>

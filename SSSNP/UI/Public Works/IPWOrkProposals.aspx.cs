@@ -43,6 +43,12 @@ public partial class IPWOrkProposals : System.Web.UI.Page
             // Look up Click Function Intialization
             btnOrgLookup0.Attributes.Add("onclick", "javascript:return OpenPopup()");
 
+            //Estimated Work Start date
+            CalendarExtender2.StartDate = DateTime.Now;
+
+            //Estimated Work End date
+            CalendarExtender3.StartDate = DateTime.Now;
+
             Gen.getStates(ddlState);
             Gen.getIpDet(ddlIP);
 
@@ -1612,14 +1618,15 @@ public partial class IPWOrkProposals : System.Web.UI.Page
         string from = string.Format("\"SSSNP System\" <{0}>", sssnpmail);
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
-        anothermail = "";
-        anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
+        anothermail = "[email1],[email2]";
+  
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {
             mail.To.Add(new MailAddress(multilailid));
         }
 
+  
         string Messge = ddlIP.SelectedItem.Text + " has Proposed some works.Please verify it.";
 
         mail.From = new MailAddress(from, ":: SSSNP Public Works MIS ::", System.Text.Encoding.UTF8);
@@ -1637,7 +1644,7 @@ public partial class IPWOrkProposals : System.Web.UI.Page
 
         string smtpserver = System.Configuration.ConfigurationManager.AppSettings["SMTPSERVER"]; // Config smtp
         var client = new SmtpClient(smtpserver);
-
+     
         try
         {
             client.Send(mail);
@@ -1665,8 +1672,22 @@ public partial class IPWOrkProposals : System.Web.UI.Page
         string from = string.Format("\"SSSNP System\" <{0}>", sssnpmail);
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
-        anothermail = "";
-        anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
+        DataSet dsIPEmails = Gen.GetUsersDetailsByRole("IP");
+        string strEmailList = string.Empty;
+        int icountUsers = dsIPEmails.Tables[0].Rows.Count;
+        for (int iCounter = 0; iCounter < icountUsers; iCounter++)
+        {
+            if (iCounter == 0)
+            {
+                strEmailList = dsIPEmails.Tables[0].Rows[0]["Email"].ToString();
+            }
+            else
+            {
+                strEmailList = strEmailList + "," + dsIPEmails.Tables[0].Rows[0]["Email"].ToString();
+            }
+        }
+ 
+        anothermail = strEmailList;
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {

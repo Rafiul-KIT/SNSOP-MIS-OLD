@@ -123,8 +123,7 @@ public partial class UI_EnvironmentManagmentReport : System.Web.UI.Page
             aa = aa.Replace(@"\", @"/");
             
             aa = aa.Replace(sssnpdir, sssnpweb);
-            aa = aa.Replace("", sssnpweb);
-            aa = aa.Replace("", sssnpweb);
+            
             string url = aa;
             string cc = bb.Text;
             hlink.NavigateUrl = aa + "/" + cc.ToString();

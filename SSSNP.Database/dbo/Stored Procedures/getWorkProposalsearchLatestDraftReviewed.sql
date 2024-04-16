@@ -31,14 +31,14 @@ left outer join  tr_ProposedWorkAct on tbl_WorkMaster.intWorkid=tr_ProposedWorkA
                                           
                       where tbl_WorkMaster.intStateid like @intStateid and tbl_WorkMaster.intCountieid like @intCountieid and tbl_WorkMaster.intPayamid like @intPayamid                    
                       and tbl_WorkMaster.intBomasid  like @intBomasid   and tbl_WorkMaster.intTSTid like @intTSTid and tbl_WorkMaster.IPid like @IPid   
-					  and tbl_WorkMaster.Status !='New Proposal'
-					  and tbl_WorkMaster.Status !='Approved'
+					  --and tbl_WorkMaster.Status !='New Proposal'
+					  --and tbl_WorkMaster.Status !='Approved'
 					  and tbl_WorkMaster.Status !='Funds Allocation'
 					  and tbl_WorkMaster.Status !='Fund Released'
-					  and tbl_WorkMaster.Status !='InProgress'
+					  --and tbl_WorkMaster.Status !='InProgress'
 					  and tbl_WorkMaster.Status !='Closed'
 					  --and tbl_WorkMaster.Status !='Rejected'
-					  and tbl_WorkMaster.Status !='Draft'
+					  --and tbl_WorkMaster.Status !='Draft'
 					  and tbl_WorkMaster.Status like '%'+ @Status + '%'
 
                       and (tbl_WorkMaster.WorkCode like '%'+@WorkCode+'%' )

@@ -107,7 +107,6 @@ public partial class ESMPDetails : System.Web.UI.Page
             string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
             aa = aa.Replace(@"\", @"/");
             aa = aa.Replace(sssnpdir, sssnpweb);
-            aa = aa.Replace("", sssnpweb);
             string url = aa;
             string cc = bb.Text;
             hlink.NavigateUrl = aa + "/" + cc.ToString();
