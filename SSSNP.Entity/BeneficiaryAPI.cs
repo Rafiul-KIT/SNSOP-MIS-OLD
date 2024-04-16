@@ -48,7 +48,18 @@ namespace SSSNP_SNSOP.Entity
         //ALternate     
         public string alternate_number { get; set; }
         public string selection_criteria { get; set; }
-        public string selection_reason { get; set; } 
-              
+        public string selection_reason { get; set; }
+
+
+        public string liTemplate { get; set; }
+        public string lmTemplate { get; set; }
+        public string lrTemplate { get; set; }
+        public string lsTemplate { get; set; }
+        public string ltTemplate { get; set; }
+        public string riTemplate { get; set; }
+        public string rmTemplate { get; set; }
+        public string rrTemplate { get; set; }
+        public string rsTemplate { get; set; }
+        public string rtTemplate { get; set; }
     }
 }
