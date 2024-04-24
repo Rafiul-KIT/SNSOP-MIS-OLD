@@ -64,7 +64,17 @@
 		<property name="selection_reason">
 			<column>SelectionReason</column>
 		</property>
-		
+
+    <property name="liTemplate"></property>
+    <property name="lmTemplate"></property>
+    <property name="lrTemplate"></property>
+    <property name="lsTemplate"></property>
+    <property name="ltTemplate"></property>
+    <property name="riTemplate"></property>
+    <property name="rmTemplate"></property>
+    <property name="rrTemplate"></property>
+    <property name="rsTemplate"></property>
+    <property name="rtTemplate"></property>
 	</properties>
 
 	<operations>
@@ -459,52 +469,60 @@
 		<operation name="AddBeneficiary">
 			<query>
 
-				DECLARE @SumMale int = convert(int, @female_dependants) ;
-				declare @SumFemale int = convert(int ,@male_dependants) ;
-				declare @SumMF int = @SumMale + @SumFemale;
+        DECLARE @SumMale int = convert(int, @female_dependants) ;
+        declare @SumFemale int = convert(int ,@male_dependants) ;
+        declare @SumMF int = @SumMale + @SumFemale;
 
-				EXEC @ReturnValue = insertbenficiaryDetfromapi
-				@partner_code,
-				@household_number,
-				@beneficiary_type,
-				@group_number,
-				@supervisor_id,
-				@member_number,
-				@household_size,
-				@household_name,
-				@Age,
-				@spouse_name,
-				@id_number,
-				@phone_number,
-				@gender,
-				@female_dependants,
-				@male_dependants,
-				@SumMF,
-				@zero_five,
-				@six_eighteen,
-				@nineteen_forty_five,
-				@forty_six_sixty_five,
-				@sixty_six,
-				@income_household,
-				@average_household,
-				@state,
-				@county,
-				@payam,
-				@boma,
-				@latitude,
-				@longitude,
-				@legal_status,
-				@photo_url,
-				'',
-				@created_at,
-				@updated_at,
-				@partner_code,
-				@selection_criteria,
-				@selection_reason,
-				@ReturnValue output
-
-
-			</query>
+        EXEC @ReturnValue = insertbenficiaryDetfromapi
+        @partner_code,
+        @household_number,
+        @beneficiary_type,
+        @group_number,
+        @supervisor_id,
+        @member_number,
+        @household_size,
+        @household_name,
+        @Age,
+        @spouse_name,
+        @id_number,
+        @phone_number,
+        @gender,
+        @female_dependants,
+        @male_dependants,
+        @SumMF,
+        @zero_five,
+        @six_eighteen,
+        @nineteen_forty_five,
+        @forty_six_sixty_five,
+        @sixty_six,
+        @income_household,
+        @average_household,
+        @state,
+        @county,
+        @payam,
+        @boma,
+        @latitude,
+        @longitude,
+        @legal_status,
+        @photo_url,
+        '',
+        @created_at,
+        @updated_at,
+        @partner_code,
+        @selection_criteria,
+        @selection_reason,
+        @liTemplate,
+        @lmTemplate,
+        @lrTemplate,
+        @lsTemplate,
+        @ltTemplate,
+        @riTemplate,
+        @rmTemplate,
+        @rrTemplate,
+        @rsTemplate,
+        @rtTemplate,
+        @ReturnValue output
+      </query>
 		</operation>
     <operation name="AddBeneficiaryLoc">
       <query>
