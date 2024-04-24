@@ -1619,7 +1619,8 @@ public partial class IPWOrkProposals : System.Web.UI.Page
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
         anothermail = "[email1],[email2]";
-  
+        anothermail = System.Configuration.ConfigurationManager.AppSettings["TwoEmailRecipients"];
+
         string[] multi = anothermail.Split(',');
         foreach (string multilailid in multi)
         {
