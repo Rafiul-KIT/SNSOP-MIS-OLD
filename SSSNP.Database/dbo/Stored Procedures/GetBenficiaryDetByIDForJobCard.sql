@@ -17,8 +17,8 @@ SELECT tAPI.intBenTempid , tbl_WorkMaster.WorkCode,tbl_BeneficiaryDet.Age,   tbl
                       tbl_BeneficiaryDet.Address, tbl_BeneficiaryDet.ContactNo, tbl_BeneficiaryDet.Email, tbl_BeneficiaryDet.BiometricNo,      
                       tbl_BeneficiaryDet.Created_dt, tm_Payams.PayamName, tm_States.StateName, tm_Counties.CountieName, tm_Bomas.BomaName,
 					   tbl_BeneficiaryDet.PhotoPath,tbl_BeneficiaryDet.PhotoName   ,
-					      tbl_BeneficiaryDet.FirstAlternatePayeePhotoName, tbl_BeneficiaryDet.Name1stAlternatePayee ,
-					    tbl_BeneficiaryDet.SecondAlternatepayeePhotoName , tbl_BeneficiaryDet.Name2ndAlternatePayee 
+					      tbl_BeneficiaryDet.FirstAlternatePayeePhotoName, tbl_BeneficiaryDet.FirstAlternatePayeePhotoPath, tbl_BeneficiaryDet.Name1stAlternatePayee ,
+					    tbl_BeneficiaryDet.SecondAlternatepayeePhotoName , tbl_BeneficiaryDet.SecondAlternatePayeePhotoPath, tbl_BeneficiaryDet.Name2ndAlternatePayee 
 FROM         tbl_BeneficiaryDet LEFT OUTER JOIN   
  tm_Bomas ON tbl_BeneficiaryDet.intBomasid = tm_Bomas.intBomasid left outer JOIN 
  tm_Payams ON tm_Payams.intPayamid = tm_Bomas.intPayamid left outer JOIN  

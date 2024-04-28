@@ -429,7 +429,7 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                     dd = dd.Replace(sssnpdir, sssnpweb);
                     dd = dd.Replace("~/", sssnpweb);
                     // lblFileName.Text = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
-                    Image2.ImageUrl = dd + "/" + lblFileName.Text;
+                    Image2.ImageUrl = dd + "/" + lblFileName1.Text;
                     // Image1.ImageUrl = Session["Photo"] + "\\"+ lblFileName.Text ;
 
                 }
@@ -511,7 +511,7 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                     // lblFileName.Text = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
                     //dd = dd.Replace("~/", "http://www.snsdpmis.com/");
                     dd = dd.Replace("~/", sssnpweb);
-                    Image3.ImageUrl = dd + "/" + lblFileName.Text;
+                    Image3.ImageUrl = dd + "/" + lblFileName2.Text;
                     // Image1.ImageUrl = Session["Photo"] + "\\"+ lblFileName.Text ;
 
                 }
@@ -728,8 +728,9 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
             if (ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != null)
             {
                 string dd = ds.Tables[0].Rows[0]["PhotoPath"].ToString().Trim();
-                Session["Photo"] = ds.Tables[0].Rows[0]["PhotoPath"].ToString().Trim();
-                Session["PhotoName"] = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
+                string ddName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
+                Session["Photo"] = dd;
+                Session["PhotoFileName"] = ddName;
                 string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
                 string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
                 dd = dd.Replace(@"\", @"/");
@@ -740,13 +741,18 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                 //  dd = "http://www.snsdpmis.com/Photo/" + hdfID.Value + "/Household/"; 
                 lblFileName.Text = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
                 //Image1.ImageUrl = dd + "/" + lblFileName.Text;
+                if (!dd.Contains(ddName))
+                {
+                    dd += "/" + ddName;
+                }
                 Image1.ImageUrl = dd;
             }
             if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != null)
             {
                 string dd = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim();
-                Session["Photo1"] = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim();
-                Session["PhotoName1"] = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
+                string ddName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
+                Session["Photo1"] = dd;
+                Session["PhotoFileName1"] = ddName;
                 string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
                 string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
                 dd = dd.Replace(@"\", @"/");
@@ -758,6 +764,10 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                 // Image2.ImageUrl = dd ;
                 if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim() != "")
                 {
+                    if (!dd.Contains(ddName))
+                    {
+                        dd += "/" + ddName;
+                    }
                     Image2.ImageUrl = dd;
                     //Image2.ImageUrl = dd + "/" + lblFileName1.Text;
                 }
@@ -770,8 +780,9 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
             if (ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != null)
             {
                 string dd = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim();
-                Session["Photo2"] = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim();
-                Session["PhotoName2"] = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
+                string ddName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
+                Session["Photo2"] = dd;
+                Session["PhotoFileName2"] = ddName;
                 string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
                 string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
                 dd = dd.Replace(@"\", @"/");
@@ -784,6 +795,10 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
                 //   Image3.ImageUrl = dd;
                 if (ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim() != "")
                 {
+                    if (!dd.Contains(ddName))
+                    {
+                        dd += "/" + ddName;
+                    }
                     Image3.ImageUrl = dd;
                     //Image3.ImageUrl = dd + "/" + lblFileName2.Text;
                 }

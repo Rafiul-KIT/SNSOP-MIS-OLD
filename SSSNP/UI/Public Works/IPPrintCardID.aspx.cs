@@ -125,20 +125,33 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 if (ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != null)
                 {
+                    string ddName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
                     string dd = ds.Tables[0].Rows[0]["PhotoPath"].ToString().Trim();
                     dd = dd.Replace(@"\", @"/");
 
                     txtFilename.Text = dd;
-                    
-                    if (File.Exists(Server.MapPath(dd)))
+
+                    if (!dd.Contains(ddName))
                     {
+                        dd += "/" + ddName;
+                    }
+
+                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+
+                    if (dd.Contains(sssnpdir))
+                    {
+                        dd = dd.Replace(sssnpdir, "~");
+                    }
+
+                    //if (File.Exists(Server.MapPath(act)))
+                    //{
                         hdPhotoMain.Value = CreateCloneImage(dd);
                         btnEditPhotoBeneficiary.Enabled = true;
 
-                    }
-                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-                    dd = dd.Replace(sssnpdir, sssnpweb);
+                    //}
+                    
+                    //dd = dd.Replace(sssnpdir, sssnpweb);
                     dd = dd.Replace("~", sssnpweb);
          
                     string lblFileName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
@@ -153,6 +166,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 {
                     string dd = @"~/alternateone/" + ds.Tables[0].Rows[0]["intBenTempid"].ToString() + @"/" + ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
                     dd = dd.Replace(@"\", @"/");
+                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+                    dd = dd.Replace(sssnpdir, sssnpweb);
+
+                    string ddName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"]?.ToString().Trim();
 
                     txtPhotoCardA1.Text = dd;
 
@@ -162,11 +180,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         btnEditPhotoA1.Enabled = true;
 
                     }
-                                       
-
-                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-                    dd = dd.Replace(sssnpdir, sssnpweb);
+                    else
+                    {
+                        if (ddName != "" && ddName != null)
+                        {
+                            dd = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim();
+                            dd = dd.Replace(@"\", @"/");
+                            dd = dd.Replace(sssnpdir, sssnpweb);
+                            if (!dd.Contains(ddName))
+                            {
+                                dd += "/" + ddName;
+                            }
+                            hdPhotoA1.Value = CreateCloneImage(dd.Replace(sssnpweb, "~"));
+                            btnEditPhotoA1.Enabled = true;
+                        }
+                    }
+                    
                     dd = dd.Replace("~", sssnpweb);
                     string lblFileName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
 
@@ -178,6 +207,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 {
                     string dd = @"~/alternatetwo/" + ds.Tables[0].Rows[0]["intBenTempid"].ToString() + @"/" + ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
                     dd = dd.Replace(@"\", @"/");
+                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+                    dd = dd.Replace(sssnpdir, sssnpweb);
+
+                    string ddName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"]?.ToString().Trim();
 
                     txtPhotoCardA2.Text = dd;
 
@@ -188,11 +222,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         btnEditPhotoA2.Enabled = true;
 
                     }
-
+                    else
+                    {
+                        if (ddName != "" && ddName != null)
+                        {
+                            dd = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim();
+                            dd = dd.Replace(@"\", @"/");
+                            dd = dd.Replace(sssnpdir, sssnpweb);
+                            if (!dd.Contains(ddName))
+                            {
+                                dd += "/" + ddName;
+                            }
+                            hdPhotoA2.Value = CreateCloneImage(dd.Replace(sssnpweb, "~"));
+                            btnEditPhotoA2.Enabled = true;
+                        }
+                    }
                     
-                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-                    dd = dd.Replace(sssnpdir, sssnpweb);
                     dd = dd.Replace("~", sssnpweb);
                     string lblFileName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
 

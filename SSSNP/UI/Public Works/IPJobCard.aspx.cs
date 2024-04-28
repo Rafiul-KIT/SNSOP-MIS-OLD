@@ -97,6 +97,12 @@ public partial class CheckPOITD : System.Web.UI.Page
                 dd = dd.Replace(sssnpdir, sssnpweb);
                 dd = dd.Replace("~", sssnpweb);
                 string lblFileName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
+
+                if (!dd.Contains(lblFileName))
+                {
+                    dd += "/" + lblFileName;
+                }
+
                 Image1.ImageUrl = dd;
             }
 
