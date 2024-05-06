@@ -8,6 +8,14 @@ using System.Web.UI.WebControls;
 using System.Net.Mail;
 using Telerik.Web.UI;
 using System.Drawing;
+using System.Data.SqlClient;
+using System.Web.Script.Serialization;
+using System.Collections.Generic;
+using System.Net;
+using SSSNP_SNSOP.Extensions;
+using System.Text;
+using System.IO;
+using static ImportBeneficiaryAll;
 #endregion
 #region Amendment History Begin
 //Form Name : Wage Process Dashboard Drilldown and Approvals at Coordinator, Specialist, Manager
@@ -511,6 +519,8 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             {
                 //Update Exchange rate and Specialist approval date (SApproveDate)
                 int ss = Gen.UpdateMApproveDate(hdfApplID.Value, Session["uid"].ToString().Trim());
+
+                SendWageRequestByApi(Session["uid"].ToString().Trim());
             }
         }
 
@@ -560,6 +570,107 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
     }
     #endregion
 
+
+    #region Send Manager Approved Wage Request Data by API
+    private void SendWageRequestByApi(string uid)
+    {
+        try
+        {
+            string result = "";
+            DB.DB con = new DB.DB();
+            con.OpenConnection();
+            SqlDataAdapter da;
+            DataSet dsn = new DataSet();
+            try
+            {
+                da = new SqlDataAdapter("getBenfWorkWageDetailsService", con.GetConnection);
+                da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.Fill(dsn);
+                Session["ErrorDataW"] = dsn.Tables[0];
+
+                con.CloseConnection();
+                DataTable ds = new DataTable();
+                ds = (DataTable)Session["ErrorDataW"];
+
+                if (ds.Rows.Count > 0)
+                {
+                    result = "{ \"BenfWorkWagesDetails\":\"success\",\"status\":" + "\"" + "1" + "\",\"result\":" + DataTableToJSONWithJavaScriptSerializer(ds, uid) + "}";
+                }
+                else
+                {
+                    result = "{ \"BenfWorkWagesDetails\":\"failure\",\"status\":\"0\",\"result\": \"null\"}";
+                }
+            }
+            catch (Exception ex)
+            {
+                result = "{ \"BenfWorkWagesDetails\":\"failure\",\"status\":\"0\",\"result\": \"null\"}";
+            }
+
+            string uri = System.Configuration.ConfigurationManager.AppSettings["PushPayments"];
+            Uri urlCheck = new Uri(uri);
+            HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
+
+            string apikey = System.Configuration.ConfigurationManager.AppSettings["APIpasskey"];
+            httpWReq.PreAuthenticate = true;
+            httpWReq.Headers.Add("Authorization", "Bearer " + apikey.HashSHA512());
+
+            try
+            {
+                var data = Encoding.ASCII.GetBytes(result);
+                httpWReq.Method = "POST";
+                httpWReq.ContentType = "application/x-www-form-urlencoded";
+                httpWReq.ContentLength = data.Length;
+
+                using (var stream = httpWReq.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+
+                HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                String jsonresponse = "";
+                String temp = null;
+                while ((temp = reader.ReadLine()) != null)
+                {
+                    jsonresponse += temp;
+                }
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                js.MaxJsonLength = Int32.MaxValue;
+                RootObject obj = js.Deserialize<RootObject>(jsonresponse);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
+            }
+        }
+        catch
+        {
+
+        }
+    }
+
+    private string DataTableToJSONWithJavaScriptSerializer(DataTable table, string uid)
+    {
+        JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
+        jsSerializer.MaxJsonLength = Int32.MaxValue;
+        List<Dictionary<string, object>> parentRow = new List<Dictionary<string, object>>();
+        Dictionary<string, object> childRow;
+        foreach (DataRow row in table.Rows)
+        {
+            if (row["intWagePaymentReqid"] != null && row["intWagePaymentReqid"].ToString() == uid)
+            {
+                childRow = new Dictionary<string, object>();
+                foreach (DataColumn col in table.Columns)
+                {
+                    childRow.Add(col.ColumnName, row[col]);
+                }
+                parentRow.Add(childRow);
+            }
+        }
+
+        return jsSerializer.Serialize(parentRow);
+    }
+    #endregion
 
     #region Mail Send Functionalities
 
