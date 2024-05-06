@@ -182,6 +182,7 @@
     <Content Include="assets\Background.png" />
     <Content Include="assets\Loading.gif" />
     <Content Include="error.txt" />
+    <Content Include="Resource\Images\snsop-id-card-bg-edited.png" />
     <Content Include="Tools.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Errorpages\oops.aspx" />

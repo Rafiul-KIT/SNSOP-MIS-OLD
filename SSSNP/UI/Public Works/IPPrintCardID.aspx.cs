@@ -459,6 +459,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             if (intID == 0) return;
 
             GenerateCardID cardId = new GenerateCardID();
+            cardId.intBenId = intID.ToString();
             cardId.NumberID = lblJobcard.Text;
             cardId.BeneficiaryName = lblHHname.Text;
             cardId.BeneficiaryPhoto = hdPhotoMain.Value;

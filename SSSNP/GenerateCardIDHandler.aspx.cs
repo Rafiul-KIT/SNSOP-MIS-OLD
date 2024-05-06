@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Xml.Linq;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
+using System.Data;
 
 namespace SSSNP
 {
@@ -60,7 +61,7 @@ namespace SSSNP
         private byte[] GeneratePDF(GenerateCardID cardID)
         {
             string imageFilePath = Server.MapPath("~/Resource/Images/background1pdf.png");
-            string imageFilePath2 = Server.MapPath("~/Resource/Images/background2pdf.png");
+            string imageFilePath2 = Server.MapPath("~/Resource/Images/snsop-id-card-bg-edited.png");
 
             string emptyPhoto = Server.MapPath("~/Resource/Images/not-available.jpg");
             // string emptyPhoto = Server.MapPath("~/Photo/testO1.png");
@@ -181,6 +182,32 @@ namespace SSSNP
             cb5.ShowText("2. " + cardID.AlternateName2);
             cb5.EndText();
 
+            //var qrData = "QrCodeData:\n";
+            var qrData = "";
+            qrData += "1: " + cardID.NumberID + "\n";
+            qrData += "2: " + cardID.BeneficiaryName + "\n";
+            try
+            {
+                General Gen = new General();
+                DataSet ds = Gen.GetBenficiaryDetByID(cardID.intBenId.ToString());
+                if (ds != null && ds.Tables?.Count > 0 && ds.Tables[0].Rows?.Count > 0)
+                {
+                    qrData += "3: " + ds.Tables[0].Rows[0]["Age"].ToString() + "\n";
+                    qrData += "4: " + ds.Tables[0].Rows[0]["Sex"].ToString() + "\n";
+                    qrData += "5: " + ds.Tables[0].Rows[0]["ContactNo"].ToString() + "\n";
+                }
+            } catch
+            {
+
+            }
+
+            iTextSharp.text.pdf.PdfContentByte jpg6 = writer.DirectContent;
+            iTextSharp.text.pdf.BarcodeQRCode Qr = new BarcodeQRCode(qrData, 25, 25, null);
+            iTextSharp.text.Image img = Qr.GetImage();
+            img.ScaleAbsoluteWidth(50);
+            img.ScaleAbsoluteHeight(50);
+            img.SetAbsolutePosition(495, 135);
+            img.Alignment = iTextSharp.text.Image.ALIGN_CENTER;
 
             document.Add(jpg);
             document.Add(jpg2);
@@ -188,6 +215,7 @@ namespace SSSNP
             document.Add(jpg3);
             document.Add(jpg4);
             document.Add(jpg5);
+            document.Add(img);
 
             //Paragraph p = new Paragraph("HouseNumber");
             //document.Add(p);

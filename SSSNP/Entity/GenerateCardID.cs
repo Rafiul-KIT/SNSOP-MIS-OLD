@@ -8,6 +8,7 @@ namespace SSSNP_SNSOP.Entity
     [Serializable]
     public class GenerateCardID
     {
+        public string intBenId { get; set; }
         public string NumberID { get; set; }
         public string BeneficiaryName { get; set; }
         public string BeneficiaryPhoto { get; set; }
