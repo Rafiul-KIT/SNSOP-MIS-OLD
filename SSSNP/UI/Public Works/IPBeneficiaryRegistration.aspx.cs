@@ -696,7 +696,7 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
             else { DdlA1Gender.SelectedIndex = 0; }
             if (ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString().Trim() != "")
             {
-                if (DdlA1Age.Items.FindByValue(ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString()) == null)
+                if (DdlA1Age.Items.FindByValue(ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString()) == null)
                 {
                     DdlA1Age.Items.Add(ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString().Trim());
                 }
@@ -714,7 +714,7 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
             {
                 if (DdlA2Age.Items.FindByValue(ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString()) == null)
                 {
-                    DdlA2Age.Items.Add(ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString().Trim());
+                    DdlA2Age.Items.Add(ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString().Trim());
                 }
                 DdlA2Age.SelectedValue = DdlA2Age.Items.FindByValue(ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString()).Value;
             }

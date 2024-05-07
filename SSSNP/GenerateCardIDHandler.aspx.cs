@@ -14,6 +14,7 @@ using System.Xml.Linq;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Data;
+using SSSNP.Entity;
 
 namespace SSSNP
 {
@@ -184,21 +185,69 @@ namespace SSSNP
 
             //var qrData = "QrCodeData:\n";
             var qrData = "";
-            qrData += "1: " + cardID.NumberID + "\n";
-            qrData += "2: " + cardID.BeneficiaryName + "\n";
+
+            NewIdCardInfo newIdCardInfo = new NewIdCardInfo();
+            newIdCardInfo.HouseholdNumber = cardID.NumberID;
+            newIdCardInfo.HouseholdName = cardID.BeneficiaryName;
+
+            //qrData += "1: " + cardID.NumberID + "\n";
+            //qrData += "2: " + cardID.BeneficiaryName + "\n";
             try
             {
                 General Gen = new General();
                 DataSet ds = Gen.GetBenficiaryDetByID(cardID.intBenId.ToString());
                 if (ds != null && ds.Tables?.Count > 0 && ds.Tables[0].Rows?.Count > 0)
                 {
-                    qrData += "3: " + ds.Tables[0].Rows[0]["Age"].ToString() + "\n";
-                    qrData += "4: " + ds.Tables[0].Rows[0]["Sex"].ToString() + "\n";
-                    qrData += "5: " + ds.Tables[0].Rows[0]["ContactNo"].ToString() + "\n";
-                }
-            } catch
-            {
+                    //qrData += "3: " + ds.Tables[0].Rows[0]["Age"].ToString() + "\n";
+                    //qrData += "4: " + ds.Tables[0].Rows[0]["Sex"].ToString() + "\n";
+                    //qrData += "5: " + ds.Tables[0].Rows[0]["ContactNo"].ToString() + "\n";
 
+                    //qrData += "6: " + ds.Tables[0].Rows[0]["Name1stAlternatePayee"].ToString();
+                    if (ds.Tables[0].Rows[0]["Age"] != null &&
+                            ds.Tables[0].Rows[0]["Age"].ToString().Trim() != "")
+                    {
+                        newIdCardInfo.HouseholdAge = Convert.ToInt32(ds.Tables[0].Rows[0]["Age"].ToString());
+                    }
+                    newIdCardInfo.HouseholdGender = ds.Tables[0].Rows[0]["Sex"].ToString();
+                    newIdCardInfo.HouseholdPhone = ds.Tables[0].Rows[0]["ContactNo"].ToString();
+
+                    if (ds.Tables[0].Rows[0]["Name1stAlternatePayee"] != null)
+                    {
+                        AlternateNewCardInfo alt1 = new AlternateNewCardInfo();
+                        alt1.AlternateName = ds.Tables[0].Rows[0]["Name1stAlternatePayee"].ToString();
+                        if (ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"] != null &&
+                            ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString().Trim() != "") {
+                            string a = ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString();
+                            alt1.AlternateAge = Convert.ToInt32(a);
+                        }
+                        alt1.AlternateGender = ds.Tables[0].Rows[0]["FirstAlternatePayeeGender"].ToString();
+                        alt1.AlternatePhone = ds.Tables[0].Rows[0]["FirstAlternatePayeeMobile"].ToString();
+
+                        newIdCardInfo.Alternates.Add(alt1);
+                    }
+
+                    if (ds.Tables[0].Rows[0]["Name2ndAlternatePayee"] != null)
+                    {
+                        AlternateNewCardInfo alt1 = new AlternateNewCardInfo();
+                        alt1.AlternateName = ds.Tables[0].Rows[0]["Name2ndAlternatePayee"].ToString();
+                        if (ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"] != null &&
+                            ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString().Trim() != "")
+                        {
+                            string a = ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString();
+                            alt1.AlternateAge = Convert.ToInt32(a);
+                        }
+                        alt1.AlternateGender = ds.Tables[0].Rows[0]["SecondAlternatePayeeGender"].ToString();
+                        alt1.AlternatePhone = ds.Tables[0].Rows[0]["SecondAlternatePayeeMobile"].ToString();
+
+                        newIdCardInfo.Alternates.Add(alt1);
+                    }
+
+                    string jsonString = JsonConvert.SerializeObject(newIdCardInfo);
+                    qrData = "MappedQrCodeData" + jsonString;
+                }
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
 
             iTextSharp.text.pdf.PdfContentByte jpg6 = writer.DirectContent;
