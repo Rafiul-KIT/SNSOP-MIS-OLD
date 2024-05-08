@@ -16,6 +16,7 @@ using SSSNP_SNSOP.Extensions;
 using System.Text;
 using System.IO;
 using static ImportBeneficiaryAll;
+using SSSNP.Entity.Payroll;
 #endregion
 #region Amendment History Begin
 //Form Name : Wage Process Dashboard Drilldown and Approvals at Coordinator, Specialist, Manager
@@ -594,7 +595,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
 
                 if (ds.Rows.Count > 0)
                 {
-                    result = "{ \"BenfWorkWagesDetails\":\"success\",\"status\":" + "\"" + "1" + "\",\"result\":" + DataTableToJSONWithJavaScriptSerializer(ds, uid) + "}";
+                    result = DataTableToJSONWithJavaScriptSerializer(ds, uid);
                 }
                 else
                 {
@@ -606,7 +607,12 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 result = "{ \"BenfWorkWagesDetails\":\"failure\",\"status\":\"0\",\"result\": \"null\"}";
             }
 
-            string uri = System.Configuration.ConfigurationManager.AppSettings["PushPayments"];
+
+            string uri = System.Configuration.ConfigurationManager.AppSettings["PushApprovedPaymentsDevEndpoint"];
+            if (System.Configuration.ConfigurationManager.AppSettings["AZUREAD_ENV"].Equals("prod"))
+            {
+                uri = System.Configuration.ConfigurationManager.AppSettings["PushApprovedPaymentsProdEndpoint"];
+            }
             Uri urlCheck = new Uri(uri);
             HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
 
@@ -643,9 +649,9 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
             }
         }
-        catch
+        catch (Exception ex)
         {
-
+            Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
         }
     }
 
@@ -657,15 +663,90 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         Dictionary<string, object> childRow;
         foreach (DataRow row in table.Rows)
         {
-            if (row["intWagePaymentReqid"] != null && row["intWagePaymentReqid"].ToString() == uid)
+            //if (row["intWagePaymentReqid"] != null && row["intWagePaymentReqid"].ToString() == uid)
+            //{
+            childRow = new Dictionary<string, object>();
+            foreach (DataColumn col in table.Columns)
             {
-                childRow = new Dictionary<string, object>();
-                foreach (DataColumn col in table.Columns)
+                string key = col.ColumnName;
+                if (key.Equals("ReqFromDate"))
                 {
-                    childRow.Add(col.ColumnName, row[col]);
+                    key = "reqFromDate";
                 }
-                parentRow.Add(childRow);
+                else if (key.Equals("ReqToDate"))
+                {
+                    key = "reqToDate";
+                }
+                else if (key.Equals("Exchangerateattime"))
+                {
+                    key = "exchangerateattime";
+                }
+                else if (key.Equals("WageRateUSD"))
+                {
+                    key = "wageRateUSD";
+                }
+                else if (key.Equals("ReqNo"))
+                {
+                    key = "reqNo";
+                }
+                else if (key.Equals("EnrollmentNo"))
+                {
+                    key = "enrollmentNo";
+                }
+                else if (key.Equals("WorkCode"))
+                {
+                    key = "workCode";
+                }
+                else if (key.Equals("TotAttendance"))
+                {
+                    key = "totAttendance";
+                }
+                else if (key.Equals("WageRateUSDTotal"))
+                {
+                    key = "wageRateUSDTotal";
+                }
+                else if (key.Equals("DateofCreation"))
+                {
+                    key = "dateofCreation";
+                }
+                else if (key.Equals("Status"))
+                {
+                    key = "status";
+                }
+                else if (key.Equals("PaymentCycle"))
+                {
+                    key = "paymentCycle";
+                }
+                else if (key.Equals("WageRateSSPTotal"))
+                {
+                    key = "wageRateSSPTotal";
+                }
+                else if (key.Equals("household_number"))
+                {
+                    continue;
+                }
+                else if (key.Equals("intBenid"))
+                {
+                    DataSet dsChild = new DataSet();
+                    dsChild = Gen.GetBenficiaryDetByID(row[col].ToString());
+
+                    if (dsChild.Tables[0].Rows.Count > 0)
+                    {
+                        HouseholdDetailDto dto = new HouseholdDetailDto();
+                        if (dsChild.Tables[0].Rows[0]["Age"].ToString() != "") {
+                            dto.age = Convert.ToInt32(dsChild.Tables[0].Rows[0]["Age"].ToString());
+                        }
+                        dto.lastName = dsChild.Tables[0].Rows[0]["NameofHousehold"].ToString();
+                        dto.phoneNumber = dsChild.Tables[0].Rows[0]["ContactNo"].ToString();
+
+                        childRow.Add("houseHoldDetail", dto);
+                    }
+                }
+
+                childRow.Add(key, row[col]);
             }
+            parentRow.Add(childRow);
+            //}
         }
 
         return jsSerializer.Serialize(parentRow);

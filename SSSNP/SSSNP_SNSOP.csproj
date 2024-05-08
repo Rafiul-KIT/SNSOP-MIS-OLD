@@ -750,6 +750,10 @@
     <Compile Include="App_Code\SSSNPHelper.cs" />
     <Compile Include="Entity\AlternateNewCardInfo.cs" />
     <Compile Include="Entity\NewIdCardInfo.cs" />
+    <Compile Include="Entity\Payroll\HouseholdDetailDto.cs" />
+    <Compile Include="Entity\Payroll\PayrollAlternateDto.cs" />
+    <Compile Include="Entity\Payroll\PayrollDataDto.cs" />
+    <Compile Include="Entity\Payroll\PayrollDto.cs" />
     <Compile Include="Tools.aspx.cs">
       <DependentUpon>Tools.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
