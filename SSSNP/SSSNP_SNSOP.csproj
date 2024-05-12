@@ -182,7 +182,8 @@
     <Content Include="assets\Background.png" />
     <Content Include="assets\Loading.gif" />
     <Content Include="error.txt" />
-    <Content Include="Resource\Images\snsop-id-card-bg-edited.png" />
+    <Content Include="Resource\Images\snsop-id-card-bg2.png" />
+    <Content Include="Resource\Images\snsop-id-card-bg1.png" />
     <Content Include="Tools.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Errorpages\oops.aspx" />
@@ -3763,6 +3764,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\snsop.p12" />
     <None Include="packages.config" />
     <Content Include="Resource\Styles\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Resource\Styles\font-awesome\fonts\fontawesome-webfont.ttf" />

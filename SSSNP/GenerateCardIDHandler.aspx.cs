@@ -15,6 +15,9 @@ using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Data;
 using SSSNP.Entity;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SSSNP
 {
@@ -61,8 +64,8 @@ namespace SSSNP
         }
         private byte[] GeneratePDF(GenerateCardID cardID)
         {
-            string imageFilePath = Server.MapPath("~/Resource/Images/background1pdf.png");
-            string imageFilePath2 = Server.MapPath("~/Resource/Images/snsop-id-card-bg-edited.png");
+            string imageFilePath = Server.MapPath("~/Resource/Images/snsop-id-card-bg1.png");
+            string imageFilePath2 = Server.MapPath("~/Resource/Images/snsop-id-card-bg2.png");
 
             string emptyPhoto = Server.MapPath("~/Resource/Images/not-available.jpg");
             // string emptyPhoto = Server.MapPath("~/Photo/testO1.png");
@@ -183,8 +186,8 @@ namespace SSSNP
             cb5.ShowText("2. " + cardID.AlternateName2);
             cb5.EndText();
 
-            //var qrData = "QrCodeData:\n";
-            var qrData = "";
+            var qrData = "QrCodeData:\n";
+            //var qrData = "";
 
             NewIdCardInfo newIdCardInfo = new NewIdCardInfo();
             newIdCardInfo.HouseholdNumber = cardID.NumberID;
@@ -243,7 +246,8 @@ namespace SSSNP
                     }
 
                     string jsonString = JsonConvert.SerializeObject(newIdCardInfo);
-                    qrData = "MappedQrCodeData" + jsonString;
+                    newIdCardInfo.Signature = getSignedQrData(jsonString);
+                    qrData = JsonConvert.SerializeObject(newIdCardInfo);
                 }
             } catch (Exception e)
             {
@@ -276,8 +280,34 @@ namespace SSSNP
 
             fs.Close();
             return btFile;
+        }
 
+        public string getSignedQrData(string json)
+        {
+            try
+            {
+                X509Certificate2 cert = new X509Certificate2(@"C:\snsop.p12", "SmKM3pXfZraDbpPy",
+    X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
+                RSACryptoServiceProvider rsacsp = (RSACryptoServiceProvider)cert.PrivateKey;
 
+                CspParameters cspParam = new CspParameters();
+                cspParam.KeyContainerName = rsacsp.CspKeyContainerInfo.KeyContainerName;
+                cspParam.KeyNumber = rsacsp.CspKeyContainerInfo.KeyNumber == KeyNumber.Exchange ? 1 : 2;
+                RSACryptoServiceProvider aescsp = new RSACryptoServiceProvider(cspParam);
+                aescsp.PersistKeyInCsp = false;
+                var dataToSign = json;
+                byte[] signedBA = aescsp.SignData(Encoding.UTF8.GetBytes(dataToSign), "SHA256");
+                bool isValid = aescsp.VerifyData(Encoding.UTF8.GetBytes(dataToSign), "SHA256", signedBA);
+                string result = Convert.ToBase64String(signedBA);
+                Console.WriteLine("\nSignature Base64:\n" + result);
+                Console.WriteLine("\nIs signature verified:\n" + isValid);
+
+                return result;
+            } catch (Exception e)
+            {
+                Console.WriteLine("Error when trying to get signed QR data\n" + e.ToString());
+                return null;
+            }
         }
 
 

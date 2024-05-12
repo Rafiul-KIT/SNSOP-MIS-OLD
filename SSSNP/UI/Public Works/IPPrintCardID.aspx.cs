@@ -97,7 +97,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 hdPhotoA1.Value = "";
                 hdPhotoA2.Value = "";
 
-                lblJobcard.Text = "SSSNP-PW-" + ds.Tables[0].Rows[0]["intBenid"].ToString();
+                lblJobcard.Text = "SNSOP-PW-" + ds.Tables[0].Rows[0]["intBenid"].ToString();
                 lblHHname.Text = ds.Tables[0].Rows[0]["NameofHousehold"].ToString();
                 lblSpouse.Text = ds.Tables[0].Rows[0]["NameofSpouse"].ToString();
                 lblRegDate.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["Created_dt"].ToString()).ToString("dd-MM-yyyy");
@@ -463,7 +463,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             cardId.NumberID = lblJobcard.Text;
             cardId.BeneficiaryName = lblHHname.Text;
             cardId.BeneficiaryPhoto = hdPhotoMain.Value;
-            cardId.ValidTo = "11/2022";
+            cardId.ValidTo = "06/2026";
             cardId.AlternateName1 = txtAlternate1.Text;
             cardId.AlternateName2 = txtAlternate2.Text;
             cardId.AlternatePhoto1 = hdPhotoA1.Value;
