@@ -1,5 +1,6 @@
 ﻿
 using CSDS.Core.Framework.Configuration;
+using SSSNP.Service;
 using SSSNP_SNSOP.App_Code;
 using SSSNP_SNSOP.Core;
 using System;
@@ -19,7 +20,7 @@ namespace SSSNP
         {
             DataPartitionManagers config = (DataPartitionManagers)ConfigurationManager.GetSection("dataPartitions");
 
-
+            //new WageRequestApiManager().SendWageRequestByApi("8959");
         }
 
         protected void Session_Start(object sender, EventArgs e)
