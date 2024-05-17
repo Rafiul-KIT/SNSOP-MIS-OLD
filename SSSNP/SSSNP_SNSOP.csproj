@@ -750,6 +750,7 @@
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
     <Compile Include="Entity\AlternateNewCardInfo.cs" />
+    <Compile Include="Entity\IdCard\IdCardInfoV1.cs" />
     <Compile Include="Entity\NewIdCardInfo.cs" />
     <Compile Include="Entity\Payroll\HouseholdDetailDto.cs" />
     <Compile Include="Entity\Payroll\PayrollAlternateDto.cs" />

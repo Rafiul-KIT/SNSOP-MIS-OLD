@@ -97,7 +97,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 hdPhotoA1.Value = "";
                 hdPhotoA2.Value = "";
 
-                lblJobcard.Text = "SNSOP-PW-" + ds.Tables[0].Rows[0]["intBenid"].ToString();
+                //lblJobcard.Text = "SNSOP-PW-" + ds.Tables[0].Rows[0]["intBenid"].ToString();
+                lblJobcard.Text = ds.Tables[0].Rows[0]["household_number"].ToString();
                 lblHHname.Text = ds.Tables[0].Rows[0]["NameofHousehold"].ToString();
                 lblSpouse.Text = ds.Tables[0].Rows[0]["NameofSpouse"].ToString();
                 lblRegDate.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["Created_dt"].ToString()).ToString("dd-MM-yyyy");
@@ -475,7 +476,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
             // Response.Redirect(string.Format("~/GenerateCardIDHandler.aspx?json={0}", json) );
 
-            string redLink = sssnpweb +  string.Format("/GenerateCardIDHandler.aspx?json={0}", json);
+            string redLink = sssnpweb +  string.Format("GenerateCardIDHandler.aspx?json={0}", json);
             ScriptManager.RegisterStartupScript(this, typeof(string), "New_Window", "window.open( '" + redLink + "', null, 'height=800,width=1280,status=yes,toolbar=yes,menubar=yes,location=no' );", true);
 
 

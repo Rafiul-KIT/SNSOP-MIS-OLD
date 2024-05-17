@@ -18,6 +18,9 @@ using SSSNP.Entity;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
 using System.Text;
+using SSSNP.Entity.IdCard;
+using System.Configuration;
+using SSSNP_SNSOP;
 
 namespace SSSNP
 {
@@ -145,7 +148,7 @@ namespace SSSNP
             PdfContentByte cb1 = writer.DirectContent;
             cb1.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            cb1.SetFontAndSize(f_cn, 10);
+            cb1.SetFontAndSize(f_cn, 7);
             cb1.SetTextMatrix(147, 157);  //(xPos, yPos)
             cb1.ShowText(cardID.NumberID);
             cb1.EndText();
@@ -189,67 +192,77 @@ namespace SSSNP
             var qrData = "QrCodeData:\n";
             //var qrData = "";
 
-            NewIdCardInfo newIdCardInfo = new NewIdCardInfo();
-            newIdCardInfo.HouseholdNumber = cardID.NumberID;
-            newIdCardInfo.HouseholdName = cardID.BeneficiaryName;
+            IdCardInfoV1 idCardInfoV1 = new IdCardInfoV1();
+            idCardInfoV1.HouseholdNumber = cardID.NumberID;
 
-            //qrData += "1: " + cardID.NumberID + "\n";
-            //qrData += "2: " + cardID.BeneficiaryName + "\n";
+            //NewIdCardInfo newIdCardInfo = new NewIdCardInfo();
+            //newIdCardInfo.HouseholdNumber = cardID.NumberID;
+            //newIdCardInfo.HouseholdName = cardID.BeneficiaryName;
             try
             {
-                General Gen = new General();
-                DataSet ds = Gen.GetBenficiaryDetByID(cardID.intBenId.ToString());
-                if (ds != null && ds.Tables?.Count > 0 && ds.Tables[0].Rows?.Count > 0)
-                {
-                    //qrData += "3: " + ds.Tables[0].Rows[0]["Age"].ToString() + "\n";
-                    //qrData += "4: " + ds.Tables[0].Rows[0]["Sex"].ToString() + "\n";
-                    //qrData += "5: " + ds.Tables[0].Rows[0]["ContactNo"].ToString() + "\n";
+                //    General Gen = new General();
+                //    DataSet ds = Gen.GetBenficiaryDetByID(cardID.intBenId.ToString());
+                //    if (ds != null && ds.Tables?.Count > 0 && ds.Tables[0].Rows?.Count > 0)
+                //    {
+                //        if (ds.Tables[0].Rows[0]["Age"] != null &&
+                //                ds.Tables[0].Rows[0]["Age"].ToString().Trim() != "")
+                //        {
+                //            newIdCardInfo.HouseholdAge = Convert.ToInt32(ds.Tables[0].Rows[0]["Age"].ToString());
+                //        }
+                //        newIdCardInfo.HouseholdGender = ds.Tables[0].Rows[0]["Sex"].ToString();
+                //        newIdCardInfo.HouseholdPhone = ds.Tables[0].Rows[0]["ContactNo"].ToString();
 
-                    //qrData += "6: " + ds.Tables[0].Rows[0]["Name1stAlternatePayee"].ToString();
-                    if (ds.Tables[0].Rows[0]["Age"] != null &&
-                            ds.Tables[0].Rows[0]["Age"].ToString().Trim() != "")
-                    {
-                        newIdCardInfo.HouseholdAge = Convert.ToInt32(ds.Tables[0].Rows[0]["Age"].ToString());
-                    }
-                    newIdCardInfo.HouseholdGender = ds.Tables[0].Rows[0]["Sex"].ToString();
-                    newIdCardInfo.HouseholdPhone = ds.Tables[0].Rows[0]["ContactNo"].ToString();
+                //        if (ds.Tables[0].Rows[0]["Name1stAlternatePayee"] != null)
+                //        {
+                //            AlternateNewCardInfo alt1 = new AlternateNewCardInfo();
+                //            alt1.AlternateName = ds.Tables[0].Rows[0]["Name1stAlternatePayee"].ToString();
+                //            if (ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"] != null &&
+                //                ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString().Trim() != "") {
+                //                string a = ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString();
+                //                alt1.AlternateAge = Convert.ToInt32(a);
+                //            }
+                //            alt1.AlternateGender = ds.Tables[0].Rows[0]["FirstAlternatePayeeGender"].ToString();
+                //            alt1.AlternatePhone = ds.Tables[0].Rows[0]["FirstAlternatePayeeMobile"].ToString();
 
-                    if (ds.Tables[0].Rows[0]["Name1stAlternatePayee"] != null)
-                    {
-                        AlternateNewCardInfo alt1 = new AlternateNewCardInfo();
-                        alt1.AlternateName = ds.Tables[0].Rows[0]["Name1stAlternatePayee"].ToString();
-                        if (ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"] != null &&
-                            ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString().Trim() != "") {
-                            string a = ds.Tables[0].Rows[0]["FirstAlternatePayeeAge"].ToString();
-                            alt1.AlternateAge = Convert.ToInt32(a);
-                        }
-                        alt1.AlternateGender = ds.Tables[0].Rows[0]["FirstAlternatePayeeGender"].ToString();
-                        alt1.AlternatePhone = ds.Tables[0].Rows[0]["FirstAlternatePayeeMobile"].ToString();
+                //            newIdCardInfo.Alternates.Add(alt1);
+                //        }
 
-                        newIdCardInfo.Alternates.Add(alt1);
-                    }
+                //        if (ds.Tables[0].Rows[0]["Name2ndAlternatePayee"] != null)
+                //        {
+                //            AlternateNewCardInfo alt1 = new AlternateNewCardInfo();
+                //            alt1.AlternateName = ds.Tables[0].Rows[0]["Name2ndAlternatePayee"].ToString();
+                //            if (ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"] != null &&
+                //                ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString().Trim() != "")
+                //            {
+                //                string a = ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString();
+                //                alt1.AlternateAge = Convert.ToInt32(a);
+                //            }
+                //            alt1.AlternateGender = ds.Tables[0].Rows[0]["SecondAlternatePayeeGender"].ToString();
+                //            alt1.AlternatePhone = ds.Tables[0].Rows[0]["SecondAlternatePayeeMobile"].ToString();
 
-                    if (ds.Tables[0].Rows[0]["Name2ndAlternatePayee"] != null)
-                    {
-                        AlternateNewCardInfo alt1 = new AlternateNewCardInfo();
-                        alt1.AlternateName = ds.Tables[0].Rows[0]["Name2ndAlternatePayee"].ToString();
-                        if (ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"] != null &&
-                            ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString().Trim() != "")
-                        {
-                            string a = ds.Tables[0].Rows[0]["SecondAlternatePayeeAge"].ToString();
-                            alt1.AlternateAge = Convert.ToInt32(a);
-                        }
-                        alt1.AlternateGender = ds.Tables[0].Rows[0]["SecondAlternatePayeeGender"].ToString();
-                        alt1.AlternatePhone = ds.Tables[0].Rows[0]["SecondAlternatePayeeMobile"].ToString();
+                //            newIdCardInfo.Alternates.Add(alt1);
+                //        }
 
-                        newIdCardInfo.Alternates.Add(alt1);
-                    }
+                //string jsonString = JsonConvert.SerializeObject(newIdCardInfo);
+                //newIdCardInfo.Signature = SSSNPHelper.getSignedQrData(jsonString);
+                //qrData = JsonConvert.SerializeObject(newIdCardInfo);
 
-                    string jsonString = JsonConvert.SerializeObject(newIdCardInfo);
-                    newIdCardInfo.Signature = getSignedQrData(jsonString);
-                    qrData = JsonConvert.SerializeObject(newIdCardInfo);
-                }
-            } catch (Exception e)
+                idCardInfoV1.HouseholdNumber = SSSNPHelper.EncryptString(ConfigurationManager.AppSettings
+                    ["HouseholdNumberEncryptorKey"].ToString(),
+                    idCardInfoV1.HouseholdNumber);
+
+                string jsonString = JsonConvert.SerializeObject(idCardInfoV1);
+
+                string decryptedString = SSSNPHelper.DecryptString(ConfigurationManager.AppSettings
+                    ["HouseholdNumberEncryptorKey"].ToString(),
+                    idCardInfoV1.HouseholdNumber);
+
+                //idCardInfoV1.Signature = getSignedQrData("{\"HouseholdNumber\":" + "\""
+                //    + idCardInfoV1.HouseholdNumber
+                //    + "\"}");
+                qrData = JsonConvert.SerializeObject(idCardInfoV1);
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
@@ -281,35 +294,6 @@ namespace SSSNP
             fs.Close();
             return btFile;
         }
-
-        public string getSignedQrData(string json)
-        {
-            try
-            {
-                X509Certificate2 cert = new X509Certificate2(@"C:\snsop.p12", "SmKM3pXfZraDbpPy",
-    X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
-                RSACryptoServiceProvider rsacsp = (RSACryptoServiceProvider)cert.PrivateKey;
-
-                CspParameters cspParam = new CspParameters();
-                cspParam.KeyContainerName = rsacsp.CspKeyContainerInfo.KeyContainerName;
-                cspParam.KeyNumber = rsacsp.CspKeyContainerInfo.KeyNumber == KeyNumber.Exchange ? 1 : 2;
-                RSACryptoServiceProvider aescsp = new RSACryptoServiceProvider(cspParam);
-                aescsp.PersistKeyInCsp = false;
-                var dataToSign = json;
-                byte[] signedBA = aescsp.SignData(Encoding.UTF8.GetBytes(dataToSign), "SHA256");
-                bool isValid = aescsp.VerifyData(Encoding.UTF8.GetBytes(dataToSign), "SHA256", signedBA);
-                string result = Convert.ToBase64String(signedBA);
-                Console.WriteLine("\nSignature Base64:\n" + result);
-                Console.WriteLine("\nIs signature verified:\n" + isValid);
-
-                return result;
-            } catch (Exception e)
-            {
-                Console.WriteLine("Error when trying to get signed QR data\n" + e.ToString());
-                return null;
-            }
-        }
-
 
         public Bitmap Crop(System.Drawing.Image _currentBitmap, int xPosition, int yPosition, int width, int height)
         {
