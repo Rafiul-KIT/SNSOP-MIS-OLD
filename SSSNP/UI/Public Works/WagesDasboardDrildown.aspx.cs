@@ -315,6 +315,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
     }
 
     #endregion
+
     #region Dropdown Binding Functionalities and Dropdown and TextBox Index Changed Events
     protected void ddlIP_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -570,7 +571,6 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         Response.Redirect("WagesDasboardDrildown.aspx?Status=" + Request.QueryString[0].ToString().Trim());
     }
     #endregion
-
 
     #region Send Manager Approved Wage Request Data by API
     private void SendWageRequestByApi(string uid)
