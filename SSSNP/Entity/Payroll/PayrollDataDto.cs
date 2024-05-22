@@ -8,6 +8,10 @@ namespace SSSNP.Entity.Payroll
     [Serializable]
     public class PayrollDataDto
     {
+        public Int64 state { get; set; }
+        public Int64 county { get; set; }
+        public Int64 payam { get; set; }
+        public Int64 boma { get; set; }
         public List<PayrollAlternateDto> alternates { get; set; }
         public string dateofCreation { get; set; }
         public string enrollmentNo { get; set; }
@@ -22,6 +26,7 @@ namespace SSSNP.Entity.Payroll
         public string reqNo { get; set; }
         public string reqToDate { get; set; }
         public string status { get; set; }
+        public string supportType { get; set; }
         public Int32 totAttendance { get; set; }
         public double wageRateSSPTotal { get; set; }
         public double wageRateUSD { get; set; }
@@ -31,6 +36,7 @@ namespace SSSNP.Entity.Payroll
         public PayrollDataDto()
         {
             alternates = new List<PayrollAlternateDto>();
+            houseHoldDetail = new HouseholdDetailDto();
         }
     }
 }

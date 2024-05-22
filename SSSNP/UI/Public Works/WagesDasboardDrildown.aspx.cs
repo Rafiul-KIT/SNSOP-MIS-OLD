@@ -17,6 +17,9 @@ using System.Text;
 using System.IO;
 using static ImportBeneficiaryAll;
 using SSSNP.Entity.Payroll;
+using SSSNP.Network;
+using System.Configuration;
+using Newtonsoft.Json;
 #endregion
 #region Amendment History Begin
 //Form Name : Wage Process Dashboard Drilldown and Approvals at Coordinator, Specialist, Manager
@@ -522,7 +525,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 //Update Exchange rate and Specialist approval date (SApproveDate)
                 int ss = Gen.UpdateMApproveDate(hdfApplID.Value, Session["uid"].ToString().Trim());
 
-                SendWageRequestByApi(Session["uid"].ToString().Trim());
+                SendWageRequestByApi(hdfApplID.Value);
             }
         }
 
@@ -582,55 +585,62 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             con.OpenConnection();
             SqlDataAdapter da;
             DataSet dsn = new DataSet();
+            PayrollDto request = new PayrollDto();
             try
             {
-                da = new SqlDataAdapter("getBenfWorkWageDetailsService", con.GetConnection);
-                da.SelectCommand.CommandType = CommandType.StoredProcedure;
-                da.Fill(dsn);
-                Session["ErrorDataW"] = dsn.Tables[0];
+                dsn = Gen.GetWageRequestDetialsbyID(uid);
+                if (dsn == null || dsn.Tables.Count <= 0) return;
 
                 con.CloseConnection();
-                DataTable ds = new DataTable();
-                ds = (DataTable)Session["ErrorDataW"];
+                DataTable ds = (DataTable) dsn.Tables[0];
 
                 if (ds.Rows.Count > 0)
                 {
-                    result = DataTableToJSONWithJavaScriptSerializer(ds, uid);
+                    request = DataTableToJSONWithJavaScriptSerializerV1(ds, uid);
                 }
                 else
                 {
-                    result = "{ \"BenfWorkWagesDetails\":\"failure\",\"status\":\"0\",\"result\": \"null\"}";
+                    return;
                 }
             }
             catch (Exception ex)
             {
-                result = "{ \"BenfWorkWagesDetails\":\"failure\",\"status\":\"0\",\"result\": \"null\"}";
+                return;
             }
 
 
-            string uri = System.Configuration.ConfigurationManager.AppSettings["PushApprovedPaymentsDevEndpoint"];
-            if (System.Configuration.ConfigurationManager.AppSettings["AZUREAD_ENV"].Equals("prod"))
+            string uri = System.Configuration.ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
+            
+            String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaG92b24iLCJpYXQiOjE3MDg4ODY5OTYsImV4cCI6MTg2NjU2Njk5Nn0.L-75R-EYM1GbrAqj-KdRpWLjxfxCMdVsAboepITEnI2I6AtTUtRhTgQaevzb5GOLWPnGaAUzggcC6SsArnMj-g";
+
+            uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
+            if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
             {
-                uri = System.Configuration.ConfigurationManager.AppSettings["PushApprovedPaymentsProdEndpoint"];
+                uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
             }
             Uri urlCheck = new Uri(uri);
             HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
-
-            string apikey = System.Configuration.ConfigurationManager.AppSettings["APIpasskey"];
             httpWReq.PreAuthenticate = true;
-            httpWReq.Headers.Add("Authorization", "Bearer " + apikey.HashSHA512());
+            httpWReq.Headers.Add("Authorization", "Bearer " + token);
 
             try
             {
-                var data = Encoding.ASCII.GetBytes(result);
+                string reqStr = JsonConvert.SerializeObject(request);
+
+                var data = Encoding.ASCII.GetBytes(reqStr);
                 httpWReq.Method = "POST";
-                httpWReq.ContentType = "application/x-www-form-urlencoded";
+                httpWReq.ContentType = "application/json";
                 httpWReq.ContentLength = data.Length;
 
-                using (var stream = httpWReq.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
+                var newStream = httpWReq.GetRequestStream(); // get a ref to the request body so it can be modified
+                newStream.Write(data, 0, data.Length);
+                newStream.Flush();
+                newStream.Close();
+
+                //using (var stream = httpWReq.GetRequestStream())
+                //{
+                //    stream.Write(data, 0, data.Length);
+                //}
 
                 HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
                 StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -642,12 +652,35 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 }
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 js.MaxJsonLength = Int32.MaxValue;
-                RootObject obj = js.Deserialize<RootObject>(jsonresponse);
+                SavePayrollResponse savePayrollResponse = js.Deserialize<SavePayrollResponse>(jsonresponse);
+                if (savePayrollResponse != null && savePayrollResponse.operationResult)
+                {
+                    int value = Gen.InsUpdWageRequestAfisSync(Convert.ToInt32(uid), 1);
+                } else
+                {
+                    int value = Gen.InsUpdWageRequestAfisSync(Convert.ToInt32(uid), 0);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
             }
+
+            //try
+            //{
+            //    SavePayrollResponse response = NetworkService.SubmitRequest<SavePayrollResponse>
+            //        (requestModel: request, url: uri, requestType: "POST", accessToken: token);
+
+            //    if (response != null && response.operationResult)
+            //    {
+            //        // Insert this record into the td_WageRequestAfisSync table
+            //        int value = Gen.InsUpdWageRequestAfisSync(Convert.ToInt32(uid), 1);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
+            //}
         }
         catch (Exception ex)
         {
@@ -655,102 +688,183 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         }
     }
 
-    private string DataTableToJSONWithJavaScriptSerializer(DataTable table, string uid)
+    private PayrollDto DataTableToJSONWithJavaScriptSerializerV1(DataTable table, string uid)
     {
         JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
         jsSerializer.MaxJsonLength = Int32.MaxValue;
         List<Dictionary<string, object>> parentRow = new List<Dictionary<string, object>>();
-        Dictionary<string, object> childRow;
+
+        PayrollDto payrollRequest = new PayrollDto();
         foreach (DataRow row in table.Rows)
         {
-            //if (row["intWagePaymentReqid"] != null && row["intWagePaymentReqid"].ToString() == uid)
-            //{
-            childRow = new Dictionary<string, object>();
-            foreach (DataColumn col in table.Columns)
+            PayrollDataDto payrollData = new PayrollDataDto();
+            payrollData.boma = (row["boma"] != null) ? long.Parse(row["boma"].ToString()) : 0;
+            payrollData.county = (row["county"] != null) ? long.Parse(row["county"].ToString()) : 0;
+            payrollData.dateofCreation = (row["dateofCreation"] != null) ? row["dateofCreation"].ToString() : null;
+            payrollData.enrollmentNo = (row["enrollmentNo"] != null) ? row["enrollmentNo"].ToString() : null;
+            payrollData.exchangerateattime = (row["exchangerateattime"] != null) ? double.Parse(row["exchangerateattime"].ToString()) : 0.0;
+            payrollData.intBenid = (row["intBenid"] != null) ? int.Parse(row["intBenid"].ToString()) : 0;
+            payrollData.intWagePaymentReqid = (row["intWagePaymentReqid"] != null) ? int.Parse(row["intWagePaymentReqid"].ToString()) : 0;
+            payrollData.intWagesReqBenTransid = (row["intWagesReqBenTransid"] != null) ? int.Parse(row["intWagesReqBenTransid"].ToString()) : 0;
+            payrollData.intWorkid = (row["intWorkid"] != null) ? int.Parse(row["intWorkid"].ToString()) : 0;
+            payrollData.payam = (row["payam"] != null) ? long.Parse(row["payam"].ToString()) : 0;
+            payrollData.paymentCycle = (row["paymentCycle"] != null) ? row["paymentCycle"].ToString() : null;
+            payrollData.reqFromDate = (row["reqFromDate"] != null) ? row["reqFromDate"].ToString() : null;
+            payrollData.reqNo = (row["reqNo"] != null) ? row["reqNo"].ToString() : null;
+            payrollData.reqToDate = (row["reqToDate"] != null) ? row["reqToDate"].ToString() : null;
+            payrollData.state = (row["state"] != null) ? long.Parse(row["state"].ToString()) : 0;
+            payrollData.status = (row["status"] != null) ? row["status"].ToString() : null;
+            payrollData.supportType = (payrollData.intWorkid == 999) ? "DIS" : "LIPW";
+            payrollData.totAttendance = (row["totAttendance"] != null) ? int.Parse(row["totAttendance"].ToString()) : 0;
+            payrollData.wageRateSSPTotal = (row["wageRateSSPTotal"] != null) ? double.Parse(row["wageRateSSPTotal"].ToString()) : 0;
+            payrollData.wageRateUSD = (row["wageRateUSD"] != null) ? double.Parse(row["wageRateUSD"].ToString()) : 0;
+            payrollData.wageRateUSDTotal = (row["wageRateUSDTotal"] != null) ? double.Parse(row["wageRateUSDTotal"].ToString()) : 0;
+            payrollData.workCode = (row["workCode"] != null) ? row["workCode"].ToString() : null;
+
+            payrollData.houseHoldDetail = getHouseholdInfo(row);
+
+            payrollData.alternates = getAlternates(row);
+
+            payrollRequest.payrollData.Add(payrollData);
+        }
+
+        return payrollRequest;
+    }
+
+    private HouseholdDetailDto getHouseholdInfo(DataRow row)
+    {
+        try
+        {
+            HouseholdDetailDto dto = new HouseholdDetailDto();
+
+            if (row["NameofHousehold"] != null)
             {
-                string key = col.ColumnName;
-                if (key.Equals("ReqFromDate"))
+                var names = row["NameofHousehold"].ToString().Split(' ');
+                if (names != null && names.Length > 0)
                 {
-                    key = "reqFromDate";
-                }
-                else if (key.Equals("ReqToDate"))
-                {
-                    key = "reqToDate";
-                }
-                else if (key.Equals("Exchangerateattime"))
-                {
-                    key = "exchangerateattime";
-                }
-                else if (key.Equals("WageRateUSD"))
-                {
-                    key = "wageRateUSD";
-                }
-                else if (key.Equals("ReqNo"))
-                {
-                    key = "reqNo";
-                }
-                else if (key.Equals("EnrollmentNo"))
-                {
-                    key = "enrollmentNo";
-                }
-                else if (key.Equals("WorkCode"))
-                {
-                    key = "workCode";
-                }
-                else if (key.Equals("TotAttendance"))
-                {
-                    key = "totAttendance";
-                }
-                else if (key.Equals("WageRateUSDTotal"))
-                {
-                    key = "wageRateUSDTotal";
-                }
-                else if (key.Equals("DateofCreation"))
-                {
-                    key = "dateofCreation";
-                }
-                else if (key.Equals("Status"))
-                {
-                    key = "status";
-                }
-                else if (key.Equals("PaymentCycle"))
-                {
-                    key = "paymentCycle";
-                }
-                else if (key.Equals("WageRateSSPTotal"))
-                {
-                    key = "wageRateSSPTotal";
-                }
-                else if (key.Equals("household_number"))
-                {
-                    continue;
-                }
-                else if (key.Equals("intBenid"))
-                {
-                    DataSet dsChild = new DataSet();
-                    dsChild = Gen.GetBenficiaryDetByID(row[col].ToString());
-
-                    if (dsChild.Tables[0].Rows.Count > 0)
+                    if (names.Length >= 3)
                     {
-                        HouseholdDetailDto dto = new HouseholdDetailDto();
-                        if (dsChild.Tables[0].Rows[0]["Age"].ToString() != "") {
-                            dto.age = Convert.ToInt32(dsChild.Tables[0].Rows[0]["Age"].ToString());
-                        }
-                        dto.lastName = dsChild.Tables[0].Rows[0]["NameofHousehold"].ToString();
-                        dto.phoneNumber = dsChild.Tables[0].Rows[0]["ContactNo"].ToString();
+                        dto.firstName = names[0];
+                        dto.middleName = names[1];
+                        dto.lastName = names[2];
+                    } else if (names.Length == 2)
+                    {
+                        dto.firstName = names[0];
+                        dto.lastName = names[1];
+                    } else
+                    {
+                        dto.lastName = names[0];
+                    }
+                }
+            }
+            if (row["Age"] != null)
+            {
+                dto.age = int.Parse(row["Age"].ToString());
+            }
+            if (row["gender"] != null)
+            {
+                dto.gender = int.Parse(row["gender"].ToString());
+            }
+            dto.houseHoldNumber = (row["household_number"] != null) ? row["household_number"].ToString() : null;
+            dto.phoneNumber = (row["ContactNo"] != null) ? row["ContactNo"].ToString() : null;
+            return dto;
+        } catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+            return null;
+        }
+    }
 
-                        childRow.Add("houseHoldDetail", dto);
+    private List<PayrollAlternateDto> getAlternates(DataRow row)
+    {
+        try
+        {
+            List<PayrollAlternateDto> list = new List<PayrollAlternateDto>();
+            if (row["Name1stAlternatePayee"] != null)
+            {
+                PayrollAlternateDto dto = new PayrollAlternateDto();
+                if (row["FirstAlternatePayeeAge"] != null)
+                {
+                    dto.age = int.Parse(row["FirstAlternatePayeeAge"].ToString());
+                }
+                if (row["FirstAlternatePayeeGender"] != null)
+                {
+                    dto.gender = int.Parse(row["FirstAlternatePayeeGender"].ToString());
+                }
+                dto.phoneNumber = (row["FirstAlternatePayeeMobile"] != null) ? row["FirstAlternatePayeeMobile"].ToString() : null;
+                if (row["Name1stAlternatePayee"] != null)
+                {
+                    var names = row["Name1stAlternatePayee"].ToString().Split(' ');
+                    if (names != null && names.Length > 0)
+                    {
+                        if (names.Length >= 3)
+                        {
+                            dto.firstName = names[0];
+                            dto.middleName = names[1];
+                            dto.lastName = names[2];
+                        }
+                        else if (names.Length == 2)
+                        {
+                            dto.firstName = names[0];
+                            dto.lastName = names[1];
+                        }
+                        else
+                        {
+                            dto.lastName = names[0];
+                        }
                     }
                 }
 
-                childRow.Add(key, row[col]);
+                list.Add(dto);
             }
-            parentRow.Add(childRow);
-            //}
-        }
 
-        return jsSerializer.Serialize(parentRow);
+            if (row["Name2ndAlternatePayee"] != null)
+            {
+                PayrollAlternateDto dto = new PayrollAlternateDto();
+                if (row["SecondAlternatePayeeAge"] != null)
+                {
+                    dto.age = int.Parse(row["SecondAlternatePayeeAge"].ToString());
+                }
+                if (row["SecondAlternatePayeeGender"] != null)
+                {
+                    dto.gender = int.Parse(row["SecondAlternatePayeeGender"].ToString());
+                }
+                dto.phoneNumber = (row["FirstAlternatePayeeMobile"] != null) ? row["FirstAlternatePayeeMobile"].ToString() : null;
+                if (row["Name2ndAlternatePayee"] != null)
+                {
+                    var names = row["Name2ndAlternatePayee"].ToString().Split(' ');
+                    if (names != null && names.Length > 0)
+                    {
+                        if (names.Length >= 3)
+                        {
+                            dto.firstName = names[0];
+                            dto.middleName = names[1];
+                            dto.lastName = names[2];
+                        }
+                        else if (names.Length == 2)
+                        {
+                            dto.firstName = names[0];
+                            dto.lastName = names[1];
+                        }
+                        else
+                        {
+                            dto.lastName = names[0];
+                        }
+                    }
+                }
+
+                list.Add(dto);
+            }
+
+            return list;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+            return null;
+        }
     }
+
     #endregion
 
     #region Mail Send Functionalities

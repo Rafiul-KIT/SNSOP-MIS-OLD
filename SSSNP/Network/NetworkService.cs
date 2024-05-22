@@ -30,11 +30,11 @@ namespace SSSNP.Network
                 string apiBaseURL = "";
                 if (ConfigurationManager.AppSettings["build.profile.active"].ToString() == "dev")
                 {
-                    apiBaseURL = System.Configuration.ConfigurationManager.AppSettings["ApiBaseUrlDev"];
+                    apiBaseURL = System.Configuration.ConfigurationManager.AppSettings["AfisDevBaseUrl"];
                 }
                 else
                 {
-                    apiBaseURL = System.Configuration.ConfigurationManager.AppSettings["ApiBaseUrlProd"];
+                    apiBaseURL = System.Configuration.ConfigurationManager.AppSettings["AfisProdBaseUrl"];
                 }
 
 

@@ -9197,6 +9197,40 @@ public class General
         }
     }
 
+    public DataSet GetWageRequestDetialsbyID(string intWagePaymentReqid)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("getBenfWorkWageDetailsServiceKIT", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+
+
+            if (intWagePaymentReqid.Trim() == "" || intWagePaymentReqid.Trim() == null)
+                da.SelectCommand.Parameters.Add("@intWagePaymentReqid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intWagePaymentReqid", SqlDbType.VarChar).Value = intWagePaymentReqid.ToString();
+
+
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+
+
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
+
     public int InsApprovalStatus(string intWagePaymentReqid, string ReqStatus, string Created_by, string Remarks)
     {
         int value = 0;
@@ -11274,7 +11308,60 @@ public class General
         }
     }
 
-    public int InsrtWorkProgressDet(string intWorkid, string WorkStartDate, string Status, string Remarks, string Created_by, string Incharge)
+    public int InsUpdWageRequestAfisSync(int intWagePaymentReqid, int syncStatus)
+    {
+        SqlCommand com = new SqlCommand();
+        com.CommandType = CommandType.StoredProcedure;
+        com.CommandText = "InsUpdWageRequestAfisSync";
+
+        if (intWagePaymentReqid < 1)
+            return -1;
+        else
+            com.Parameters.Add("@intWagePaymentReqid", SqlDbType.VarChar).Value = intWagePaymentReqid;
+
+
+        if (syncStatus < 1)
+            return -1;
+        else
+            com.Parameters.Add("@syncStatus", SqlDbType.VarChar).Value = syncStatus;
+
+        con.OpenConnection();
+        com.Connection = con.GetConnection;
+
+        try
+        {
+            int result = Convert.ToInt32(com.ExecuteScalar());
+
+
+            #region TraceLog Implementation
+            try
+            {
+                string appSettingValue = System.Configuration.ConfigurationManager.AppSettings["TraceLogs"];
+
+                if (appSettingValue != null && appSettingValue.ToLower() == "true")
+                {
+                    CreateAudit(com, TraceLogOperationType.Insert, result.ToString(), "InsUpdWageRequestAfisSync");
+                }
+
+            }
+            catch (Exception) { }
+            #endregion
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            return 0;
+        }
+        finally
+        {
+            com.Dispose();
+            con.CloseConnection();
+        }
+    }
+
+        public int InsrtWorkProgressDet(string intWorkid, string WorkStartDate, string Status, string Remarks, string Created_by, string Incharge)
     {
         SqlCommand com = new SqlCommand();
         com.CommandType = CommandType.StoredProcedure;
