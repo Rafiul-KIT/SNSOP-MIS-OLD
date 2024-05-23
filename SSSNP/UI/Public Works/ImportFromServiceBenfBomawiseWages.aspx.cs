@@ -158,7 +158,10 @@ public partial class ImportFromServiceBenfBomawiseWages : System.Web.UI.Page
 
                     string apikey = System.Configuration.ConfigurationManager.AppSettings["APIpasskey"];
                     httpWReq.PreAuthenticate = true;
-                    httpWReq.Headers.Add("Authorization", "Bearer " + apikey.HashSHA512());
+                    //httpWReq.Headers.Add("Authorization", "Bearer " + apikey.HashSHA512());
+
+                    var token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWtpYiIsImlhdCI6MTcxNDk4MTEwOCwiZXhwIjoxODcyNjYxMTA4fQ.7FgalnXhBOcC7q-nYfONbxmc7My4iUOeWpN2eK3b7vc_br43NCEFiKWIrXs1cJTsU_Ds_ZZLHRB28c-jdgiBRw";
+                    httpWReq.Headers.Add("Authorization", "Bearer " + token);
 
                     string HouseHold_Number = "";
 
