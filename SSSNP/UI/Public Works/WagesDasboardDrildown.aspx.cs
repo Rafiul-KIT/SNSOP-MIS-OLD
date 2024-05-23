@@ -20,6 +20,7 @@ using SSSNP.Entity.Payroll;
 using SSSNP.Network;
 using System.Configuration;
 using Newtonsoft.Json;
+using SSSNP_SNSOP.App_Code;
 #endregion
 #region Amendment History Begin
 //Form Name : Wage Process Dashboard Drilldown and Approvals at Coordinator, Specialist, Manager
@@ -32,6 +33,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
     #region Declaration
     General clsGeneral = new General();
     General Gen = new General();
+    ErrorLogger eLog = new ErrorLogger();
     #endregion
 
     #region Page_Load
@@ -496,8 +498,6 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             #endregion
         }
 
-        int a = Gen.InsApprovalStatus(hdfApplID.Value, ddlStatus.SelectedValue, Session["uid"].ToString().Trim(), txtPromotor.Text);
-
         //Update Coordinator approval date (CApproveDate)
         if (Session["user_type"].ToString().Trim() == "Cordinator" && ddlStatus.SelectedItem.Text == "Approved")
         {
@@ -522,13 +522,21 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         {
             if (Request.QueryString[0].ToString() == "2")
             {
-                //Update Exchange rate and Specialist approval date (SApproveDate)
-                int ss = Gen.UpdateMApproveDate(hdfApplID.Value, Session["uid"].ToString().Trim());
-
-                SendWageRequestByApi(hdfApplID.Value);
+                Boolean sendSuccess = SendWageRequestByApi(hdfApplID.Value);
+                if (sendSuccess)
+                {
+                    //Update Exchange rate and Specialist approval date (SApproveDate)
+                    int ss = Gen.UpdateMApproveDate(hdfApplID.Value, Session["uid"].ToString().Trim());
+                } else
+                {
+                    lblMsg.Text = "Approval Failed due to API connectivity issues. Please contact the administrator";
+                    lblMsg.ForeColor = Color.Red;
+                    return;
+                }
             }
         }
 
+        int a = Gen.InsApprovalStatus(hdfApplID.Value, ddlStatus.SelectedValue, Session["uid"].ToString().Trim(), txtPromotor.Text);
 
         if (a >= 0)
         {
@@ -576,7 +584,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
     #endregion
 
     #region Send Manager Approved Wage Request Data by API
-    private void SendWageRequestByApi(string uid)
+    private Boolean SendWageRequestByApi(string uid)
     {
         try
         {
@@ -589,7 +597,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             try
             {
                 dsn = Gen.GetWageRequestDetialsbyID(uid);
-                if (dsn == null || dsn.Tables.Count <= 0) return;
+                if (dsn == null || dsn.Tables.Count <= 0) return false;
 
                 con.CloseConnection();
                 DataTable ds = (DataTable) dsn.Tables[0];
@@ -600,16 +608,16 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 }
                 else
                 {
-                    return;
+                    return false;
                 }
             }
             catch (Exception ex)
             {
-                return;
+                return false;
             }
 
 
-            string uri = System.Configuration.ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
+            string uri = ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
             
             String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaG92b24iLCJpYXQiOjE3MDg4ODY5OTYsImV4cCI6MTg2NjU2Njk5Nn0.L-75R-EYM1GbrAqj-KdRpWLjxfxCMdVsAboepITEnI2I6AtTUtRhTgQaevzb5GOLWPnGaAUzggcC6SsArnMj-g";
 
@@ -660,10 +668,13 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 {
                     int value = Gen.InsUpdWageRequestAfisSync(Convert.ToInt32(uid), 0);
                 }
+                return true;
             }
             catch (Exception ex)
             {
+                eLog.LogError(ex);
                 Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
+                return false;
             }
 
             //try
@@ -676,15 +687,20 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             //        // Insert this record into the td_WageRequestAfisSync table
             //        int value = Gen.InsUpdWageRequestAfisSync(Convert.ToInt32(uid), 1);
             //    }
+            //      return true;
             //}
             //catch (Exception ex)
             //{
             //    Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
+            //      return false;
             //}
+
+            return true;
         }
         catch (Exception ex)
         {
             Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
+            return false;
         }
     }
 
