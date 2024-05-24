@@ -7,6 +7,8 @@ using System.IO;
 using System.Web.Script.Serialization;
 using SSSNP_SNSOP.Extensions;
 using System.Threading;
+using System.Configuration;
+using SSSNP_SNSOP.App_Code;
 
 public partial class ImportFromServiceBenfBomawiseWagesLatest_Thread : System.Web.UI.Page
 {
@@ -169,6 +171,7 @@ public partial class ImportFromServiceBenfBomawiseWagesLatest_Thread : System.We
     public class InsertWageBenDetailsThread
     {
         private string strJson;
+        ErrorLogger eLog = new ErrorLogger();
 
         public void ThreadProc()
         {
@@ -186,14 +189,25 @@ public partial class ImportFromServiceBenfBomawiseWagesLatest_Thread : System.We
                     for (iIndexBoma = 0; iIndexBoma < iCntBomas; iIndexBoma++)
                     {
                         string strBomaId = dsBomasWageApplied.Tables[0].Rows[iIndexBoma][0].ToString();
-                        string URI = System.Configuration.ConfigurationManager.AppSettings["GetPayments"] + "/" + strBomaId;
+                        //string URI = System.Configuration.ConfigurationManager.AppSettings["GetPayments"] + "/" + strBomaId;
+
+                        string URI = ConfigurationManager.AppSettings["AfisDevBaseUrl"] 
+                            + ConfigurationManager.AppSettings["GetPayments"] + "/" + strBomaId;
+                        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+                        {
+                            URI = ConfigurationManager.AppSettings["AfisProdBaseUrl"]
+                            + ConfigurationManager.AppSettings["GetPayments"] + "/" + strBomaId;
+                        }
 
                         Uri urlCheck = new Uri(URI);
                         HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
 
-                        string apikey = System.Configuration.ConfigurationManager.AppSettings["APIpasskey"];
+                        //string apikey = System.Configuration.ConfigurationManager.AppSettings["APIpasskey"];
                         httpWReq.PreAuthenticate = true;
-                        httpWReq.Headers.Add("Authorization", "Bearer " + apikey.HashSHA512());
+                        //httpWReq.Headers.Add("Authorization", "Bearer " + apikey.HashSHA512());
+
+                        var token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWtpYiIsImlhdCI6MTcxNDk4MTEwOCwiZXhwIjoxODcyNjYxMTA4fQ.7FgalnXhBOcC7q-nYfONbxmc7My4iUOeWpN2eK3b7vc_br43NCEFiKWIrXs1cJTsU_Ds_ZZLHRB28c-jdgiBRw";
+                        httpWReq.Headers.Add("Authorization", "Bearer " + token);
 
 
                         httpWReq.ProtocolVersion = HttpVersion.Version11;
@@ -299,6 +313,7 @@ public partial class ImportFromServiceBenfBomawiseWagesLatest_Thread : System.We
             }
             catch (Exception ex)
             {
+                eLog.LogError(ex);
                 throw;
             }
             int sas = Gen.RemoveUnpaidList();
