@@ -247,20 +247,22 @@ namespace SSSNP
                 //newIdCardInfo.Signature = SSSNPHelper.getSignedQrData(jsonString);
                 //qrData = JsonConvert.SerializeObject(newIdCardInfo);
 
-                idCardInfoV1.HouseholdNumber = SSSNPHelper.EncryptString(ConfigurationManager.AppSettings
-                    ["HouseholdNumberEncryptorKey"].ToString(),
-                    idCardInfoV1.HouseholdNumber);
+                //idCardInfoV1.HouseholdNumber = SSSNPHelper.EncryptString(ConfigurationManager.AppSettings
+                //    ["HouseholdNumberEncryptorKey"].ToString(),
+                //    idCardInfoV1.HouseholdNumber);
 
-                string jsonString = JsonConvert.SerializeObject(idCardInfoV1);
+                //string jsonString = JsonConvert.SerializeObject(idCardInfoV1);
 
-                string decryptedString = SSSNPHelper.DecryptString(ConfigurationManager.AppSettings
-                    ["HouseholdNumberEncryptorKey"].ToString(),
-                    idCardInfoV1.HouseholdNumber);
+                //string decryptedString = SSSNPHelper.DecryptString(ConfigurationManager.AppSettings
+                //    ["HouseholdNumberEncryptorKey"].ToString(),
+                //    idCardInfoV1.HouseholdNumber);
 
                 //idCardInfoV1.Signature = getSignedQrData("{\"HouseholdNumber\":" + "\""
                 //    + idCardInfoV1.HouseholdNumber
                 //    + "\"}");
-                qrData = JsonConvert.SerializeObject(idCardInfoV1);
+                //qrData = JsonConvert.SerializeObject(idCardInfoV1);
+
+                qrData = idCardInfoV1.HouseholdNumber;
             }
             catch (Exception e)
             {
