@@ -722,91 +722,110 @@ public partial class IPBeneficiaryRegistration : System.Web.UI.Page
             TxtA2NationalID.Text = ds.Tables[0].Rows[0]["SecondAlternateNationalID"].ToString();
             TxtA2ContactNo.Text = ds.Tables[0].Rows[0]["SecondAlternatePayeeMobile"].ToString();
 
+            string minioBase = ConfigurationManager.AppSettings["MinioBaseDev"].ToString();
 
-
-
-            if (ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != null)
+            if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
             {
-                string dd = ds.Tables[0].Rows[0]["PhotoPath"].ToString().Trim();
-                string ddName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
-                Session["Photo"] = dd;
-                Session["PhotoFileName"] = ddName;
-                string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-                dd = dd.Replace(@"\", @"/");
-    
-                dd = dd.Replace(sssnpdir, sssnpweb);
-                dd = dd.Replace("~", sssnpweb);
-                //  dd = dd.Replace("~/", sssnpweb);
-                //  dd = "http://www.snsdpmis.com/Photo/" + hdfID.Value + "/Household/"; 
-                lblFileName.Text = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
-                //Image1.ImageUrl = dd + "/" + lblFileName.Text;
-                if (!dd.Contains(ddName))
-                {
-                    dd += "/" + ddName;
-                }
-                Image1.ImageUrl = dd;
+                minioBase = ConfigurationManager.AppSettings["MinioBaseProd"].ToString();
             }
-            if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != null)
-            {
-                string dd = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim();
-                string ddName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
-                Session["Photo1"] = dd;
-                Session["PhotoFileName1"] = ddName;
-                string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-                dd = dd.Replace(@"\", @"/");
-    
-                dd = dd.Replace(sssnpdir, sssnpweb);
-                dd = dd.Replace("~/", sssnpweb);
-                lblFileName1.Text = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
-                //   Image2.ImageUrl = dd + "/" + lblFileName1.Text;
-                // Image2.ImageUrl = dd ;
-                if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim() != "")
-                {
-                    if (!dd.Contains(ddName))
-                    {
-                        dd += "/" + ddName;
-                    }
-                    Image2.ImageUrl = dd;
-                    //Image2.ImageUrl = dd + "/" + lblFileName1.Text;
-                }
-                else
-                {
-                    //Image2.ImageUrl = "http:/54.68.125.132:8181/snsdp/public/attachments/" + ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
-                    Image2.ImageUrl = System.Configuration.ConfigurationManager.AppSettings["GetAttachments"] + ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim(); // API_V_1.2
-                }
-            }
-            if (ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != null)
-            {
-                string dd = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim();
-                string ddName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
-                Session["Photo2"] = dd;
-                Session["PhotoFileName2"] = ddName;
-                string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-                dd = dd.Replace(@"\", @"/");
 
-             
-                dd = dd.Replace(sssnpdir, sssnpweb);
-                dd = dd.Replace("~/", sssnpweb);
-                lblFileName2.Text = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
-                //  Image3.ImageUrl = dd + "/" + lblFileName2.Text;
-                //   Image3.ImageUrl = dd;
-                if (ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim() != "")
-                {
-                    if (!dd.Contains(ddName))
-                    {
-                        dd += "/" + ddName;
-                    }
-                    Image3.ImageUrl = dd;
-                    //Image3.ImageUrl = dd + "/" + lblFileName2.Text;
-                }
-                else
-                {
-                    Image3.ImageUrl = System.Configuration.ConfigurationManager.AppSettings["GetAttachments"] + ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim(); // API_V_1.2
-                }
+            if (ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim() != null)
+            {
+                Image1.ImageUrl = minioBase + ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim();
             }
+
+            if (ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim() != null)
+            {
+                Image2.ImageUrl = minioBase + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim();
+            }
+
+            if (ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim() != null)
+            {
+                Image3.ImageUrl = minioBase + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim();
+            }
+
+            //if (ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != null)
+            //{
+            //    string dd = ds.Tables[0].Rows[0]["PhotoPath"].ToString().Trim();
+            //    string ddName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
+            //    Session["Photo"] = dd;
+            //    Session["PhotoFileName"] = ddName;
+            //    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+            //    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+            //    dd = dd.Replace(@"\", @"/");
+
+            //    dd = dd.Replace(sssnpdir, sssnpweb);
+            //    dd = dd.Replace("~", sssnpweb);
+            //    //  dd = dd.Replace("~/", sssnpweb);
+            //    //  dd = "http://www.snsdpmis.com/Photo/" + hdfID.Value + "/Household/"; 
+            //    lblFileName.Text = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
+            //    //Image1.ImageUrl = dd + "/" + lblFileName.Text;
+            //    if (!dd.Contains(ddName))
+            //    {
+            //        dd += "/" + ddName;
+            //    }
+            //    Image1.ImageUrl = dd;
+            //}
+            //if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != null)
+            //{
+            //    string dd = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim();
+            //    string ddName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
+            //    Session["Photo1"] = dd;
+            //    Session["PhotoFileName1"] = ddName;
+            //    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+            //    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+            //    dd = dd.Replace(@"\", @"/");
+
+            //    dd = dd.Replace(sssnpdir, sssnpweb);
+            //    dd = dd.Replace("~/", sssnpweb);
+            //    lblFileName1.Text = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
+            //    //   Image2.ImageUrl = dd + "/" + lblFileName1.Text;
+            //    // Image2.ImageUrl = dd ;
+            //    if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim() != "")
+            //    {
+            //        if (!dd.Contains(ddName))
+            //        {
+            //            dd += "/" + ddName;
+            //        }
+            //        Image2.ImageUrl = dd;
+            //        //Image2.ImageUrl = dd + "/" + lblFileName1.Text;
+            //    }
+            //    else
+            //    {
+            //        //Image2.ImageUrl = "http:/54.68.125.132:8181/snsdp/public/attachments/" + ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
+            //        Image2.ImageUrl = System.Configuration.ConfigurationManager.AppSettings["GetAttachments"] + ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim(); // API_V_1.2
+            //    }
+            //}
+            //if (ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != null)
+            //{
+            //    string dd = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim();
+            //    string ddName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
+            //    Session["Photo2"] = dd;
+            //    Session["PhotoFileName2"] = ddName;
+            //    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+            //    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+            //    dd = dd.Replace(@"\", @"/");
+
+
+            //    dd = dd.Replace(sssnpdir, sssnpweb);
+            //    dd = dd.Replace("~/", sssnpweb);
+            //    lblFileName2.Text = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
+            //    //  Image3.ImageUrl = dd + "/" + lblFileName2.Text;
+            //    //   Image3.ImageUrl = dd;
+            //    if (ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim() != "")
+            //    {
+            //        if (!dd.Contains(ddName))
+            //        {
+            //            dd += "/" + ddName;
+            //        }
+            //        Image3.ImageUrl = dd;
+            //        //Image3.ImageUrl = dd + "/" + lblFileName2.Text;
+            //    }
+            //    else
+            //    {
+            //        Image3.ImageUrl = System.Configuration.ConfigurationManager.AppSettings["GetAttachments"] + ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim(); // API_V_1.2
+            //    }
+            //}
 
 
             if (ds.Tables[0].Rows[0]["WorkCode"].ToString().Trim() != "")
