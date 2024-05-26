@@ -122,130 +122,156 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 txtAlternate1.Text = ds.Tables[0].Rows[0]["Name1stAlternatePayee"].ToString();
                 txtAlternate2.Text = ds.Tables[0].Rows[0]["Name2ndAlternatePayee"].ToString();
 
+                string minioBase = ConfigurationManager.AppSettings["MinioBaseDev"].ToString();
 
-
-                if (ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != null)
+                if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
                 {
-                    string ddName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
-                    string dd = ds.Tables[0].Rows[0]["PhotoPath"].ToString().Trim();
-                    dd = dd.Replace(@"\", @"/");
+                    minioBase = ConfigurationManager.AppSettings["MinioBaseProd"].ToString();
+                }
 
-                    txtFilename.Text = dd;
+                if (ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim() != null)
+                {
+                    hdPhotoMain.Value = CreateCloneImage(ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim());
+                    btnEditPhotoBeneficiary.Enabled = true;
+                    Image1.Src = minioBase + ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim();
+                }
 
-                    if (!dd.Contains(ddName))
-                    {
-                        dd += "/" + ddName;
-                    }
+                if (ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim() != null)
+                {
+                    hdPhotoA1.Value = CreateCloneImage(ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim());
+                    btnEditPhotoA1.Enabled = true;
+                    imgAlternate1.Src = minioBase + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim();
+                }
 
-                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+                if (ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim() != null)
+                {
+                    hdPhotoA2.Value = CreateCloneImage(ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim());
+                    btnEditPhotoA2.Enabled = true;
+                    imgAlternate2.Src = minioBase + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim();
+                }
 
-                    if (dd.Contains(sssnpdir))
-                    {
-                        dd = dd.Replace(sssnpdir, "~");
-                    }
+                //if (ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != null)
+                //{
+                //    string ddName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
+                //    string dd = ds.Tables[0].Rows[0]["PhotoPath"].ToString().Trim();
+                //    dd = dd.Replace(@"\", @"/");
 
-                    //if (File.Exists(Server.MapPath(act)))
-                    //{
-                        hdPhotoMain.Value = CreateCloneImage(dd);
-                        btnEditPhotoBeneficiary.Enabled = true;
+                //    txtFilename.Text = dd;
 
-                    //}
+                //    if (!dd.Contains(ddName))
+                //    {
+                //        dd += "/" + ddName;
+                //    }
+
+                //    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+                //    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+
+                //    if (dd.Contains(sssnpdir))
+                //    {
+                //        dd = dd.Replace(sssnpdir, "~");
+                //    }
+
+                //    //if (File.Exists(Server.MapPath(act)))
+                //    //{
+                //        hdPhotoMain.Value = CreateCloneImage(dd);
+                //        btnEditPhotoBeneficiary.Enabled = true;
+
+                //    //}
                     
-                    //dd = dd.Replace(sssnpdir, sssnpweb);
-                    dd = dd.Replace("~", sssnpweb);
+                //    //dd = dd.Replace(sssnpdir, sssnpweb);
+                //    dd = dd.Replace("~", sssnpweb);
          
-                    string lblFileName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
-                    //Image1.ImageUrl = dd;
-                    Image1.Src = dd;
+                //    string lblFileName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
+                //    //Image1.ImageUrl = dd;
+                //    Image1.Src = dd;
 
 
 
 
-                }
-                if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != null)
-                {
-                    string dd = @"~/alternateone/" + ds.Tables[0].Rows[0]["intBenTempid"].ToString() + @"/" + ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
-                    dd = dd.Replace(@"\", @"/");
-                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-                    dd = dd.Replace(sssnpdir, sssnpweb);
+                //}
+                //if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != null)
+                //{
+                //    string dd = @"~/alternateone/" + ds.Tables[0].Rows[0]["intBenTempid"].ToString() + @"/" + ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
+                //    dd = dd.Replace(@"\", @"/");
+                //    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+                //    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+                //    dd = dd.Replace(sssnpdir, sssnpweb);
 
-                    string ddName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"]?.ToString().Trim();
+                //    string ddName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"]?.ToString().Trim();
 
-                    txtPhotoCardA1.Text = dd;
+                //    txtPhotoCardA1.Text = dd;
 
-                    if (File.Exists(Server.MapPath(dd)))
-                    {
-                        hdPhotoA1.Value = CreateCloneImage(dd);
-                        btnEditPhotoA1.Enabled = true;
+                //    if (File.Exists(Server.MapPath(dd)))
+                //    {
+                //        hdPhotoA1.Value = CreateCloneImage(dd);
+                //        btnEditPhotoA1.Enabled = true;
 
-                    }
-                    else
-                    {
-                        if (ddName != "" && ddName != null)
-                        {
-                            dd = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim();
-                            dd = dd.Replace(@"\", @"/");
-                            dd = dd.Replace(sssnpdir, sssnpweb);
-                            if (!dd.Contains(ddName))
-                            {
-                                dd += "/" + ddName;
-                            }
-                            hdPhotoA1.Value = CreateCloneImage(dd.Replace(sssnpweb, "~"));
-                            btnEditPhotoA1.Enabled = true;
-                        }
-                    }
+                //    }
+                //    else
+                //    {
+                //        if (ddName != "" && ddName != null)
+                //        {
+                //            dd = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoPath"].ToString().Trim();
+                //            dd = dd.Replace(@"\", @"/");
+                //            dd = dd.Replace(sssnpdir, sssnpweb);
+                //            if (!dd.Contains(ddName))
+                //            {
+                //                dd += "/" + ddName;
+                //            }
+                //            hdPhotoA1.Value = CreateCloneImage(dd.Replace(sssnpweb, "~"));
+                //            btnEditPhotoA1.Enabled = true;
+                //        }
+                //    }
                     
-                    dd = dd.Replace("~", sssnpweb);
-                    string lblFileName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
+                //    dd = dd.Replace("~", sssnpweb);
+                //    string lblFileName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
 
 
-                    imgAlternate1.Src = dd;
+                //    imgAlternate1.Src = dd;
 
-                }
-                if (ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != null)
-                {
-                    string dd = @"~/alternatetwo/" + ds.Tables[0].Rows[0]["intBenTempid"].ToString() + @"/" + ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
-                    dd = dd.Replace(@"\", @"/");
-                    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
-                    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-                    dd = dd.Replace(sssnpdir, sssnpweb);
+                //}
+                //if (ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim() != null)
+                //{
+                //    string dd = @"~/alternatetwo/" + ds.Tables[0].Rows[0]["intBenTempid"].ToString() + @"/" + ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
+                //    dd = dd.Replace(@"\", @"/");
+                //    string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+                //    string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
+                //    dd = dd.Replace(sssnpdir, sssnpweb);
 
-                    string ddName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"]?.ToString().Trim();
+                //    string ddName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"]?.ToString().Trim();
 
-                    txtPhotoCardA2.Text = dd;
+                //    txtPhotoCardA2.Text = dd;
 
 
-                    if (File.Exists(Server.MapPath(dd)))
-                    {
-                        hdPhotoA2.Value = CreateCloneImage(dd);
-                        btnEditPhotoA2.Enabled = true;
+                //    if (File.Exists(Server.MapPath(dd)))
+                //    {
+                //        hdPhotoA2.Value = CreateCloneImage(dd);
+                //        btnEditPhotoA2.Enabled = true;
 
-                    }
-                    else
-                    {
-                        if (ddName != "" && ddName != null)
-                        {
-                            dd = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim();
-                            dd = dd.Replace(@"\", @"/");
-                            dd = dd.Replace(sssnpdir, sssnpweb);
-                            if (!dd.Contains(ddName))
-                            {
-                                dd += "/" + ddName;
-                            }
-                            hdPhotoA2.Value = CreateCloneImage(dd.Replace(sssnpweb, "~"));
-                            btnEditPhotoA2.Enabled = true;
-                        }
-                    }
+                //    }
+                //    else
+                //    {
+                //        if (ddName != "" && ddName != null)
+                //        {
+                //            dd = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoPath"].ToString().Trim();
+                //            dd = dd.Replace(@"\", @"/");
+                //            dd = dd.Replace(sssnpdir, sssnpweb);
+                //            if (!dd.Contains(ddName))
+                //            {
+                //                dd += "/" + ddName;
+                //            }
+                //            hdPhotoA2.Value = CreateCloneImage(dd.Replace(sssnpweb, "~"));
+                //            btnEditPhotoA2.Enabled = true;
+                //        }
+                //    }
                     
-                    dd = dd.Replace("~", sssnpweb);
-                    string lblFileName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
+                //    dd = dd.Replace("~", sssnpweb);
+                //    string lblFileName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
 
 
-                    imgAlternate2.Src = dd;
+                //    imgAlternate2.Src = dd;
 
-                }
+                //}
 
 
             }
