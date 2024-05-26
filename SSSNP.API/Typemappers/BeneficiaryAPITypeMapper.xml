@@ -75,6 +75,20 @@
     <property name="rrTemplate"></property>
     <property name="rsTemplate"></property>
     <property name="rtTemplate"></property>
+    <property name="household_photo_url"></property>
+    <property name="alt1_photo_url"></property>
+    <property name="alt2_photo_url"></property>
+    <property name="alt1Name"></property>
+    <property name="alt1Gender"></property>
+    <property name="alt1Age"></property>
+    <property name="alt1Nid"></property>
+    <property name="alt1Mobile"></property>
+    <property name="alt2Name"></property>
+    <property name="alt2Gender"></property>
+    <property name="alt2Age"></property>
+    <property name="alt2Nid"></property>
+    <property name="alt2Mobile"></property>
+    
 	</properties>
 
 	<operations>
@@ -521,6 +535,19 @@
         @rrTemplate,
         @rsTemplate,
         @rtTemplate,
+        @household_photo_url,
+        @alt1_photo_url,
+        @alt2_photo_url,
+        @alt1Name,
+        @alt1Gender,
+        @alt1Age,
+        @alt1Nid,
+        @alt1Mobile,
+        @alt2Name,
+        @alt2Gender,
+        @alt2Age,
+        @alt2Nid,
+        @alt2Mobile,
         @ReturnValue output
       </query>
 		</operation>
