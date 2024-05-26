@@ -49,8 +49,6 @@ namespace SSSNP_SNSOP.Entity
         public string alternate_number { get; set; }
         public string selection_criteria { get; set; }
         public string selection_reason { get; set; }
-
-
         public string liTemplate { get; set; }
         public string lmTemplate { get; set; }
         public string lrTemplate { get; set; }
@@ -61,5 +59,18 @@ namespace SSSNP_SNSOP.Entity
         public string rrTemplate { get; set; }
         public string rsTemplate { get; set; }
         public string rtTemplate { get; set; }
+        public string household_photo_url { get; set; }
+        public string alt1_photo_url { get; set; }
+        public string alt2_photo_url { get; set; }
+        public string alt1Name { get; set; }
+        public string alt1Gender { get; set; }
+        public int alt1Age { get; set; }
+        public string alt1Nid { get; set; }
+        public string alt1Mobile { get; set; }
+        public string alt2Name { get; set; }
+        public string alt2Gender { get; set; }
+        public int alt2Age { get; set; }
+        public string alt2Nid { get; set; }
+        public string alt2Mobile { get; set; }
     }
 }
