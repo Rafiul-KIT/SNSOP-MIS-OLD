@@ -16,6 +16,7 @@ using SSSNP_SNSOP.Entity;
 using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
 using System.Web.Services;
+using System.Net;
 
 namespace SSSNP_SNSOP.UI.Public_Works
 {
@@ -131,23 +132,81 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 if (ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim() != null)
                 {
-                    hdPhotoMain.Value = CreateCloneImage(ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim());
+                    string directoryName = @ConfigurationManager.AppSettings["SSSNPDIR"].ToString() + "/Photo/" + lblJobcard.Text;
+                    if (!Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+                    string dd = @directoryName + "/" + ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim() + ".jpg";
+                    if (!File.Exists(dd))
+                    {
+                        WebClient client = new WebClient();
+                        try
+                        {
+                            client.DownloadFile(minioBase + ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim(), dd);
+                        }
+                        catch (Exception e) 
+                        { 
+                            throw; 
+                        }
+                    }
+
+                    string path = "~/Photo/" + lblJobcard.Text + "/" + ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim() + ".jpg";
+                    hdPhotoMain.Value = CreateCloneImage(path);
                     btnEditPhotoBeneficiary.Enabled = true;
-                    Image1.Src = minioBase + ds.Tables[0].Rows[0]["household_photo_url"].ToString().Trim();
+                    Image1.Src = hdPhotoMain.Value;
                 }
 
                 if (ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim() != null)
                 {
-                    hdPhotoA1.Value = CreateCloneImage(ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim());
+                    string directoryName = @ConfigurationManager.AppSettings["SSSNPDIR"].ToString() + "/Photo/" + lblJobcard.Text;
+                    if (!Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+                    string dd = @directoryName + "/" + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim() + ".jpg";
+                    if (!File.Exists(dd))
+                    {
+                        WebClient client = new WebClient();
+                        try
+                        {
+                            client.DownloadFile(minioBase + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim(), dd);
+                        } catch (Exception e)
+                        {
+                            throw;
+                        }
+                    }
+
+                    string path = "~/Photo/" + lblJobcard.Text + "/" + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim() + ".jpg";
+                    hdPhotoA1.Value = CreateCloneImage(path);
                     btnEditPhotoA1.Enabled = true;
-                    imgAlternate1.Src = minioBase + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim();
+                    imgAlternate1.Src = hdPhotoA1.Value;
                 }
 
                 if (ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim() != null)
                 {
-                    hdPhotoA2.Value = CreateCloneImage(ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim());
+                    string directoryName = @ConfigurationManager.AppSettings["SSSNPDIR"].ToString() + "/Photo/" + lblJobcard.Text;
+                    if (!Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+                    string dd = @directoryName + "/" + ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim() + ".jpg";
+                    if (!File.Exists(dd))
+                    {
+                        WebClient client = new WebClient();
+                        try
+                        {
+                            client.DownloadFile(minioBase + ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim(), dd);
+                        } catch (Exception e)
+                        {
+                            throw;
+                        }
+                    }
+
+                    string path = "~/Photo/" + lblJobcard.Text + "/" + ds.Tables[0].Rows[0]["alt2_photo_url"].ToString().Trim() + ".jpg";
+                    hdPhotoA2.Value = CreateCloneImage(path);
                     btnEditPhotoA2.Enabled = true;
-                    imgAlternate2.Src = minioBase + ds.Tables[0].Rows[0]["alt1_photo_url"].ToString().Trim();
+                    imgAlternate2.Src = hdPhotoA2.Value;
                 }
 
                 //if (ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim() != null)
@@ -173,14 +232,14 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 //    //if (File.Exists(Server.MapPath(act)))
                 //    //{
-                //        hdPhotoMain.Value = CreateCloneImage(dd);
-                //        btnEditPhotoBeneficiary.Enabled = true;
+                //    hdPhotoMain.Value = CreateCloneImage(dd);
+                //    btnEditPhotoBeneficiary.Enabled = true;
 
                 //    //}
-                    
+
                 //    //dd = dd.Replace(sssnpdir, sssnpweb);
                 //    dd = dd.Replace("~", sssnpweb);
-         
+
                 //    string lblFileName = ds.Tables[0].Rows[0]["PhotoName"].ToString().Trim();
                 //    //Image1.ImageUrl = dd;
                 //    Image1.Src = dd;
@@ -189,7 +248,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
 
                 //}
-                //if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != null)
+                ////if (ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != "" && ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim() != null)
                 //{
                 //    string dd = @"~/alternateone/" + ds.Tables[0].Rows[0]["intBenTempid"].ToString() + @"/" + ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
                 //    dd = dd.Replace(@"\", @"/");
@@ -222,7 +281,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 //            btnEditPhotoA1.Enabled = true;
                 //        }
                 //    }
-                    
+
                 //    dd = dd.Replace("~", sssnpweb);
                 //    string lblFileName = ds.Tables[0].Rows[0]["FirstAlternatePayeePhotoName"].ToString().Trim();
 
@@ -264,7 +323,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 //            btnEditPhotoA2.Enabled = true;
                 //        }
                 //    }
-                    
+
                 //    dd = dd.Replace("~", sssnpweb);
                 //    string lblFileName = ds.Tables[0].Rows[0]["SecondAlternatePayeePhotoName"].ToString().Trim();
 
@@ -600,7 +659,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 string result = "";
 
-                string suffix = DateTime.Now.Ticks.ToString();
+                //string suffix = DateTime.Now.Ticks.ToString();
+                string suffix = "-clone";
 
                 // Generate Temp File Image
                 string filename = Server.MapPath(filenameSource);
