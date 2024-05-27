@@ -363,9 +363,10 @@ namespace SSSNP_SNSOP.API.Controllers
         [Route("addBeneficiarySNSOP")]
         [HttpPost]
         [AuthorizationAPIFilter]
-        public APIResultObject AddBeneficiarySNSOP([FromBody] BeneficiaryAPI beneficiaryAPI)
+        public APIResultObject AddBeneficiarySNSOP([FromBody] BeneficiaryAPIExt beneficiaryAPI)
         {
             APIResultObject result = new APIResultObject();
+           
 
             try
             {

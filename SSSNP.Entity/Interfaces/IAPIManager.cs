@@ -17,7 +17,7 @@ namespace SSSNP_SNSOP.Entity.Interfaces
         int AddBeneficiary(BeneficiaryAPI beneficiaryAPI);
         int AddBeneficiaryLoc(BeneficiaryAPI beneficiaryAPI);
         int AddBeneficiaryFAO(BeneficiaryAPI beneficiaryAPI);
-        int AddBeneficiarySNSOP(BeneficiaryAPI beneficiaryAPI);
+        int AddBeneficiarySNSOP(BeneficiaryAPIExt beneficiaryAPI);
 
         int CheckHouseHoldNumber(string houseHoldNumber);
         int CheckHouseHoldNumberLoc(string houseHoldNumber);

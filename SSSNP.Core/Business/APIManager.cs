@@ -170,14 +170,83 @@ namespace SSSNP_SNSOP.Core.Business
 
         }
 
-        public int AddBeneficiarySNSOP(BeneficiaryAPI beneficiaryAPI)
+        private BeneficiaryAPI GetBeneficiaryData(BeneficiaryAPIExt beneficiaryAPIExt)
+        {
+            BeneficiaryAPI beneficiaryAPI = new BeneficiaryAPI();
+
+            beneficiaryAPI.id = beneficiaryAPIExt.id;
+            beneficiaryAPI.supervisor_id = beneficiaryAPIExt.supervisor_id;
+            beneficiaryAPI.partner_code = beneficiaryAPIExt.partner_code;
+            beneficiaryAPI.household_number = beneficiaryAPIExt.household_number;
+            beneficiaryAPI.beneficiary_type = beneficiaryAPIExt.beneficiary_type;
+            beneficiaryAPI.group_number = beneficiaryAPIExt.group_number;
+            beneficiaryAPI.member_number = beneficiaryAPIExt.member_number;
+            beneficiaryAPI.household_size = beneficiaryAPIExt.household_size;
+            beneficiaryAPI.household_name = beneficiaryAPIExt.household_name;
+            beneficiaryAPI.age = beneficiaryAPIExt.age;
+            beneficiaryAPI.spouse_name = beneficiaryAPIExt.spouse_name;
+            beneficiaryAPI.id_number = beneficiaryAPIExt.id_number;
+            beneficiaryAPI.phone_number = beneficiaryAPIExt.phone_number;
+            beneficiaryAPI.gender = beneficiaryAPIExt.gender;
+            beneficiaryAPI.female_dependants = beneficiaryAPIExt.female_dependants;
+            beneficiaryAPI.male_dependants = beneficiaryAPIExt.male_dependants;
+            beneficiaryAPI.zero_five = beneficiaryAPIExt.zero_five;
+            beneficiaryAPI.six_eighteen = beneficiaryAPIExt.six_eighteen;
+            beneficiaryAPI.nineteen_forty_five = beneficiaryAPIExt.nineteen_forty_five;
+            beneficiaryAPI.forty_six_sixty_five = beneficiaryAPIExt.forty_six_sixty_five;
+            beneficiaryAPI.sixty_six = beneficiaryAPIExt.sixty_six;
+            beneficiaryAPI.income_household = beneficiaryAPIExt.income_household;
+            beneficiaryAPI.average_household = beneficiaryAPIExt.average_household;
+            beneficiaryAPI.state = beneficiaryAPIExt.state;
+            beneficiaryAPI.county = beneficiaryAPIExt.county;
+            beneficiaryAPI.payam = beneficiaryAPIExt.payam;
+            beneficiaryAPI.boma = beneficiaryAPIExt.boma;
+            beneficiaryAPI.latitude = beneficiaryAPIExt.latitude;
+            beneficiaryAPI.longitude = beneficiaryAPIExt.longitude;
+            beneficiaryAPI.legal_status = beneficiaryAPIExt.legal_status;
+            beneficiaryAPI.photo_url = beneficiaryAPIExt.photo_url;
+            beneficiaryAPI.status = beneficiaryAPIExt.status;
+            beneficiaryAPI.created_at = beneficiaryAPIExt.created_at;
+            beneficiaryAPI.updated_at = beneficiaryAPIExt.updated_at;
+            beneficiaryAPI.alternate_number = beneficiaryAPIExt.alternate_number;
+            beneficiaryAPI.selection_criteria = beneficiaryAPIExt.selection_criteria;
+            beneficiaryAPI.selection_reason = beneficiaryAPIExt.selection_reason;
+            beneficiaryAPI.liTemplate = beneficiaryAPIExt.liTemplate;
+            beneficiaryAPI.lmTemplate = beneficiaryAPIExt.lmTemplate;
+            beneficiaryAPI.lrTemplate = beneficiaryAPIExt.lrTemplate;
+            beneficiaryAPI.lsTemplate = beneficiaryAPIExt.lsTemplate;
+            beneficiaryAPI.ltTemplate = beneficiaryAPIExt.ltTemplate;
+            beneficiaryAPI.riTemplate = beneficiaryAPIExt.riTemplate;
+            beneficiaryAPI.rmTemplate = beneficiaryAPIExt.rmTemplate;
+            beneficiaryAPI.rrTemplate = beneficiaryAPIExt.rrTemplate;
+            beneficiaryAPI.rsTemplate = beneficiaryAPIExt.rsTemplate;
+            beneficiaryAPI.rtTemplate = beneficiaryAPIExt.rtTemplate;
+            beneficiaryAPI.household_photo_url = beneficiaryAPIExt.household_photo_url;
+            beneficiaryAPI.alt1_photo_url = beneficiaryAPIExt.alt1_photo_url;
+            beneficiaryAPI.alt2_photo_url = beneficiaryAPIExt.alt2_photo_url;
+            beneficiaryAPI.alt1Name = beneficiaryAPIExt.alt1Name;
+            beneficiaryAPI.alt1Gender = beneficiaryAPIExt.alt1Gender;
+            beneficiaryAPI.alt1Age = beneficiaryAPIExt.alt1Age;
+            beneficiaryAPI.alt1Nid = beneficiaryAPIExt.alt1Nid;
+            beneficiaryAPI.alt1Mobile = beneficiaryAPIExt.alt1Mobile;
+            beneficiaryAPI.alt2Name = beneficiaryAPIExt.alt2Name;
+            beneficiaryAPI.alt2Gender = beneficiaryAPIExt.alt2Gender;
+            beneficiaryAPI.alt2Age = beneficiaryAPIExt.alt2Age;
+            beneficiaryAPI.alt2Nid = beneficiaryAPIExt.alt2Nid;
+            beneficiaryAPI.alt2Mobile = beneficiaryAPIExt.alt2Mobile;
+            return beneficiaryAPI;
+        }
+
+        public int AddBeneficiarySNSOP(BeneficiaryAPIExt beneficiaryAPIExt)
         {
             int result;
 
             int checkBenId = 0;
 
-            checkBenId = CheckHouseHoldNumberSNSOP(beneficiaryAPI.household_number);
+            checkBenId = CheckHouseHoldNumberSNSOP(beneficiaryAPIExt.household_number);
             if (checkBenId > 0) return -1;
+
+            BeneficiaryAPI beneficiaryAPI = GetBeneficiaryData(beneficiaryAPIExt);
 
             using (APIDataAccess ds = new APIDataAccess("APIManagerSNSOP"))
             {
@@ -185,8 +254,22 @@ namespace SSSNP_SNSOP.Core.Business
                 ds.AcceptChanges();
             }
 
+            AddNomineeInfo(beneficiaryAPIExt.nomineeList);
+
             return result;
 
+        }
+
+        public void AddNomineeInfo(List<NomineeDto> nomList)
+        {
+            using (APIDataAccess ds = new APIDataAccess("APIManagerSNSOP"))
+            {
+                foreach(var obj in nomList)
+                {
+                    var result = ds.AddNomineeInfo(obj);
+                    ds.AcceptChanges();
+                }
+            }
         }
 
         public int CountBeneficiary()

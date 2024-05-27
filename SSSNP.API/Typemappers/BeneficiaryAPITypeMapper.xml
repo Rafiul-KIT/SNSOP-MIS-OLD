@@ -88,6 +88,19 @@
     <property name="alt2Age"></property>
     <property name="alt2Nid"></property>
     <property name="alt2Mobile"></property>
+
+    <property name="applicationId"></property>
+    <property name="nomineeFirstName"></property>
+    <property name="nomineeMiddleName"></property>
+    <property name="nomineeLastName"></property>
+    <property name="nomineeNickName"></property>
+    <property name="relationshipWithHouseholdHead"></property>
+    <property name="relationshipOther"></property>
+    <property name="nomineeAge"></property>
+    <property name="nomineeGender"></property>
+    <property name="isReadWrite"></property>
+    <property name="nomineeOccupation"></property>
+    <property name="otherOccupation"></property>
     
 	</properties>
 
@@ -551,6 +564,26 @@
         @ReturnValue output
       </query>
 		</operation>
+
+    <operation name="AddNomineeInfo">
+      <query>
+        EXEC @ReturnValue = insertNomineeInfo
+        @applicationId,
+        @nomineeFirstName,
+        @nomineeMiddleName,
+        @nomineeLastName,
+        @nomineeNickName,
+        @relationshipWithHouseholdHead,
+        @relationshipOther,
+        @nomineeAge,
+        @nomineeGender,
+        @isReadWrite,
+        @nomineeOccupation,
+        @otherOccupation,
+        @ReturnValue output
+      </query>
+    </operation>
+    
     <operation name="AddBeneficiaryLoc">
       <query>
 
