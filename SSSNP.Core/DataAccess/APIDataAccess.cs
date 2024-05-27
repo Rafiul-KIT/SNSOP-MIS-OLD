@@ -56,6 +56,19 @@ namespace SSSNP_SNSOP.Core.DataAccess
 
             return (int)returnValue.Value;
         }
+
+        public int AddNomineeInfo(NomineeDto nominee)
+        {
+            ITypemapper tm = new Typemapper(TMapperAPIContext.BeneficiaryAPI, "AddNomineeInfo");
+            IDbDataParameter returnValue = CreateOutputParameter("@ReturnValue");
+
+            this.ExecuteNonQuery<NomineeDto>(tm, nominee, returnValue);
+
+            if (returnValue.Value == DBNull.Value) return -1;
+
+            return (int)returnValue.Value;
+        }
+
         public int AddBeneficiaryLoc(BeneficiaryAPI beneficiaryAPI)
         {
             ITypemapper tm = new Typemapper(TMapperAPIContext.BeneficiaryAPI, "AddBeneficiaryLoc");
