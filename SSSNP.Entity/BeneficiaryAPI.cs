@@ -9,7 +9,7 @@ namespace SSSNP_SNSOP.Entity
     [Serializable]
     public class BeneficiaryAPI
     {
-        public int id { get; set; }
+        public int? id { get; set; }
         public string supervisor_id { get; set; }
         public string partner_code { get; set; }
         public string household_number { get; set; }
@@ -64,12 +64,12 @@ namespace SSSNP_SNSOP.Entity
         public string alt2_photo_url { get; set; }
         public string alt1Name { get; set; }
         public string alt1Gender { get; set; }
-        public int alt1Age { get; set; }
+        public int? alt1Age { get; set; }
         public string alt1Nid { get; set; }
         public string alt1Mobile { get; set; }
         public string alt2Name { get; set; }
         public string alt2Gender { get; set; }
-        public int alt2Age { get; set; }
+        public int? alt2Age { get; set; }
         public string alt2Nid { get; set; }
         public string alt2Mobile { get; set; }
     }
@@ -77,7 +77,7 @@ namespace SSSNP_SNSOP.Entity
     [Serializable]
     public class BeneficiaryAPIExt
     {
-        public int id { get; set; }
+        public int? id { get; set; }
         public string supervisor_id { get; set; }
         public string partner_code { get; set; }
         public string household_number { get; set; }
@@ -132,12 +132,12 @@ namespace SSSNP_SNSOP.Entity
         public string alt2_photo_url { get; set; }
         public string alt1Name { get; set; }
         public string alt1Gender { get; set; }
-        public int alt1Age { get; set; }
+        public int? alt1Age { get; set; }
         public string alt1Nid { get; set; }
         public string alt1Mobile { get; set; }
         public string alt2Name { get; set; }
         public string alt2Gender { get; set; }
-        public int alt2Age { get; set; }
+        public int? alt2Age { get; set; }
         public string alt2Nid { get; set; }
         public string alt2Mobile { get; set; }
         public List<NomineeDto> nomineeList { get; set; } = new List<NomineeDto>();
@@ -150,12 +150,12 @@ namespace SSSNP_SNSOP.Entity
         public string nomineeMiddleName { get; set; }
         public string nomineeLastName { get; set; }
         public string nomineeNickName { get; set; }
-        public int relationshipWithHouseholdHead { get; set; }
+        public int? relationshipWithHouseholdHead { get; set; }
         public string relationshipOther { get; set; }
-        public int nomineeAge { get; set; }
-        public int nomineeGender { get; set; }
-        public int isReadWrite { get; set; }
-        public int nomineeOccupation { get; set; }
+        public int? nomineeAge { get; set; }
+        public int? nomineeGender { get; set; }
+        public int? isReadWrite { get; set; }
+        public int? nomineeOccupation { get; set; }
         public string otherOccupation { get; set; }
     }
 }
