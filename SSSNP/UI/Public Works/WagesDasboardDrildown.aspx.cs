@@ -545,11 +545,11 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             string status = "";
             if (ddlStatus.SelectedValue == "2")
             {
-                status = "The above payment has been reviewed by SSSNP program - Co-Ordinator.Please verify it";
+                status = "The above payment has been reviewed by SNSOP program - Co-Ordinator.Please verify it";
             }
             else if (ddlStatus.SelectedValue == "3")
             {
-                status = "The above payment has been verified by SSSNP program - Specialist.Please verify it";
+                status = "The above payment has been verified by SNSOP program - Specialist.Please verify it";
             }
             else if (ddlStatus.SelectedValue == "4")
             {
@@ -557,15 +557,15 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             }
             else if (ddlStatus.SelectedValue == "100")
             {
-                status = "The above payment has been rejected by SSSNP program - Co-Ordinator.Please verify it";
+                status = "The above payment has been rejected by SNSOP program - Co-Ordinator.Please verify it";
             }
             else if (ddlStatus.SelectedValue == "101")
             {
-                status = "The above payment has been rejected by SSSNP program - Specialist.Please verify it";
+                status = "The above payment has been rejected by SNSOP program - Specialist.Please verify it";
             }
             else if (ddlStatus.SelectedValue == "103")
             {
-                status = "The above payment has been rejected by SSSNP program - Manager.Please verify it";
+                status = "The above payment has been rejected by SNSOP program - Manager.Please verify it";
             }
             else
             {
@@ -631,9 +631,11 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             httpWReq.PreAuthenticate = true;
             httpWReq.Headers.Add("Authorization", "Bearer " + token);
 
+            string reqStr = "";
+
             try
             {
-                string reqStr = JsonConvert.SerializeObject(request);
+                reqStr = JsonConvert.SerializeObject(request);
 
                 var data = Encoding.ASCII.GetBytes(reqStr);
                 httpWReq.Method = "POST";
@@ -763,13 +765,6 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                         dto.firstName = names[0];
                         dto.middleName = names[1];
                         dto.lastName = names[2];
-                    } else if (names.Length == 2)
-                    {
-                        dto.firstName = names[0];
-                        dto.lastName = names[1];
-                    } else
-                    {
-                        dto.lastName = names[0];
                     }
                 }
             }
@@ -819,15 +814,6 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                             dto.middleName = names[1];
                             dto.lastName = names[2];
                         }
-                        else if (names.Length == 2)
-                        {
-                            dto.firstName = names[0];
-                            dto.lastName = names[1];
-                        }
-                        else
-                        {
-                            dto.lastName = names[0];
-                        }
                     }
                 }
 
@@ -845,7 +831,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 {
                     dto.gender = int.Parse(row["SecondAlternatePayeeGender"].ToString());
                 }
-                dto.phoneNumber = (row["FirstAlternatePayeeMobile"] != null) ? row["FirstAlternatePayeeMobile"].ToString() : null;
+                dto.phoneNumber = (row["SecondAlternatePayeeMobile"] != null) ? row["SecondAlternatePayeeMobile"].ToString() : null;
                 if (row["Name2ndAlternatePayee"] != null)
                 {
                     var names = row["Name2ndAlternatePayee"].ToString().Split(' ');
@@ -856,15 +842,6 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                             dto.firstName = names[0];
                             dto.middleName = names[1];
                             dto.lastName = names[2];
-                        }
-                        else if (names.Length == 2)
-                        {
-                            dto.firstName = names[0];
-                            dto.lastName = names[1];
-                        }
-                        else
-                        {
-                            dto.lastName = names[0];
                         }
                     }
                 }
@@ -888,7 +865,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
     public void SendMailforWages(string numbers, string anothermail, string Ipname, string WorkCode, string WorkRequest)
     {
         string sssnpmail = System.Configuration.ConfigurationManager.AppSettings["SSSNPMAIL"]; // Config email
-        string from = string.Format("\"SSSNP System\" <{0}>", sssnpmail);
+        string from = string.Format("\"SNSOP System\" <{0}>", sssnpmail);
 
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
@@ -921,9 +898,9 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         }
 
   
-        mail.From = new MailAddress(from, ":: SSSNP Public works MIS :: Wages", System.Text.Encoding.UTF8);
+        mail.From = new MailAddress(from, ":: SNSOP Public works MIS :: Wages", System.Text.Encoding.UTF8);
 
-        mail.Subject = "SSSNP Public Works MIS – Notification on Wage Payroll for Review";
+        mail.Subject = "SNSOP Public Works MIS – Notification on Wage Payroll for Review";
 
         mail.SubjectEncoding = System.Text.Encoding.UTF8;
         string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
@@ -934,7 +911,11 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
 
         string smtpserver = System.Configuration.ConfigurationManager.AppSettings["SMTPSERVER"]; // Config smtp
         var client = new SmtpClient(smtpserver);
-
+        client.Port = 587;
+        client.Host = smtpserver;
+        client.EnableSsl = true;
+        client.UseDefaultCredentials = false;
+        client.Credentials = new System.Net.NetworkCredential("no-reply@southsudansafetynet.info", "2sOQenMaTV-?");
 
         try
         {

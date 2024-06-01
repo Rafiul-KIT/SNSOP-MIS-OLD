@@ -304,12 +304,12 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
 
             GrdExisted.DataSource = null;
             GrdExisted.DataBind();
-            SendMailforWagesDraft(status, "", Session["username"].ToString(), lblWorkCode.Text, System.DateTime.Now.Year.ToString() + "-SNSDPWR-" + resultwage.ToString());
+            SendMailforWagesDraft(status, "", Session["username"].ToString(), lblWorkCode.Text, System.DateTime.Now.Year.ToString() + "-SNSOPWR-" + resultwage.ToString());
 
             success.Visible = true;
             Failure.Visible = false;
             clear();
-            Response.Redirect("WageRequestResult.aspx?WageReqNo=" + System.DateTime.Now.Year.ToString() + "-SNSDPWR-" + resultwage.ToString());
+            Response.Redirect("WageRequestResult.aspx?WageReqNo=" + System.DateTime.Now.Year.ToString() + "-SNSOPWR-" + resultwage.ToString());
         }
     }
 
@@ -758,6 +758,11 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
 
         string smtpserver = System.Configuration.ConfigurationManager.AppSettings["SMTPSERVER"]; // Config smtp
         var client = new SmtpClient(smtpserver);
+        client.Port = 587;
+        client.Host = smtpserver;
+        client.EnableSsl = true;
+        client.UseDefaultCredentials = false;
+        client.Credentials = new System.Net.NetworkCredential("no-reply@southsudansafetynet.info", "2sOQenMaTV-?");
 
         try
         {

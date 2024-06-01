@@ -300,7 +300,7 @@ public partial class PDCHouseholdWagesApplyDIS : System.Web.UI.Page
         success.Visible = true;
         Failure.Visible = false;
         clear();
-        Response.Redirect("WageRequestResultDIS.aspx?WageReqNo=" + System.DateTime.Now.Year.ToString() + "-SNSDPWR-" + resultwage.ToString());
+        Response.Redirect("WageRequestResultDIS.aspx?WageReqNo=" + System.DateTime.Now.Year.ToString() + "-SNSOPWR-" + resultwage.ToString());
     }
 
     protected void btnOrgLookup_Click(object sender, EventArgs e)
@@ -801,7 +801,7 @@ public partial class PDCHouseholdWagesApplyDIS : System.Web.UI.Page
     public void SendMailforWagesDISDraft(string numbers, string anothermail, string Ipname)
     {
         string sssnpmail = System.Configuration.ConfigurationManager.AppSettings["SSSNPMAIL"]; // Config email
-        string from = string.Format("\"SSSNP System\" <{0}>", sssnpmail);
+        string from = string.Format("\"SNSOP System\" <{0}>", sssnpmail);
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
       
         DataSet dsIPApprovers = Gen.GetIPApprovers();
@@ -823,6 +823,11 @@ public partial class PDCHouseholdWagesApplyDIS : System.Web.UI.Page
 
         string smtpserver = System.Configuration.ConfigurationManager.AppSettings["SMTPSERVER"]; // Config smtp
         var client = new SmtpClient(smtpserver);
+        client.Port = 587;
+        client.Host = smtpserver;
+        client.EnableSsl = true;
+        client.UseDefaultCredentials = false;
+        client.Credentials = new System.Net.NetworkCredential("no-reply@southsudansafetynet.info", "2sOQenMaTV-?");
 
         try
         {

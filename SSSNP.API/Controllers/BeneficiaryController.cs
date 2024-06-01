@@ -385,7 +385,7 @@ namespace SSSNP_SNSOP.API.Controllers
             catch (Exception ex)
             {
 
-                return new APIResultObject() { error = true, errorCode = 500, errorMessage = ex.Message, returnId = -1, householdNumber = "" };
+                return new APIResultObject() { error = true, errorCode = 500, errorMessage = ex.Message, returnId = -3, householdNumber = "" };
             }
 
         }

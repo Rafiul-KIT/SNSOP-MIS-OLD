@@ -172,6 +172,7 @@
                                                             <tr>
                                                                 <td style="padding: 5px; margin: 5px">
                                                                     <asp:Label ID="Label2" runat="server" CssClass="LBLBLACK" Width="125px">Year</asp:Label>
+                                                                    <span style="text-align: left; color: red;">*</span>
                                                                 </td>
                                                                 <td style="padding: 5px; margin: 5px">: </td>
                                                                 <td style="padding: 5px; margin: 5px">
@@ -181,7 +182,7 @@
                                                                         <asp:ListItem Value="2021">2021</asp:ListItem>
                                                                         <asp:ListItem Value="2022">2022</asp:ListItem>
                                                                         <asp:ListItem Value="2023">2023</asp:ListItem>
-                                                                        <asp:ListItem Value="2023">2024</asp:ListItem>
+                                                                        <asp:ListItem Value="2024">2024</asp:ListItem>
                                                                     </asp:DropDownList>
                                                                 </td>
                                                                 <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp; </td>
@@ -232,6 +233,7 @@
                                                             <tr>
                                                                 <td style="padding: 5px; margin: 5px">
                                                                     <asp:Label ID="Label3" runat="server" CssClass="LBLBLACK" Width="165px">Month</asp:Label>
+                                                                    <span style="text-align: left; color: red;">*</span>
                                                                 </td>
                                                                 <td style="padding: 5px; margin: 5px">: </td>
                                                                 <td style="padding: 5px; margin: 5px">
