@@ -52,7 +52,7 @@ namespace SSSNP_SNSOP.Core.DataAccess
 
             this.ExecuteNonQuery<BeneficiaryAPI>(tm, beneficiaryAPI, returnValue);
 
-            if (returnValue.Value == DBNull.Value) return -1;
+            if (returnValue.Value == DBNull.Value) return -2;
 
             return (int)returnValue.Value;
         }
