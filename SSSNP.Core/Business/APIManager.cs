@@ -2,10 +2,12 @@
 using SSSNP_SNSOP.Entity;
 using SSSNP_SNSOP.Entity.Interfaces;
 using System;
+using System.Activities.Statements;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SSSNP_SNSOP.Core.Business
 {
@@ -248,13 +250,28 @@ namespace SSSNP_SNSOP.Core.Business
 
             BeneficiaryAPI beneficiaryAPI = GetBeneficiaryData(beneficiaryAPIExt);
 
-            using (APIDataAccess ds = new APIDataAccess("APIManagerSNSOP"))
+            using (System.Transactions.TransactionScope transactionScope = new System.Transactions.TransactionScope())
             {
-                result = ds.AddBeneficiary(beneficiaryAPI);
-                ds.AcceptChanges();
-            }
+                try
+                {
+                    using (APIDataAccess ds = new APIDataAccess("APIManagerSNSOP"))
+                    {
+                        result = ds.AddBeneficiary(beneficiaryAPI);
+                        ds.AcceptChanges();
+                    }
 
-            AddNomineeInfo(beneficiaryAPIExt.nomineeList);
+                    if (beneficiaryAPIExt.nomineeList != null && beneficiaryAPIExt.nomineeList.Count > 0)
+                    {
+                        AddNomineeInfo(beneficiaryAPIExt.nomineeList);
+                    }
+                    transactionScope.Complete();
+                }
+                catch (TransactionException ex)
+                {
+                    transactionScope.Dispose();
+                    result = -4;
+                }
+            }
 
             return result;
 
