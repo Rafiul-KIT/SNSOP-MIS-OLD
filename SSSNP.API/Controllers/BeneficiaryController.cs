@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using SSSNP_SNSOP.API;
 using CSDS.Core.Framework.Configuration;
+using NLog;
+using System.Text.Json;
 
 namespace SSSNP_SNSOP.API.Controllers
 {
@@ -18,6 +20,7 @@ namespace SSSNP_SNSOP.API.Controllers
     {
        
         private readonly ILogger<BeneficiaryController> _logger;
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public BeneficiaryController(ILogger<BeneficiaryController> logger)
         {
@@ -366,7 +369,7 @@ namespace SSSNP_SNSOP.API.Controllers
         public APIResultObject AddBeneficiarySNSOP([FromBody] BeneficiaryAPIExt beneficiaryAPI)
         {
             APIResultObject result = new APIResultObject();
-           
+            logger.Info("Request Payload of SNSOP beneficiary:\n" + JsonSerializer.Serialize(beneficiaryAPI));
 
             try
             {
@@ -379,12 +382,10 @@ namespace SSSNP_SNSOP.API.Controllers
 
                 int returnValue = APICoreContext.APIManager.AddBeneficiarySNSOP(beneficiaryAPI);
                 return new APIResultObject() { error = false, errorCode = 0, errorMessage = "", returnId = returnValue, householdNumber = beneficiaryAPI.household_number };
-
-
             }
             catch (Exception ex)
             {
-
+                logger.Error("There was an unexpected error when adding beneficiary of snsop. Error Message:\n" + ex.ToString());
                 return new APIResultObject() { error = true, errorCode = 500, errorMessage = ex.Message, returnId = -3, householdNumber = "" };
             }
 

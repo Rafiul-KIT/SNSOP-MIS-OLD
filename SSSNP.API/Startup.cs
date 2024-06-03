@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace SSSNP_SNSOP.API
 
         public IConfiguration Configuration { get; }
 
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -32,9 +35,14 @@ namespace SSSNP_SNSOP.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SSSNP.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SNSOP.API", Version = "v1" });
             });
 
+
+            Utility.SetupLogging(Configuration.GetSection("LogFileLocation").Value, Configuration.GetSection("LogFileName").Value,
+                NLog.LogLevel.FromString(Configuration.GetSection("LogLevel").Value));
+
+            logger.Info("SNSOP API Project started...");
 
             string managerName = Configuration.GetSection("DataPartition:Manager").Value;
             string connectionString = Configuration.GetSection("DataPartition:ConnectionString").Value;
