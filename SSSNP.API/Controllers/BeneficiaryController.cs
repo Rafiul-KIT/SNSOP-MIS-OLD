@@ -369,7 +369,7 @@ namespace SSSNP_SNSOP.API.Controllers
         public APIResultObject AddBeneficiarySNSOP([FromBody] BeneficiaryAPIExt beneficiaryAPI)
         {
             APIResultObject result = new APIResultObject();
-            logger.Info("Request Payload of SNSOP beneficiary:\n" + JsonSerializer.Serialize(beneficiaryAPI));
+            logger.Info("\n\nRequest Payload of SNSOP beneficiary:\n" + JsonSerializer.Serialize(beneficiaryAPI));
 
             try
             {
@@ -381,14 +381,22 @@ namespace SSSNP_SNSOP.API.Controllers
                 beneficiaryAPI.created_at = beneficiaryAPI.created_at.ConvertDateIndia();
 
                 int returnValue = APICoreContext.APIManager.AddBeneficiarySNSOP(beneficiaryAPI);
+
+                if(returnValue < 100)
+                {
+                    logger.Info("\n\nError :: Return Value :: " + returnValue + " :: Household Number :: " + beneficiaryAPI.household_number);
+                }
+                else
+                {
+                    logger.Info("\n\nSuccess :: Return Value :: " + returnValue + " :: Household Number :: " + beneficiaryAPI.household_number);
+                }
                 return new APIResultObject() { error = false, errorCode = 0, errorMessage = "", returnId = returnValue, householdNumber = beneficiaryAPI.household_number };
             }
             catch (Exception ex)
             {
-                logger.Error("There was an unexpected error when adding beneficiary of snsop. Error Message:\n" + ex.ToString());
+                logger.Error("\n\nThere was an unexpected error when adding beneficiary of snsop. Household number: " + beneficiaryAPI.household_number + "\nError Message:\n" + ex.ToString());
                 return new APIResultObject() { error = true, errorCode = 500, errorMessage = ex.Message, returnId = -3, householdNumber = "" };
             }
-
         }
 
 
