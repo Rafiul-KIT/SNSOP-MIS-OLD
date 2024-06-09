@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.IO;
 using Telerik.Web.UI;
 using System.Web;
+using System.Configuration;
 #endregion
 
 #region Amendment History Begin
@@ -757,12 +758,23 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
         mail.Priority = MailPriority.High;
 
         string smtpserver = System.Configuration.ConfigurationManager.AppSettings["SMTPSERVER"]; // Config smtp
-        var client = new SmtpClient(smtpserver);
+        SmtpClient client = new SmtpClient();
         client.Port = 587;
         client.Host = smtpserver;
         client.EnableSsl = true;
         client.UseDefaultCredentials = false;
         client.Credentials = new System.Net.NetworkCredential("no-reply@southsudansafetynet.info", "2sOQenMaTV-?");
+
+        MailAddress fromMail = new MailAddress("no-reply@southsudansafetynet.info");
+        MailAddress toMail = new MailAddress(ConfigurationManager.AppSettings["OneEmailRecipient"].ToString());
+
+        mail = new MailMessage(fromMail, toMail);
+        mail.Subject = "SNSOP MIS – Notification on Wage Payroll for Review";
+        mail.SubjectEncoding = System.Text.Encoding.UTF8;
+        mail.Body = "<H2>Notification on Wage Payroll for Review</H2><br> <br> <b> IP NAME: " + Ipname + "</b> <br><br> Work Code: " + WorkCode + "<br> <br> Work Request No: " + WorkRequest + "<br>  Remarks: " + numbers + " <br> <br> URL : " + sssnpweb + " <br><br> Please Login by clicking the above link. <br> Thanks & Regards <br>" + Ipname + "<br>";
+        mail.BodyEncoding = System.Text.Encoding.UTF8;
+        mail.IsBodyHtml = true;
+        mail.Priority = MailPriority.High;
 
         try
         {

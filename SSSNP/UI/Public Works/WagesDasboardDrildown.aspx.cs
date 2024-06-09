@@ -15,6 +15,7 @@ using System.Net;
 using SSSNP_SNSOP.Extensions;
 using System.Text;
 using System.IO;
+using System.Transactions;
 using static ImportBeneficiaryAll;
 using SSSNP.Entity.Payroll;
 using SSSNP.Network;
@@ -498,46 +499,59 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             #endregion
         }
 
-        //Update Coordinator approval date (CApproveDate)
-        if (Session["user_type"].ToString().Trim() == "Cordinator" && ddlStatus.SelectedItem.Text == "Approved")
-        {
-            if (Request.QueryString[0].ToString() == "2")
-            {
-                //Update Exchange rate and Specialist approval date (SApproveDate)
-                int ss = Gen.UpdateCApproveDate(hdfApplID.Value, Session["uid"].ToString().Trim());
-            }
-        }
+        int a = 0;
 
-        //Update Exchange rate and Specialist approval date (SApproveDate)
-        if (Session["user_type"].ToString().Trim() == "Specialist" && ddlStatus.SelectedItem.Text == "Approved")
+        using (System.Transactions.TransactionScope transactionScope = new System.Transactions.TransactionScope())
         {
-            if (Request.QueryString[0].ToString() == "2")
+            try
             {
-                int ss = Gen.Updatewagedate(hdfApplID.Value, txtExchangerate.Text, Session["uid"].ToString().Trim(), amountInSSPValue);
-            }
-        }
-
-        //Update Manager approval date (CApproveDate)
-        if (Session["user_type"].ToString().Trim() == "Manager" && ddlStatus.SelectedItem.Text == "Approved")
-        {
-            if (Request.QueryString[0].ToString() == "2")
-            {
-                Boolean sendSuccess = SendWageRequestByApi(hdfApplID.Value);
-                if (sendSuccess)
+                //Update Coordinator approval date (CApproveDate)
+                if (Session["user_type"].ToString().Trim() == "Cordinator" && ddlStatus.SelectedItem.Text == "Approved")
                 {
-                    //Update Exchange rate and Specialist approval date (SApproveDate)
-                    int ss = Gen.UpdateMApproveDate(hdfApplID.Value, Session["uid"].ToString().Trim());
-                } else
-                {
-                    lblMsg.Text = "Approval Failed due to API connectivity issues. Please contact the administrator";
-                    lblMsg.ForeColor = Color.Red;
-                    return;
+                    if (Request.QueryString[0].ToString() == "2")
+                    {
+                        //Update Exchange rate and Specialist approval date (SApproveDate)
+                        int ss = Gen.UpdateCApproveDate(hdfApplID.Value, Session["uid"].ToString().Trim());
+                    }
                 }
+
+                //Update Exchange rate and Specialist approval date (SApproveDate)
+                if (Session["user_type"].ToString().Trim() == "Specialist" && ddlStatus.SelectedItem.Text == "Approved")
+                {
+                    if (Request.QueryString[0].ToString() == "2")
+                    {
+                        int ss = Gen.Updatewagedate(hdfApplID.Value, txtExchangerate.Text, Session["uid"].ToString().Trim(), amountInSSPValue);
+                    }
+                }
+
+                //Update Manager approval date (CApproveDate)
+                if (Session["user_type"].ToString().Trim() == "Manager" && ddlStatus.SelectedItem.Text == "Approved")
+                {
+                    if (Request.QueryString[0].ToString() == "2")
+                    {
+                        Boolean sendSuccess = SendWageRequestByApi(hdfApplID.Value);
+                        if (sendSuccess)
+                        {
+                            //Update Exchange rate and Specialist approval date (SApproveDate)
+                            int ss = Gen.UpdateMApproveDate(hdfApplID.Value, Session["uid"].ToString().Trim());
+                        }
+                        else
+                        {
+                            lblMsg.Text = "Approval Failed due to API connectivity issues. Please contact the administrator";
+                            lblMsg.ForeColor = Color.Red;
+                            return;
+                        }
+                    }
+                }
+
+                a = Gen.InsApprovalStatus(hdfApplID.Value, ddlStatus.SelectedValue, Session["uid"].ToString().Trim(), txtPromotor.Text);
+                transactionScope.Complete();
+            }
+            catch (TransactionException ex)
+            {
+                transactionScope.Dispose();
             }
         }
-
-        int a = Gen.InsApprovalStatus(hdfApplID.Value, ddlStatus.SelectedValue, Session["uid"].ToString().Trim(), txtPromotor.Text);
-
         if (a >= 0)
         {
             lblresult.Text = "Submitted Successfully";
@@ -600,7 +614,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 if (dsn == null || dsn.Tables.Count <= 0) return false;
 
                 con.CloseConnection();
-                DataTable ds = (DataTable) dsn.Tables[0];
+                DataTable ds = (DataTable)dsn.Tables[0];
 
                 if (ds.Rows.Count > 0)
                 {
@@ -618,7 +632,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
 
 
             string uri = ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
-            
+
             String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaG92b24iLCJpYXQiOjE3MDg4ODY5OTYsImV4cCI6MTg2NjU2Njk5Nn0.L-75R-EYM1GbrAqj-KdRpWLjxfxCMdVsAboepITEnI2I6AtTUtRhTgQaevzb5GOLWPnGaAUzggcC6SsArnMj-g";
 
             uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
@@ -666,7 +680,8 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 if (savePayrollResponse != null && savePayrollResponse.operationResult)
                 {
                     int value = Gen.InsUpdWageRequestAfisSync(Convert.ToInt32(uid), 1);
-                } else
+                }
+                else
                 {
                     int value = Gen.InsUpdWageRequestAfisSync(Convert.ToInt32(uid), 0);
                 }
@@ -779,7 +794,8 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             dto.houseHoldNumber = (row["household_number"] != null) ? row["household_number"].ToString() : null;
             dto.phoneNumber = (row["ContactNo"] != null) ? row["ContactNo"].ToString() : null;
             return dto;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e.ToString());
             return null;
@@ -803,6 +819,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                     dto.gender = int.Parse(row["FirstAlternatePayeeGender"].ToString());
                 }
                 dto.phoneNumber = (row["FirstAlternatePayeeMobile"] != null) ? row["FirstAlternatePayeeMobile"].ToString() : null;
+                dto.nationalId = (row["FirstAlternatePayeeNationID"] != null) ? row["FirstAlternatePayeeNationID"].ToString() : null;
                 if (row["Name1stAlternatePayee"] != null)
                 {
                     var names = row["Name1stAlternatePayee"].ToString().Split(' ');
@@ -832,6 +849,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                     dto.gender = int.Parse(row["SecondAlternatePayeeGender"].ToString());
                 }
                 dto.phoneNumber = (row["SecondAlternatePayeeMobile"] != null) ? row["SecondAlternatePayeeMobile"].ToString() : null;
+                dto.nationalId = (row["SecondAlternateNationalID"] != null) ? row["SecondAlternateNationalID"].ToString() : null;
                 if (row["Name2ndAlternatePayee"] != null)
                 {
                     var names = row["Name2ndAlternatePayee"].ToString().Split(' ');
@@ -865,7 +883,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
     public void SendMailforWages(string numbers, string anothermail, string Ipname, string WorkCode, string WorkRequest)
     {
         string sssnpmail = System.Configuration.ConfigurationManager.AppSettings["SSSNPMAIL"]; // Config email
-        string from = string.Format("\"SNSOP System\" <{0}>", sssnpmail);
+        string from = string.Format("{0}", sssnpmail);
 
 
         System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
@@ -897,8 +915,8 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             mail.To.Add(new MailAddress(multilailid));
         }
 
-  
-        mail.From = new MailAddress(from, ":: SNSOP Public works MIS :: Wages", System.Text.Encoding.UTF8);
+
+        mail.From = new MailAddress(from);
 
         mail.Subject = "SNSOP Public Works MIS – Notification on Wage Payroll for Review";
 
@@ -910,12 +928,19 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         mail.Priority = MailPriority.High;
 
         string smtpserver = System.Configuration.ConfigurationManager.AppSettings["SMTPSERVER"]; // Config smtp
-        var client = new SmtpClient(smtpserver);
+        SmtpClient client = new SmtpClient();
         client.Port = 587;
         client.Host = smtpserver;
         client.EnableSsl = true;
         client.UseDefaultCredentials = false;
         client.Credentials = new System.Net.NetworkCredential("no-reply@southsudansafetynet.info", "2sOQenMaTV-?");
+
+        MailAddress fromMail = new MailAddress("no-reply@southsudansafetynet.info");
+        MailAddress toMail = new MailAddress(ConfigurationManager.AppSettings["OneEmailRecipient"].ToString());
+
+        mail = new MailMessage(fromMail, toMail);
+        mail.Subject = "SNSOP Public Works MIS – Notification on Wage Payroll for Review";
+        mail.Body = "Notification on Wage Payroll for Review\nWork Code: " + WorkCode + "\nWork Request No: " + WorkRequest + "\nPlease Login by clicking the following link.\n" + sssnpweb;
 
         try
         {

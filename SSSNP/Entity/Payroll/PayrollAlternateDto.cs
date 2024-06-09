@@ -13,6 +13,7 @@ namespace SSSNP.Entity.Payroll
         public int gender { get; set; }
         public string lastName { get; set; }
         public string middleName { get; set; }
+        public string nationalId { get; set; }
         public string nickName { get; set; }
         public string phoneNumber { get; set; }
     }
