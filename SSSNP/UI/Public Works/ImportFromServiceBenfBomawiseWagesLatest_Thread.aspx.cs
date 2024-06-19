@@ -272,7 +272,7 @@ public partial class ImportFromServiceBenfBomawiseWagesLatest_Thread : System.We
                                                     try
                                                     {
                                                         Bentransid = Convert.ToInt32(bad.trans_id);
-                                                        if (bad.status == "1")
+                                                        if (bad.status != null && (bad.status == "1" || bad.status.Equals("PAID")))
                                                         {
 
 

@@ -501,6 +501,16 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
 
         int a = 0;
 
+        Boolean sendSuccess = false;
+
+        if (Session["user_type"].ToString().Trim() == "Manager" && ddlStatus.SelectedItem.Text == "Approved")
+        {
+            if (Request.QueryString[0].ToString() == "2")
+            {
+                sendSuccess = SendWageRequestByApi(hdfApplID.Value);
+            }
+        }
+
         using (System.Transactions.TransactionScope transactionScope = new System.Transactions.TransactionScope())
         {
             try
@@ -529,7 +539,6 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 {
                     if (Request.QueryString[0].ToString() == "2")
                     {
-                        Boolean sendSuccess = SendWageRequestByApi(hdfApplID.Value);
                         if (sendSuccess)
                         {
                             //Update Exchange rate and Specialist approval date (SApproveDate)
