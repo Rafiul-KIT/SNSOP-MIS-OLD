@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using NLog;
+using SSSNP_SNSOP.Core.DbHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,26 @@ namespace SSSNP_SNSOP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //// test code for db operations: START
+            //IDbOperation dbOperation = new SqlDbOperation();
+
+            //// native complex queries call goes here
+            //var sql = "select * from tbl_Users where IP_Approver = 1";
+            //var dataTableForSql = dbOperation.GetDataTable(sql);
+
+            //// native stored procedure call goes here
+            //var dataSet = dbOperation.ExecuteCmdForSp(new List<CmdParamModel>()
+            //{
+            //    new CmdParamModel() { ParamValue = "alamin", ParamName = "@User_id" },
+            //}, "CheckUserid");
+
+            //if (dataSet != null && dataSet.Tables.Count > 0)
+            //{
+            //    var dataTableForStoredProcedure = dataSet.Tables[0];
+            //}
+            //// test code for db operations: END
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

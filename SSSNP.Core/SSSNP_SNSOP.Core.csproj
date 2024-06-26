@@ -184,6 +184,9 @@
     <Compile Include="Business\SSSNPManager.cs" />
     <Compile Include="DataAccess\APIDataAccess.cs" />
     <Compile Include="DataAccess\SSSNPDataAccess.cs" />
+    <Compile Include="DbHandler\CmdParamModel.cs" />
+    <Compile Include="DbHandler\IDbOperation.cs" />
+    <Compile Include="DbHandler\SqlDbOperation.cs" />
     <Compile Include="OleDbMapping\CreateGBVImported.cs" />
     <Compile Include="OleDbMapping\CreateNonGBVImported.cs" />
     <Compile Include="OleDbMapping\GBVGenerate.cs" />

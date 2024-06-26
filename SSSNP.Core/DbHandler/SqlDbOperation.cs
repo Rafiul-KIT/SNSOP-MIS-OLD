@@ -1,0 +1,218 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SSSNP_SNSOP.Core.DbHandler
+{
+    public class SqlDbOperation : IDbOperation
+    {
+        private readonly string connectionStr = "Server=167.86.68.15; Database=PBW_SNSOP; User Id=snsop;Password=Win@2019!@#$;Connect Timeout=12000;"; // get from config
+        public bool InsertData(string tableName, Dictionary<string, object> data)
+        {
+            var sqlConnection = new SqlConnection(connectionStr);
+            string columns = "";
+            string param = "";
+            List<object> values = new List<object>();
+            try
+            {
+                int i = 1;
+                foreach (KeyValuePair<string, object> value in data)
+                {
+                    columns += String.Format(" {0},", value.Key);
+                    param += String.Format(" {0},", "@param" + i);
+                    values.Add(value.Value);
+                    i++;
+                }
+                columns = columns.Substring(0, columns.Length - 1);
+                param = param.Substring(0, param.Length - 1);
+                string sql = String.Format("INSERT INTO {0}({1}) VALUES({2});", tableName, columns, param);
+
+
+                SqlCommand commands = new SqlCommand(sql, sqlConnection);
+                commands.CommandText = sql;
+                commands.CommandType = CommandType.Text;
+
+                int j = 1;
+                foreach (object value in values)
+                {
+                    string paramName = "@param" + j++;
+                    commands.Parameters.Add(new SqlParameter(paramName, value));
+                }
+
+                sqlConnection.Open();
+                if (commands.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                sqlConnection.Close();
+                return false;
+            }
+            catch (Exception x)
+            {
+                throw x;
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+        }
+        public bool UpdateData(string tableName, Dictionary<string, object> data, string wherePart)
+        {
+            var sqlConnection = new SqlConnection(connectionStr);
+            string fields = "";
+            List<object> updatedValue = new List<object>();
+            if (data != null && data.Count > 0)
+            {
+                int i = 1;
+                foreach (KeyValuePair<string, object> value in data)
+                {
+                    fields += String.Format(" {0} = {1},", value.Key.ToString(), "@param" + i);
+                    updatedValue.Add(value.Value);
+                    i++;
+                }
+                fields = fields.Substring(0, fields.Length - 1);
+            }
+            try
+            {
+                string sql = String.Format("UPDATE {0} SET {1} WHERE {2};", tableName, fields, wherePart);
+
+                SqlCommand commands = new SqlCommand(sql, sqlConnection);
+                commands.CommandText = sql;
+                commands.CommandType = CommandType.Text;
+
+                int j = 1;
+                foreach (object obj in updatedValue)
+                {
+                    string param = "@param" + (j++);
+                    commands.Parameters.Add(new SqlParameter(param, obj));
+                }
+
+                sqlConnection.Open();
+                if (commands.ExecuteNonQuery() > 0)
+                {
+                    commands.Dispose();
+                    return true;
+                }
+                sqlConnection.Close();
+            }
+            catch (Exception x)
+            {
+                throw x;
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+            return false;
+        }
+        public DataTable GetDataTable(string sql)
+        {
+            var sqlDbConnection = new SqlConnection(connectionStr);
+            DataTable dataTable = new DataTable();
+            try
+            {
+                SqlCommand commands = new SqlCommand(sql, sqlDbConnection);
+                commands.CommandText = sql;
+                sqlDbConnection.Open();
+                SqlDataReader reader = commands.ExecuteReader();
+                dataTable.Load(reader);
+                reader.Close();
+                sqlDbConnection.Close();
+            }
+            catch (Exception x)
+            {
+                throw x;
+            }
+            finally
+            {
+                if (sqlDbConnection.State == ConnectionState.Open)
+                {
+                    sqlDbConnection.Close();
+                }
+            }
+            return dataTable;
+        }
+        public DataSet ExecuteCmdForSp(List<CmdParamModel> cmdParams, string spName)
+        {
+            var sqlDbConnection = new SqlConnection(connectionStr);
+            try
+            {
+                var sqlCommand = new SqlCommand(spName, sqlDbConnection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                sqlDbConnection.Open();
+                SqlCommandBuilder.DeriveParameters(sqlCommand);
+                sqlDbConnection.Close();
+
+                foreach (var cmdParam in cmdParams)
+                {
+                    if (sqlCommand.Parameters.Contains(cmdParam.ParamName))
+                    {
+                        if (sqlCommand.Parameters[cmdParam.ParamName].SqlDbType == SqlDbType.Decimal)
+                        {
+                            sqlCommand.Parameters[cmdParam.ParamName].Value = string.IsNullOrWhiteSpace(cmdParam.ParamValue?.ToString())
+                                ? DBNull.Value
+                                : cmdParam.ParamValue;
+                        }
+                        else
+                        {
+                            sqlCommand.Parameters[cmdParam.ParamName].Value = cmdParam.ParamValue;
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("SP: " + spName + " is not having parameter: " + cmdParam.ParamName);
+                    }
+                }
+
+                var dataSet = new DataSet();
+                var oracleAdapter = new SqlDataAdapter(sqlCommand);
+
+                oracleAdapter.Fill(dataSet);
+
+                var dataTable = new DataTable("out");
+                dataTable.Columns.Add("key");
+                dataTable.Columns.Add("value");
+
+                foreach (SqlParameter oracleParam in sqlCommand.Parameters)
+                {
+                    if (oracleParam.Direction != ParameterDirection.InputOutput &&
+                        oracleParam.Direction != ParameterDirection.Output)
+                    {
+                        continue;
+                    }
+
+                    var dataRow = dataTable.NewRow();
+                    dataRow["key"] = oracleParam.ParameterName;
+                    dataRow["value"] = oracleParam.Value;
+                    dataTable.Rows.Add(dataRow);
+                }
+                dataSet.Tables.Add(dataTable);
+                return dataSet;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (sqlDbConnection.State == ConnectionState.Open)
+                {
+                    sqlDbConnection.Close();
+                }
+            }
+        }
+    }
+}
