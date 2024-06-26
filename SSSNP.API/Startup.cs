@@ -34,7 +34,7 @@ namespace SSSNP_SNSOP.API
         {
 
             //// test code for db operations: START
-            //IDbOperation dbOperation = new SqlDbOperation();
+            //IDbOperation dbOperation = new SqlDbOperation(Configuration.GetSection("snsop_db_connStr").Value);
 
             //// native complex queries call goes here
             //var sql = "select * from tbl_Users where IP_Approver = 1";

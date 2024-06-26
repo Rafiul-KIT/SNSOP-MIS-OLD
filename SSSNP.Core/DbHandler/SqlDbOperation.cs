@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SSSNP_SNSOP.Core.DbHandler
 {
     public class SqlDbOperation : IDbOperation
     {
-        private readonly string connectionStr = "Server=167.86.68.15; Database=PBW_SNSOP; User Id=snsop;Password=Win@2019!@#$;Connect Timeout=12000;"; // get from config
+        //private readonly string connectionStr = "Server=167.86.68.15; Database=PBW_SNSOP; User Id=snsop;Password=Win@2019!@#$;Connect Timeout=12000;"; // get from config
+        private string connectionStr = "";
+
+        public SqlDbOperation(string connStr)
+        {
+            connectionStr = connStr;
+        }
         public bool InsertData(string tableName, Dictionary<string, object> data)
         {
             var sqlConnection = new SqlConnection(connectionStr);

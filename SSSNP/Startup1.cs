@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -22,7 +23,17 @@ namespace SSSNP
         public void ConfigureAuth(IAppBuilder app)
         {
             //// test code for db operations: START
-            //IDbOperation dbOperation = new SqlDbOperation();
+            //var buildProfile = ConfigurationManager.AppSettings["build.profile.active"].ToString();
+            //string connStr = "";
+            //if(buildProfile.Equals("prod"))
+            //{
+            //    connStr = ConfigurationManager.AppSettings["snsop_db_connStr_prod"].ToString();
+            //}
+            //else
+            //{
+            //    connStr = ConfigurationManager.AppSettings["snsop_db_connStr_dev"].ToString();
+            //}
+            //IDbOperation dbOperation = new SqlDbOperation(connStr);
 
             //// native complex queries call goes here
             //var sql = "select * from tbl_Users where IP_Approver = 1";
