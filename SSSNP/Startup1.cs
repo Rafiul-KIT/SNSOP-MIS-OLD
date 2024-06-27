@@ -11,7 +11,9 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Notifications;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
+using SSSNP.Asynch;
 using SSSNP_SNSOP.Core.DbHandler;
+using SSSNP_SNSOP.Core.Threads;
 
 
 
@@ -50,6 +52,12 @@ namespace SSSNP
             //    var dataTableForStoredProcedure = dataSet.Tables[0];
             //}
             //// test code for db operations: END
+
+
+            //// test code for thread management: START
+            //// Start grm notifocation thread
+            //ThreadHandler.GetInstance(new SendGrmNotificationAsynch()).StartThread();
+            //// test code for thread management: END
 
 
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);

@@ -202,6 +202,9 @@
     <Compile Include="OleDbMapping\ValidateNonGBVMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SSSNPContext.cs" />
+    <Compile Include="Threads\IThreadable.cs" />
+    <Compile Include="Threads\SimpleThreadable.cs" />
+    <Compile Include="Threads\ThreadHandler.cs" />
     <Compile Include="TMapperAPIContext.cs" />
     <Compile Include="TMapperContext.cs" />
   </ItemGroup>
