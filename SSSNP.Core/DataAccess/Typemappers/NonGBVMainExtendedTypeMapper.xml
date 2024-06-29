@@ -61,8 +61,9 @@
 				s.StateName ,
 				c.CountieName ,
 				p.PayamName,
-				b.BomaName,
-				stat.StatusName				
+				b.BomaName,				
+				stat.StatusName,
+				case when stat.StatusID=7 then 1 when stat.StatusID=1 then 2 when stat.StatusID=2 then 3 else 4 end orderById
 
 				FROM [NonGBVMain] as M left join NonGBVDetails as d on (d.NonGBVMainID = m.NonGBVMainID and d.Deleted = 0)
 						inner join tm_States as S on s.intStateid = m.StateID 
@@ -71,7 +72,7 @@
 						inner join tm_Bomas as B on b.intBomasid = m.BomaID 
 						inner join LK_GBVStatus as Stat on (stat.StatusID = m.Status  and stat.NonGBVStatus = 1)
 				WHERE M.Deleted = 0
-				
+				order by orderById asc
 				]]>
 				
 			</query>
