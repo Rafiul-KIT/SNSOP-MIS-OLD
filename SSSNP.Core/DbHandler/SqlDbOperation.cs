@@ -217,5 +217,64 @@ namespace SSSNP_SNSOP.Core.DbHandler
                 }
             }
         }
+
+        public DataTable ExecuteDataTable(string query, CommandType commandType)
+        {
+            var sqlConnection = new SqlConnection(connectionStr);
+            var dataTable = new DataTable();
+            try
+            {
+                using (var sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlCommand.CommandType = commandType;
+                    using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+                    {
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+            return dataTable;
+        }
+
+        public DataTable ExecuteDataTable(string query, CommandType commandType, SqlParameter param)
+        {
+            var sqlConnection = new SqlConnection(connectionStr);
+            var dataTable = new DataTable();
+            try
+            {
+                using (var sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlCommand.CommandType = commandType;
+                    sqlCommand.Parameters.Add(param);
+                    using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+                    {
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+            return dataTable;
+        }
     }
 }
