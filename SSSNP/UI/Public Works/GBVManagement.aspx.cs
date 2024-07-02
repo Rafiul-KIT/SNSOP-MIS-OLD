@@ -1,7 +1,9 @@
-﻿using SSSNP_SNSOP.Core;
+﻿using SSSNP.Network;
+using SSSNP_SNSOP.Core;
 using SSSNP_SNSOP.Entity;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -16,6 +18,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
     {
         General Gen = new General();
         private int maximumSizeUploadFile = 25000000;
+        private EmailService emailService = new EmailService();
 
         public Guid GetAttachment_DescriptionIncident
         {
@@ -703,6 +706,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     DivSuccess.Visible = true;
                     lblMessageSuccess.Text = "Create Successfully";
 
+                    string subject = "New GBV Grievance in SNSOP MIS";
+                    string body = "<H2>Dear GRM Manager (SNSOP MIS),</H2> <br><br>" +
+                        "A new Gender-Based Violence Grievance has been registered.<br>" +
+                        ConfigurationManager.AppSettings["SSSNPWEB"] +
+                        "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+                    emailService.sendEmailToGrmManager(subject, body);
                 }
 
                 return result;

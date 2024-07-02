@@ -157,7 +157,7 @@
                                                     <telerik:GridBoundColumn DataField="ContactFocalPointPersonName" Display="true" ItemStyle-HorizontalAlign="Left" HeaderText="Focal Point Name" HeaderStyle-HorizontalAlign="Left" HeaderStyle-Width="30%"></telerik:GridBoundColumn>
 
                                                     <telerik:GridBoundColumn DataField="IncidentReportedBy" Display="true" ItemStyle-HorizontalAlign="Left" HeaderText="Incident Reported By" HeaderStyle-HorizontalAlign="Left" HeaderStyle-Width="100px"></telerik:GridBoundColumn>
-                                                    <telerik:GridBoundColumn DataField="SSSNPBeneficiary" Display="true" ItemStyle-HorizontalAlign="Left" HeaderText="SNSoP Beneficiary" HeaderStyle-HorizontalAlign="Left" HeaderStyle-Width="100px"></telerik:GridBoundColumn>
+                                                    <telerik:GridBoundColumn DataField="SSSNPBeneficiary" Display="true" ItemStyle-HorizontalAlign="Left" HeaderText="SNSOP Beneficiary" HeaderStyle-HorizontalAlign="Left" HeaderStyle-Width="100px"></telerik:GridBoundColumn>
                                                     <telerik:GridBoundColumn DataField="StatusName" Display="true" ItemStyle-HorizontalAlign="Left" HeaderText="Status" HeaderStyle-HorizontalAlign="Left" HeaderStyle-Width="140px"></telerik:GridBoundColumn>
 
                                                     <telerik:GridTemplateColumn HeaderText="" UniqueName="EditColumn"

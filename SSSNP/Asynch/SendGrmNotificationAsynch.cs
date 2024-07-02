@@ -1,8 +1,10 @@
-﻿using SSSNP_SNSOP.Core.DbHandler;
+﻿using SSSNP.Network;
+using SSSNP_SNSOP.Core.DbHandler;
 using SSSNP_SNSOP.Core.Threads;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,12 +15,13 @@ namespace SSSNP.Asynch
     public class SendGrmNotificationAsynch : IThreadable
     {
         // TODO: based on the day count, notifications to be sent
-        private const int SLEEP_TIME = 60 * 1000 * 30; // 30 minutes interval
+        private const int SLEEP_TIME = 60 * 1000 * 60 * 12; // 30 minutes interval
         private const string NAME = "grm_notification_daemon";
         private AutoResetEvent waitHandle = new AutoResetEvent(false);
         private AutoResetEvent abortHandle = new AutoResetEvent(false);
         private IDbOperation _dbOperation = null;
         private string _connStr = "";
+        private EmailService emailService;
 
         public SendGrmNotificationAsynch()
         {
@@ -32,6 +35,7 @@ namespace SSSNP.Asynch
                 _connStr = ConfigurationManager.AppSettings["snsop_db_connStr_dev"].ToString();
             }
             _dbOperation = new SqlDbOperation(_connStr);
+            emailService = new EmailService();
         }
         public string GetName()
         {
@@ -94,6 +98,54 @@ namespace SSSNP.Asynch
                 // TODO:
                 // 1. Read data from table using _dbOperation
                 // 2. Send email using smtp
+
+                bool needToSend = false;
+                string emailSubject = "Grievance Expiration Notice";
+                string emailBody = "<H2>Dear GRM Manager (SNSOP MIS),</H2> <br><br>";
+
+                String sql1 = "select count(*) count from NonGBVMain m where 1=1 " +
+                    " and dateadd(DAY,14, [Date]) < getdate() " +
+                    " and m.Status <> 5 and Deleted = 0";
+                DataTable dt1 = _dbOperation.GetDataTable(sql1);
+                if (dt1 != null && dt1.Rows != null && dt1.Rows.Count > 0)
+                {
+                    int count = -1;
+                    foreach (DataRow row in dt1.Rows)
+                    {
+                        count = row["count"] != null ? int.Parse(row["count"].ToString()) : -1;
+                    }
+                    if (count > 0)
+                    {
+                        needToSend = true;
+                        emailBody += "You have " + count + " Non-GBV grievance(s) which have expired<br>";
+                    }
+                }
+
+                String sql2 = "select count(*) count from GBVMain m where 1=1 " +
+                    " and dateadd(DAY,14, [Date]) < getdate() " +
+                    " and m.Status <> 5 and Deleted = 0";
+                DataTable dt2 = _dbOperation.GetDataTable(sql2);
+                if (dt2 != null && dt2.Rows != null && dt2.Rows.Count > 0)
+                {
+                    int count = -1;
+                    foreach (DataRow row in dt2.Rows)
+                    {
+                        count = row["count"] != null ? int.Parse(row["count"].ToString()) : -1;
+                    }
+                    if (count > 0)
+                    {
+                        needToSend = true;
+                        emailBody += "You have " + count + " GBV grievance(s) which have expired<br>";
+                    }
+                }
+
+                string sssnpweb = ConfigurationManager.AppSettings["SSSNPWEB"];
+                emailBody += sssnpweb + "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+                if (needToSend == true)
+                {
+                    emailService.sendEmailToGrmManager(emailSubject, emailBody);
+                }
 
                 return true;
             }

@@ -1,8 +1,10 @@
-﻿using SSSNP_SNSOP.Core;
+﻿using SSSNP.Network;
+using SSSNP_SNSOP.Core;
 using SSSNP_SNSOP.Core.OleDbMapping;
 using SSSNP_SNSOP.Entity;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +17,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
     public partial class GBVExcelImporting : System.Web.UI.Page
     {
         General Gen = new General();
+        EmailService emailService = new EmailService();
+
         private void NoAccessPage(bool noAccess)
         {
 
@@ -369,7 +373,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             {
                                 SSSNPContext.SSSNPManager.UpdateStatusGBVImportedFile(iFile.ImportedID);
                             }
-                            
+
+                            string subject = "New Non-GBV Grievance Bulk Import in SNSOP MIS";
+                            string body = "<H2>Dear GRM Manager (SNSOP MIS),</H2> <br><br>" +
+                                "New Non-Gender Based Violence Grievance(s) have been imported through excel.<br>" +
+                                ConfigurationManager.AppSettings["SSSNPWEB"] +
+                                "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+                            emailService.sendEmailToGrmManager(subject, body);
+
                             AddSuccessMessage("Non-GBV Imported Successfully", true);
                             btnImport.Enabled = false;
                             RadGridLanding.DataSource = null;
@@ -424,6 +436,14 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             {
                                 SSSNPContext.SSSNPManager.UpdateStatusGBVImportedFile(iFile.ImportedID);
                             }
+
+                            string subject = "New GBV Grievance Bulk Import in SNSOP MIS";
+                            string body = "<H2>Dear GRM Manager (SNSOP MIS),</H2> <br><br>" +
+                                "New Gender Based Violence Grievance(s) have been imported through excel.<br>" +
+                                ConfigurationManager.AppSettings["SSSNPWEB"] +
+                                "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+                            emailService.sendEmailToGrmManager(subject, body);
 
                             AddSuccessMessage("GBV Imported Successfully", true);
                             btnImport.Enabled = false;
