@@ -108,19 +108,19 @@ namespace SSSNP
 
             //alternative 1
             iTextSharp.text.Image jpg5 = iTextSharp.text.Image.GetInstance(photoAnternate1);
-            jpg5.ScaleAbsoluteWidth(88f);
-            jpg5.ScaleAbsoluteHeight(114f);
+            jpg5.ScaleAbsoluteWidth(50f);
+            jpg5.ScaleAbsoluteHeight(90f);
             //jpg5.ScaleToFit(iTextSharp.text.Utilities.MillimetersToPoints(15), iTextSharp.text.Utilities.MillimetersToPoints(15));
             jpg5.Alignment = iTextSharp.text.Image.TITLE;
-            jpg5.SetAbsolutePosition(309, 71);
+            jpg5.SetAbsolutePosition(315, 80);
 
             //alternative 2
             iTextSharp.text.Image jpg4 = iTextSharp.text.Image.GetInstance(photoAnternate2);
             // jpg4.ScaleToFit(iTextSharp.text.Utilities.MillimetersToPoints(15), iTextSharp.text.Utilities.MillimetersToPoints(15));
-            jpg4.ScaleAbsoluteWidth(88f);
-            jpg4.ScaleAbsoluteHeight(114f);
+            jpg4.ScaleAbsoluteWidth(50f);
+            jpg4.ScaleAbsoluteHeight(90f);
             jpg4.Alignment = iTextSharp.text.Image.TITLE;
-            jpg4.SetAbsolutePosition(406, 71);
+            jpg4.SetAbsolutePosition(390, 80);
 
             MemoryStream fs = new MemoryStream();
 

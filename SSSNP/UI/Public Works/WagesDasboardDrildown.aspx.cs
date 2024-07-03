@@ -816,20 +816,20 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         try
         {
             List<PayrollAlternateDto> list = new List<PayrollAlternateDto>();
-            if (row["Name1stAlternatePayee"] != null)
+            if (row["Name1stAlternatePayee"] != null && row["Name1stAlternatePayee"].ToString() != "")
             {
                 PayrollAlternateDto dto = new PayrollAlternateDto();
-                if (row["FirstAlternatePayeeAge"] != null)
+                if (row["FirstAlternatePayeeAge"] != null && row["FirstAlternatePayeeAge"].ToString() != "")
                 {
                     dto.age = int.Parse(row["FirstAlternatePayeeAge"].ToString());
                 }
-                if (row["FirstAlternatePayeeGender"] != null)
+                if (row["FirstAlternatePayeeGender"] != null && row["FirstAlternatePayeeGender"].ToString() != "")
                 {
                     dto.gender = int.Parse(row["FirstAlternatePayeeGender"].ToString());
                 }
                 dto.phoneNumber = (row["FirstAlternatePayeeMobile"] != null) ? row["FirstAlternatePayeeMobile"].ToString() : null;
                 dto.nationalId = (row["FirstAlternatePayeeNationID"] != null) ? row["FirstAlternatePayeeNationID"].ToString() : null;
-                if (row["Name1stAlternatePayee"] != null)
+                if (row["Name1stAlternatePayee"] != null && row["Name1stAlternatePayee"].ToString() != "")
                 {
                     var names = row["Name1stAlternatePayee"].ToString().Split(' ');
                     if (names != null && names.Length > 0)
@@ -846,20 +846,21 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 list.Add(dto);
             }
 
-            if (row["Name2ndAlternatePayee"] != null)
+            if (row["Name2ndAlternatePayee"] != null && row["Name2ndAlternatePayee"].ToString() != "")
             {
+                string name = row["Name2ndAlternatePayee"].ToString();
                 PayrollAlternateDto dto = new PayrollAlternateDto();
-                if (row["SecondAlternatePayeeAge"] != null)
+                if (row["SecondAlternatePayeeAge"] != null && row["SecondAlternatePayeeAge"].ToString() != "")
                 {
                     dto.age = int.Parse(row["SecondAlternatePayeeAge"].ToString());
                 }
-                if (row["SecondAlternatePayeeGender"] != null)
+                if (row["SecondAlternatePayeeGender"] != null && row["SecondAlternatePayeeGender"].ToString() != "")
                 {
                     dto.gender = int.Parse(row["SecondAlternatePayeeGender"].ToString());
                 }
                 dto.phoneNumber = (row["SecondAlternatePayeeMobile"] != null) ? row["SecondAlternatePayeeMobile"].ToString() : null;
                 dto.nationalId = (row["SecondAlternateNationalID"] != null) ? row["SecondAlternateNationalID"].ToString() : null;
-                if (row["Name2ndAlternatePayee"] != null)
+                if (row["Name2ndAlternatePayee"] != null && row["Name2ndAlternatePayee"].ToString() != "")
                 {
                     var names = row["Name2ndAlternatePayee"].ToString().Split(' ');
                     if (names != null && names.Length > 0)
