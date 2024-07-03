@@ -20,6 +20,7 @@ public partial class PayrollDownload : System.Web.UI.Page
     private LookupManagerService _lookupManagerService;
     private string accessToken;
     private string apiUrl;
+    private ApiResponse apiResponse;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -216,13 +217,19 @@ public partial class PayrollDownload : System.Web.UI.Page
             }
             JavaScriptSerializer js = new JavaScriptSerializer();
             js.MaxJsonLength = Int32.MaxValue;
-            ApiResponse apiResponse = js.Deserialize<ApiResponse>(jsonresponse);
+            apiResponse = js.Deserialize<ApiResponse>(jsonresponse);
 
             // Log the response
             // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
 
+            
+
             if (apiResponse != null && apiResponse.data != null && apiResponse.data.Count > 0)
             {
+                string serializedApiResponse = JsonConvert.SerializeObject(apiResponse);
+                Session["SerializedApiResponse"] = serializedApiResponse;
+
+
                 Session["PayrollData"] = apiResponse.data.SelectMany(c => c.payrollData).ToList();
                 rgResults.DataSource = Session["PayrollData"];
                 rgResults.DataBind();
@@ -308,10 +315,12 @@ public partial class PayrollDownload : System.Web.UI.Page
 
     protected void BtnDownload_Click(object sender, EventArgs e)
     {
-        if (Session["PayrollData"] != null)
+        if (Session["SerializedApiResponse"] != null)
         {
             // Ensure the payroll data is serialized and stored in the session
-            Session["PayrollData"] = JsonConvert.SerializeObject(Session["PayrollData"]);
+            //Session["PayrollData"] = JsonConvert.SerializeObject(Session["PayrollData"]);
+
+            //string serializedApiResponse = Session["SerializedApiResponse"].ToString();
 
             // Redirect to ViewAttachmentHandler.aspx with appropriate parameters
             string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 
 namespace SSSNP_SNSOP
 {
@@ -340,9 +341,10 @@ namespace SSSNP_SNSOP
         //downlaod encrypted payroll data module start
         private void EncryptedPayrollDataHandler()
         {
-            if (Session["PayrollData"] != null)
+            if (Session["SerializedApiResponse"] != null)
             {
-                string json = Session["PayrollData"].ToString();
+                string json = Session["SerializedApiResponse"].ToString();
+                System.Diagnostics.Debug.WriteLine(json);
 
                 // Hexadecimal key (256-bit) and IV (128-bit)
                 string hexKey = "dd8de506bd4a90418afe9372f01b979b6f0df2e8aae22ec90b09a0bc197dc80c";
