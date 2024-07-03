@@ -5,7 +5,9 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
@@ -306,82 +308,19 @@ public partial class PayrollDownload : System.Web.UI.Page
 
     protected void BtnDownload_Click(object sender, EventArgs e)
     {
-        List<PayrollDataDto> payrollData = Session["PayrollData"] as List<PayrollDataDto>;
-        if (payrollData != null && payrollData.Count > 0)
+        if (Session["PayrollData"] != null)
         {
-            ExportToExcel(payrollData);
-        }
-        else
-        {
-            System.Diagnostics.Debug.WriteLine("No data available to download.");
-        }
-    }
+            // Ensure the payroll data is serialized and stored in the session
+            Session["PayrollData"] = JsonConvert.SerializeObject(Session["PayrollData"]);
 
-    private void ExportToExcel(List<PayrollDataDto> payrollData)
-    {
-        using (ExcelPackage pck = new ExcelPackage())
-        {
-            ExcelWorksheet ws = pck.Workbook.Worksheets.Add("PayrollData");
-
-            ws.Cells["A1"].Value = "State";
-            ws.Cells["B1"].Value = "County";
-            ws.Cells["C1"].Value = "Payam";
-            ws.Cells["D1"].Value = "Boma";
-            ws.Cells["E1"].Value = "EnrollmentNo";
-            ws.Cells["F1"].Value = "DateOfCreation";
-            ws.Cells["G1"].Value = "ExchangeRateAtTime";
-            ws.Cells["H1"].Value = "IntBenId";
-            ws.Cells["I1"].Value = "IntWagePaymentReqId";
-            ws.Cells["J1"].Value = "IntWagesReqBenTransId";
-            ws.Cells["K1"].Value = "IntWorkId";
-            ws.Cells["L1"].Value = "PaymentCycle";
-            ws.Cells["M1"].Value = "ReqFromDate";
-            ws.Cells["N1"].Value = "ReqNo";
-            ws.Cells["O1"].Value = "ReqToDate";
-            ws.Cells["P1"].Value = "Status";
-            ws.Cells["Q1"].Value = "SupportType";
-            ws.Cells["R1"].Value = "TotAttendance";
-            ws.Cells["S1"].Value = "WageRateSSPTotal";
-            ws.Cells["T1"].Value = "WageRateUSD";
-            ws.Cells["U1"].Value = "WageRateUSDTotal";
-            ws.Cells["V1"].Value = "WorkCode";
-
-            int row = 2;
-            foreach (var item in payrollData)
-            {
-                ws.Cells["A" + row].Value = item.state;
-                ws.Cells["B" + row].Value = item.county;
-                ws.Cells["C" + row].Value = item.payam;
-                ws.Cells["D" + row].Value = item.boma;
-                ws.Cells["E" + row].Value = item.enrollmentNo;
-                ws.Cells["F" + row].Value = item.dateofCreation;
-                ws.Cells["G" + row].Value = item.exchangerateattime;
-                ws.Cells["H" + row].Value = item.intBenid;
-                ws.Cells["I" + row].Value = item.intWagePaymentReqid;
-                ws.Cells["J" + row].Value = item.intWagesReqBenTransid;
-                ws.Cells["K" + row].Value = item.intWorkid;
-                ws.Cells["L" + row].Value = item.paymentCycle;
-                ws.Cells["M" + row].Value = item.reqFromDate;
-                ws.Cells["N" + row].Value = item.reqNo;
-                ws.Cells["O" + row].Value = item.reqToDate;
-                ws.Cells["P" + row].Value = item.status;
-                ws.Cells["Q" + row].Value = item.supportType;
-                ws.Cells["R" + row].Value = item.totAttendance;
-                ws.Cells["S" + row].Value = item.wageRateSSPTotal;
-                ws.Cells["T" + row].Value = item.wageRateUSD;
-                ws.Cells["U" + row].Value = item.wageRateUSDTotal;
-                ws.Cells["V" + row].Value = item.workCode;
-
-                row++;
-            }
-
-            Response.Clear();
-            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("content-disposition", "attachment; filename=PayrollData.xlsx");
-            Response.BinaryWrite(pck.GetAsByteArray());
-            Response.End();
+            // Redirect to ViewAttachmentHandler.aspx with appropriate parameters
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";
+            Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
     }
+
+
 
     private void LogError(Exception ex)
     {
