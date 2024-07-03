@@ -779,7 +779,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         {
             HouseholdDetailDto dto = new HouseholdDetailDto();
 
-            if (row["NameofHousehold"] != null)
+            if (row["NameofHousehold"] != null && row["NameofHousehold"].ToString() != "")
             {
                 var names = row["NameofHousehold"].ToString().Split(' ');
                 if (names != null && names.Length > 0)
@@ -792,11 +792,11 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                     }
                 }
             }
-            if (row["Age"] != null)
+            if (row["Age"] != null && row["Age"].ToString() != "")
             {
                 dto.age = int.Parse(row["Age"].ToString());
             }
-            if (row["gender"] != null)
+            if (row["gender"] != null && row["gender"].ToString() != "")
             {
                 dto.gender = int.Parse(row["gender"].ToString());
             }
