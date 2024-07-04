@@ -10,6 +10,10 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
+using System.Web.Script.Serialization;
+using SSSNP.Entity.Payroll_Download;
+using SSSNP.Entity.Payroll;
+using SSSNP_SNSOP.UI.Public_Works;
 
 namespace SSSNP_SNSOP
 {
@@ -341,10 +345,17 @@ namespace SSSNP_SNSOP
         //downlaod encrypted payroll data module start
         private void EncryptedPayrollDataHandler()
         {
-            if (Session["SerializedApiResponse"] != null)
+            if (Session["ApiResponse"] != null)
             {
-                string json = Session["SerializedApiResponse"].ToString();
-                //System.Diagnostics.Debug.WriteLine(json);
+                // Retrieve the ApiResponse object from the session
+                ApiResponse apiResponse = Session["ApiResponse"] as ApiResponse;
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                
+                // Serialize the ApiResponse object to a JSON string
+                string json = js.Serialize(apiResponse);
+
+                // Print the JSON string for debugging
+                // System.Diagnostics.Debug.WriteLine(json);
 
                 // Hexadecimal key (256-bit) and IV (128-bit)
                 string hexKey = "dd8de506bd4a90418afe9372f01b979b6f0df2e8aae22ec90b09a0bc197dc80c";

@@ -13,6 +13,7 @@ using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using SSSNP.Entity.Payroll;
+using SSSNP.Entity.Payroll_Download;
 using SSSNP.Network;
 
 public partial class PayrollDownload : System.Web.UI.Page
@@ -222,14 +223,10 @@ public partial class PayrollDownload : System.Web.UI.Page
             // Log the response
             // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
 
-            
+            Session["ApiResponse"] = apiResponse;
 
             if (apiResponse != null && apiResponse.data != null && apiResponse.data.Count > 0)
             {
-                string serializedApiResponse = JsonConvert.SerializeObject(apiResponse);
-                Session["SerializedApiResponse"] = serializedApiResponse;
-
-
                 Session["PayrollData"] = apiResponse.data.SelectMany(c => c.payrollData).ToList();
                 rgResults.DataSource = Session["PayrollData"];
                 rgResults.DataBind();
@@ -241,13 +238,13 @@ public partial class PayrollDownload : System.Web.UI.Page
         }
     }
 
-    private void BindResultsToGrid(List<PayrollDataDto> data)
+    private void BindResultsToGrid(List<PDPayrollDataDto> data)
     {
         DataTable dt = new DataTable();
-        dt.Columns.Add("State");
+        /*dt.Columns.Add("State");
         dt.Columns.Add("County");
         dt.Columns.Add("Payam");
-        dt.Columns.Add("Boma");
+        dt.Columns.Add("Boma");*/
         dt.Columns.Add("EnrollmentNo");
         dt.Columns.Add("DateOfCreation");
         dt.Columns.Add("ExchangeRateAtTime");
@@ -270,10 +267,10 @@ public partial class PayrollDownload : System.Web.UI.Page
         foreach (var item in data)
         {
             dt.Rows.Add(
-                item.state,
+                /*item.state,
                 item.county,
                 item.payam,
-                item.boma,
+                item.boma,*/
                 item.enrollmentNo,
                 item.dateofCreation,
                 item.exchangerateattime,
@@ -315,14 +312,8 @@ public partial class PayrollDownload : System.Web.UI.Page
 
     protected void BtnDownload_Click(object sender, EventArgs e)
     {
-        if (Session["SerializedApiResponse"] != null)
+        if (Session["ApiResponse"] != null)
         {
-            // Ensure the payroll data is serialized and stored in the session
-            //Session["PayrollData"] = JsonConvert.SerializeObject(Session["PayrollData"]);
-
-            //string serializedApiResponse = Session["SerializedApiResponse"].ToString();
-
-            // Redirect to ViewAttachmentHandler.aspx with appropriate parameters
             string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
             HttpContext.Current.ApplicationInstance.CompleteRequest();

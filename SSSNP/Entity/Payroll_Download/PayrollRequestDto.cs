@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SSSNP.Entity.Payroll
+namespace SSSNP.Entity.Payroll_Download
 {
     public class PayrollRequestDto
     {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace SSSNP.Entity.Payroll
+namespace SSSNP.Entity.Payroll_Download
 {
     public class PayrollResponseDto
     {
-        public List<PayrollDataDto> data { get; set; }
+        public List<PDPayrollDataDto> data { get; set; }
         public int errorCode { get; set; }
         public string errorMsg { get; set; }
         public bool operationResult { get; set; }
@@ -12,7 +12,7 @@ namespace SSSNP.Entity.Payroll
 
         public PayrollResponseDto()
         {
-            data = new List<PayrollDataDto>();
+            data = new List<PDPayrollDataDto>();
         }
     }
 }

@@ -130,10 +130,6 @@
                                                                     <HeaderStyle CssClass="MyGridHeader" />
                                                                     <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
                                                                     <Columns>
-                                                                        <telerik:GridBoundColumn DataField="state" HeaderText="State" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="county" HeaderText="County" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="payam" HeaderText="Payam" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="boma" HeaderText="Boma" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
                                                                         <telerik:GridBoundColumn DataField="enrollmentNo" HeaderText="Enrollment No" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
                                                                         <telerik:GridBoundColumn DataField="dateofCreation" HeaderText="Date Of Creation" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
                                                                         <telerik:GridBoundColumn DataField="exchangerateattime" HeaderText="Exchange Rate At Time" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
