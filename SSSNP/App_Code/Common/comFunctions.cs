@@ -88,6 +88,12 @@ public class comFunctions
 
     }
 
+    public bool isOk(object obj)
+    {
+        if (obj != null && obj.ToString().Trim() != "") return true;
+        else return false;
+    }
+
     #endregion
 
     #region Send Mail Message

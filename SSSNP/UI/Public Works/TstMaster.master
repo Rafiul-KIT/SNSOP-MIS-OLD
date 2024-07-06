@@ -339,9 +339,9 @@
                                                 <li id="TSTDashboard" runat="server"><a href='Dashboard.aspx'><i></i>TST Dashboard</a></li>
 
                                                 <li><a href="#" style="font-weight: bold">Wage Request:</a> </li>
-                                                <li runat="server" id="trCo"><a href="AdminWageProcessDashboard.aspx?ids=Cordinator">Co-ordinator Dashboard</a> </li>
-                                                <li runat="server" id="trSp"><a href="AdminWageProcessDashboard.aspx?ids=Specialist">Specialist Dashboard</a> </li>
-                                                <li runat="server" id="trMa"><a href="AdminWageProcessDashboard.aspx?ids=Manager">Manager Dashboard</a> </li>
+                                                <li runat="server" id="trCo"><a href="AdminWageProcessDashboard.aspx?ids=Cordinator">Initial Reviewer Dashboard</a> </li>
+                                                <li runat="server" id="trSp"><a href="AdminWageProcessDashboard.aspx?ids=Specialist">Financial Approver Dashboard</a> </li>
+                                                <li runat="server" id="trMa"><a href="AdminWageProcessDashboard.aspx?ids=Manager">Final Payment Authorizer Dashboard</a> </li>
 
 
                                             </ul>

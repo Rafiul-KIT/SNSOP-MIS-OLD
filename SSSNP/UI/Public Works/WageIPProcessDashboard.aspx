@@ -74,13 +74,13 @@
                                              <a href="WagesDasboardDrildown.aspx?Status=2" target="_blank" class="list-group-item">
                                         <span class="badge" >
                                             <asp:Label ID="Label26" runat="server"></asp:Label></span>
-                                        <i class="fa fa-fw fa-calendar"></i>2. Wage Requests at Co-ordinator
+                                        <i class="fa fa-fw fa-calendar"></i>2. Wage Requests at Initial Reviewer
                                     </a>
                                     
                                       <a href="WagesDasboardDrildown.aspx?Status=3" target="_blank" class="list-group-item">
                                         <span class="badge" >
                                             <asp:Label ID="Label41" runat="server"></asp:Label></span>
-                                        <i class="fa fa-fw fa-calendar"></i>3. Wage Requests at Specialist
+                                        <i class="fa fa-fw fa-calendar"></i>3. Wage Requests at Financial Approver
                                     </a>
                                     
                                        
@@ -103,7 +103,7 @@
                                       <a href="WagesDasboardDrildown.aspx?Status=4" target="_blank" class="list-group-item">
                                         <span class="badge">
                                             <asp:Label ID="Label8" runat="server"></asp:Label></span>
-                                        <i class="fa fa-fw fa-calendar"></i>4. Wage Requests at Manager
+                                        <i class="fa fa-fw fa-calendar"></i>4. Wage Requests at Final Payment Authorizer
                                     </a>
                                         <a href="WagesDasboardDrildown.aspx?Status=5" target="_blank" class="list-group-item">
                                         <span class="badge">

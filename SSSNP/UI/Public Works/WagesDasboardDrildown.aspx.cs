@@ -35,6 +35,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
     General clsGeneral = new General();
     General Gen = new General();
     ErrorLogger eLog = new ErrorLogger();
+    comFunctions cmf = new comFunctions();
     #endregion
 
     #region Page_Load
@@ -568,11 +569,11 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             string status = "";
             if (ddlStatus.SelectedValue == "2")
             {
-                status = "The above payment has been reviewed by SNSOP program - Co-Ordinator.Please verify it";
+                status = "The above payment has been reviewed by SNSOP program - Initial Reviewer. Please verify it";
             }
             else if (ddlStatus.SelectedValue == "3")
             {
-                status = "The above payment has been verified by SNSOP program - Specialist.Please verify it";
+                status = "The above payment has been verified by SNSOP program - Financial Approver. Please verify it";
             }
             else if (ddlStatus.SelectedValue == "4")
             {
@@ -580,15 +581,15 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             }
             else if (ddlStatus.SelectedValue == "100")
             {
-                status = "The above payment has been rejected by SNSOP program - Co-Ordinator.Please verify it";
+                status = "The above payment has been rejected by SNSOP program - Initial Reviewer.Please verify it";
             }
             else if (ddlStatus.SelectedValue == "101")
             {
-                status = "The above payment has been rejected by SNSOP program - Specialist.Please verify it";
+                status = "The above payment has been rejected by SNSOP program - Financial Approver. Please verify it";
             }
             else if (ddlStatus.SelectedValue == "103")
             {
-                status = "The above payment has been rejected by SNSOP program - Manager.Please verify it";
+                status = "The above payment has been rejected by SNSOP program - Final Payment Authorizer. Please verify it";
             }
             else
             {
@@ -720,8 +721,6 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             //    Console.WriteLine("Error when pushing payment data by api. Error:\n" + ex.ToString());
             //      return false;
             //}
-
-            return true;
         }
         catch (Exception ex)
         {
@@ -740,8 +739,8 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         foreach (DataRow row in table.Rows)
         {
             PayrollDataDto payrollData = new PayrollDataDto();
-            payrollData.boma = (row["boma"] != null) ? long.Parse(row["boma"].ToString()) : 0;
-            payrollData.county = (row["county"] != null) ? long.Parse(row["county"].ToString()) : 0;
+            payrollData.boma = (cmf.isOk(row["boma"])) ? long.Parse(row["boma"].ToString()) : 0;
+            payrollData.county = (cmf.isOk(row["county"])) ? long.Parse(row["county"].ToString()) : 0;
             payrollData.dateofCreation = (row["dateofCreation"] != null) ? row["dateofCreation"].ToString() : null;
             payrollData.enrollmentNo = (row["enrollmentNo"] != null) ? row["enrollmentNo"].ToString() : null;
             payrollData.exchangerateattime = (row["exchangerateattime"] != null) ? double.Parse(row["exchangerateattime"].ToString()) : 0.0;
@@ -749,18 +748,18 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
             payrollData.intWagePaymentReqid = (row["intWagePaymentReqid"] != null) ? int.Parse(row["intWagePaymentReqid"].ToString()) : 0;
             payrollData.intWagesReqBenTransid = (row["intWagesReqBenTransid"] != null) ? int.Parse(row["intWagesReqBenTransid"].ToString()) : 0;
             payrollData.intWorkid = (row["intWorkid"] != null) ? int.Parse(row["intWorkid"].ToString()) : 0;
-            payrollData.payam = (row["payam"] != null) ? long.Parse(row["payam"].ToString()) : 0;
+            payrollData.payam = (cmf.isOk(row["payam"])) ? long.Parse(row["payam"].ToString()) : 0;
             payrollData.paymentCycle = (row["paymentCycle"] != null) ? row["paymentCycle"].ToString() : null;
             payrollData.reqFromDate = (row["reqFromDate"] != null) ? row["reqFromDate"].ToString() : null;
             payrollData.reqNo = (row["reqNo"] != null) ? row["reqNo"].ToString() : null;
             payrollData.reqToDate = (row["reqToDate"] != null) ? row["reqToDate"].ToString() : null;
-            payrollData.state = (row["state"] != null) ? long.Parse(row["state"].ToString()) : 0;
+            payrollData.state = (cmf.isOk(row["state"])) ? long.Parse(row["state"].ToString()) : 0;
             payrollData.status = (row["status"] != null) ? row["status"].ToString() : null;
             payrollData.supportType = (payrollData.intWorkid == 999) ? "DIS" : "LIPW";
-            payrollData.totAttendance = (row["totAttendance"] != null) ? int.Parse(row["totAttendance"].ToString()) : 0;
-            payrollData.wageRateSSPTotal = (row["wageRateSSPTotal"] != null) ? double.Parse(row["wageRateSSPTotal"].ToString()) : 0;
-            payrollData.wageRateUSD = (row["wageRateUSD"] != null) ? double.Parse(row["wageRateUSD"].ToString()) : 0;
-            payrollData.wageRateUSDTotal = (row["wageRateUSDTotal"] != null) ? double.Parse(row["wageRateUSDTotal"].ToString()) : 0;
+            payrollData.totAttendance = (cmf.isOk(row["totAttendance"])) ? int.Parse(row["totAttendance"].ToString()) : 0;
+            payrollData.wageRateSSPTotal = (cmf.isOk(row["wageRateSSPTotal"])) ? double.Parse(row["wageRateSSPTotal"].ToString()) : 0;
+            payrollData.wageRateUSD = (cmf.isOk(row["wageRateUSD"])) ? double.Parse(row["wageRateUSD"].ToString()) : 0;
+            payrollData.wageRateUSDTotal = (cmf.isOk(row["wageRateUSDTotal"])) ? double.Parse(row["wageRateUSDTotal"].ToString()) : 0;
             payrollData.workCode = (row["workCode"] != null) ? row["workCode"].ToString() : null;
 
             payrollData.houseHoldDetail = getHouseholdInfo(row);
@@ -779,7 +778,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         {
             HouseholdDetailDto dto = new HouseholdDetailDto();
 
-            if (row["NameofHousehold"] != null && row["NameofHousehold"].ToString() != "")
+            if (cmf.isOk(row["NameofHousehold"] != null))
             {
                 var names = row["NameofHousehold"].ToString().Split(' ');
                 if (names != null && names.Length > 0)
@@ -792,11 +791,11 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                     }
                 }
             }
-            if (row["Age"] != null && row["Age"].ToString() != "")
+            if (cmf.isOk(row["Age"]))
             {
                 dto.age = int.Parse(row["Age"].ToString());
             }
-            if (row["gender"] != null && row["gender"].ToString() != "")
+            if (cmf.isOk(row["gender"]))
             {
                 dto.gender = int.Parse(row["gender"].ToString());
             }
@@ -816,61 +815,55 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         try
         {
             List<PayrollAlternateDto> list = new List<PayrollAlternateDto>();
-            if (row["Name1stAlternatePayee"] != null && row["Name1stAlternatePayee"].ToString() != "")
+            if (cmf.isOk(row["Name1stAlternatePayee"]))
             {
                 PayrollAlternateDto dto = new PayrollAlternateDto();
-                if (row["FirstAlternatePayeeAge"] != null && row["FirstAlternatePayeeAge"].ToString() != "")
+                if (cmf.isOk(row["FirstAlternatePayeeAge"]))
                 {
                     dto.age = int.Parse(row["FirstAlternatePayeeAge"].ToString());
                 }
-                if (row["FirstAlternatePayeeGender"] != null && row["FirstAlternatePayeeGender"].ToString() != "")
+                if (cmf.isOk(row["FirstAlternatePayeeGender"]))
                 {
                     dto.gender = int.Parse(row["FirstAlternatePayeeGender"].ToString());
                 }
                 dto.phoneNumber = (row["FirstAlternatePayeeMobile"] != null) ? row["FirstAlternatePayeeMobile"].ToString() : null;
                 dto.nationalId = (row["FirstAlternatePayeeNationID"] != null) ? row["FirstAlternatePayeeNationID"].ToString() : null;
-                if (row["Name1stAlternatePayee"] != null && row["Name1stAlternatePayee"].ToString() != "")
+                var names = row["Name1stAlternatePayee"].ToString().Split(' ');
+                if (names != null && names.Length > 0)
                 {
-                    var names = row["Name1stAlternatePayee"].ToString().Split(' ');
-                    if (names != null && names.Length > 0)
+                    if (names.Length >= 3)
                     {
-                        if (names.Length >= 3)
-                        {
-                            dto.firstName = names[0];
-                            dto.middleName = names[1];
-                            dto.lastName = names[2];
-                        }
+                        dto.firstName = names[0];
+                        dto.middleName = names[1];
+                        dto.lastName = names[2];
                     }
                 }
 
                 list.Add(dto);
             }
 
-            if (row["Name2ndAlternatePayee"] != null && row["Name2ndAlternatePayee"].ToString() != "")
+            if (cmf.isOk(row["Name2ndAlternatePayee"]))
             {
                 string name = row["Name2ndAlternatePayee"].ToString();
                 PayrollAlternateDto dto = new PayrollAlternateDto();
-                if (row["SecondAlternatePayeeAge"] != null && row["SecondAlternatePayeeAge"].ToString() != "")
+                if (cmf.isOk(row["SecondAlternatePayeeAge"]))
                 {
                     dto.age = int.Parse(row["SecondAlternatePayeeAge"].ToString());
                 }
-                if (row["SecondAlternatePayeeGender"] != null && row["SecondAlternatePayeeGender"].ToString() != "")
+                if (cmf.isOk(row["SecondAlternatePayeeGender"]))
                 {
                     dto.gender = int.Parse(row["SecondAlternatePayeeGender"].ToString());
                 }
                 dto.phoneNumber = (row["SecondAlternatePayeeMobile"] != null) ? row["SecondAlternatePayeeMobile"].ToString() : null;
                 dto.nationalId = (row["SecondAlternateNationalID"] != null) ? row["SecondAlternateNationalID"].ToString() : null;
-                if (row["Name2ndAlternatePayee"] != null && row["Name2ndAlternatePayee"].ToString() != "")
+                var names = row["Name2ndAlternatePayee"].ToString().Split(' ');
+                if (names != null && names.Length > 0)
                 {
-                    var names = row["Name2ndAlternatePayee"].ToString().Split(' ');
-                    if (names != null && names.Length > 0)
+                    if (names.Length >= 3)
                     {
-                        if (names.Length >= 3)
-                        {
-                            dto.firstName = names[0];
-                            dto.middleName = names[1];
-                            dto.lastName = names[2];
-                        }
+                        dto.firstName = names[0];
+                        dto.middleName = names[1];
+                        dto.lastName = names[2];
                     }
                 }
 

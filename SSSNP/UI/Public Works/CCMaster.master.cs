@@ -334,6 +334,31 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 PDC.Visible = true;
             }
 
+            if (Session["user_type"].ToString() == "GenderSpec")
+            {
+                LiIp6.Visible = true;
+                gbvNewMenu.Visible = true;
+                gbvNewMenuDashboard.Visible = true;
+                Li1.Visible = false;
+            }
+            if (Session["user_type"].ToString() == "SocDevSpec")
+            {
+                LiIp6.Visible = true;
+                nongbvMenu.Visible = true;
+                nongbvDashboardMenu.Visible = true;
+                Li1.Visible = false;
+            }
+            if (Session["user_type"].ToString() == "PcuSpec")
+            {
+                LiIp6.Visible = true;
+                nongbvMenu.Visible = true;
+                nongbvDashboardMenu.Visible = true;
+                gbvNewMenu.Visible = true;
+                gbvNewMenuDashboard.Visible = true;
+                grmReport.Visible = true;
+                Li1.Visible = false;
+            }
+
             #region old code
             //////    LiTST.Visible = false;
             //////    lblwecome.Text = Session["username"].ToString();

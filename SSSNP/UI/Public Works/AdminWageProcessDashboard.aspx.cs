@@ -29,6 +29,13 @@ public partial class AdminWageProcessDashboard : System.Web.UI.Page
         if (!IsPostBack)
         {
             lblOfficer.Text = Request.QueryString[0].ToString().Trim();
+            String userType = Request.QueryString[0].ToString().Trim();
+            if (userType != null)
+            {
+                if (userType.Equals("Cordinator")) lblOfficer.Text = "Initial Reviewer";
+                else if (userType.Equals("Specialist")) lblOfficer.Text = "Financial Approver";
+                else if (userType.Equals("Manager")) lblOfficer.Text = "Final Payment Authorizer";
+            }
 
 
             Session["AdminWageOfficerType"] = Request.QueryString[0].ToString().Trim();

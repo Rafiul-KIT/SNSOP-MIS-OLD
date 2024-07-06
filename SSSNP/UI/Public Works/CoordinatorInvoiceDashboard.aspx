@@ -13,7 +13,7 @@
                     You are here
         &nbsp;!&nbsp; &nbsp; &nbsp; 
                             <li>
-                                <i class="fa fa-dashboard"></i><a href="Home.aspx">Coordinator: Invoice Dashboard</a>
+                                <i class="fa fa-dashboard"></i><a href="Home.aspx">Initial Reviewer: Invoice Dashboard</a>
                             </li>
 
 
@@ -25,7 +25,7 @@
                     <div class="col-lg-11">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Coordinator: Invoice Dashboard</h3>
+                                <h3 class="panel-title">Initial Reviewer: Invoice Dashboard</h3>
                             </div>
                             <div class="panel-body">
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 100%">
