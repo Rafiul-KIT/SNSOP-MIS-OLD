@@ -107,7 +107,18 @@
                                                 ValidationGroup="group" Width="110px" />
                                             <asp:Button ID="BtnDownload" runat="server" CssClass="btn btn-primary"
                                                 Height="32px" OnClick="BtnDownload_Click" TabIndex="10" Text="Download"
-                                                ValidationGroup="group" Width="110px" />
+                                                ValidationGroup="group" Width="110px" Visible="false" />
+                                            <asp:Button ID="BtnUnlock" runat="server" CssClass="btn btn-secondary"
+                                                Height="32px" OnClick="BtnUnlock_Click" TabIndex="10" Text="Unlock"
+                                                ValidationGroup="group" Width="110px" Visible="false" />
+                                            <asp:HiddenField ID="HiddenLockedStatus" runat="server" />
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
+                                            <!-- New Label for Locked Status -->
+                                            <asp:Label ID="LblLockedStatus" runat="server" CssClass="status-label" Text="" Visible="false"></asp:Label>
                                         </td>
                                     </tr>
                                     <tr>

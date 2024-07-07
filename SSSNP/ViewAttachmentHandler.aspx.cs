@@ -349,10 +349,8 @@ namespace SSSNP_SNSOP
             {
                 // Retrieve the ApiResponse object from the session
                 ApiResponse apiResponse = Session["ApiResponse"] as ApiResponse;
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                
-                // Serialize the ApiResponse object to a JSON string
-                string json = js.Serialize(apiResponse);
+               
+                string json = JsonConvert.SerializeObject(apiResponse);
 
                 // Print the JSON string for debugging
                 // System.Diagnostics.Debug.WriteLine(json);

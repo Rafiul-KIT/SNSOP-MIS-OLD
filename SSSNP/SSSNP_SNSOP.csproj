@@ -785,7 +785,7 @@
     <Compile Include="Entity\Payroll\PayrollAlternateDto.cs" />
     <Compile Include="Entity\Payroll\PayrollDataDto.cs" />
     <Compile Include="Entity\Payroll\PayrollDto.cs" />
-    <Compile Include="Entity\Payroll_Download\PayrollRequestDto.cs" />
+    <Compile Include="Entity\Payroll_Download\ApiRequest.cs" />
     <Compile Include="Entity\Payroll_Download\PayrollResponseDto.cs" />
     <Compile Include="Entity\Payroll\SavePayrollResponse.cs" />
     <Compile Include="Entity\Payroll_Download\PDBiometricDto.cs" />

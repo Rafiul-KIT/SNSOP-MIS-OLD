@@ -5,16 +5,11 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using System.Web.Script.Serialization;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
-using OfficeOpenXml;
-using SSSNP.Entity.Payroll;
 using SSSNP.Entity.Payroll_Download;
-using SSSNP.Network;
 
 public partial class PayrollDownload : System.Web.UI.Page
 {
@@ -22,6 +17,7 @@ public partial class PayrollDownload : System.Web.UI.Page
     private string accessToken;
     private string apiUrl;
     private ApiResponse apiResponse;
+    private ApiRequest apiResquest;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -72,7 +68,13 @@ public partial class PayrollDownload : System.Web.UI.Page
     protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
     {
         ddlCounty.Items.Clear();
+        ddlPayam.Items.Clear();
+        ddlBoma.Items.Clear();
+
         ddlCounty.Items.Add(new ListItem("--Select--", ""));
+        ddlPayam.Items.Add(new ListItem("--Select--", ""));
+        ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
         if (!string.IsNullOrEmpty(ddlState.SelectedValue))
         {
             try
@@ -103,7 +105,11 @@ public partial class PayrollDownload : System.Web.UI.Page
     protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
     {
         ddlPayam.Items.Clear();
+        ddlBoma.Items.Clear();
+
         ddlPayam.Items.Add(new ListItem("--Select--", ""));
+        ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
         if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
         {
             try
@@ -168,15 +174,12 @@ public partial class PayrollDownload : System.Web.UI.Page
         pnlResults.Visible = true;
         tblResults.Visible = true;
 
-        var request = new
+        var request = new ApiRequest
         {
             state = int.Parse(ddlState.SelectedValue),
             county = int.Parse(ddlCounty.SelectedValue),
             payam = int.Parse(ddlPayam.SelectedValue),
-            boma = int.Parse(ddlBoma.SelectedValue),
-            createdFrom = (string)null,
-            createdTo = (string)null,
-            payrollId = (string)null
+            boma = int.Parse(ddlBoma.SelectedValue)
         };
 
         string uri = ConfigurationManager.AppSettings["DownloadPayroll"];
@@ -209,16 +212,11 @@ public partial class PayrollDownload : System.Web.UI.Page
             newStream.Close();
 
             HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            String jsonresponse = "";
-            String temp = null;
-            while ((temp = reader.ReadLine()) != null)
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
             {
-                jsonresponse += temp;
+                string jsonResponse = reader.ReadToEnd();
+                apiResponse = JsonConvert.DeserializeObject<ApiResponse>(jsonResponse);
             }
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            js.MaxJsonLength = Int32.MaxValue;
-            apiResponse = js.Deserialize<ApiResponse>(jsonresponse);
 
             // Log the response
             // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
@@ -228,8 +226,34 @@ public partial class PayrollDownload : System.Web.UI.Page
             if (apiResponse != null && apiResponse.data != null && apiResponse.data.Count > 0)
             {
                 Session["PayrollData"] = apiResponse.data.SelectMany(c => c.payrollData).ToList();
-                rgResults.DataSource = Session["PayrollData"];
-                rgResults.DataBind();
+                rgResults.Rebind();  // Trigger the NeedDataSource event
+
+                // Update button visibility based on lockedStatus
+                var firstData = apiResponse.data.FirstOrDefault();
+                var lockedStatus = firstData?.lockedStatus;
+                HiddenLockedStatus.Value = lockedStatus;
+
+
+                // Store paymentCycle and wagePaymentReqId in session
+                var paymentCycle = firstData?.payrollData.FirstOrDefault()?.paymentCycle;
+                var wagePaymentReqId = firstData?.payrollData.FirstOrDefault()?.intWagePaymentReqid;
+                Session["PaymentCycle"] = paymentCycle;
+                Session["WagePaymentReqId"] = wagePaymentReqId;
+
+                BtnDownload.Visible = false;
+                BtnUnlock.Visible = false;
+
+                LblLockedStatus.Visible = true;
+                LblLockedStatus.Text = "Locked Status: " + lockedStatus;
+
+                if (lockedStatus == "UNLOCKED")
+                {
+                    BtnDownload.Visible = true;
+                }
+                else if (lockedStatus == "LOCKED")
+                {
+                    BtnUnlock.Visible = true;
+                }
             }
         }
         catch (Exception ex)
@@ -241,10 +265,6 @@ public partial class PayrollDownload : System.Web.UI.Page
     private void BindResultsToGrid(List<PDPayrollDataDto> data)
     {
         DataTable dt = new DataTable();
-        /*dt.Columns.Add("State");
-        dt.Columns.Add("County");
-        dt.Columns.Add("Payam");
-        dt.Columns.Add("Boma");*/
         dt.Columns.Add("EnrollmentNo");
         dt.Columns.Add("DateOfCreation");
         dt.Columns.Add("ExchangeRateAtTime");
@@ -267,10 +287,6 @@ public partial class PayrollDownload : System.Web.UI.Page
         foreach (var item in data)
         {
             dt.Rows.Add(
-                /*item.state,
-                item.county,
-                item.payam,
-                item.boma,*/
                 item.enrollmentNo,
                 item.dateofCreation,
                 item.exchangerateattime,
@@ -309,6 +325,84 @@ public partial class PayrollDownload : System.Web.UI.Page
     protected void rgResults_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
     {
     }
+
+
+    protected void BtnUnlock_Click(object sender, EventArgs e)
+    {
+        var paymentCycle = Session["PaymentCycle"]?.ToString();
+        var wagePaymentReqId = Session["WagePaymentReqId"] != null ? int.Parse(Session["WagePaymentReqId"].ToString()) : 0;
+
+        var request = new
+        {
+            boma = int.Parse(ddlBoma.SelectedValue),
+            county = int.Parse(ddlCounty.SelectedValue),
+            payam = int.Parse(ddlPayam.SelectedValue),
+            paymentCycle = paymentCycle,
+            state = int.Parse(ddlState.SelectedValue),
+            supportType = "LIPW",
+            wagePaymentReqId = wagePaymentReqId
+        };
+
+        string uri = ConfigurationManager.AppSettings["UnlockPayroll"];
+        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWtpYiIsImlhdCI6MTcxNDk4MTEwOCwiZXhwIjoxODcyNjYxMTA4fQ.7FgalnXhBOcC7q-nYfONbxmc7My4iUOeWpN2eK3b7vc_br43NCEFiKWIrXs1cJTsU_Ds_ZZLHRB28c-jdgiBRw";
+
+        uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
+        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+        {
+            uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
+        }
+
+        Uri urlCheck = new Uri(uri);
+        HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
+        httpWReq.PreAuthenticate = true;
+        httpWReq.Headers.Add("Authorization", "Bearer " + token);
+        httpWReq.Headers.Add("DeviceId", "29feb6211b04-a56d-7d6a-e79e-018b2f19");
+
+        try
+        {
+            string reqStr = JsonConvert.SerializeObject(request);
+            var data = Encoding.ASCII.GetBytes(reqStr);
+            httpWReq.Method = "POST";
+            httpWReq.ContentType = "application/json";
+            httpWReq.ContentLength = data.Length;
+
+            using (var newStream = httpWReq.GetRequestStream())
+            {
+                newStream.Write(data, 0, data.Length);
+            }
+
+            HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            {
+                string jsonResponse = reader.ReadToEnd();
+                var unlockResponse = JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                // Handle the response if necessary
+            }
+
+            // After unlocking, refresh the data
+            BtnSearch_Click(sender, e);
+        }
+
+        catch (WebException webEx)
+        {
+            LogError(webEx);
+            using (var response = webEx.Response)
+            {
+                var httpResponse = (HttpWebResponse)response;
+                using (var reader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    string responseText = reader.ReadToEnd();
+                    // Log the response details for debugging
+                    LogError(new Exception($"Error Response: {responseText}"));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+        }
+    }
+
 
     protected void BtnDownload_Click(object sender, EventArgs e)
     {

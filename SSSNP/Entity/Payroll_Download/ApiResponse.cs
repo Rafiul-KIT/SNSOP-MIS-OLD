@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 
 namespace SSSNP.Entity.Payroll_Download
@@ -13,6 +15,8 @@ namespace SSSNP.Entity.Payroll_Download
 
     }
 
+
+
     public class PDPayrollDataContainer
     {
         public int id { get; set; }
@@ -20,6 +24,27 @@ namespace SSSNP.Entity.Payroll_Download
         public int county { get; set; }
         public int payam { get; set; }
         public int boma { get; set; }
+
+        public string _lockedStatus;
+
+        public string lockedStatus
+        {
+            get => _lockedStatus;
+            set
+            {
+                if (value == "LOCKED" || value == "UNLOCKED" || value == "RECONCILED")
+                {
+                    _lockedStatus = value;
+                }
+                else
+                {
+                    // Handle unexpected values
+                    throw new ArgumentException("Invalid lockedStatus value");
+                }
+            }
+        }
+
+
         public List<PDPayrollDataDto> payrollData { get; set; }
     }
 }
