@@ -185,6 +185,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             if (!Page.IsPostBack)
             {
+                if (CUser.Current.IsPcuSpecRole)
+                {
+                    lblSNNote.Text += "<br/>You have only viewing privilege";
+                    btnNewDetails.Enabled = false;
+                }
                 if (OperationType == RequestOperationTypePage.NEW)
                 {
                     PrepareNewEnvironmentNonGBV();

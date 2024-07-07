@@ -248,6 +248,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             if (!Page.IsPostBack)
             {
+                if (CUser.Current.IsPcuSpecRole)
+                {
+                    lblSNNote.Text += "<br/>You have only viewing privilege";
+                    btnNewDetails.Enabled = false;
+                }
                 if (OperationType == RequestOperationTypePage.NEW)
                 {
                     PrepareNewEnvironmentGBV();
@@ -282,7 +287,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         BtnSave.Enabled = false;
                         DisableControls(true);
                         DivFailure.Visible = true;
-                        lblMessageError.Text = "No Role for Edit Non-GBV";
+                        lblMessageError.Text = "No Role for Edit GBV";
                     }
 
                 }

@@ -160,8 +160,55 @@ public class CUserContext
 
         }
     }
+    public bool IsGenderSpecRole
+    {
+        get
+        {
+            try
+            {
+                string usert_type = Convert.ToString(HttpContext.Current.Session["user_type"]);
+                if (usert_type == "GenderSpec") return true;
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+    }
+    public bool IsSocDevSpecRole
+    {
+        get
+        {
+            try
+            {
+                string usert_type = Convert.ToString(HttpContext.Current.Session["user_type"]);
+                if (usert_type == "SocDevSpec") return true;
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
+        }
+    }
+    public bool IsPcuSpecRole
+    {
+        get
+        {
+            try
+            {
+                string usert_type = Convert.ToString(HttpContext.Current.Session["user_type"]);
+                if (usert_type == "PcuSpec") return true;
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
-
+        }
+    }
 }
 

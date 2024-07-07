@@ -365,7 +365,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 {
                     PrepareNewEnvironmentNonGBV();
 
-                    if (CUser.Current.IsIPRole || CUser.Current.IsEntryGRMRole || CUser.Current.IsManagerGRMRole)
+                    if (CUser.Current.IsIPRole || CUser.Current.IsEntryGRMRole || CUser.Current.IsManagerGRMRole || CUser.Current.IsSocDevSpecRole)
                     {
                         BtnSave.Enabled = true;
                     }
@@ -383,7 +383,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 {
                     LoadEnvironmentNonGBV();
 
-                    if (CUser.Current.IsEntryGRMRole || CUser.Current.IsManagerGRMRole)
+                    if (CUser.Current.IsEntryGRMRole || CUser.Current.IsManagerGRMRole || CUser.Current.IsSocDevSpecRole)
                     {
                         BtnSave.Enabled = true;
                         
@@ -1182,7 +1182,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 GridDataItem item = (GridDataItem)e.Item;
                 LinkButton btDelete = item.FindControl("btnDelete") as LinkButton;
             
-                if (CUser.Current.IsIPRole || CUser.Current.IsManagerGRMRole )
+                if (CUser.Current.IsIPRole || CUser.Current.IsManagerGRMRole || CUser.Current.IsSocDevSpecRole)
                 {
                     if (GetNonGBVMain != null && GetNonGBVMain.Status.ToString() == "5")
                     {

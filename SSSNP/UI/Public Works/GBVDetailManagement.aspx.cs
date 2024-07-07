@@ -125,7 +125,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 {
                     PrepareNewEnvironmentGBV();
 
-                    if (CUser.Current.IsIPRole || CUser.Current.IsEntryGRMRole || CUser.Current.IsManagerGRMRole)
+                    if (CUser.Current.IsIPRole || CUser.Current.IsEntryGRMRole || CUser.Current.IsManagerGRMRole || CUser.Current.IsGenderSpecRole)
                     {
                         BtnSave.Enabled = true;
                     }
@@ -142,7 +142,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 else if (OperationType == RequestOperationTypePage.EDIT && GBVDetailId != 0)
                 {
                     LoadEnvironmentGBV();
-                    if (CUser.Current.IsEntryGRMRole || CUser.Current.IsManagerGRMRole)
+                    if (CUser.Current.IsEntryGRMRole || CUser.Current.IsManagerGRMRole || CUser.Current.IsGenderSpecRole)
                     {
                         BtnSave.Enabled = true;
 
