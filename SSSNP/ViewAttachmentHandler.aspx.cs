@@ -345,10 +345,10 @@ namespace SSSNP_SNSOP
         //downlaod encrypted payroll data module start
         private void EncryptedPayrollDataHandler()
         {
-            if (Session["ApiResponse"] != null)
+            if (Session["PDResponse"] != null)
             {
                 // Retrieve the ApiResponse object from the session
-                ApiResponse apiResponse = Session["ApiResponse"] as ApiResponse;
+                PayrollDownloadResponse apiResponse = Session["PDResponse"] as PayrollDownloadResponse;
                
                 string json = JsonConvert.SerializeObject(apiResponse);
 

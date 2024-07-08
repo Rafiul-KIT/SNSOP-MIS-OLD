@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SSSNP.Entity.Payroll_Download
 {
-    public class ApiResponse
+    public class PayrollDownloadResponse
     {
         public bool operationResult { get; set; }
         public string errorMsg { get; set; }
@@ -25,7 +25,7 @@ namespace SSSNP.Entity.Payroll_Download
         public int payam { get; set; }
         public int boma { get; set; }
 
-        public string _lockedStatus;
+        private string _lockedStatus;
 
         public string lockedStatus
         {

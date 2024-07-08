@@ -129,8 +129,10 @@
         <link href="../../Resource/Styles/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="../../Resource/Styles/css/sb-admin.css" rel="stylesheet" type="text/css" />
         <link href="../../Resource/Styles/css/plugins/morris.css" rel="stylesheet" type="text/css" />
-        <link href="../../Resource/Styles/font-awesome/css/font-awesome.css" rel="stylesheet"
-            type="text/css" />
+        <link href="../../Resource/Styles/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+        
+        <link href="../../Resource/Styles/css/payroll-download-style.css" rel="stylesheet" type="text/css" />
+        
         <%--<link href="../../Resource/css/bootstrap.min.css"rel="stylesheet" type="text/css" />   
     <link href="../../Resource/css/sb-admin.css" rel="stylesheet" type="text/css" />   
     <link href="../../Resource/css/plugins/morris.css" rel="stylesheet" type="text/css" />--%>
@@ -320,6 +322,12 @@
                                                  <ul class="down_menu">
                                                     <li><a href="PayrollDownload.aspx">Payroll Download</a></li>
                                                  </ul>
+                                            </li>
+                                            <li id="LiMNE" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-line-chart"></i>Monitoring and Evaluation</a>
+                                                <ul class="down_menu">
+                                                    <li><a href="CashTransferSummaryMNE.aspx">Cash Transfer Summary</a> </li>
+                                                    <li><a href="BeneficiaryEnrollmentSummaryMNE.aspx">Beneficiary Enrollment Summary</a> </li>
+                                                </ul>
                                             </li>
                                             <li id="LiIp6" visible="false" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-comments"></i>Grievances and Safeguards</a>
                                                 <ul class="down_menu">

@@ -2,7 +2,7 @@
 
 namespace SSSNP.Entity.Payroll_Download
 {
-    public class ApiRequest
+    public class PayrollDownloadRequest
     {
         public int state { get; set; }
         public int county { get; set; }

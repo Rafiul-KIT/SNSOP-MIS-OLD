@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using SSSNP.Entity.Payroll_Download;
@@ -16,8 +17,8 @@ public partial class PayrollDownload : System.Web.UI.Page
     private LookupManagerService _lookupManagerService;
     private string accessToken;
     private string apiUrl;
-    private ApiResponse apiResponse;
-    private ApiRequest apiResquest;
+    private PayrollDownloadResponse pdResponse;
+    private PayrollDownloadRequest pdRequest;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -174,7 +175,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         pnlResults.Visible = true;
         tblResults.Visible = true;
 
-        var request = new ApiRequest
+        var request = new PayrollDownloadRequest
         {
             state = int.Parse(ddlState.SelectedValue),
             county = int.Parse(ddlCounty.SelectedValue),
@@ -215,21 +216,21 @@ public partial class PayrollDownload : System.Web.UI.Page
             using (StreamReader reader = new StreamReader(response.GetResponseStream()))
             {
                 string jsonResponse = reader.ReadToEnd();
-                apiResponse = JsonConvert.DeserializeObject<ApiResponse>(jsonResponse);
+                pdResponse = JsonConvert.DeserializeObject<PayrollDownloadResponse>(jsonResponse);
             }
 
             // Log the response
             // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
 
-            Session["ApiResponse"] = apiResponse;
+            Session["PDResponse"] = pdResponse;
 
-            if (apiResponse != null && apiResponse.data != null && apiResponse.data.Count > 0)
+            if (pdResponse != null && pdResponse.data != null && pdResponse.data.Count > 0)
             {
-                Session["PayrollData"] = apiResponse.data.SelectMany(c => c.payrollData).ToList();
+                Session["PayrollData"] = pdResponse.data.SelectMany(c => c.payrollData).ToList();
                 rgResults.Rebind();  // Trigger the NeedDataSource event
 
                 // Update button visibility based on lockedStatus
-                var firstData = apiResponse.data.FirstOrDefault();
+                var firstData = pdResponse.data.FirstOrDefault();
                 var lockedStatus = firstData?.lockedStatus;
                 HiddenLockedStatus.Value = lockedStatus;
 
@@ -255,7 +256,22 @@ public partial class PayrollDownload : System.Web.UI.Page
                     BtnUnlock.Visible = true;
                 }
             }
+
+            else
+            {
+                // If there is no data, clear the grid's data source
+                Session["PayrollData"] = null;
+                rgResults.DataSource = null;
+                rgResults.DataBind();
+                rgResults.Rebind();
+
+                // Update button visibility and locked status label
+                BtnDownload.Visible = false;
+                BtnUnlock.Visible = false;
+                LblLockedStatus.Visible = false;
+            }
         }
+       
         catch (Exception ex)
         {
             LogError(ex);
@@ -318,6 +334,10 @@ public partial class PayrollDownload : System.Web.UI.Page
         if (Session["PayrollData"] != null)
         {
             rgResults.DataSource = Session["PayrollData"];
+        }
+        else
+        {
+            rgResults.DataSource = new List<PDPayrollDataDto>();
         }
     }
 
@@ -406,7 +426,7 @@ public partial class PayrollDownload : System.Web.UI.Page
 
     protected void BtnDownload_Click(object sender, EventArgs e)
     {
-        if (Session["ApiResponse"] != null)
+        if (Session["PDResponse"] != null)
         {
             string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
