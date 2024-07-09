@@ -84,7 +84,7 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.ENCRYPTED_PAYROLL_DATA:
                     EncryptedPayrollDataHandler();
                     return "OK";
-                    break;
+                    //break;
 
             }
 

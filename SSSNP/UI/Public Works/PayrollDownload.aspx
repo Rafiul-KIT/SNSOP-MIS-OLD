@@ -9,9 +9,17 @@
         $(document).ready(function () {
             $('#txtStartDate').datetimepicker();
         });
+
+        function hideUpdateProgress() {
+            setTimeout(function () {
+                document.getElementById('<%= UpdateProgress.ClientID %>').style.display = 'none';
+        }, 2000); // 2000 milliseconds = 2 seconds
+        }
+        Sys.WebForms.PageRequestManager.getInstance().add_initializeRequest(hideUpdateProgress);
+
     </script>
 
-    <asp:UpdatePanel ID="upd1" runat="server">
+    <asp:UpdatePanel ID="upd1" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
             <div align="left" style="vertical-align: top">
                 <ol class="breadcrumb">
@@ -35,54 +43,63 @@
                                 <h3 class="panel-title">Payroll Download</h3>
                             </div>
                             <div class="panel-body">
-                                <table align="center" cellpadding="10" cellspacing="5" style="width: 100%">
+                                <table align="center" cellpadding="10" cellspacing="5" style="width: 90%">
                                     <tr>
                                         <td style="padding: 5px; margin: 5px" colspan="3" align="center">&nbsp;</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px; margin: 5px" valign="top">
-                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
+
+                                            <table cellpadding="4" cellspacing="5" style="width: 83%">
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelState" runat="server" CssClass="LBLBLACK" Width="165px">State Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
-                                                    <td style="padding: 5px; margin: 5px; width: 192px;">
-                                                        <asp:DropDownList ID="ddlState" runat="server" AutoPostBack="True"
-                                                            class="form-control txtbox" Height="33px"
-                                                            OnSelectedIndexChanged="ddlState_SelectedIndexChanged" Width="180px">
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlState" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlState_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
+
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelCounty" runat="server" CssClass="LBLBLACK" Width="165px">County / Municipality Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
-                                                    <td style="padding: 5px; margin: 5px; width: 192px;">
-                                                        <asp:DropDownList ID="ddlCounty" runat="server" AutoPostBack="True"
-                                                            class="form-control txtbox" Height="33px"
-                                                            OnSelectedIndexChanged="ddlCounty_SelectedIndexChanged" Width="180px">
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlCounty" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlCounty_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
+
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 27px">&nbsp;</td>
+                                        <td valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
-                                                    <td style="padding: 5px; margin: 5px; width: 192px;">
-                                                        <asp:DropDownList ID="ddlPayam" runat="server" AutoPostBack="True"
-                                                            class="form-control txtbox" Height="33px"
-                                                            OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged" Width="180px">
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlPayam" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
+
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
@@ -93,9 +110,10 @@
                                                         <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox"
                                                             Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
+
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -112,7 +130,6 @@
                                                 Height="32px" OnClick="BtnUnlock_Click" TabIndex="10" Text="Unlock"
                                                 ValidationGroup="group" Width="110px" Visible="false" />
                                             <asp:HiddenField ID="HiddenLockedStatus" runat="server" />
-                                            
                                         </td>
                                     </tr>
                                     <tr>
@@ -121,63 +138,69 @@
                                             <asp:Label ID="LblLockedStatus" runat="server" CssClass="status-label" Text="" Visible="false"></asp:Label>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="3" style="padding: 5px; margin: 5px; height: 117px;" valign="top">
-                                            <asp:Panel ID="pnlResults" runat="server">
-                                                <table runat="server" id="tblResults" visible="false" style="padding: 5px">
-                                                    <tr>
-                                                        <td>
-                                                            <telerik:RadGrid ID="rgResults" PageSize="20" AllowPaging="True" AutoGenerateColumns="false" runat="server" AllowSorting="true" GridLines="Both"
-                                                                OnNeedDataSource="rgResults_NeedDataSource" OnItemDataBound="rgResults_ItemDataBound">
-                                                                <PagerStyle Mode="NextPrevAndNumeric" />
-                                                                <HeaderStyle CssClass="MyGridHeader" />
-                                                                <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
-                                                                <ClientSettings Selecting-AllowRowSelect="true">
-                                                                    <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
-                                                                    <Selecting AllowRowSelect="True" />
-                                                                </ClientSettings>
-                                                                <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" DataKeyNames="intWagePaymentReqid">
-                                                                    <NoRecordsTemplate>&nbsp;&nbsp;&nbsp;No results found</NoRecordsTemplate>
-                                                                    <HeaderStyle CssClass="MyGridHeader" />
-                                                                    <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
-                                                                    <Columns>
-                                                                        <telerik:GridBoundColumn DataField="enrollmentNo" HeaderText="Enrollment No" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="dateofCreation" HeaderText="Date Of Creation" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="exchangerateattime" HeaderText="Exchange Rate At Time" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="intBenid" HeaderText="Beneficiary ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="intWagePaymentReqid" HeaderText="Wage Payment Req ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="intWagesReqBenTransid" HeaderText="Wages Req Ben Trans ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="intWorkid" HeaderText="Work ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="paymentCycle" HeaderText="Payment Cycle" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="reqFromDate" HeaderText="Req From Date" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="reqNo" HeaderText="Req No" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="reqToDate" HeaderText="Req To Date" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="status" HeaderText="Status" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="supportType" HeaderText="Support Type" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="totAttendance" HeaderText="Total Attendance" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="wageRateSSPTotal" HeaderText="Wage Rate SSP Total" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="wageRateUSD" HeaderText="Wage Rate USD" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="wageRateUSDTotal" HeaderText="Wage Rate USD Total" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="workCode" HeaderText="Work Code" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                    </Columns>
-                                                                </MasterTableView>
-                                                            </telerik:RadGrid>
-
-
-
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </asp:Panel>
-                                        </td>
-                                    </tr>
                                 </table>
                             </div>
                         </div>
+                        <table cellpadding="4" cellspacing="5" style="width: 100%">
+                            <tr>
+                                <td colspan="3" style="padding: 5px; margin: 5px; height: 117px;" valign="top">
+                                    <asp:Panel ID="pnlResults" runat="server">
+                                        <table runat="server" id="tblResults" visible="false" style="padding: 5px">
+                                            <tr>
+                                                <td>
+                                                    <telerik:RadGrid ID="rgResults" PageSize="20" AllowPaging="True" AutoGenerateColumns="false" runat="server" AllowSorting="true" GridLines="Both"
+                                                        OnNeedDataSource="rgResults_NeedDataSource" OnItemDataBound="rgResults_ItemDataBound">
+                                                        <PagerStyle Mode="NextPrevAndNumeric" />
+                                                        <HeaderStyle CssClass="MyGridHeader" />
+                                                        <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                                        <ClientSettings Selecting-AllowRowSelect="true">
+                                                            <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
+                                                            <Selecting AllowRowSelect="True" />
+                                                        </ClientSettings>
+                                                        <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" DataKeyNames="intWagePaymentReqid">
+                                                            <NoRecordsTemplate>&nbsp;&nbsp;&nbsp;No results found</NoRecordsTemplate>
+                                                            <HeaderStyle CssClass="MyGridHeader" />
+                                                            <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                                            <Columns>
+                                                                <telerik:GridBoundColumn DataField="enrollmentNo" HeaderText="Enrollment No" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="dateofCreation" HeaderText="Date Of Creation" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="exchangerateattime" HeaderText="Exchange Rate At Time" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="intBenid" HeaderText="Beneficiary ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="intWagePaymentReqid" HeaderText="Wage Payment Req ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="intWagesReqBenTransid" HeaderText="Wages Req Ben Trans ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="intWorkid" HeaderText="Work ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="paymentCycle" HeaderText="Payment Cycle" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="reqFromDate" HeaderText="Req From Date" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="reqNo" HeaderText="Req No" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="reqToDate" HeaderText="Req To Date" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="status" HeaderText="Status" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="supportType" HeaderText="Support Type" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="totAttendance" HeaderText="Total Attendance" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="wageRateSSPTotal" HeaderText="Wage Rate SSP Total" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="wageRateUSD" HeaderText="Wage Rate USD" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="wageRateUSDTotal" HeaderText="Wage Rate USD Total" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <telerik:GridBoundColumn DataField="workCode" HeaderText="Work Code" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                            </Columns>
+                                                        </MasterTableView>
+                                                    </telerik:RadGrid>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </asp:Panel>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
         </ContentTemplate>
+
+
+        <%--<Triggers>
+            <asp:AsyncPostBackTrigger ControlID="BtnSearch" EventName="Click" />
+        </Triggers>--%>
+
+
     </asp:UpdatePanel>
 
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">

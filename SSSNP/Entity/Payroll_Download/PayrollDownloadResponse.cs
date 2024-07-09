@@ -24,26 +24,7 @@ namespace SSSNP.Entity.Payroll_Download
         public int county { get; set; }
         public int payam { get; set; }
         public int boma { get; set; }
-
-        private string _lockedStatus;
-
-        public string lockedStatus
-        {
-            get => _lockedStatus;
-            set
-            {
-                if (value == "LOCKED" || value == "UNLOCKED" || value == "RECONCILED")
-                {
-                    _lockedStatus = value;
-                }
-                else
-                {
-                    // Handle unexpected values
-                    throw new ArgumentException("Invalid lockedStatus value");
-                }
-            }
-        }
-
+        public string lockedStatus { get; set; }
 
         public List<PDPayrollDataDto> payrollData { get; set; }
     }
