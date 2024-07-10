@@ -10,13 +10,6 @@
             $('#txtStartDate').datetimepicker();
         });
 
-        function hideUpdateProgress() {
-            setTimeout(function () {
-                document.getElementById('<%= UpdateProgress.ClientID %>').style.display = 'none';
-        }, 2000); // 2000 milliseconds = 2 seconds
-        }
-        Sys.WebForms.PageRequestManager.getInstance().add_initializeRequest(hideUpdateProgress);
-
     </script>
 
     <asp:UpdatePanel ID="upd1" runat="server" UpdateMode="Conditional">
@@ -196,9 +189,9 @@
         </ContentTemplate>
 
 
-        <%--<Triggers>
-            <asp:AsyncPostBackTrigger ControlID="BtnSearch" EventName="Click" />
-        </Triggers>--%>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="BtnDownload" />
+        </Triggers>
 
 
     </asp:UpdatePanel>

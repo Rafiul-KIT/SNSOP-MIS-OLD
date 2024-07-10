@@ -114,51 +114,7 @@ namespace SSSNP_SNSOP
             Response.Close();
 
         }
-        private void Non_GBVAttachmentHandler(bool isNonGBVTemplate)
-        {
-            string filenameFull;
-            string filename;
-
-            if (isNonGBVTemplate)
-            {
-                filenameFull = Server.MapPath("~/Template/NonGBVTemplateFile.xlsx");
-                filename = "NonGBVTemplateFile.xlsx";
-            }
-            else
-            {
-                filenameFull = Server.MapPath("~/Template/GBVTemplateFile.xlsx");
-                filename = "GBVTemplateFile.xlsx";
-            }
-
-            try
-            {
-                byte[] buffer;
-
-                using (FileStream fs = new FileStream(filenameFull, FileMode.Open))
-                {
-
-                    buffer = new byte[(int)fs.Length];
-                    fs.Read(buffer, 0, (int)fs.Length);
-                    fs.Close();
-                }
-
-                Response.ClearHeaders();
-                Response.ContentType = "application/octet-stream";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
-                Response.AddHeader("Content-Length", buffer.Length.ToString());
-
-
-                Response.BinaryWrite((byte[])buffer);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            Response.Flush();
-            Response.Close();
-
-        }
+       
         private void GBVAttachmentHandler(object valueFunction)
         {
             if (valueFunction == null) return;
@@ -362,28 +318,30 @@ namespace SSSNP_SNSOP
                 byte[] key = HexStringToByteArray(hexKey);
                 byte[] iv = HexStringToByteArray(hexIv);
 
-                // Encrypt the data
-                byte[] encryptedData = EncryptData(json, key, iv);
-
-                // Set the response headers and content
-                Response.Clear();
-                Response.ClearHeaders();
-                Response.ContentType = "application/octet-stream";
-                Response.AddHeader("Content-Disposition", "attachment; filename=encryptedPayrollData.bin");
-                Response.AddHeader("Content-Length", encryptedData.Length.ToString());
-
                 try
                 {
-                    Response.BinaryWrite(encryptedData);
-                    Response.Flush(); // Ensure all data is sent to the client
-                    HttpContext.Current.ApplicationInstance.CompleteRequest(); // End the request without aborting the thread
+                    // Encrypt the data
+                    byte[] encryptedData;
+                    encryptedData = EncryptData(json, key, iv);
+
+                    // Set the response headers and content
+                    // Response.Clear();
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=encryptedPayrollData.bin");
+                    Response.AddHeader("Content-Length", encryptedData.Length.ToString());
+
+                
+                    Response.BinaryWrite((byte[])encryptedData);
                 }
                 catch (Exception ex)
                 {
-                    LogError(ex);
-                    Response.StatusCode = 500;
-                    Response.End();
+                    throw;
                 }
+
+                Response.Flush(); // Ensure all data is sent to the client
+                // HttpContext.Current.ApplicationInstance.CompleteRequest(); // End the request without aborting the thread
+                Response.Close();
             }
         }
 
