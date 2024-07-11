@@ -202,6 +202,24 @@ public partial class WorkProposalLookup
     protected global::System.Web.UI.WebControls.DropDownList ddlWorkActivity;
 
     /// <summary>
+    /// Label404 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label404;
+
+    /// <summary>
+    /// ddlScreeningStatus control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlScreeningStatus;
+
+    /// <summary>
     /// lblMsg control.
     /// </summary>
     /// <remarks>

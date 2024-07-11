@@ -229,6 +229,21 @@
                                                     <td style="padding: 5px; margin: 5px" __designer:mapid="1812">
                                                         &nbsp;</td>
                                                 </tr>
+                                                <tr __designer:mapid="180a">
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180b">
+                                                      <asp:Label ID="Label404" runat="server" CssClass="LBLBLACK" Width="124px"> Screening Status</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180d">
+                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="180e">
+                                                      <asp:DropDownList ID="ddlScreeningStatus" runat="server" class="form-control txtbox" 
+                                                            Height="28px" Width="180px">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px" __designer:mapid="1812">
+                                                        &nbsp;</td>
+                                                </tr>
                                             </table>
                                 </td>
                             </tr>

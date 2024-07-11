@@ -1064,6 +1064,23 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px"></td>
                                                 </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="screeningStatusLabel" runat="server" CssClass="LBLBLACK" Width="137px">Paper Screening Status</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlScreeningStatus" runat="server" AutoPostBack="True" class="form-control txtbox" Height="33px" Width="180px">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server"
+                                                            ControlToValidate="ddlScreeningStatus" ErrorMessage="Please Select Paper Screening Status"
+                                                            InitialValue="--Select--" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                                </tr>
                                                 <tr style="display: none;">
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="Label2" runat="server" CssClass="LBLBLACK" Width="137px">Type Of Material Required</asp:Label>

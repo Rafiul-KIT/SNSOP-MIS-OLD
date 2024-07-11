@@ -4163,7 +4163,7 @@ public class General
 
 
     //Created by siva as on 4-1-2016 :: Insert,Update Work Proposal 
-    public int InsertUpdWorkProposal(string intWorkid, string WorkCode, string IPid, string intPrjid, string MeetingDate, string intStateid, string intCountieid, string intPayamid, string intBomasid, string Status, string StatusDate, string PDC_ApprvDate, string Remarks, string Created_by, string TypeofMeeting)
+    public int InsertUpdWorkProposal(string intWorkid, string WorkCode, string IPid, string intPrjid, string MeetingDate, string intStateid, string intCountieid, string intPayamid, string intBomasid, string Status, string StatusDate, string PDC_ApprvDate, string Remarks, string Created_by, string TypeofMeeting, string screeningStatus)
     {
         SqlCommand com = new SqlCommand();
         com.CommandType = CommandType.StoredProcedure;
@@ -4244,7 +4244,7 @@ public class General
         //
 
 
-        if (Status == "" || Status == null)
+        if (Status == "" || Status == null || Status == "--Select--")
             com.Parameters.Add("@Status", SqlDbType.VarChar).Value = DBNull.Value;
         else
             com.Parameters.Add("@Status", SqlDbType.VarChar).Value = Status.Trim();
@@ -4256,7 +4256,10 @@ public class General
         else
             com.Parameters.Add("@Created_by", SqlDbType.VarChar).Value = Created_by.Trim();
 
-
+        if (screeningStatus == null)
+            com.Parameters.Add("@screening_status", SqlDbType.VarChar).Value = DBNull.Value;
+        else
+            com.Parameters.Add("@screening_status", SqlDbType.VarChar).Value = screeningStatus;
 
 
         con.OpenConnection();
@@ -18204,7 +18207,7 @@ public class General
         }
     }
 
-    public DataSet getWorkProposalsearchLatestIP(string intUserid, string intStateid, string intCountieid, string intPayamid, string intBomasid, string WorkCode, string IPid, string intTSTid, string Status, string AreaofWork, string WorkActivity, string ProjectId)
+    public DataSet getWorkProposalsearchLatestIP(string intUserid, string intStateid, string intCountieid, string intPayamid, string intBomasid, string WorkCode, string IPid, string intTSTid, string Status, string AreaofWork, string WorkActivity, string ProjectId, string screeningStatus)
     {
         con.OpenConnection();
         SqlDataAdapter da;
@@ -18279,6 +18282,11 @@ public class General
                 da.SelectCommand.Parameters.Add("@ProjectId", SqlDbType.VarChar).Value = "%";
             else
                 da.SelectCommand.Parameters.Add("@ProjectId", SqlDbType.VarChar).Value = ProjectId.ToString();
+
+            if (screeningStatus == null || (screeningStatus.Trim() == "" || screeningStatus.Trim() == null || screeningStatus.Trim() == "--Select--"))
+                da.SelectCommand.Parameters.Add("@screening_status", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@screening_status", SqlDbType.VarChar).Value = screeningStatus.ToString();
 
 
 

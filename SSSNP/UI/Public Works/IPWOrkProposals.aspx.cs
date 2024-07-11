@@ -49,6 +49,9 @@ public partial class IPWOrkProposals : System.Web.UI.Page
             //Estimated Work End date
             CalendarExtender3.StartDate = DateTime.Now;
 
+            ddlScreeningStatus.Items.Add("Accepted");
+            ddlScreeningStatus.Items.Add("Rejected");
+
             Gen.getStates(ddlState);
             Gen.getIpDet(ddlIP);
 
@@ -58,6 +61,9 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                 lblheading.Text = "Work Approvals";
                 lblSite2.Text = "Work Approvals";
                 lblSitemap.Text = "TST";
+
+                screeningStatusLabel.Visible = false;
+                ddlScreeningStatus.Visible = false;
             }
             else
             {
@@ -349,6 +355,25 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                 ddlMeeting.SelectedValue = ds.Tables[0].Rows[0]["TypeofMeeting"].ToString();
             getprojectDet();
             txtStartDate.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["MeetingDate"].ToString()).ToString("dd-MM-yyyy");
+            if (ds.Tables[0].Rows[0]["screening_status"].ToString() != "")
+            {
+                if (ds.Tables[0].Rows[0]["screening_status"].ToString() == "1")
+                {
+                    ddlScreeningStatus.SelectedValue = "Accepted";
+                }
+                else if (ds.Tables[0].Rows[0]["screening_status"].ToString() == "2")
+                {
+                    ddlScreeningStatus.SelectedValue = "Rejected";
+                }
+                else
+                {
+                    ddlScreeningStatus.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+                ddlScreeningStatus.SelectedIndex = 0;
+            }
             if (ds.Tables[0].Rows[0]["intStateid"].ToString() != "")
             {
                 ddlState.SelectedValue = ds.Tables[0].Rows[0]["intStateid"].ToString();
@@ -625,8 +650,20 @@ public partial class IPWOrkProposals : System.Web.UI.Page
 
         if (BtnSave1.Text == "Save")
         {
+            string screeningStatus = null;
+            if (ddlScreeningStatus != null)
+            {
+                if (ddlScreeningStatus.SelectedValue.ToString() == "Accepted")
+                {
+                    screeningStatus = "1";
+                }
+                else if (ddlScreeningStatus.SelectedValue.ToString() == "Rejected")
+                {
+                    screeningStatus = "2";
+                }
+            }
             //New step for approving work proposals
-            int i = Gen.InsertUpdWorkProposal("0", "", Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "IP-Submitted", txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue);
+            int i = Gen.InsertUpdWorkProposal("0", "", Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, (screeningStatus == "1") ? "IP-Submitted" : null, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus);
 
             if (ddlstatus.SelectedValue == "TST-Rejected")
             {
@@ -817,7 +854,19 @@ public partial class IPWOrkProposals : System.Web.UI.Page
         }
         else
         {
-            int i = Gen.InsertUpdWorkProposal(ids.ToString(), lblworkcode.Text, Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, ddlstatus.SelectedValue, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue);
+            string screeningStatus = null;
+            if (ddlScreeningStatus != null)
+            {
+                if (ddlScreeningStatus.SelectedValue.ToString() == "Accepted")
+                {
+                    screeningStatus = "1";
+                }
+                else if (ddlScreeningStatus.SelectedValue.ToString() == "Rejected")
+                {
+                    screeningStatus = "2";
+                }
+            }
+            int i = Gen.InsertUpdWorkProposal(ids.ToString(), lblworkcode.Text, Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, ddlstatus.SelectedValue, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus);
             if (ddlstatus.SelectedValue == "TST-Rejected")
             {
                 Gen.insertWorkComment(ids.ToString(), txtRemarks.Text, ddlstatus.SelectedValue, Session["uid"].ToString());

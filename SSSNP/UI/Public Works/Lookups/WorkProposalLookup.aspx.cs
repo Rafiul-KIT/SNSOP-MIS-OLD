@@ -40,15 +40,20 @@ public partial class WorkProposalLookup : System.Web.UI.Page
                 ddlIP.Enabled = false;
 
                 Gen.getProjects(ddlProject, ddlIP.SelectedValue);
+                Label404.Visible = true;
+                ddlScreeningStatus.Visible = true;
             }
             else if (Session["user_type"].ToString() == "TST")
             {
                 clsGeneral.GetIpsByTST(ddlIP, Session["uid"].ToString());
 
                 ddlIP.Enabled = true;
+                Label404.Visible = false;
+                ddlScreeningStatus.Visible = false;
             }
             //fillgrid();
-
+            ddlScreeningStatus.Items.Add("Accepted");
+            ddlScreeningStatus.Items.Add("Rejected");
             Gen.getStates(ddlState);
         }
     }
@@ -79,13 +84,27 @@ public partial class WorkProposalLookup : System.Web.UI.Page
         }
 
         DataSet ds= new DataSet();
+
+        string screeningStatus = "";
+        if (ddlScreeningStatus != null)
+        {
+            if (ddlScreeningStatus.SelectedValue.ToString() == "Accepted")
+            {
+                screeningStatus = "1";
+            }
+            else if (ddlScreeningStatus.SelectedValue.ToString() == "Rejected")
+            {
+                screeningStatus = "2";
+            }
+        }
+
         if (Session["user_type"].ToString() != "IP")
         {
             ds = clsGeneral.getWorkProposalsearchLatest(ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, User, ddlstatus.SelectedValue, ddlAreaofWork.SelectedValue, ddlWorkActivity.SelectedValue, ddlProject.SelectedValue);
         }
         else if (Session["user_type"].ToString() == "IP")
         {
-            ds = clsGeneral.getWorkProposalsearchLatestIP(Session["uid"].ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, User, ddlstatus.SelectedValue, ddlAreaofWork.SelectedValue, ddlWorkActivity.SelectedValue, ddlProject.SelectedValue);
+            ds = clsGeneral.getWorkProposalsearchLatestIP(Session["uid"].ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, User, ddlstatus.SelectedValue, ddlAreaofWork.SelectedValue, ddlWorkActivity.SelectedValue, ddlProject.SelectedValue, screeningStatus);
         }
 
 
