@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Cash Transfer Summary" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="CashTransferSummary" CodeBehind="CashTransferSummaryMNE.aspx.cs" %>
+﻿<%@ Page Title=":: :: SSSNP : : Cash Transfer Summary" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="CashTransferSummaryMNE" CodeBehind="CashTransferSummaryMNE.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
@@ -45,7 +45,7 @@
                                                 <!-- State Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelState" runat="server" CssClass="LBLBLACK" Width="165px">State Name</asp:Label>
+                                                        <asp:Label ID="LabelState" runat="server"  Width="165px">State Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
@@ -60,7 +60,7 @@
                                                 <!-- County Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelCounty" runat="server" CssClass="LBLBLACK" Width="165px">County / Municipality Name</asp:Label>
+                                                        <asp:Label ID="LabelCounty" runat="server"  Width="165px">County / Municipality Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
@@ -75,7 +75,7 @@
                                                 <!-- Payam Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
+                                                        <asp:Label ID="LabelPayam" runat="server"  Width="165px">Payam / Block Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
@@ -90,7 +90,7 @@
                                                 <!-- Boma Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name</asp:Label>
+                                                        <asp:Label ID="LabelBoma" runat="server"  Width="165px">Boma / Quarter Council Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -104,7 +104,7 @@
                                                 <!-- Currency Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelCurrency" runat="server" CssClass="LBLBLACK" Width="165px">Currency</asp:Label>
+                                                        <asp:Label ID="LabelCurrency" runat="server"  Width="165px">Currency</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -120,7 +120,7 @@
                                                 <!-- Payment Cycle Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPaymentCycle" runat="server" CssClass="LBLBLACK" Width="165px">Payment Cycle</asp:Label>
+                                                        <asp:Label ID="LabelPaymentCycle" runat="server"  Width="165px">Payment Cycle</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -138,7 +138,7 @@
                                                 <!-- Payment Status Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPaymentStatus" runat="server" CssClass="LBLBLACK" Width="165px">Payment Status</asp:Label>
+                                                        <asp:Label ID="LabelPaymentStatus" runat="server"  Width="165px">Payment Status</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -146,7 +146,7 @@
                                                             Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                             <asp:ListItem Value="Paid">Paid</asp:ListItem>
-                                                            <asp:ListItem Value="NotPaid">Not Paid</asp:ListItem>
+                                                            <asp:ListItem Value="Not Paid">Not Paid</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
@@ -154,7 +154,7 @@
                                                 <!-- Component Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelComponent" runat="server" CssClass="LBLBLACK" Width="165px">Component</asp:Label>
+                                                        <asp:Label ID="LabelComponent" runat="server"  Width="165px">Component</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -170,7 +170,7 @@
                                                 <!-- Payment Partner Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPaymentPartner" runat="server" CssClass="LBLBLACK" Width="165px">Payment Partner</asp:Label>
+                                                        <asp:Label ID="LabelPaymentPartner" runat="server"  Width="165px">Payment Partner</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -189,61 +189,9 @@
                                     </tr>
                                     <tr>
                                         <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
-                                            <asp:Button ID="BtnSearch" runat="server" CssClass="btn btn-primary"
+                                            <asp:Button ID="BtnSearch" runat="server"
                                                 Height="32px" OnClick="BtnSearch_Click" TabIndex="10" Text="Search"
                                                 ValidationGroup="group" Width="110px" />
-                                            <asp:Button ID="BtnDownload" runat="server" CssClass="btn btn-primary"
-                                                Height="32px" OnClick="BtnDownload_Click" TabIndex="10" Text="Download"
-                                                ValidationGroup="group" Width="110px" Visible="false" />
-                                            <asp:Button ID="BtnUnlock" runat="server" CssClass="btn btn-secondary"
-                                                Height="32px" OnClick="BtnUnlock_Click" TabIndex="10" Text="Unlock"
-                                                ValidationGroup="group" Width="110px" Visible="false" />
-                                            <asp:HiddenField ID="HiddenLockedStatus" runat="server" />
-                                            
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
-                                            <!-- New Label for Locked Status -->
-                                            <asp:Label ID="LblLockedStatus" runat="server" CssClass="status-label" Text="" Visible="false"></asp:Label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" style="padding: 5px; margin: 5px; height: 117px;" valign="top">
-                                            <asp:Panel ID="pnlResults" runat="server">
-                                                <table runat="server" id="tblResults" visible="false" style="padding: 5px">
-                                                    <tr>
-                                                        <td>
-                                                            <telerik:RadGrid ID="rgResults" PageSize="20" AllowPaging="True" AutoGenerateColumns="false" runat="server" AllowSorting="true" GridLines="Both"
-                                                                OnNeedDataSource="rgResults_NeedDataSource" OnItemDataBound="rgResults_ItemDataBound">
-                                                                <PagerStyle Mode="NextPrevAndNumeric" />
-                                                                <HeaderStyle CssClass="MyGridHeader" />
-                                                                <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
-                                                                <ClientSettings Selecting-AllowRowSelect="true">
-                                                                    <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
-                                                                    <Selecting AllowRowSelect="True" />
-                                                                </ClientSettings>
-                                                                <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" DataKeyNames="intPaymentId">
-                                                                    <NoRecordsTemplate>&nbsp;&nbsp;&nbsp;No results found</NoRecordsTemplate>
-                                                                    <HeaderStyle CssClass="MyGridHeader" />
-                                                                    <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
-                                                                    <Columns>
-                                                                        <telerik:GridBoundColumn DataField="intPaymentId" HeaderText="Payment ID" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="geoLocation" HeaderText="Geo Location" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="currency" HeaderText="Currency" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="paymentCycle" HeaderText="Payment Cycle" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="paymentStatus" HeaderText="Payment Status" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="component" HeaderText="Component" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="paymentPartner" HeaderText="Payment Partner" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="paymentAmount" HeaderText="Payment Amount" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                        <telerik:GridBoundColumn DataField="paymentDate" HeaderText="Payment Date" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
-                                                                    </Columns>
-                                                                </MasterTableView>
-                                                            </telerik:RadGrid>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </asp:Panel>
                                         </td>
                                     </tr>
                                 </table>
@@ -254,15 +202,4 @@
             </div>
         </ContentTemplate>
     </asp:UpdatePanel>
-
-    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
-        <ProgressTemplate>
-            <div class="overlay">
-                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
-                    <img alt="" src="../../Resource/Images/Processing.gif" />
-                </div>
-            </div>
-        </ProgressTemplate>
-    </asp:UpdateProgress>
-
 </asp:Content>

@@ -1,82 +1,127 @@
 ﻿using System;
 using System.Data;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+using System.Configuration;
 using Telerik.Web.UI;
+using System.Web.UI;
 
 public partial class BeneficiaryEnrollmentSummaryMNE : Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        try
         {
-            LoadInitialData();
+            Log("Page_Load started.");
+            if (!IsPostBack)
+            {
+                Log("IsPostBack is false.");
+                // You can add any initial data loading here if needed
+            }
         }
-    }
-
-    private void LoadInitialData()
-    {
-        // Load initial data for dropdown lists (states, counties, payams, etc.)
-        // For example:
-        // ddlState.DataSource = GetStates();
-        // ddlState.DataBind();
-    }
-
-    protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        // Load counties based on selected state
-    }
-
-    protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        // Load payams based on selected county
-    }
-
-    protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        // Load bomas based on selected payam
+        catch (Exception ex)
+        {
+            LogError("Error in Page_Load: " + ex.Message, ex);
+            throw;
+        }
     }
 
     protected void BtnSearch_Click(object sender, EventArgs e)
     {
-        LoadBeneficiaryData();
+        try
+        {
+            Log("BtnSearch_Click started.");
+            rgResults.Rebind();
+            Log("Search button clicked.");
+        }
+        catch (Exception ex)
+        {
+            LogError("Error in BtnSearch_Click: " + ex.Message, ex);
+            throw;
+        }
     }
 
-    private void LoadBeneficiaryData()
+    protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
     {
-        // Fetch beneficiary data based on selected filters
-        DataTable dt = GetBeneficiaryData();
-        rgResults.DataSource = dt;
-        rgResults.DataBind();
-        rgResults.Visible = true;
+        // Implement your logic to load counties based on selected state
     }
 
-    private DataTable GetBeneficiaryData()
+    protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
     {
-        // Implement your data fetching logic here
-        DataTable dt = new DataTable();
-        dt.Columns.Add("intBeneficiaryId");
-        dt.Columns.Add("geoLocation");
-        dt.Columns.Add("age");
-        dt.Columns.Add("gender");
-        dt.Columns.Add("component");
-        dt.Columns.Add("enrollmentDate");
-        dt.Columns.Add("status");
+        // Implement your logic to load payams based on selected county
+    }
 
-        // Add dummy data for example purposes
-        dt.Rows.Add("1", "Location1", "25", "Male", "LIPW", DateTime.Now.ToString(), "Active");
-        dt.Rows.Add("2", "Location2", "30", "Female", "DIS", DateTime.Now.ToString(), "Inactive");
-
-        return dt;
+    protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Implement your logic to load bomas based on selected payam
     }
 
     protected void rgResults_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
     {
-        rgResults.DataSource = GetBeneficiaryData();
+        try
+        {
+            Log("rgResults_NeedDataSource started.");
+            string state = ddlState.SelectedValue;
+            string county = ddlCounty.SelectedValue;
+            string payam = ddlPayam.SelectedValue;
+            string boma = ddlBoma.SelectedValue;
+            string age = txtAge.Text;
+            string gender = ddlGender.SelectedValue;
+            string component = ddlComponent.SelectedValue;
+
+            DataTable dt = GetEnrolledBeneficiaries(state, county, payam, boma, age, gender, component);
+            rgResults.DataSource = dt;
+        }
+        catch (Exception ex)
+        {
+            LogError("Error in rgResults_NeedDataSource: " + ex.Message, ex);
+            throw;
+        }
     }
 
-    protected void rgResults_ItemDataBound(object sender, GridItemEventArgs e)
+    private DataTable GetEnrolledBeneficiaries(string state, string county, string payam, string boma, string age, string gender, string component)
     {
-        // Handle any additional item data binding logic here
+        DataTable dt = new DataTable();
+        string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+        try
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                using (SqlCommand cmd = new SqlCommand("GetEnrolledBeneficiaries", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@State", string.IsNullOrEmpty(state) ? (object)DBNull.Value : state);
+                    cmd.Parameters.AddWithValue("@County", string.IsNullOrEmpty(county) ? (object)DBNull.Value : county);
+                    cmd.Parameters.AddWithValue("@Payam", string.IsNullOrEmpty(payam) ? (object)DBNull.Value : payam);
+                    cmd.Parameters.AddWithValue("@Boma", string.IsNullOrEmpty(boma) ? (object)DBNull.Value : boma);
+                    cmd.Parameters.AddWithValue("@Age", string.IsNullOrEmpty(age) ? (object)DBNull.Value : (object)int.Parse(age));
+                    cmd.Parameters.AddWithValue("@Gender", string.IsNullOrEmpty(gender) ? (object)DBNull.Value : gender);
+                    cmd.Parameters.AddWithValue("@Component", string.IsNullOrEmpty(component) ? (object)DBNull.Value : component);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            LogError("Error in GetEnrolledBeneficiaries: " + ex.Message, ex);
+            throw;
+        }
+
+        return dt;
+    }
+
+    private void Log(string message)
+    {
+        // Implement your logging logic here
+        System.Diagnostics.Debug.WriteLine(message);
+    }
+
+    private void LogError(string message, Exception ex)
+    {
+        // Implement your error logging logic here
+        System.Diagnostics.Debug.WriteLine(message);
+        // Example: ErrorLogger.LogError(ex);
     }
 }
