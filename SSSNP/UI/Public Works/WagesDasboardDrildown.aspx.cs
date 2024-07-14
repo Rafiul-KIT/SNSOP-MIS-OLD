@@ -36,6 +36,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
     General Gen = new General();
     ErrorLogger eLog = new ErrorLogger();
     comFunctions cmf = new comFunctions();
+    private EmailService emailService = new EmailService();
     #endregion
 
     #region Page_Load
@@ -566,6 +567,41 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         {
             lblresult.Text = "Submitted Successfully";
 
+            if (Session["user_type"].ToString().Trim() == "Cordinator")
+            {
+                if (ddlStatus.SelectedItem.Text == "Approved")
+                {
+                    sendEmailForWageRequest(hdfApplID.Value, row.Cells[3].Text, "Specialist", true);
+                } 
+                else
+                {
+                    string emailBody = "A wage request with number: " + row.Cells[3].Text + " has been rejected by Cordinator. " +
+                        "Please Review it.";
+                    emailService.sendEmailToIpApprover("SNSOP Wage Request", emailBody);
+                }
+            }
+            else if (Session["user_type"].ToString().Trim() == "Specialist")
+            {
+                if (ddlStatus.SelectedItem.Text == "Approved")
+                {
+                    sendEmailForWageRequest(hdfApplID.Value, row.Cells[3].Text, "Manager", true);
+                }
+                else
+                {
+                    sendEmailForWageRequest(hdfApplID.Value, row.Cells[3].Text, "Cordinator", false);
+                }
+            }
+            else if (Session["user_type"].ToString().Trim() == "Manager")
+            {
+                if (ddlStatus.SelectedItem.Text == "Approved")
+                {
+                }
+                else
+                {
+                    sendEmailForWageRequest(hdfApplID.Value, row.Cells[3].Text, "Specialist", false);
+                }
+            }
+
             string status = "";
             if (ddlStatus.SelectedValue == "2")
             {
@@ -596,9 +632,39 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 status = "Done";
             }
 
-            SendMailforWages(status, "", row.Cells[1].Text, row.Cells[2].Text, row.Cells[3].Text);
+            //SendMailforWages(status, "", row.Cells[1].Text, row.Cells[2].Text, row.Cells[3].Text);
             fillgrid();
         }
+    }
+
+    private void sendEmailForWageRequest(string intWagePaymentReqid, string reqNo, string userType, Boolean approved)
+    {
+        string emailSubject = "SNSOP Wage Request";
+
+        string newUserType = "";
+        if (userType == "Cordinator")
+        {
+            newUserType = "Initial Reviewer";
+        } 
+        else if (userType == "Specialist")
+        {
+            newUserType = "Financial Approver";
+        }
+        else if (userType == "Manager")
+        {
+            newUserType = "Final Payment Authorizer";
+        }
+
+        string emailBody = "";
+        if (approved)
+        {
+            emailBody = "A wage request with number: "+ reqNo+" has been approved by " + newUserType + " Please review it.";
+        } 
+        else
+        {
+            emailBody = "A wage request with number: " + reqNo + " has been rejected by " + newUserType + " Please review it.";
+        }
+        emailService.sendEmailForWageRequest(intWagePaymentReqid, userType, emailSubject, emailBody);
     }
 
     protected void BtnClear_Click(object sender, EventArgs e)

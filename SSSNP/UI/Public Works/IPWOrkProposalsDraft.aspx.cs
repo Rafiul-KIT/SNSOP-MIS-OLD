@@ -6,6 +6,8 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Net.Mail;
 using System.IO;
+using System.Configuration;
+using SSSNP.Network;
 
 public partial class IPWOrkProposalsDraft : System.Web.UI.Page
 {
@@ -14,6 +16,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
     General Gen = new General();
     DataRow dtrdr;
     DataTable myDtNewRecdr = new DataTable();
+    private EmailService emailService = new EmailService();
     #endregion
 
     #region PageLoad
@@ -960,6 +963,86 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
     }
     #endregion
 
+    private void sendApprovalEmailToEnvSpecByQualEng(string workId)
+    {
+        try
+        {
+            string emailSubject = "Sub-project Approval";
+            string emailBody = "<H2>Dear Environment Specialist (SNSOP MIS),</H2> <br><br>" +
+                "A sub-project has been approved by Quality Engineer and needs your approval to move forward. Please review.<br>";
+
+            emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
+            emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+            emailService.sendEmailToUserType(emailSubject, emailBody, "EnvSpec");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an unexpexted error when sending email to Env Spec. Error details:\n" + ex.ToString());
+            return;
+        }
+    }
+
+    private void sendRejectionEmailToIpByQualEng(string ipMail, string workId)
+    {
+        try
+        {
+            string emailSubject = "Sub-project Rejection";
+            string emailBody = "<H2>Dear Implementing Partner (SNSOP MIS),</H2> <br><br>" +
+                "A sub-project that you created has been rejected by Quality Engineer. Please review.<br>";
+
+            emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
+            emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+            emailService.sendEmail(ipMail, emailSubject, emailBody);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an unexpexted error when sending email to Quality Engineer. Error details:\n" + ex.ToString());
+            return;
+        }
+    }
+
+    private void sendApprovalEmailToTstByEnvSpec(string workId)
+    {
+        try
+        {
+            string emailSubject = "Sub-project Approval";
+            string emailBody = "<H2>Dear Technical Support Team member (SNSOP MIS),</H2> <br><br>" +
+                "A new sub-project has been approved by Environment Specialist and needs your approval to move forward. Please review.<br>";
+
+            emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
+            emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+            emailService.sendEmailToUserType(emailSubject, emailBody, "TST");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an unexpexted error when sending email to TST. Error details:\n" + ex.ToString());
+            return;
+        }
+    }
+
+    private void sendRejectionEmailToQualEngByEnvSpec(string workId)
+    {
+        try
+        {
+            string emailSubject = "Sub-project Rejection";
+            string emailBody = "<H2>Dear Quality Engineer (SNSOP MIS),</H2> <br><br>" +
+                "A sub-project has been rejected by Environment Specialist. Please review.<br>";
+
+            emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
+            emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+            emailService.sendEmailToUserType(emailSubject, emailBody, "QualEng");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an unexpexted error when sending email to Quality Engineer. Error details:\n" + ex.ToString());
+            return;
+        }
+    }
+
     protected void btnAppRej_Click(object sender, EventArgs e)
     {
         Failure.Visible = false;
@@ -1057,25 +1140,29 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
                     //send email to the IP that created the Work Proposal
                     DataSet dsWorkProposal = Gen.GetWorkProposalCreatorByIntWorkId(Session["intWorkId"].ToString());
                     string strCreatroEmailAddr = dsWorkProposal.Tables[0].Rows[0]["Email"].ToString();
-                    Gen.SendMail(strCreatroEmailAddr, "SNSOP Notifications - Rowk Proposal Status", string.Format("Notification <br>: the Work propossal with ID {0} you created has been rejected by the PMU QUality Engineer. <br> Please check and review it according to comments provided.", Session["intWorkId"].ToString()));
+
+                    sendRejectionEmailToIpByQualEng(strCreatroEmailAddr, Session["intWorkId"].ToString());
+
+                    //Gen.SendMail(strCreatroEmailAddr, "SNSOP Notifications - Rowk Proposal Status", string.Format("Notification <br>: the Work propossal with ID {0} you created has been rejected by the PMU QUality Engineer. <br> Please check and review it according to comments provided.", Session["intWorkId"].ToString()));
                 }
                 else if (ddlQualEngStatus.SelectedValue == "QE-Approved")
                 {
-                    DataSet dsEnvironmentSpecialistEmails = Gen.GetUsersDetailsByRole("EnvSpec");
-                    string strEmailList = string.Empty;
-                    int icountUsers = dsEnvironmentSpecialistEmails.Tables[0].Rows.Count;
-                    for (int iCounter = 0; iCounter < icountUsers; iCounter++)
-                    {
-                        if (iCounter == 0)
-                        {
-                            strEmailList = dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
-                        }
-                        else
-                        {
-                            strEmailList = strEmailList + "," + dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
-                        }
-                    }
-                    Gen.SendMail(strEmailList, "SNSOP Notifications - Work Proposal Status", string.Format("Notification <br>: the Work propossal with ID {0} has been reviewed by the PMU QUality Engineer. <br> Please check and review it.", Session["intWorkId"].ToString()));
+                    sendApprovalEmailToEnvSpecByQualEng(Session["intWorkId"].ToString());
+                    //DataSet dsEnvironmentSpecialistEmails = Gen.GetUsersDetailsByRole("EnvSpec");
+                    //string strEmailList = string.Empty;
+                    //int icountUsers = dsEnvironmentSpecialistEmails.Tables[0].Rows.Count;
+                    //for (int iCounter = 0; iCounter < icountUsers; iCounter++)
+                    //{
+                    //    if (iCounter == 0)
+                    //    {
+                    //        strEmailList = dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
+                    //    }
+                    //    else
+                    //    {
+                    //        strEmailList = strEmailList + "," + dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
+                    //    }
+                    //}
+                    //Gen.SendMail(strEmailList, "SNSOP Notifications - Work Proposal Status", string.Format("Notification <br>: the Work propossal with ID {0} has been reviewed by the PMU QUality Engineer. <br> Please check and review it.", Session["intWorkId"].ToString()));
                 }
 
             }
@@ -1083,39 +1170,41 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             {
                 if (ddlEnvSpecStatus.SelectedValue == "ES-Rejected")
                 {
-                    DataSet dsEnvironmentSpecialistEmails = Gen.GetUsersDetailsByRole("QualEng");
-                    string strEmailList = string.Empty;
-                    int icountUsers = dsEnvironmentSpecialistEmails.Tables[0].Rows.Count;
-                    for (int iCounter = 0; iCounter < icountUsers; iCounter++)
-                    {
-                        if (iCounter == 0)
-                        {
-                            strEmailList = dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
-                        }
-                        else
-                        {
-                            strEmailList = strEmailList + "," + dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
-                        }
-                    }
-                    Gen.SendMail(strEmailList, "SNSOP Notifications - Work Proposal Status", string.Format("Notification <br>: the Work proposal with ID {0} has been rejected by the Environment Specialist. <br> Please check and review it according to comments provided.", Session["intWorkId"].ToString()));
+                    sendRejectionEmailToQualEngByEnvSpec(Session["intWorkId"].ToString());
+                    //DataSet dsEnvironmentSpecialistEmails = Gen.GetUsersDetailsByRole("QualEng");
+                    //string strEmailList = string.Empty;
+                    //int icountUsers = dsEnvironmentSpecialistEmails.Tables[0].Rows.Count;
+                    //for (int iCounter = 0; iCounter < icountUsers; iCounter++)
+                    //{
+                    //    if (iCounter == 0)
+                    //    {
+                    //        strEmailList = dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
+                    //    }
+                    //    else
+                    //    {
+                    //        strEmailList = strEmailList + "," + dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
+                    //    }
+                    //}
+                    //Gen.SendMail(strEmailList, "SNSOP Notifications - Work Proposal Status", string.Format("Notification <br>: the Work proposal with ID {0} has been rejected by the Environment Specialist. <br> Please check and review it according to comments provided.", Session["intWorkId"].ToString()));
                 }
                 else if (ddlEnvSpecStatus.SelectedValue == "ES-Approved")
                 {
-                    DataSet dsEnvironmentSpecialistEmails = Gen.GetUsersDetailsByRole("TST");
-                    string strEmailList = string.Empty;
-                    int icountUsers = dsEnvironmentSpecialistEmails.Tables[0].Rows.Count;
-                    for (int iCounter = 0; iCounter < icountUsers; iCounter++)
-                    {
-                        if (iCounter == 0)
-                        {
-                            strEmailList = dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
-                        }
-                        else
-                        {
-                            strEmailList = strEmailList + "," + dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
-                        }
-                    }
-                    Gen.SendMail(strEmailList, "SNSOP Notifications - Work Proposal Status", string.Format("Notification <br>: the Work proposal with ID {0} has been reviewd by the Environment Specialist. <br> Please check and review it.", Session["intWorkId"].ToString()));
+                    sendApprovalEmailToTstByEnvSpec(Session["intWorkId"].ToString());
+                    //DataSet dsEnvironmentSpecialistEmails = Gen.GetUsersDetailsByRole("TST");
+                    //string strEmailList = string.Empty;
+                    //int icountUsers = dsEnvironmentSpecialistEmails.Tables[0].Rows.Count;
+                    //for (int iCounter = 0; iCounter < icountUsers; iCounter++)
+                    //{
+                    //    if (iCounter == 0)
+                    //    {
+                    //        strEmailList = dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
+                    //    }
+                    //    else
+                    //    {
+                    //        strEmailList = strEmailList + "," + dsEnvironmentSpecialistEmails.Tables[0].Rows[0]["Email"].ToString();
+                    //    }
+                    //}
+                    //Gen.SendMail(strEmailList, "SNSOP Notifications - Work Proposal Status", string.Format("Notification <br>: the Work proposal with ID {0} has been reviewd by the Environment Specialist. <br> Please check and review it.", Session["intWorkId"].ToString()));
                 }
             }
 

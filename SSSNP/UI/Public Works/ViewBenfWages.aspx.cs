@@ -5,7 +5,7 @@ using System.Data;
 using Telerik.Web.UI;
 using System.Drawing;
 using System.Net.Mail;
-
+using SSSNP.Network;
 
 public partial class ViewBenfWages : System.Web.UI.Page
 {
@@ -14,6 +14,7 @@ public partial class ViewBenfWages : System.Web.UI.Page
     General Gen = new General();
     comFunctions cmf = new comFunctions();
     string strWageRequestStatus;
+    private EmailService emailService = new EmailService();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -494,7 +495,13 @@ public partial class ViewBenfWages : System.Web.UI.Page
             string status = "";
             status = "The above payment has been approved by IP. It is now ready for Coordinator approval";
 
-            SendMailforWages(status, "", "", lblWorkCode.Text, lblRequestNumber.Text);
+            //SendMailforWages(status, "", "", lblWorkCode.Text, lblRequestNumber.Text);
+
+            string emailSubject = "SNSOP Wage Request";
+            string emailBody = "A wage request with number: " + lblRequestNumber.Text + " has been approved by IP Approver." +
+                " Please review it.";
+
+            emailService.sendEmailForWageRequest(Request.QueryString[0].ToString().Trim(), "Cordinator", emailSubject, emailBody);
         }
     }
 
@@ -530,7 +537,13 @@ public partial class ViewBenfWages : System.Web.UI.Page
             string status = "";
             status = "The above payment has been rejected by IP Approver. It should be cancelled and created correctly";
 
-            SendMailforWagesDraftRejected(status, "", "", lblWorkCode.Text, lblRequestNumber.Text);
+            //SendMailforWagesDraftRejected(status, "", "", lblWorkCode.Text, lblRequestNumber.Text);
+
+            string emailSubject = "SNSOP Wage Request";
+            string emailBody = "A wage request with number: " + lblRequestNumber.Text + " has been rejected by IP Approver." +
+                "It should be cancelled and created correctly. Please review it.";
+
+            emailService.sendEmailToUserType(emailSubject, emailBody, "IP");
         }
     }
 

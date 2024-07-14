@@ -380,7 +380,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                                 ConfigurationManager.AppSettings["SSSNPWEB"] +
                                 "<br>Please login by clicking the above link<br>Thanks and regards.";
 
-                            emailService.sendEmailToGrmManager(subject, body);
+                            emailService.sendEmailToUserType(subject, body, "ManagerGRM");
 
                             AddSuccessMessage("Non-GBV Imported Successfully", true);
                             btnImport.Enabled = false;
@@ -443,7 +443,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                                 ConfigurationManager.AppSettings["SSSNPWEB"] +
                                 "<br>Please login by clicking the above link<br>Thanks and regards.";
 
-                            emailService.sendEmailToGrmManager(subject, body);
+                            emailService.sendEmailToUserType(subject, body, "ManagerGRM");
 
                             AddSuccessMessage("GBV Imported Successfully", true);
                             btnImport.Enabled = false;

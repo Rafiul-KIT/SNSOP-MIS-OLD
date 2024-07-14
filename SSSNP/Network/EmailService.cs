@@ -65,11 +65,60 @@ namespace SSSNP.Network
             }
         }
 
-        public void sendEmailToGrmManager(string emailSubject, string emailBody)
+        public void sendEmailToUserType(string emailSubject, string emailBody, string userType)
         {
             String sql3 = "select Email from tbl_Users where 1=1 " +
-                    " and User_type='ManagerGRM' and Status='Y' and Email is not null";
+                    " and User_type='"+userType+"' and Status='Y' and Email is not null";
             DataTable dt3 = _dbOperation.GetDataTable(sql3);
+            if (dt3 != null && dt3.Rows != null && dt3.Rows.Count > 0)
+            {
+                foreach (DataRow dataRow in dt3.Rows)
+                {
+                    String toEmail = dataRow["Email"] != null ? dataRow["Email"].ToString() : null;
+                    if (toEmail != null)
+                    {
+                        sendEmail(toEmail, emailSubject, emailBody);
+                    }
+                }
+            }
+        }
+
+        public void sendEmailToIpApprover(string emailSubject, string emailBody)
+        {
+            String sql3 = "select Email from tbl_Users where 1=1 " +
+                    " and User_type='IP' and IP_Approver=1 and Status='Y' and Email is not null";
+            DataTable dt3 = _dbOperation.GetDataTable(sql3);
+            if (dt3 != null && dt3.Rows != null && dt3.Rows.Count > 0)
+            {
+                foreach (DataRow dataRow in dt3.Rows)
+                {
+                    String toEmail = dataRow["Email"] != null ? dataRow["Email"].ToString() : null;
+                    if (toEmail != null)
+                    {
+                        sendEmail(toEmail, emailSubject, emailBody);
+                    }
+                }
+            }
+        }
+
+        public void sendEmailForWageRequest(string intWagePaymentReqid, string userType, string emailSubject, string emailBody)
+        {
+            string sql = "select tu.Email from td_WorkWageRequest t left join tbl_Users tu";
+            if (userType == "Cordinator")
+            {
+                sql += " on t.intCoOrdinatorid=tu.intUserid ";
+            }
+            if (userType == "Specialist")
+            {
+                sql += " on t.intSpecialistid=tu.intUserid ";
+            }
+            if (userType == "Manager")
+            {
+                sql += " on t.intManagerid=tu.intUserid ";
+            }
+            sql += " and tu.Status='Y' and tu.Email is not null where t.intWagePaymentReqid='" + intWagePaymentReqid + "'";
+
+            DataTable dt3 = _dbOperation.GetDataTable(sql);
             if (dt3 != null && dt3.Rows != null && dt3.Rows.Count > 0)
             {
                 foreach (DataRow dataRow in dt3.Rows)

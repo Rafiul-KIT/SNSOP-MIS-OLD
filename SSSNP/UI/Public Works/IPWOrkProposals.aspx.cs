@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Net.Mail;
 using System.IO;
+using SSSNP.Network;
 #endregion
 
 #region Amendment History Begin
@@ -27,6 +28,7 @@ public partial class IPWOrkProposals : System.Web.UI.Page
     General Gen = new General();
     DataRow dtrdr;
     DataTable myDtNewRecdr = new DataTable();
+    private EmailService emailService = new EmailService();
     #endregion
 
     #region PageLoad
@@ -635,6 +637,66 @@ public partial class IPWOrkProposals : System.Web.UI.Page
     protected void btnOrgLookup_Click(object sender, EventArgs e)
     {
     }
+
+    private void sendEmailToQualityEngineer()
+    {
+        try
+        {
+            string emailSubject = "Sub-project Approval";
+            string emailBody = "<H2>Dear Quality Engineer (SNSOP MIS),</H2> <br><br>" +
+                "A new sub-project has been submitted which needs your approval to move forward. Please review.<br>";
+
+            emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
+            emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+            emailService.sendEmailToUserType(emailSubject, emailBody, "QualEng");
+        } catch (Exception ex)
+        {
+            Console.WriteLine("There was an unexpexted error when sending email to Quality Engineer. Error details:\n" + ex.ToString());
+            return;
+        }
+    }
+
+    private void sendEmailToEnvironmentSpecialistAboutRejection(string workId)
+    {
+        try
+        {
+            string emailSubject = "Sub-project Rejection by TST";
+            string emailBody = "<H2>Dear Environment Specialist (SNSOP MIS),</H2> <br><br>" +
+                "The Work proposal with ID "+workId+" has been rejected by the TST. Please review.<br>";
+
+            emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
+            emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+            emailService.sendEmailToUserType(emailSubject, emailBody, "EnvSpec");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an unexpexted error when sending rejection email to Environment Specialist. Error details:\n" + ex.ToString());
+            return;
+        }
+    }
+
+    private void sendApprovalMailToIpByTST(string ipMail, string workId)
+    {
+        try
+        {
+            string emailSubject = "Sub-project Approval";
+            string emailBody = "<H2>Dear Implementing Partner (SNSOP MIS),</H2> <br><br>" +
+                "A sub-project that you created has been approved by TST. Please take further actions.<br>";
+
+            emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
+            emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
+
+            emailService.sendEmail(ipMail, emailSubject, emailBody);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an unexpexted error when sending email to IP. Error details:\n" + ex.ToString());
+            return;
+        }
+    }
+
     protected void BtnSave_Click(object sender, EventArgs e)
     {
         var vals = hdfID.Value.Split(',')[0];
@@ -844,6 +906,11 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                 Failure.Visible = false;
                 clear();
                 Response.Redirect("Result.aspx");
+
+                if (screeningStatus == "1")
+                {
+                    sendEmailToQualityEngineer();
+                }
             }
             else
             {
@@ -885,6 +952,9 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                     }
                 }
                 Gen.SendMail(strEmailList, "SNSOP Notifications - Work Proposal Status", string.Format("Notification <br>: the Work proposal with ID {0} has been rejected by the TST. <br> Please check and review it according to comments provided.", Session["intWorkId"].ToString()));
+
+                sendEmailToEnvironmentSpecialistAboutRejection(Session["intWorkId"].ToString());
+
             }
             if (fuWorkProposalAttachment.HasFile)
             {
@@ -1047,6 +1117,8 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                 if (ddlstatus.SelectedValue == "Approved")
                 {
                     SendMailAnotherApprv(hdfIPEmail.Value, hdfWorkCode.Value, ddlstatus.SelectedValue, hdfTSTName.Value);
+
+                    sendApprovalMailToIpByTST(hdfIPEmail.Value, hdfWorkCode.Value);
                 }
 
                 lblmsg.Text = "Updated Successfully..!";

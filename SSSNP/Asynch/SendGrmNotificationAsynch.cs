@@ -144,7 +144,7 @@ namespace SSSNP.Asynch
 
                 if (needToSend == true)
                 {
-                    emailService.sendEmailToGrmManager(emailSubject, emailBody);
+                    emailService.sendEmailToUserType(emailSubject, emailBody, "ManagerGRM");
                 }
 
                 return true;

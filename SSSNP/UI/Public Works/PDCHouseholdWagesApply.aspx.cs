@@ -9,6 +9,7 @@ using System.IO;
 using Telerik.Web.UI;
 using System.Web;
 using System.Configuration;
+using SSSNP.Network;
 #endregion
 
 #region Amendment History Begin
@@ -33,6 +34,7 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
     public DataTable dtMyTableCertificate;
     public DataTable dtMyTablepr;
     public DataTable dtMyTableCertificate2;
+    private EmailService emailService = new EmailService();
     #endregion
 
     #region PageLoad
@@ -305,7 +307,17 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
 
             GrdExisted.DataSource = null;
             GrdExisted.DataBind();
-            SendMailforWagesDraft(status, "", Session["username"].ToString(), lblWorkCode.Text, System.DateTime.Now.Year.ToString() + "-SNSOPWR-" + resultwage.ToString());
+            //SendMailforWagesDraft(status, "", Session["username"].ToString(), lblWorkCode.Text, System.DateTime.Now.Year.ToString() + "-SNSOPWR-" + resultwage.ToString());
+
+            string subject = "SNSOP MIS – Notification on Wage Payroll for Review";
+
+            string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+                                                                                                 //mail.Body = "<H2>Notification on Wage Payroll for Review - DIS</H2><br> <br> <b> IP NAME: " + Ipname + "</b> <br><br> Work Code: " + "DIS" + "<br> <br> Work Request No: " + "DIS" + "<br>  Remarks: " + numbers + " <br> <br> URL : " + sssnpweb + " <br><br> Please Login by clicking the above link. <br> Thanks & Regards <br>" + Ipname + "<br>";
+            string body = "<H2>Notification on Wage Payroll for Review - LIPW</H2><br> <br> <b> IP NAME: " + Session["username"].ToString() + 
+                "</b> <br><br> Work Code: " + lblWorkCode.Text + "<br> <br> Work Request No: " + "-SNSOPWR-" + resultwage.ToString() + 
+                " <br> Please review the above Wage Request. <br> URL : " + sssnpweb + " <br><br> Please Login by clicking the above link. <br> Thanks & Regards";
+
+            emailService.sendEmailToIpApprover(subject, body);
 
             success.Visible = true;
             Failure.Visible = false;

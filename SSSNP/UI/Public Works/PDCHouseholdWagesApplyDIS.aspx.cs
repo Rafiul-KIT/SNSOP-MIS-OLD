@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using SSSNP_SNSOP.Core;
 using System.Web;
 using System.Configuration;
+using SSSNP.Network;
 #endregion
 
 #region Amendment History Begin
@@ -38,6 +39,7 @@ public partial class PDCHouseholdWagesApplyDIS : System.Web.UI.Page
     public DataTable dtMyTableCertificate;
     public DataTable dtMyTablepr;
     public DataTable dtMyTableCertificate2;
+    private EmailService emailService = new EmailService();
     #endregion
 
     #region PageLoad
@@ -298,6 +300,17 @@ public partial class PDCHouseholdWagesApplyDIS : System.Web.UI.Page
 
         }
         SendMailforWagesDISDraft(status, "", Session["username"].ToString());
+
+        string subject = "SNSOP MIS – Notification on Wage Payroll for Review";
+
+        string sssnpweb = System.Configuration.ConfigurationManager.AppSettings["SSSNPWEB"]; // Config web
+                                                                                             //mail.Body = "<H2>Notification on Wage Payroll for Review - DIS</H2><br> <br> <b> IP NAME: " + Ipname + "</b> <br><br> Work Code: " + "DIS" + "<br> <br> Work Request No: " + "DIS" + "<br>  Remarks: " + numbers + " <br> <br> URL : " + sssnpweb + " <br><br> Please Login by clicking the above link. <br> Thanks & Regards <br>" + Ipname + "<br>";
+        string body = "<H2>Notification on Wage Payroll for Review</H2><br> <br> <b> IP NAME: " + Session["username"].ToString() +
+            "</b> <br><br> Work Code: DIS<br> <br> Work Request No: " + "-SNSOPWR-" + resultwage.ToString() +
+            " <br> Please review above wage request <br> URL : " + sssnpweb + " <br><br> Please Login by clicking the above link. <br> Thanks & Regards";
+
+        emailService.sendEmailToIpApprover(subject, body);
+
         success.Visible = true;
         Failure.Visible = false;
         clear();
