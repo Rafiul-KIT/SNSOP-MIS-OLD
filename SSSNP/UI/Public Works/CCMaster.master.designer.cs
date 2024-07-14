@@ -139,6 +139,24 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiIp5;
 
     /// <summary>
+    /// LiPayroll control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiPayroll;
+
+    /// <summary>
+    /// LiMNE control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiMNE;
+
+    /// <summary>
     /// LiIp6 control.
     /// </summary>
     /// <remarks>

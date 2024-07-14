@@ -1,0 +1,162 @@
+﻿<%@ Page Title=":: :: SSSNP : : Beneficiary Enrollment Summary" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="BeneficiaryEnrollmentSummaryMNE" CodeBehind="BeneficiaryEnrollmentSummaryMNE.aspx.cs" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+<%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+
+    <script src="../../Resource/Scripts/js/validations.js" type="text/javascript"></script>
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function () {
+            $('#txtStartDate').datetimepicker();
+        });
+
+    </script>
+
+    <asp:UpdatePanel ID="upd1" runat="server">
+        <ContentTemplate>
+            <div align="left" style="vertical-align: top">
+                <ol class="breadcrumb">
+                    <li>You are here&nbsp;!&nbsp; &nbsp; &nbsp;</li>
+                    <li>
+                        <i class="fa fa-dashboard"></i><a href="Home.aspx">Dashboard</a>
+                    </li>
+                    <li class="">
+                        <i class="fa fa-fw fa-desktop"></i>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-edit"></i><a href="#">Beneficiary Enrollment Summary</a>
+                    </li>
+                </ol>
+            </div>
+            <div align="center">
+                <div class="row" align="left" style="width: 98%">
+                    <div class="col-lg-11" style="padding-left: 0px">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Beneficiary Enrollment Summary</h3>
+                            </div>
+                            <div class="panel-body">
+                                <table align="center" cellpadding="10" cellspacing="5" style="width: 100%">
+                                    <tr>
+                                        <td style="padding: 5px; margin: 5px" valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
+                                                <!-- Geo Location Filters -->
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelState" runat="server" Width="165px">State Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlState" runat="server" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlState_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelCounty" runat="server" Width="165px">County / Municipality Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlCounty" runat="server" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlCounty_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelPayam" runat="server" Width="165px">Payam / Block Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlPayam" runat="server" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelBoma" runat="server" Width="165px">Boma / Quarter Council Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlBoma" runat="server" Width="180px">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px" valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
+                                                <!-- Other Filters -->
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelAge" runat="server" Width="165px">Age</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:TextBox ID="txtAge" runat="server" Width="180px"></asp:TextBox>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelGender" runat="server" Width="165px">Gender</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlGender" runat="server" Width="180px">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="Male">Male</asp:ListItem>
+                                                            <asp:ListItem Value="Female">Female</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelComponent" runat="server" Width="165px">Component</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlComponent" runat="server" Width="180px">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="LIPW">LIPW</asp:ListItem>
+                                                            <asp:ListItem Value="DIS">DIS</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="padding: 5px; margin: 5px" valign="top" align="center">
+                                            <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" Width="110px" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <telerik:RadGrid ID="rgResults" runat="server" AutoGenerateColumns="False" AllowPaging="True" PageSize="10"
+                                    OnNeedDataSource="rgResults_NeedDataSource">
+                                    <MasterTableView>
+                                        <Columns>
+                                            <telerik:GridBoundColumn DataField="intBeneficiaryId" HeaderText="Beneficiary ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="geoLocation" HeaderText="Geo Location"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="age" HeaderText="Age"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="gender" HeaderText="Gender"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="component" HeaderText="Component"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="enrollmentDate" HeaderText="Enrollment Date"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="status" HeaderText="Status"></telerik:GridBoundColumn>
+                                        </Columns>
+                                    </MasterTableView>
+                                </telerik:RadGrid>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
+</asp:Content>

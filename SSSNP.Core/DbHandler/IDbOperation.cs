@@ -11,6 +11,8 @@ namespace SSSNP_SNSOP.Core.DbHandler
     {
         bool InsertData(string tableName, Dictionary<string, object> data);
         bool UpdateData(string tableName, Dictionary<string, object> data, string wherePart);
+        DataTable ExecuteDataTable(string v, CommandType text);
+        DataTable ExecuteDataTable(string v, CommandType text, System.Data.SqlClient.SqlParameter param);
         DataTable GetDataTable(string sql);
         DataSet ExecuteCmdForSp(List<CmdParamModel> cmdParams, string spName);
     }

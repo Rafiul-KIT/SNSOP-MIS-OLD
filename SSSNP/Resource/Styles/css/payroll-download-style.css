@@ -1,0 +1,28 @@
+﻿/* Content/Site.css */
+
+.LBLBLACK {
+    font-size: 14px;
+}
+
+.txtbox {
+    display: inline-block;
+    width: auto;
+}
+
+.center-table {
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.center-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

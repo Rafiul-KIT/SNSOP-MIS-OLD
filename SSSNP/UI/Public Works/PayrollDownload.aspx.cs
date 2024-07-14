@@ -1,0 +1,449 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using SSSNP.Entity.Payroll_Download;
+
+public partial class PayrollDownload : System.Web.UI.Page
+{
+    private LookupManagerService _lookupManagerService;
+    private string accessToken;
+    private string apiUrl;
+    private PayrollDownloadResponse pdResponse;
+    private PayrollDownloadRequest pdRequest;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        InitializeServices();
+        if (!IsPostBack)
+        {
+            LoadStates();
+        }
+
+        accessToken = "";
+    }
+
+    private void InitializeServices()
+    {
+        try
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new Exception("Connection string 'SNSDPSkils' is not found or empty.");
+            }
+
+            _lookupManagerService = new LookupManagerService(connectionString);
+        }
+        catch (Exception ex)
+        {
+            LogError(new Exception("Error initializing services: " + ex.Message, ex));
+        }
+    }
+
+    private void LoadStates()
+    {
+        try
+        {
+            DataTable dtStates = _lookupManagerService.GetStateList();
+            ddlState.DataSource = dtStates;
+            ddlState.DataTextField = "StateName";
+            ddlState.DataValueField = "intStateid";
+            ddlState.DataBind();
+            ddlState.Items.Insert(0, new ListItem("--Select--", ""));
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+        }
+    }
+
+    protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ddlCounty.Items.Clear();
+        ddlPayam.Items.Clear();
+        ddlBoma.Items.Clear();
+
+        ddlCounty.Items.Add(new ListItem("--Select--", ""));
+        ddlPayam.Items.Add(new ListItem("--Select--", ""));
+        ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
+        if (!string.IsNullOrEmpty(ddlState.SelectedValue))
+        {
+            try
+            {
+                int stateId;
+                bool isParsed = int.TryParse(ddlState.SelectedValue, out stateId);
+                if (isParsed)
+                {
+                    DataTable dtCounties = _lookupManagerService.GetCountyListByStateId(stateId);
+                    ddlCounty.DataSource = dtCounties;
+                    ddlCounty.DataTextField = "CountieName";
+                    ddlCounty.DataValueField = "intCountieid";
+                    ddlCounty.DataBind();
+                    ddlCounty.Items.Insert(0, new ListItem("--Select--", ""));
+                }
+                else
+                {
+                    LogError(new Exception("ddlState.SelectedValue is not a valid integer: " + ddlState.SelectedValue));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+    }
+
+    protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ddlPayam.Items.Clear();
+        ddlBoma.Items.Clear();
+
+        ddlPayam.Items.Add(new ListItem("--Select--", ""));
+        ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
+        if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
+        {
+            try
+            {
+                int countyId;
+                bool isParsed = int.TryParse(ddlCounty.SelectedValue, out countyId);
+                if (isParsed)
+                {
+                    DataTable dtPayams = _lookupManagerService.GetPayamListByCountyId(countyId);
+                    ddlPayam.DataSource = dtPayams;
+                    ddlPayam.DataTextField = "PayamName";
+                    ddlPayam.DataValueField = "intPayamid";
+                    ddlPayam.DataBind();
+                    ddlPayam.Items.Insert(0, new ListItem("--Select--", ""));
+                }
+                else
+                {
+                    LogError(new Exception("ddlCounty.SelectedValue is not a valid integer: " + ddlCounty.SelectedValue));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+    }
+
+    protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ddlBoma.Items.Clear();
+        ddlBoma.Items.Add(new ListItem("--Select--", ""));
+        if (!string.IsNullOrEmpty(ddlPayam.SelectedValue))
+        {
+            try
+            {
+                int payamId;
+                bool isParsed = int.TryParse(ddlPayam.SelectedValue, out payamId);
+                if (isParsed)
+                {
+                    DataTable dtBomas = _lookupManagerService.GetBomaListByPayamId(payamId);
+                    ddlBoma.DataSource = dtBomas;
+                    ddlBoma.DataTextField = "BomaName";
+                    ddlBoma.DataValueField = "intBomasid";
+                    ddlBoma.DataBind();
+                    ddlBoma.Items.Insert(0, new ListItem("--Select--", ""));
+                }
+                else
+                {
+                    LogError(new Exception("ddlPayam.SelectedValue is not a valid integer: " + ddlPayam.SelectedValue));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+    }
+
+
+    protected void BtnSearch_Click(object sender, EventArgs e)
+    {
+        pnlResults.Visible = true;
+        tblResults.Visible = true;
+
+        var request = new PayrollDownloadRequest
+        {
+            state = int.Parse(ddlState.SelectedValue),
+            county = int.Parse(ddlCounty.SelectedValue),
+            payam = int.Parse(ddlPayam.SelectedValue),
+            boma = int.Parse(ddlBoma.SelectedValue)
+        };
+
+        string uri = ConfigurationManager.AppSettings["DownloadPayroll"];
+        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWtpYiIsImlhdCI6MTcxNDk4MTEwOCwiZXhwIjoxODcyNjYxMTA4fQ.7FgalnXhBOcC7q-nYfONbxmc7My4iUOeWpN2eK3b7vc_br43NCEFiKWIrXs1cJTsU_Ds_ZZLHRB28c-jdgiBRw";
+
+        uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
+        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+        {
+            uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
+        }
+        Uri urlCheck = new Uri(uri);
+        HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
+        httpWReq.PreAuthenticate = true;
+        httpWReq.Headers.Add("Authorization", "Bearer " + token);
+        httpWReq.Headers.Add("DeviceId", "29feb6211b04-a56d-7d6a-e79e-018b2f19");
+
+        string reqStr = "";
+
+        try
+        {
+            reqStr = JsonConvert.SerializeObject(request);
+            var data = Encoding.ASCII.GetBytes(reqStr);
+            httpWReq.Method = "POST";
+            httpWReq.ContentType = "application/json";
+            httpWReq.ContentLength = data.Length;
+
+            var newStream = httpWReq.GetRequestStream();
+            newStream.Write(data, 0, data.Length);
+            newStream.Flush();
+            newStream.Close();
+
+            HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            {
+                string jsonResponse = reader.ReadToEnd();
+                pdResponse = JsonConvert.DeserializeObject<PayrollDownloadResponse>(jsonResponse);
+            }
+
+            // Log the response
+            // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
+
+            Session["PDResponse"] = pdResponse;
+
+            if (pdResponse != null && pdResponse.data != null && pdResponse.data.Count > 0)
+            {
+                Session["PayrollData"] = pdResponse.data.SelectMany(c => c.payrollData).ToList();
+                rgResults.Rebind();  // Trigger the NeedDataSource event
+
+                // Update button visibility based on lockedStatus
+                var firstData = pdResponse.data.FirstOrDefault();
+                var lockedStatus = firstData?.lockedStatus;
+                HiddenLockedStatus.Value = lockedStatus;
+
+
+                // Store paymentCycle and wagePaymentReqId in session
+                var paymentCycle = firstData?.payrollData.FirstOrDefault()?.paymentCycle;
+                var wagePaymentReqId = firstData?.payrollData.FirstOrDefault()?.intWagePaymentReqid;
+                Session["PaymentCycle"] = paymentCycle;
+                Session["WagePaymentReqId"] = wagePaymentReqId;
+
+                BtnDownload.Visible = false;
+                BtnUnlock.Visible = false;
+
+                LblLockedStatus.Visible = true;
+                LblLockedStatus.Text = "Locked Status: " + lockedStatus;
+
+                if (lockedStatus == "UNLOCKED")
+                {
+                    BtnDownload.Visible = true;
+                }
+                else if (lockedStatus == "LOCKED")
+                {
+                    BtnUnlock.Visible = true;
+                }
+            }
+
+            else
+            {
+                // If there is no data, clear the grid's data source
+                Session["PayrollData"] = null;
+                rgResults.DataSource = null;
+                rgResults.DataBind();
+                rgResults.Rebind();
+
+                // Update button visibility and locked status label
+                BtnDownload.Visible = false;
+                BtnUnlock.Visible = false;
+                LblLockedStatus.Visible = false;
+            }
+        }
+       
+        catch (Exception ex)
+        {
+            LogError(ex);
+        }
+    }
+
+    private void BindResultsToGrid(List<PDPayrollDataDto> data)
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("EnrollmentNo");
+        dt.Columns.Add("DateOfCreation");
+        dt.Columns.Add("ExchangeRateAtTime");
+        dt.Columns.Add("IntBenId");
+        dt.Columns.Add("IntWagePaymentReqId");
+        dt.Columns.Add("IntWagesReqBenTransId");
+        dt.Columns.Add("IntWorkId");
+        dt.Columns.Add("PaymentCycle");
+        dt.Columns.Add("ReqFromDate");
+        dt.Columns.Add("ReqNo");
+        dt.Columns.Add("ReqToDate");
+        dt.Columns.Add("Status");
+        dt.Columns.Add("SupportType");
+        dt.Columns.Add("TotAttendance");
+        dt.Columns.Add("WageRateSSPTotal");
+        dt.Columns.Add("WageRateUSD");
+        dt.Columns.Add("WageRateUSDTotal");
+        dt.Columns.Add("WorkCode");
+
+        foreach (var item in data)
+        {
+            dt.Rows.Add(
+                item.enrollmentNo,
+                item.dateofCreation,
+                item.exchangerateattime,
+                item.intBenid,
+                item.intWagePaymentReqid,
+                item.intWagesReqBenTransid,
+                item.intWorkid,
+                item.paymentCycle,
+                item.reqFromDate,
+                item.reqNo,
+                item.reqToDate,
+                item.status,
+                item.supportType,
+                item.totAttendance,
+                item.wageRateSSPTotal,
+                item.wageRateUSD,
+                item.wageRateUSDTotal,
+                item.workCode
+            );
+        }
+
+        rgResults.DataSource = dt;
+        rgResults.DataBind();
+    }
+
+
+    protected void rgResults_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
+    {
+        if (Session["PayrollData"] != null)
+        {
+            rgResults.DataSource = Session["PayrollData"];
+        }
+        else
+        {
+            rgResults.DataSource = new List<PDPayrollDataDto>();
+        }
+    }
+
+
+    protected void rgResults_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
+    {
+    }
+
+
+    protected void BtnUnlock_Click(object sender, EventArgs e)
+    {
+        var paymentCycle = Session["PaymentCycle"]?.ToString();
+        var wagePaymentReqId = Session["WagePaymentReqId"] != null ? int.Parse(Session["WagePaymentReqId"].ToString()) : 0;
+
+        var request = new
+        {
+            boma = int.Parse(ddlBoma.SelectedValue),
+            county = int.Parse(ddlCounty.SelectedValue),
+            payam = int.Parse(ddlPayam.SelectedValue),
+            paymentCycle = paymentCycle,
+            state = int.Parse(ddlState.SelectedValue),
+            supportType = "LIPW",
+            wagePaymentReqId = wagePaymentReqId
+        };
+
+        string uri = ConfigurationManager.AppSettings["UnlockPayroll"];
+        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWtpYiIsImlhdCI6MTcxNDk4MTEwOCwiZXhwIjoxODcyNjYxMTA4fQ.7FgalnXhBOcC7q-nYfONbxmc7My4iUOeWpN2eK3b7vc_br43NCEFiKWIrXs1cJTsU_Ds_ZZLHRB28c-jdgiBRw";
+
+        uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
+        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+        {
+            uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
+        }
+
+        Uri urlCheck = new Uri(uri);
+        HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
+        httpWReq.PreAuthenticate = true;
+        httpWReq.Headers.Add("Authorization", "Bearer " + token);
+        httpWReq.Headers.Add("DeviceId", "29feb6211b04-a56d-7d6a-e79e-018b2f19");
+
+        try
+        {
+            string reqStr = JsonConvert.SerializeObject(request);
+            var data = Encoding.ASCII.GetBytes(reqStr);
+            httpWReq.Method = "POST";
+            httpWReq.ContentType = "application/json";
+            httpWReq.ContentLength = data.Length;
+
+            using (var newStream = httpWReq.GetRequestStream())
+            {
+                newStream.Write(data, 0, data.Length);
+            }
+
+            HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            {
+                string jsonResponse = reader.ReadToEnd();
+                var unlockResponse = JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+                // Handle the response if necessary
+            }
+
+            // After unlocking, refresh the data
+            BtnSearch_Click(sender, e);
+        }
+
+        catch (WebException webEx)
+        {
+            LogError(webEx);
+            using (var response = webEx.Response)
+            {
+                var httpResponse = (HttpWebResponse)response;
+                using (var reader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    string responseText = reader.ReadToEnd();
+                    // Log the response details for debugging
+                    LogError(new Exception($"Error Response: {responseText}"));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+        }
+    }
+
+
+    protected void BtnDownload_Click(object sender, EventArgs e)
+    {
+        if (Session["PDResponse"] != null)
+        {
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";
+            Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+    }
+
+
+
+    private void LogError(Exception ex)
+    {
+        System.Diagnostics.Debug.WriteLine("Error Message: " + ex.Message);
+        System.Diagnostics.Debug.WriteLine("Stack Trace: " + ex.StackTrace);
+        if (ex.InnerException != null)
+        {
+            System.Diagnostics.Debug.WriteLine("Inner Exception: " + ex.InnerException.Message);
+            System.Diagnostics.Debug.WriteLine("Inner Exception Stack Trace: " + ex.InnerException.StackTrace);
+        }
+    }
+}

@@ -8,6 +8,12 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Security.Cryptography;
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
+using SSSNP.Entity.Payroll_Download;
+using SSSNP.Entity.Payroll;
+using SSSNP_SNSOP.UI.Public_Works;
 
 namespace SSSNP_SNSOP
 {
@@ -29,7 +35,8 @@ namespace SSSNP_SNSOP
             ATTACHMENT_DRAFT = 6,
             GBV_ATTACHMENT_DEDICATED = 7,
             SYSTEM_REPORT = 8,
-            SYSTEM_REPORT_ELRP = 9
+            SYSTEM_REPORT_ELRP = 9,
+            ENCRYPTED_PAYROLL_DATA = 10 // Add new case for encrypted payroll data
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -74,7 +81,10 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.SYSTEM_REPORT_ELRP:
                     SystemReportHandler_ELRP();
                     return "OK";
-                    break;
+                case HandlerAttachment.ENCRYPTED_PAYROLL_DATA:
+                    EncryptedPayrollDataHandler();
+                    return "OK";
+                    //break;
 
             }
 
@@ -104,51 +114,7 @@ namespace SSSNP_SNSOP
             Response.Close();
 
         }
-        private void Non_GBVAttachmentHandler(bool isNonGBVTemplate)
-        {
-            string filenameFull;
-            string filename;
-
-            if (isNonGBVTemplate)
-            {
-                filenameFull = Server.MapPath("~/Template/NonGBVTemplateFile.xlsx");
-                filename = "NonGBVTemplateFile.xlsx";
-            }
-            else
-            {
-                filenameFull = Server.MapPath("~/Template/GBVTemplateFile.xlsx");
-                filename = "GBVTemplateFile.xlsx";
-            }
-
-            try
-            {
-                byte[] buffer;
-
-                using (FileStream fs = new FileStream(filenameFull, FileMode.Open))
-                {
-
-                    buffer = new byte[(int)fs.Length];
-                    fs.Read(buffer, 0, (int)fs.Length);
-                    fs.Close();
-                }
-
-                Response.ClearHeaders();
-                Response.ContentType = "application/octet-stream";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
-                Response.AddHeader("Content-Length", buffer.Length.ToString());
-
-
-                Response.BinaryWrite((byte[])buffer);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            Response.Flush();
-            Response.Close();
-
-        }
+       
         private void GBVAttachmentHandler(object valueFunction)
         {
             if (valueFunction == null) return;
@@ -331,6 +297,99 @@ namespace SSSNP_SNSOP
                 }
             }
         }
+
+        //downlaod encrypted payroll data module start
+        private void EncryptedPayrollDataHandler()
+        {
+            if (Session["PDResponse"] != null)
+            {
+                // Retrieve the ApiResponse object from the session
+                PayrollDownloadResponse apiResponse = Session["PDResponse"] as PayrollDownloadResponse;
+               
+                string json = JsonConvert.SerializeObject(apiResponse);
+
+                // Print the JSON string for debugging
+                // System.Diagnostics.Debug.WriteLine(json);
+
+                // Hexadecimal key (256-bit) and IV (128-bit)
+                string hexKey = "dd8de506bd4a90418afe9372f01b979b6f0df2e8aae22ec90b09a0bc197dc80c";
+                string hexIv = "4a6f8e2f8a0c5d3e4b6c8d9e0f1a2b3c";
+
+                byte[] key = HexStringToByteArray(hexKey);
+                byte[] iv = HexStringToByteArray(hexIv);
+
+                try
+                {
+                    // Encrypt the data
+                    byte[] encryptedData;
+                    encryptedData = EncryptData(json, key, iv);
+
+                    // Set the response headers and content
+                    // Response.Clear();
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/octet-stream";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=encryptedPayrollData.bin");
+                    Response.AddHeader("Content-Length", encryptedData.Length.ToString());
+
+                
+                    Response.BinaryWrite((byte[])encryptedData);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+
+                Response.Flush(); // Ensure all data is sent to the client
+                // HttpContext.Current.ApplicationInstance.CompleteRequest(); // End the request without aborting the thread
+                Response.Close();
+            }
+        }
+
+        private byte[] EncryptData(string plainText, byte[] key, byte[] iv)
+        {
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = key;
+                aesAlg.IV = iv;
+                aesAlg.Mode = CipherMode.CBC;
+                aesAlg.Padding = PaddingMode.PKCS7;
+
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(plainText);
+                        }
+                        return msEncrypt.ToArray();
+                    }
+                }
+            }
+        }
+
+        private byte[] HexStringToByteArray(string hex)
+        {
+            if (hex.Length % 2 != 0)
+                throw new ArgumentException("Hex string must have an even length.");
+
+            byte[] bytes = new byte[hex.Length / 2];
+            for (int i = 0; i < hex.Length; i += 2)
+            {
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            }
+            return bytes;
+        }
+
+        private void LogError(Exception ex)
+        {
+            // Implement your logging logic here
+            System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
+        }
+        //downlaod encrypted payroll data module end
+
 
     }
 }
