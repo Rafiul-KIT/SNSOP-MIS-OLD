@@ -68,7 +68,7 @@ namespace SSSNP.Network
         public void sendEmailToUserType(string emailSubject, string emailBody, string userType)
         {
             String sql3 = "select Email from tbl_Users where 1=1 " +
-                    " and User_type='"+userType+"' and Status='Y' and Email is not null";
+                    " and User_type='"+userType+ "' and Status='Y' and Email is not null and email_receiver=1";
             DataTable dt3 = _dbOperation.GetDataTable(sql3);
             if (dt3 != null && dt3.Rows != null && dt3.Rows.Count > 0)
             {
@@ -86,7 +86,7 @@ namespace SSSNP.Network
         public void sendEmailToIpApprover(string emailSubject, string emailBody)
         {
             String sql3 = "select Email from tbl_Users where 1=1 " +
-                    " and User_type='IP' and IP_Approver=1 and Status='Y' and Email is not null";
+                    " and User_type='IP' and IP_Approver=1 and Status='Y' and Email is not null and email_receiver=1";
             DataTable dt3 = _dbOperation.GetDataTable(sql3);
             if (dt3 != null && dt3.Rows != null && dt3.Rows.Count > 0)
             {
@@ -116,7 +116,7 @@ namespace SSSNP.Network
             {
                 sql += " on t.intManagerid=tu.intUserid ";
             }
-            sql += " and tu.Status='Y' and tu.Email is not null where t.intWagePaymentReqid='" + intWagePaymentReqid + "'";
+            sql += " and tu.Status='Y' and tu.Email is not null where tu.email_receiver=1 and t.intWagePaymentReqid='" + intWagePaymentReqid + "'";
 
             DataTable dt3 = _dbOperation.GetDataTable(sql);
             if (dt3 != null && dt3.Rows != null && dt3.Rows.Count > 0)
