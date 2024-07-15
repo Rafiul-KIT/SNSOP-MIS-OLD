@@ -19,8 +19,9 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
             if (!IsPostBack)
             {
                 Log("IsPostBack is false.");
-                LoadStateDropdown();
+                LoadStates();
                 LoadGenderDropdown();
+                rgResults.Visible = false; // Initially hide the grid
             }
         }
         catch (Exception ex)
@@ -53,98 +54,118 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
         throw new NotImplementedException();
     }
 
-    private void LoadStateDropdown()
+    private void LoadStates()
     {
-        string query = "SELECT intStateid, StateName FROM tm_States";
-        LoadDropdownData(ddlState, query, "StateName", "intStateid");
-    }
-
-    private void LoadCountyDropdown(int stateId)
-    {
-        string query = "SELECT intCountieid, CountieName FROM tm_Counties WHERE intStateid = @StateId";
-        LoadDropdownData(ddlCounty, query, "CountieName", "intCountieid", new SqlParameter("@StateId", stateId));
-    }
-
-    private void LoadPayamDropdown(int countyId)
-    {
-        string query = "SELECT intPayamid, PayamName FROM tm_Payams WHERE intCountieid = @CountyId";
-        LoadDropdownData(ddlPayam, query, "PayamName", "intPayamid", new SqlParameter("@CountyId", countyId));
-    }
-
-    private void LoadBomaDropdown(int payamId)
-    {
-        string query = "SELECT intBomasid, BomaName FROM tm_Bomas WHERE intPayamid = @PayamId";
-        LoadDropdownData(ddlBoma, query, "BomaName", "intBomasid", new SqlParameter("@PayamId", payamId));
+        try
+        {
+            DataTable dtStates = _lookupManagerService.GetStateList();
+            ddlState.DataSource = dtStates;
+            ddlState.DataTextField = "StateName";
+            ddlState.DataValueField = "intStateid";
+            ddlState.DataBind();
+            ddlState.Items.Insert(0, new ListItem("--Select--", ""));
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+        }
     }
 
     private void LoadGenderDropdown()
     {
         ddlGender.Items.Add(new ListItem("Male", "M"));
         ddlGender.Items.Add(new ListItem("Female", "F"));
-    }
-
-    private void LoadDropdownData(DropDownList dropdown, string query, string textField, string valueField, params SqlParameter[] parameters)
-    {
-        try
-        {
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    if (parameters != null)
-                    {
-                        cmd.Parameters.AddRange(parameters);
-                    }
-                    conn.Open();
-                    using (SqlDataReader dr = cmd.ExecuteReader())
-                    {
-                        dropdown.DataSource = dr;
-                        dropdown.DataTextField = textField;
-                        dropdown.DataValueField = valueField;
-                        dropdown.DataBind();
-                    }
-                }
-            }
-            dropdown.Items.Insert(0, new ListItem("--Select--", ""));
-        }
-        catch (Exception ex)
-        {
-            LogError("Error in LoadDropdownData: " + ex.Message, ex);
-            throw;
-        }
+        ddlGender.Items.Insert(0, new ListItem("--Select--", ""));
     }
 
     protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
     {
-        int stateId;
-        if (int.TryParse(ddlState.SelectedValue, out stateId))
-        {
-            LoadCountyDropdown(stateId);
-        }
-        ddlCounty.SelectedIndex = 0;
+        ddlCounty.Items.Clear();
         ddlPayam.Items.Clear();
         ddlBoma.Items.Clear();
+        
+
+        ddlCounty.Items.Add(new ListItem("--Select--", ""));
+        ddlPayam.Items.Add(new ListItem("--Select--", ""));
+        ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
+        if (!string.IsNullOrEmpty(ddlState.SelectedValue) && ddlState.SelectedValue != "--Select--")
+        {
+            int stateId;
+            if (int.TryParse(ddlState.SelectedValue, out stateId))
+            {
+                try
+                {
+                    DataTable dtCounties = _lookupManagerService.GetCountyListByStateId(stateId);
+                    ddlCounty.DataSource = dtCounties;
+                    ddlCounty.DataTextField = "CountieName";
+                    ddlCounty.DataValueField = "intCountieid";
+                    ddlCounty.DataBind();
+                    ddlCounty.Items.Insert(0, new ListItem("--Select--", ""));
+                }
+                catch (Exception ex)
+                {
+                    LogError(ex);
+                }
+            }
+        }
     }
 
     protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
     {
-        int countyId;
-        if (int.TryParse(ddlCounty.SelectedValue, out countyId))
-        {
-            LoadPayamDropdown(countyId);
-        }
-        ddlPayam.SelectedIndex = 0;
+        ddlPayam.Items.Clear();
         ddlBoma.Items.Clear();
+
+        ddlPayam.Items.Add(new ListItem("--Select--", ""));
+        ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
+        if (!string.IsNullOrEmpty(ddlCounty.SelectedValue) && ddlCounty.SelectedValue != "--Select--")
+        {
+            int countyId;
+            if (int.TryParse(ddlCounty.SelectedValue, out countyId))
+            {
+                try
+                {
+                    DataTable dtPayams = _lookupManagerService.GetPayamListByCountyId(countyId);
+                    ddlPayam.DataSource = dtPayams;
+                    ddlPayam.DataTextField = "PayamName";
+                    ddlPayam.DataValueField = "intPayamid";
+                    ddlPayam.DataBind();
+                    ddlPayam.Items.Insert(0, new ListItem("--Select--", ""));
+                }
+                catch (Exception ex)
+                {
+                    LogError(ex);
+                }
+            }
+        }
     }
 
     protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
     {
-        int payamId;
-        if (int.TryParse(ddlPayam.SelectedValue, out payamId))
+        ddlBoma.Items.Clear();
+        ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
+        if (!string.IsNullOrEmpty(ddlPayam.SelectedValue) && ddlPayam.SelectedValue != "--Select--")
         {
-            LoadBomaDropdown(payamId);
+            int payamId;
+            if (int.TryParse(ddlPayam.SelectedValue, out payamId))
+            {
+                try
+                {
+                    DataTable dtBomas = _lookupManagerService.GetBomaListByPayamId(payamId);
+                    ddlBoma.DataSource = dtBomas;
+                    ddlBoma.DataTextField = "BomaName";
+                    ddlBoma.DataValueField = "intBomasid";
+                    ddlBoma.DataBind();
+                    ddlBoma.Items.Insert(0, new ListItem("--Select--", ""));
+                }
+                catch (Exception ex)
+                {
+                    LogError(ex);
+                }
+            }
         }
-        ddlBoma.SelectedIndex = 0;
     }
 
     protected void BtnSearch_Click(object sender, EventArgs e)
@@ -152,6 +173,16 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
         try
         {
             Log("BtnSearch_Click started.");
+
+            int parsedAge;
+            if (!string.IsNullOrEmpty(txtAge.Text) && !int.TryParse(txtAge.Text, out parsedAge))
+            {
+                // Show a warning message
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Please enter a valid integer for Age.');", true);
+                return;
+            }
+
+            rgResults.Visible = true; // Show the grid when the search button is clicked
             rgResults.Rebind();
             Log("Search button clicked.");
         }
@@ -207,7 +238,6 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    int parsedValue;
                     cmd.Parameters.AddWithValue("@StateId", string.IsNullOrEmpty(state) || state == "--Select--" ? (object)DBNull.Value : state);
                     cmd.Parameters.AddWithValue("@CountyId", string.IsNullOrEmpty(county) || county == "--Select--" ? (object)DBNull.Value : county);
                     cmd.Parameters.AddWithValue("@PayamId", string.IsNullOrEmpty(payam) || payam == "--Select--" ? (object)DBNull.Value : payam);

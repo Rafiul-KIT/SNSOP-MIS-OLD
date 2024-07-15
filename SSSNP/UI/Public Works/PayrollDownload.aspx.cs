@@ -172,6 +172,20 @@ public partial class PayrollDownload : System.Web.UI.Page
 
     protected void BtnSearch_Click(object sender, EventArgs e)
     {
+        // Validate dropdown selections
+        if (string.IsNullOrEmpty(ddlState.SelectedValue) || ddlState.SelectedValue == "0" ||
+            string.IsNullOrEmpty(ddlCounty.SelectedValue) || ddlCounty.SelectedValue == "0" ||
+            string.IsNullOrEmpty(ddlPayam.SelectedValue) || ddlPayam.SelectedValue == "0" ||
+            string.IsNullOrEmpty(ddlBoma.SelectedValue) || ddlBoma.SelectedValue == "0")
+        {
+            LblWarning.Text = "Please select all the Geo Location fields.";
+            LblWarning.Visible = true;
+            return;
+        }
+
+        // Hide the warning label if validation passes
+        LblWarning.Visible = false;
+
         pnlResults.Visible = true;
         tblResults.Visible = true;
 
