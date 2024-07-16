@@ -11,6 +11,22 @@
             $('#txtStartDate').datetimepicker();
         });
 
+        function validateAgeInput() {
+            var ageInput = document.getElementById('<%= txtAge.ClientID %>').value;
+            if (ageInput !== "" && !/^\d+$/.test(ageInput)) {
+                alert("Please enter a valid integer for Age.");
+                return false;
+            }
+            return true;
+        }
+
+        function validateSearch() {
+            if (!validateAgeInput()) {
+                return false;
+            }
+            return true;
+        }
+
     </script>
 
     <asp:UpdatePanel ID="upd1" runat="server">
@@ -110,9 +126,9 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlGender" runat="server" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <%--<asp:ListItem>--Select--</asp:ListItem>
                                                             <asp:ListItem Value="Male">Male</asp:ListItem>
-                                                            <asp:ListItem Value="Female">Female</asp:ListItem>
+                                                            <asp:ListItem Value="Female">Female</asp:ListItem>--%>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -134,7 +150,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="padding: 5px; margin: 5px" valign="top" align="center">
-                                            <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" Width="110px" />
+                                            <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" Width="110px" OnClientClick="return validateSearch();" />
                                         </td>
                                     </tr>
                                 </table>
@@ -142,13 +158,18 @@
                                     OnNeedDataSource="rgResults_NeedDataSource">
                                     <MasterTableView>
                                         <Columns>
-                                            <telerik:GridBoundColumn DataField="intBeneficiaryId" HeaderText="Beneficiary ID"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="geoLocation" HeaderText="Geo Location"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="age" HeaderText="Age"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="gender" HeaderText="Gender"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="component" HeaderText="Component"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="enrollmentDate" HeaderText="Enrollment Date"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="status" HeaderText="Status"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="BeneficiaryId" HeaderText="Beneficiary ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="EnrollmentNo" HeaderText="Enrollment No"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Name of Household"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="FamilySize" HeaderText="Family Size"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="Gender" HeaderText="Gender"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="Age" HeaderText="Age"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="intStateid" HeaderText="State ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="intCountieid" HeaderText="County ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="intPayamid" HeaderText="Payam ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="intBomasid" HeaderText="Boma ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="Component" HeaderText="Component"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="EnrollmentDate" HeaderText="Enrollment Date"></telerik:GridBoundColumn>
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
@@ -159,4 +180,13 @@
             </div>
         </ContentTemplate>
     </asp:UpdatePanel>
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>
