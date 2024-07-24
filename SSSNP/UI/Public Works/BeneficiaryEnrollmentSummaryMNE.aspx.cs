@@ -211,7 +211,7 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
 
             Session["TotalRecordCount"] = GetTotalEnrolledBeneficiariesCount(state, county, payam, boma, age, gender, component);
 
-
+            rgResults.CurrentPageIndex = 0; // Reset to the first page
             rgResults.Rebind();
             Log("Search button clicked.");
         }

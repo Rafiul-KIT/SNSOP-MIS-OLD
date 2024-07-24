@@ -94,31 +94,13 @@ public partial class CashTransferSummaryMNE
     protected global::System.Web.UI.WebControls.DropDownList ddlBoma;
 
     /// <summary>
-    /// LabelCurrency control.
+    /// LabelAge control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label LabelCurrency;
-
-    /// <summary>
-    /// ddlCurrency control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlCurrency;
-
-    /// <summary>
-    /// LabelPaymentCycle control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label LabelPaymentCycle;
+    protected global::System.Web.UI.WebControls.Label LabelAge;
 
     /// <summary>
     /// ddlPaymentCycle control.
@@ -130,22 +112,22 @@ public partial class CashTransferSummaryMNE
     protected global::System.Web.UI.WebControls.DropDownList ddlPaymentCycle;
 
     /// <summary>
-    /// LabelPaymentStatus control.
+    /// LabelStatus control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label LabelPaymentStatus;
+    protected global::System.Web.UI.WebControls.Label LabelStatus;
 
     /// <summary>
-    /// ddlPaymentStatus control.
+    /// ddlStatus control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlPaymentStatus;
+    protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
 
     /// <summary>
     /// LabelComponent control.
@@ -166,22 +148,58 @@ public partial class CashTransferSummaryMNE
     protected global::System.Web.UI.WebControls.DropDownList ddlComponent;
 
     /// <summary>
-    /// LabelPaymentPartner control.
+    /// LabelFromDate control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label LabelPaymentPartner;
+    protected global::System.Web.UI.WebControls.Label LabelFromDate;
 
     /// <summary>
-    /// ddlPaymentPartner control.
+    /// txtFromDate control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlPaymentPartner;
+    protected global::System.Web.UI.WebControls.TextBox txtFromDate;
+
+    /// <summary>
+    /// CalendarExtender1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::AjaxControlToolkit.CalendarExtender CalendarExtender1;
+
+    /// <summary>
+    /// LabelToDate control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label LabelToDate;
+
+    /// <summary>
+    /// txtToDate control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtToDate;
+
+    /// <summary>
+    /// CalendarExtender2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::AjaxControlToolkit.CalendarExtender CalendarExtender2;
 
     /// <summary>
     /// BtnSearch control.
@@ -191,4 +209,31 @@ public partial class CashTransferSummaryMNE
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Button BtnSearch;
+
+    /// <summary>
+    /// BtnDownload control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button BtnDownload;
+
+    /// <summary>
+    /// rgResults control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::Telerik.Web.UI.RadGrid rgResults;
+
+    /// <summary>
+    /// UpdateProgress control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.UpdateProgress UpdateProgress;
 }

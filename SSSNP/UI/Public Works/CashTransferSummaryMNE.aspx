@@ -9,6 +9,10 @@
         $(document).ready(function () {
             $('#txtStartDate').datetimepicker();
         });
+
+        function validateSearch() {
+            return true;
+        }
     </script>
 
     <asp:UpdatePanel ID="upd1" runat="server">
@@ -37,164 +41,165 @@
                             <div class="panel-body">
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 100%">
                                     <tr>
-                                        <td style="padding: 5px; margin: 5px" colspan="3" align="center">&nbsp;</td>
-                                    </tr>
-                                    <tr>
                                         <td style="padding: 5px; margin: 5px" valign="top">
                                             <table cellpadding="4" cellspacing="5" style="width: 100%">
-                                                <!-- State Filter -->
+                                                <!-- Geo Location Filters -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelState" runat="server"  Width="165px">State Name</asp:Label>
+                                                        <asp:Label ID="LabelState" runat="server" Width="165px">State Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
-                                                    <td style="padding: 5px; margin: 5px; width: 192px;">
-                                                        <asp:DropDownList ID="ddlState" runat="server" AutoPostBack="True"
-                                                            class="form-control txtbox" Height="33px"
-                                                            OnSelectedIndexChanged="ddlState_SelectedIndexChanged" Width="180px">
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlState" runat="server" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlState_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
                                                 </tr>
-                                                <!-- County Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelCounty" runat="server"  Width="165px">County / Municipality Name</asp:Label>
+                                                        <asp:Label ID="LabelCounty" runat="server" Width="165px">County / Municipality Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
-                                                    <td style="padding: 5px; margin: 5px; width: 192px;">
-                                                        <asp:DropDownList ID="ddlCounty" runat="server" AutoPostBack="True"
-                                                            class="form-control txtbox" Height="33px"
-                                                            OnSelectedIndexChanged="ddlCounty_SelectedIndexChanged" Width="180px">
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlCounty" runat="server" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlCounty_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
                                                 </tr>
-                                                <!-- Payam Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPayam" runat="server"  Width="165px">Payam / Block Name</asp:Label>
+                                                        <asp:Label ID="LabelPayam" runat="server" Width="165px">Payam / Block Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
-                                                    <td style="padding: 5px; margin: 5px; width: 192px;">
-                                                        <asp:DropDownList ID="ddlPayam" runat="server" AutoPostBack="True"
-                                                            class="form-control txtbox" Height="33px"
-                                                            OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged" Width="180px">
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlPayam" runat="server" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
                                                 </tr>
-                                                <!-- Boma Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelBoma" runat="server"  Width="165px">Boma / Quarter Council Name</asp:Label>
+                                                        <asp:Label ID="LabelBoma" runat="server" Width="165px">Boma / Quarter Council Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
+                                                        <asp:DropDownList ID="ddlBoma" runat="server" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
                                                 </tr>
-                                                <!-- Currency Filter -->
+                                            </table>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px" valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
+                                                <!-- Other Filters -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelCurrency" runat="server"  Width="165px">Currency</asp:Label>
+                                                        <asp:Label ID="LabelAge" runat="server" Width="165px">Payment Cycle</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlCurrency" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
+                                                        <asp:DropDownList ID="ddlPaymentCycle" runat="server" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
-                                                            <asp:ListItem Value="SSP">SSP</asp:ListItem>
-                                                            <asp:ListItem Value="USD">USD</asp:ListItem>
+                                                            <asp:ListItem Value="1">Payment Cycle 1</asp:ListItem>
+                                                            <asp:ListItem Value="2">Payment Cycle 2</asp:ListItem>
+                                                            <asp:ListItem Value="3">Payment Cycle 3</asp:ListItem>
+                                                            <asp:ListItem Value="4">Payment Cycle 4</asp:ListItem>
+                                                            <asp:ListItem Value="5">Payment Cycle 5</asp:ListItem>
+                                                            <asp:ListItem Value="6">Payment Cycle 6</asp:ListItem>
+                                                            <asp:ListItem Value="7">Payment Cycle 7</asp:ListItem>
+                                                            <asp:ListItem Value="8">Payment Cycle 8</asp:ListItem>
+                                                            <asp:ListItem Value="9">Payment Cycle 9</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
                                                 </tr>
-                                                <!-- Payment Cycle Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPaymentCycle" runat="server"  Width="165px">Payment Cycle</asp:Label>
+                                                        <asp:Label ID="LabelStatus" runat="server" Width="165px">Status</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlPaymentCycle" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
+                                                        <asp:DropDownList ID="ddlStatus" runat="server" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
-                                                            <asp:ListItem Value="Monthly">Monthly</asp:ListItem>
-                                                            <asp:ListItem Value="Quarterly">Quarterly</asp:ListItem>
-                                                            <asp:ListItem Value="Bi-Annually">Bi-Annually</asp:ListItem>
-                                                            <asp:ListItem Value="Annually">Annually</asp:ListItem>
+                                                            <asp:ListItem Value="">IP Applied</asp:ListItem>
+                                                            <asp:ListItem Value="1">IP Approver Approved</asp:ListItem>
+                                                            <asp:ListItem Value="2">Initial Reviewer Approved</asp:ListItem>
+                                                            <asp:ListItem Value="3">Finantial Approver Approved</asp:ListItem>
+                                                            <asp:ListItem Value="4">Final Payment Authorizer Approved</asp:ListItem>
+                                                            <asp:ListItem Value="5">Reconciled</asp:ListItem>
+                                                            <asp:ListItem Value="11">IP Approver Rejected</asp:ListItem>
+                                                            <asp:ListItem Value="12">Initial Reviewer Rejected</asp:ListItem>
+                                                            <asp:ListItem Value="13">Finantial Approver Rejected</asp:ListItem>
+                                                            <asp:ListItem Value="14">Final Payment Authorizer Rejected</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
                                                 </tr>
-                                                <!-- Payment Status Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPaymentStatus" runat="server"  Width="165px">Payment Status</asp:Label>
+                                                        <asp:Label ID="LabelComponent" runat="server" Width="165px">Component</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlPaymentStatus" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
-                                                            <asp:ListItem Value="Paid">Paid</asp:ListItem>
-                                                            <asp:ListItem Value="Not Paid">Not Paid</asp:ListItem>
-                                                        </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
-                                                </tr>
-                                                <!-- Component Filter -->
-                                                <tr>
-                                                    <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelComponent" runat="server"  Width="165px">Component</asp:Label>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px">:</td>
-                                                    <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlComponent" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
+                                                        <asp:DropDownList ID="ddlComponent" runat="server" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                             <asp:ListItem Value="LIPW">LIPW</asp:ListItem>
                                                             <asp:ListItem Value="DIS">DIS</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
                                                 </tr>
-                                                <!-- Payment Partner Filter -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPaymentPartner" runat="server"  Width="165px">Payment Partner</asp:Label>
+                                                        <asp:Label ID="LabelFromDate" runat="server" Width="165px">From Date</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlPaymentPartner" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
-                                                            <asp:ListItem Value="Partner1">Partner1</asp:ListItem>
-                                                            <asp:ListItem Value="Partner2">Partner2</asp:ListItem>
-                                                            <asp:ListItem Value="Partner3">Partner3</asp:ListItem>
-                                                        </asp:DropDownList>
+                                                        <asp:TextBox ID="txtFromDate" runat="server" Width="180px" style="color: gray;" placeholder="Select a date" onfocus="this.style.color='black';" onblur="if(this.value=='') this.style.color='gray';"></asp:TextBox>
+                                                        <cc1:CalendarExtender ID="CalendarExtender1" runat="server"
+                                                            Format="dd-MM-yyyy" PopupButtonID="txtFromDate"
+                                                            TargetControlID="txtFromDate"></cc1:CalendarExtender>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelToDate" runat="server" Width="165px">To Date</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:TextBox ID="txtToDate" runat="server" Width="180px" style="color: gray;" placeholder="Select a date" onfocus="this.style.color='black';" onblur="if(this.value=='') this.style.color='gray';"></asp:TextBox>
+                                                        <cc1:CalendarExtender ID="CalendarExtender2" runat="server"
+                                                            Format="dd-MM-yyyy" PopupButtonID="txtToDate"
+                                                            TargetControlID="txtToDate"></cc1:CalendarExtender>
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
-                                            <asp:Button ID="BtnSearch" runat="server"
-                                                Height="32px" OnClick="BtnSearch_Click" TabIndex="10" Text="Search"
-                                                ValidationGroup="group" Width="110px" />
+                                        <td colspan="2" style="padding: 5px; margin: 5px" valign="top" align="center">
+                                            <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" Width="110px" OnClientClick="return validateSearch();" />
+                                            <asp:Button ID="BtnDownload" runat="server" Text="Download" OnClick="BtnDownload_Click" Width="110px" />
                                         </td>
                                     </tr>
                                 </table>
+                                <telerik:RadGrid ID="rgResults" runat="server" AutoGenerateColumns="False" AllowPaging="True" PageSize="10"
+                                    OnNeedDataSource="rgResults_NeedDataSource" AllowCustomPaging="True">
+                                    <MasterTableView AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
+                                        <Columns>
+                                            <telerik:GridBoundColumn DataField="intPaymentId" HeaderText="Payment ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="geoLocation" HeaderText="Geo Location"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="currency" HeaderText="Currency"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="paymentCycle" HeaderText="Payment Cycle"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="paymentStatus" HeaderText="Payment Status"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="component" HeaderText="Component"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="paymentPartner" HeaderText="Payment Partner"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="paymentAmount" HeaderText="Payment Amount"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="paymentDate" HeaderText="Payment Date" DataFormatString="{0:MM/dd/yyyy}"></telerik:GridBoundColumn>
+                                        </Columns>
+                                    </MasterTableView>
+                                </telerik:RadGrid>
                             </div>
                         </div>
                     </div>
@@ -202,4 +207,13 @@
             </div>
         </ContentTemplate>
     </asp:UpdatePanel>
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>
