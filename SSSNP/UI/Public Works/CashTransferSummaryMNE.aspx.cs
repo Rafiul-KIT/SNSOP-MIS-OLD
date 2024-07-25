@@ -84,18 +84,18 @@ public partial class CashTransferSummaryMNE : Page
 
     private void LoadDropdownData(DropDownList ddl, string query, string textField, string valueField)
     {
-        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
+        try
         {
-            SqlCommand cmd = new SqlCommand(query, conn);
-            conn.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            ddl.Items.Clear();
-            ddl.Items.Add(new ListItem("--Select--", ""));
-            while (reader.Read())
-            {
-                ddl.Items.Add(new ListItem(reader[textField].ToString(), reader[valueField].ToString()));
-            }
-            reader.Close();
+            DataTable dtStates = _lookupManagerService.GetStateList();
+            ddlState.DataSource = dtStates;
+            ddlState.DataTextField = "StateName";
+            ddlState.DataValueField = "intStateid";
+            ddlState.DataBind();
+            ddlState.Items.Insert(0, new ListItem("--Select--", ""));
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
         }
     }
 
@@ -109,19 +109,29 @@ public partial class CashTransferSummaryMNE : Page
         ddlPayam.Items.Add(new ListItem("--Select--", ""));
         ddlBoma.Items.Add(new ListItem("--Select--", ""));
 
-        if (!string.IsNullOrEmpty(ddlState.SelectedValue) && ddlState.SelectedValue != "--Select--")
+        if (!string.IsNullOrEmpty(ddlState.SelectedValue))
         {
-            int stateId;
-            if (int.TryParse(ddlState.SelectedValue, out stateId))
+            try
             {
-                try
+                int stateId;
+                bool isParsed = int.TryParse(ddlState.SelectedValue, out stateId);
+                if (isParsed)
                 {
-                    LoadDropdownData(ddlCounty, "SELECT intCountieid, CountyName FROM tm_Counties WHERE intStateid = @stateId", "CountyName", "intCountieid", stateId);
+                    DataTable dtCounties = _lookupManagerService.GetCountyListByStateId(stateId);
+                    ddlCounty.DataSource = dtCounties;
+                    ddlCounty.DataTextField = "CountieName";
+                    ddlCounty.DataValueField = "intCountieid";
+                    ddlCounty.DataBind();
+                    ddlCounty.Items.Insert(0, new ListItem("--Select--", ""));
                 }
-                catch (Exception ex)
+                else
                 {
-                    LogError(ex);
+                    LogError(new Exception("ddlState.SelectedValue is not a valid integer: " + ddlState.SelectedValue));
                 }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
             }
         }
     }
@@ -134,19 +144,29 @@ public partial class CashTransferSummaryMNE : Page
         ddlPayam.Items.Add(new ListItem("--Select--", ""));
         ddlBoma.Items.Add(new ListItem("--Select--", ""));
 
-        if (!string.IsNullOrEmpty(ddlCounty.SelectedValue) && ddlCounty.SelectedValue != "--Select--")
+        if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
         {
-            int countyId;
-            if (int.TryParse(ddlCounty.SelectedValue, out countyId))
+            try
             {
-                try
+                int countyId;
+                bool isParsed = int.TryParse(ddlCounty.SelectedValue, out countyId);
+                if (isParsed)
                 {
-                    LoadDropdownData(ddlPayam, "SELECT intPayamid, PayamName FROM tm_Payams WHERE intCountieid = @countyId", "PayamName", "intPayamid", countyId);
+                    DataTable dtPayams = _lookupManagerService.GetPayamListByCountyId(countyId);
+                    ddlPayam.DataSource = dtPayams;
+                    ddlPayam.DataTextField = "PayamName";
+                    ddlPayam.DataValueField = "intPayamid";
+                    ddlPayam.DataBind();
+                    ddlPayam.Items.Insert(0, new ListItem("--Select--", ""));
                 }
-                catch (Exception ex)
+                else
                 {
-                    LogError(ex);
+                    LogError(new Exception("ddlCounty.SelectedValue is not a valid integer: " + ddlCounty.SelectedValue));
                 }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
             }
         }
     }
@@ -155,25 +175,34 @@ public partial class CashTransferSummaryMNE : Page
     {
         ddlBoma.Items.Clear();
         ddlBoma.Items.Add(new ListItem("--Select--", ""));
-
-        if (!string.IsNullOrEmpty(ddlPayam.SelectedValue) && ddlPayam.SelectedValue != "--Select--")
+        if (!string.IsNullOrEmpty(ddlPayam.SelectedValue))
         {
-            int payamId;
-            if (int.TryParse(ddlPayam.SelectedValue, out payamId))
+            try
             {
-                try
+                int payamId;
+                bool isParsed = int.TryParse(ddlPayam.SelectedValue, out payamId);
+                if (isParsed)
                 {
-                    LoadDropdownData(ddlBoma, "SELECT intBomasid, BomaName FROM tm_Bomas WHERE intPayamid = @payamId", "BomaName", "intBomasid", payamId);
+                    DataTable dtBomas = _lookupManagerService.GetBomaListByPayamId(payamId);
+                    ddlBoma.DataSource = dtBomas;
+                    ddlBoma.DataTextField = "BomaName";
+                    ddlBoma.DataValueField = "intBomasid";
+                    ddlBoma.DataBind();
+                    ddlBoma.Items.Insert(0, new ListItem("--Select--", ""));
                 }
-                catch (Exception ex)
+                else
                 {
-                    LogError(ex);
+                    LogError(new Exception("ddlPayam.SelectedValue is not a valid integer: " + ddlPayam.SelectedValue));
                 }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
             }
         }
     }
 
-    private void LoadDropdownData(DropDownList ddl, string query, string textField, string valueField, int parameterValue)
+    /*private void LoadDropdownData(DropDownList ddl, string query, string textField, string valueField, int parameterValue)
     {
         using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
         {
@@ -192,7 +221,7 @@ public partial class CashTransferSummaryMNE : Page
             }
             reader.Close();
         }
-    }
+    }*/
 
     private void LogError(Exception ex)
     {
@@ -262,13 +291,13 @@ public partial class CashTransferSummaryMNE : Page
                 FROM td_WorkWageRequest w
                 INNER JOIN tbl_BeneficiaryDet b ON w.intWagePaymentReqid = b.intBenid
                 INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-                WHERE (@StateId IS NULL OR m.intStateid = @StateId)
-                AND (@CountyId IS NULL OR m.intCountieid = @CountyId)
-                AND (@PayamId IS NULL OR m.intPayamid = @PayamId)
-                AND (@BomaId IS NULL OR m.intBomasid = @BomaId)
-                AND (@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
-                AND (@Status IS NULL OR w.Status = @Status)
-                AND (@Component IS NULL OR w.Component = @Component);";
+                WHERE (@StateId IS NULL OR @StateId = '' OR m.intStateid = @StateId)
+                AND (@CountyId IS NULL OR @CountyId = '' OR m.intCountieid = @CountyId)
+                AND (@PayamId IS NULL OR @PayamId = '' OR m.intPayamid = @PayamId)
+                AND (@BomaId IS NULL OR @BomaId = '' OR m.intBomasid = @BomaId)
+                AND (@PaymentCycle IS NULL OR @PaymentCycle = '' OR w.PaymentCycle = @PaymentCycle)
+                AND (@Status IS NULL OR @Status = '' OR w.Status = @Status)
+                AND (@Component IS NULL OR @Component = '' OR w.Component = @Component);";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -385,13 +414,10 @@ public partial class CashTransferSummaryMNE : Page
 
                 string query = @"
             SELECT w.intWagePaymentReqid AS intPaymentId,
-                   CONCAT(s.StateName, ' / ', c.CountyName, ' / ', p.PayamName, ' / ', b.BomaName) AS geoLocation,
-                   w.Currency,
                    w.PaymentCycle,
-                   CASE WHEN bw.PaidAmount IS NOT NULL THEN 'Paid' ELSE 'Not Paid' END AS paymentStatus,
+                   w.Status,
                    w.Component,
-                   a.AgentName AS paymentPartner,
-                   bw.PaidAmount AS paymentAmount,
+                   bw.PaidAmountUSD AS paymentAmount,
                    bw.PaidDate AS paymentDate
             FROM td_WorkWageRequest w
             INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
@@ -400,13 +426,13 @@ public partial class CashTransferSummaryMNE : Page
             INNER JOIN tm_Payams p ON m.intPayamid = p.intPayamid
             INNER JOIN tm_Bomas b ON m.intBomasid = b.intBomasid
             LEFT JOIN tr_BenWagesPayment bw ON w.intWagePaymentReqid = bw.intWageid
-            WHERE (@StateId IS NULL OR m.intStateid = @StateId)
-            AND (@CountyId IS NULL OR m.intCountieid = @CountyId)
-            AND (@PayamId IS NULL OR m.intPayamid = @PayamId)
-            AND (@BomaId IS NULL OR m.intBomasid = @BomaId)
-            AND (@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
-            AND (@Status IS NULL OR w.Status = @Status)
-            AND (@Component IS NULL OR w.Component = @Component)
+            WHERE (@StateId IS NULL OR @StateId = '' OR m.intStateid = @StateId)
+            AND (@CountyId IS NULL OR @CountyId = '' OR m.intCountieid = @CountyId)
+            AND (@PayamId IS NULL OR @PayamId = '' OR m.intPayamid = @PayamId)
+            AND (@BomaId IS NULL OR @BomaId = '' OR m.intBomasid = @BomaId)
+            AND (@PaymentCycle IS NULL OR @PaymentCycle = '' OR w.PaymentCycle = @PaymentCycle)
+            AND (@Status IS NULL OR @Status = '' OR w.Status = @Status)
+            AND (@Component IS NULL OR @Component = '' OR w.Component = @Component)
             ORDER BY w.intWagePaymentReqid
             OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
