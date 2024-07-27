@@ -1,16 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
-using Telerik.Web.UI;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.IO;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+using Telerik.Web.UI;
 using ListItem = System.Web.UI.WebControls.ListItem;
-using System.Web;
-using System.Collections.Generic;
 
 public partial class CashTransferSummaryMNE : Page
 {
@@ -20,11 +17,11 @@ public partial class CashTransferSummaryMNE : Page
     {
         try
         {
-            Log("Page_Load started.");
+            //Log("Page_Load started.");
             InitializeServices();
             if (!IsPostBack)
             {
-                Log("IsPostBack is false.");
+                //Log("IsPostBack is false.");
                 LoadInitialData();
                 rgResults.Visible = false; // Initially hide the grid
             }
@@ -78,8 +75,8 @@ public partial class CashTransferSummaryMNE : Page
         ddlStatus.Items.Add(new ListItem("Final Payment Authorizer Rejected", "14"));
 
         ddlComponent.Items.Add(new ListItem("--Select--", ""));
-        ddlComponent.Items.Add(new ListItem("LIPW", "LIPW"));
-        ddlComponent.Items.Add(new ListItem("DIS", "DIS"));
+        ddlComponent.Items.Add(new ListItem("LIPW", "Component 1 (Public Works)"));
+        ddlComponent.Items.Add(new ListItem("DIS", "Component 2 (Direct Income Support)"));
     }
 
     private void LoadDropdownData(DropDownList ddl, string query, string textField, string valueField)
@@ -202,27 +199,6 @@ public partial class CashTransferSummaryMNE : Page
         }
     }
 
-    /*private void LoadDropdownData(DropDownList ddl, string query, string textField, string valueField, int parameterValue)
-    {
-        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
-        {
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@stateId", parameterValue);
-            cmd.Parameters.AddWithValue("@countyId", parameterValue);
-            cmd.Parameters.AddWithValue("@payamId", parameterValue);
-
-            conn.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            ddl.Items.Clear();
-            ddl.Items.Add(new ListItem("--Select--", ""));
-            while (reader.Read())
-            {
-                ddl.Items.Add(new ListItem(reader[textField].ToString(), reader[valueField].ToString()));
-            }
-            reader.Close();
-        }
-    }*/
-
     private void LogError(Exception ex)
     {
         // Log error details to a file, event log, or database.
@@ -248,25 +224,34 @@ public partial class CashTransferSummaryMNE : Page
 
             // Store search parameters in session
             var searchParams = new Dictionary<string, string>
-        {
-            { "state", state },
-            { "county", county },
-            { "payam", payam },
-            { "boma", boma },
-            { "paymentCycle", paymentCycle },
-            { "status", status },
-            { "component", component }
-        };
+            {
+                { "state", state },
+                { "county", county },
+                { "payam", payam },
+                { "boma", boma },
+                { "paymentCycle", paymentCycle },
+                { "status", status },
+                { "component", component }
+            };
+
             Session["CashTransferSummarySearchParams"] = searchParams;
 
-            DataTable dt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, 0, rgResults.PageSize);
-            Session["CashTransferSummaryData"] = dt; // Store the data in session
+            // DataTable dt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, 0, rgResults.PageSize);
+            // Session["CashTransferSummaryData"] = dt; // Store the data in session
 
-            Session["TotalRecordCount"] = dt.Rows.Count;
+            int totalCount = GetTotalPaymentRecordsCount(state, county, payam, boma, paymentCycle, status, component);
+
+            Session["TotalRecordCount"] = totalCount;
+            
+            System.Diagnostics.Debug.WriteLine(totalCount);
 
             rgResults.CurrentPageIndex = 0; // Reset to the first page
             rgResults.Rebind();
-            Log("Search button clicked.");
+
+            // Show the download button if there are records
+            BtnDownload.Visible = totalCount > 0;
+
+            //Log("Search button clicked.");
         }
         catch (Exception ex)
         {
@@ -274,6 +259,7 @@ public partial class CashTransferSummaryMNE : Page
             throw;
         }
     }
+
 
     private int GetTotalPaymentRecordsCount(string state, string county, string payam, string boma, string paymentCycle, string status, string component)
     {
@@ -286,28 +272,45 @@ public partial class CashTransferSummaryMNE : Page
             {
                 conn.Open(); // Ensure the connection is opened
 
-                string query = @"
+                /*string query = @"
                 SELECT COUNT(*)
                 FROM td_WorkWageRequest w
                 INNER JOIN tbl_BeneficiaryDet b ON w.intWagePaymentReqid = b.intBenid
                 INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-                WHERE (@StateId IS NULL OR @StateId = '' OR m.intStateid = @StateId)
-                AND (@CountyId IS NULL OR @CountyId = '' OR m.intCountieid = @CountyId)
-                AND (@PayamId IS NULL OR @PayamId = '' OR m.intPayamid = @PayamId)
-                AND (@BomaId IS NULL OR @BomaId = '' OR m.intBomasid = @BomaId)
-                AND (@PaymentCycle IS NULL OR @PaymentCycle = '' OR w.PaymentCycle = @PaymentCycle)
-                AND (@Status IS NULL OR @Status = '' OR w.Status = @Status)
-                AND (@Component IS NULL OR @Component = '' OR w.Component = @Component);";
+                WHERE (@StateId IS NULL OR m.intStateid = @StateId)
+                AND (@CountyId IS NULL OR m.intCountieid = @CountyId)
+                AND (@PayamId IS NULL OR m.intPayamid = @PayamId)
+                AND (@BomaId IS NULL OR m.intBomasid = @BomaId)
+                AND (@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
+                AND (@Status IS NULL OR w.Status = @Status)
+                AND (@Component IS NULL OR w.Component = @Component);";*/
+
+                string query = @"
+                SELECT COUNT(*)
+                FROM td_WorkWageRequest w
+                INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
+                INNER JOIN tm_States s ON m.intStateid = s.intStateid
+                INNER JOIN tm_Counties c ON m.intCountieid = c.intCountieid
+                INNER JOIN tm_Payams p ON m.intPayamid = p.intPayamid
+                INNER JOIN tm_Bomas b ON m.intBomasid = b.intBomasid
+                LEFT JOIN tr_BenWagesPayment bw ON w.intWorkid = bw.intWorkid
+                WHERE(@StateId IS NULL OR m.intStateid = @StateId)
+                AND(@CountyId IS NULL OR m.intCountieid = @CountyId)
+                AND(@PayamId IS NULL OR m.intPayamid = @PayamId)
+                AND(@BomaId IS NULL OR m.intBomasid = @BomaId)
+                AND(@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
+                AND(@Status IS NULL OR w.Status = @Status)
+                AND(@Component IS NULL OR w.Component = @Component);";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@StateId", string.IsNullOrEmpty(state) || state == "--Select--" ? (object)DBNull.Value : state);
-                    cmd.Parameters.AddWithValue("@CountyId", string.IsNullOrEmpty(county) || county == "--Select--" ? (object)DBNull.Value : county);
-                    cmd.Parameters.AddWithValue("@PayamId", string.IsNullOrEmpty(payam) || payam == "--Select--" ? (object)DBNull.Value : payam);
-                    cmd.Parameters.AddWithValue("@BomaId", string.IsNullOrEmpty(boma) || boma == "--Select--" ? (object)DBNull.Value : boma);
-                    cmd.Parameters.AddWithValue("@PaymentCycle", string.IsNullOrEmpty(paymentCycle) ? (object)DBNull.Value : paymentCycle);
-                    cmd.Parameters.AddWithValue("@Status", string.IsNullOrEmpty(status) ? (object)DBNull.Value : status);
-                    cmd.Parameters.AddWithValue("@Component", string.IsNullOrEmpty(component) || component == "--Select--" ? (object)DBNull.Value : component);
+                    cmd.Parameters.AddWithValue("@StateId", (string.IsNullOrEmpty(state) || state == "--Select--") ? (object)DBNull.Value : state);
+                    cmd.Parameters.AddWithValue("@CountyId", (string.IsNullOrEmpty(county) || county == "--Select--") ? (object)DBNull.Value : county);
+                    cmd.Parameters.AddWithValue("@PayamId", (string.IsNullOrEmpty(payam) || payam == "--Select--") ? (object)DBNull.Value : payam);
+                    cmd.Parameters.AddWithValue("@BomaId", (string.IsNullOrEmpty(boma) || boma == "--Select--") ? (object)DBNull.Value : boma);
+                    cmd.Parameters.AddWithValue("@PaymentCycle", (string.IsNullOrEmpty(paymentCycle) || paymentCycle == "--Select--") ? (object)DBNull.Value : paymentCycle);
+                    cmd.Parameters.AddWithValue("@Status", (string.IsNullOrEmpty(status) || status == "--Select--") ? (object)DBNull.Value : status);
+                    cmd.Parameters.AddWithValue("@Component", (string.IsNullOrEmpty(component) || component == "--Select--") ? (object)DBNull.Value : component);
 
                     totalRecords = (int)cmd.ExecuteScalar();
                 }
@@ -322,6 +325,7 @@ public partial class CashTransferSummaryMNE : Page
         return totalRecords;
     }
 
+
     protected void BtnDownload_Click(object sender, EventArgs e)
     {
         try
@@ -334,45 +338,6 @@ public partial class CashTransferSummaryMNE : Page
         {
             LogError("Error in BtnDownload_Click: " + ex.Message, ex);
             throw;
-        }
-    }
-
-    private void GeneratePDF(DataTable dt)
-    {
-        using (MemoryStream ms = new MemoryStream())
-        {
-            Document document = new Document();
-            PdfWriter.GetInstance(document, ms);
-            document.Open();
-            PdfPTable table = new PdfPTable(dt.Columns.Count);
-
-            // Add the headers
-            foreach (DataColumn column in dt.Columns)
-            {
-                table.AddCell(new Phrase(column.ColumnName));
-            }
-
-            // Add the data
-            foreach (DataRow row in dt.Rows)
-            {
-                foreach (DataColumn column in dt.Columns)
-                {
-                    table.AddCell(new Phrase(row[column].ToString()));
-                }
-            }
-
-            document.Add(table);
-            document.Close();
-
-            // Ensure the memory stream is at the beginning
-            ms.Position = 0;
-
-            // Clear the response before writing the PDF
-            Response.Clear();
-            Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", "attachment;filename=CashTransferSummary.pdf");
-            Response.OutputStream.Write(ms.GetBuffer(), 0, ms.GetBuffer().Length);
-            Response.End();
         }
     }
 
@@ -390,7 +355,11 @@ public partial class CashTransferSummaryMNE : Page
             string component = ddlComponent.SelectedValue;
 
             int totalRecords = (int)Session["TotalRecordCount"]; // Use cached total record count
-            DataTable dt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, rgResults.CurrentPageIndex, rgResults.PageSize);
+            DataTable totaldt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, 0, totalRecords);//to store total data
+            Session["CashTransferSummaryData"] = totaldt; // Store the data in session
+
+
+            DataTable dt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, rgResults.CurrentPageIndex, rgResults.PageSize);//to store only grid data
             rgResults.DataSource = dt;
             rgResults.VirtualItemCount = totalRecords; // Set the total number of records
         }
@@ -413,39 +382,52 @@ public partial class CashTransferSummaryMNE : Page
                 conn.Open(); // Ensure the connection is opened
 
                 string query = @"
-            SELECT w.intWagePaymentReqid AS intPaymentId,
-                   w.PaymentCycle,
-                   w.Status,
-                   w.Component,
-                   bw.PaidAmountUSD AS paymentAmount,
-                   bw.PaidDate AS paymentDate
-            FROM td_WorkWageRequest w
-            INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-            INNER JOIN tm_States s ON m.intStateid = s.intStateid
-            INNER JOIN tm_Counties c ON m.intCountieid = c.intCountieid
-            INNER JOIN tm_Payams p ON m.intPayamid = p.intPayamid
-            INNER JOIN tm_Bomas b ON m.intBomasid = b.intBomasid
-            LEFT JOIN tr_BenWagesPayment bw ON w.intWagePaymentReqid = bw.intWageid
-            WHERE (@StateId IS NULL OR @StateId = '' OR m.intStateid = @StateId)
-            AND (@CountyId IS NULL OR @CountyId = '' OR m.intCountieid = @CountyId)
-            AND (@PayamId IS NULL OR @PayamId = '' OR m.intPayamid = @PayamId)
-            AND (@BomaId IS NULL OR @BomaId = '' OR m.intBomasid = @BomaId)
-            AND (@PaymentCycle IS NULL OR @PaymentCycle = '' OR w.PaymentCycle = @PaymentCycle)
-            AND (@Status IS NULL OR @Status = '' OR w.Status = @Status)
-            AND (@Component IS NULL OR @Component = '' OR w.Component = @Component)
-            ORDER BY w.intWagePaymentReqid
-            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+                SELECT 
+                    w.intWagePaymentReqid AS intPaymentId,
+                    w.PaymentCycle,
+                    CASE 
+                        WHEN w.Status = '' THEN 'IP Applied'
+                        WHEN w.Status = '1' THEN 'IP Approver Approved'
+                        WHEN w.Status = '2' THEN 'Initial Reviewer Approved'
+                        WHEN w.Status = '3' THEN 'Financial Approver Approved'
+                        WHEN w.Status = '4' THEN 'Final Payment Authorizer Approved'
+                        WHEN w.Status = '5' THEN 'Reconciled'
+                        WHEN w.Status = '11' THEN 'IP Approver Rejected'
+                        WHEN w.Status = '12' THEN 'Initial Reviewer Rejected'
+                        WHEN w.Status = '13' THEN 'Financial Approver Rejected'
+                        WHEN w.Status = '14' THEN 'Final Payment Authorizer Rejected'
+                        ELSE 'Unknown Status'
+                    END AS PaymentStatus,
+                    w.Component,
+                    bw.PaidAmountUSD AS PaymentAmount,
+                    bw.PaidDate AS PaymentDate
+                FROM td_WorkWageRequest w
+                INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
+                INNER JOIN tm_States s ON m.intStateid = s.intStateid
+                INNER JOIN tm_Counties c ON m.intCountieid = c.intCountieid
+                INNER JOIN tm_Payams p ON m.intPayamid = p.intPayamid
+                INNER JOIN tm_Bomas b ON m.intBomasid = b.intBomasid
+                LEFT JOIN tr_BenWagesPayment bw ON w.intWorkid = bw.intWorkid
+                WHERE (@StateId IS NULL OR m.intStateid = @StateId)
+                AND (@CountyId IS NULL OR m.intCountieid = @CountyId)
+                AND (@PayamId IS NULL OR m.intPayamid = @PayamId)
+                AND (@BomaId IS NULL OR m.intBomasid = @BomaId)
+                AND (@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
+                AND (@Status IS NULL OR w.Status = @Status)
+                AND (@Component IS NULL OR w.Component = @Component)
+                ORDER BY w.intWagePaymentReqid
+                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.CommandTimeout = 120; // Set the command timeout to 120 seconds
-                    cmd.Parameters.AddWithValue("@StateId", string.IsNullOrEmpty(state) || state == "--Select--" ? (object)DBNull.Value : state);
-                    cmd.Parameters.AddWithValue("@CountyId", string.IsNullOrEmpty(county) || county == "--Select--" ? (object)DBNull.Value : county);
-                    cmd.Parameters.AddWithValue("@PayamId", string.IsNullOrEmpty(payam) || payam == "--Select--" ? (object)DBNull.Value : payam);
-                    cmd.Parameters.AddWithValue("@BomaId", string.IsNullOrEmpty(boma) || boma == "--Select--" ? (object)DBNull.Value : boma);
-                    cmd.Parameters.AddWithValue("@PaymentCycle", string.IsNullOrEmpty(paymentCycle) ? (object)DBNull.Value : paymentCycle);
-                    cmd.Parameters.AddWithValue("@Status", string.IsNullOrEmpty(status) ? (object)DBNull.Value : status);
-                    cmd.Parameters.AddWithValue("@Component", string.IsNullOrEmpty(component) || component == "--Select--" ? (object)DBNull.Value : component);
+                    cmd.Parameters.AddWithValue("@StateId", (string.IsNullOrEmpty(state) || state == "--Select--") ? (object)DBNull.Value : state);
+                    cmd.Parameters.AddWithValue("@CountyId", (string.IsNullOrEmpty(county) || county == "--Select--") ? (object)DBNull.Value : county);
+                    cmd.Parameters.AddWithValue("@PayamId", (string.IsNullOrEmpty(payam) || payam == "--Select--") ? (object)DBNull.Value : payam);
+                    cmd.Parameters.AddWithValue("@BomaId", (string.IsNullOrEmpty(boma) || boma == "--Select--") ? (object)DBNull.Value : boma);
+                    cmd.Parameters.AddWithValue("@PaymentCycle", (string.IsNullOrEmpty(paymentCycle) || paymentCycle == "--Select--") ? (object)DBNull.Value : paymentCycle);
+                    cmd.Parameters.AddWithValue("@Status", (string.IsNullOrEmpty(status) || status == "--Select--") ? (object)DBNull.Value : status);
+                    cmd.Parameters.AddWithValue("@Component", (string.IsNullOrEmpty(component) || component == "--Select--") ? (object)DBNull.Value : component);
                     cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
                     cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
@@ -462,8 +444,6 @@ public partial class CashTransferSummaryMNE : Page
 
         return dt;
     }
-
-
 
     private void Log(string message)
     {

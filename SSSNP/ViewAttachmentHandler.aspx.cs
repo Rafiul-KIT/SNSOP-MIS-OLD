@@ -407,7 +407,10 @@ namespace SSSNP_SNSOP
             {
                 // Retrieve the data from the session
                 var dt = Session["CashTransferSummaryData"] as DataTable;
-                if (dt == null) throw new Exception("Cash transfer summary data is missing.");
+                if (dt == null)
+                {
+                    throw new Exception("Cash transfer summary data is missing.");
+                }
 
                 // Generate PDF from the DataTable
                 GeneratePDF(dt);
@@ -415,55 +418,54 @@ namespace SSSNP_SNSOP
             catch (Exception ex)
             {
                 LogError("Error in CashTransferSummaryHandler: " + ex.Message, ex);
-                throw;
             }
-        }
-
-        private void LogError(string v, Exception ex)
-        {
-            throw new NotImplementedException();
         }
 
         private void GeneratePDF(DataTable dt)
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                Document document = new Document();
-                PdfWriter.GetInstance(document, ms);
-                document.Open();
-                PdfPTable table = new PdfPTable(dt.Columns.Count);
-
-                // Add the headers
-                foreach (DataColumn column in dt.Columns)
+                using (Document document = new Document())
                 {
-                    table.AddCell(new Phrase(column.ColumnName));
-                }
+                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                    document.Open();
+                    PdfPTable table = new PdfPTable(dt.Columns.Count);
 
-                // Add the data
-                foreach (DataRow row in dt.Rows)
-                {
+                    // Add headers
                     foreach (DataColumn column in dt.Columns)
                     {
-                        table.AddCell(new Phrase(row[column].ToString()));
+                        table.AddCell(new Phrase(column.ColumnName));
                     }
+
+                    // Add data
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            table.AddCell(new Phrase(row[col].ToString()));
+                        }
+                    }
+
+                    document.Add(table);
+                    document.Close();
                 }
 
-                document.Add(table);
-                document.Close();
-
-                // Ensure the memory stream is at the beginning
-                ms.Position = 0;
-
-                // Clear the response before writing the PDF
+                // Write the stream to the response
                 Response.Clear();
                 Response.ContentType = "application/pdf";
-                Response.AddHeader("content-disposition", "attachment;filename=CashTransferSummary.pdf");
-                Response.OutputStream.Write(ms.GetBuffer(), 0, ms.GetBuffer().Length);
-                Response.End();
+                Response.AddHeader("Content-Disposition", "attachment; filename=CashTransferSummary.pdf");
+                Response.BinaryWrite(ms.ToArray());
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
             }
         }
-        
-        //cash transfer summary ended
+
+        private void LogError(string message, Exception ex)
+        {
+            // Log error details to a file, event log, or database.
+            System.Diagnostics.Debug.WriteLine($"{message}: {ex}");
+        }
+
+
 
     }
 }

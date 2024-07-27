@@ -327,6 +327,9 @@
                                                 <ul class="down_menu">
                                                     <li><a href="CashTransferSummaryMNE.aspx">Cash Transfer Summary</a> </li>
                                                     <li><a href="BeneficiaryEnrollmentSummaryMNE.aspx">Beneficiary Enrollment Summary</a> </li>
+                                                    <li><a href="KeyMonitoringIndicatorsMNE.aspx">Key Monitoring Indicators</a> </li>
+                                                    <li><a href="ResultsFrameworkMNE.aspx">Results Framework</a> </li>
+                                                    <li><a href="ReportsMNE.aspx">Reports</a> </li>
                                                 </ul>
                                             </li>
                                             <li id="LiIp6" visible="false" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-comments"></i>Grievances and Safeguards</a>

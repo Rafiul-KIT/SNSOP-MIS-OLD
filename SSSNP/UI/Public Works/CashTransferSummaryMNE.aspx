@@ -103,7 +103,7 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlPaymentCycle" runat="server" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <%--<asp:ListItem>--Select--</asp:ListItem>--%>
                                                             <%--<asp:ListItem Value="1">Payment Cycle 1</asp:ListItem>
                                                             <asp:ListItem Value="2">Payment Cycle 2</asp:ListItem>
                                                             <asp:ListItem Value="3">Payment Cycle 3</asp:ListItem>
@@ -123,7 +123,7 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlStatus" runat="server" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <%--<asp:ListItem>--Select--</asp:ListItem>--%>
                                                             <%--<asp:ListItem Value="">IP Applied</asp:ListItem>
                                                             <asp:ListItem Value="1">IP Approver Approved</asp:ListItem>
                                                             <asp:ListItem Value="2">Initial Reviewer Approved</asp:ListItem>
@@ -144,13 +144,13 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlComponent" runat="server" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
-                                                            <asp:ListItem Value="LIPW">LIPW</asp:ListItem>
-                                                            <asp:ListItem Value="DIS">DIS</asp:ListItem>
+                                                            <%--<asp:ListItem>--Select--</asp:ListItem>--%>
+                                                            <%--<asp:ListItem Value="LIPW">LIPW</asp:ListItem>
+                                                            <asp:ListItem Value="DIS">DIS</asp:ListItem>--%>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <%--<tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelFromDate" runat="server" Width="165px">From Date</asp:Label>
                                                     </td>
@@ -173,14 +173,14 @@
                                                             Format="dd-MM-yyyy" PopupButtonID="txtToDate"
                                                             TargetControlID="txtToDate"></cc1:CalendarExtender>
                                                     </td>
-                                                </tr>
+                                                </tr>--%>
                                             </table>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="padding: 5px; margin: 5px" valign="top" align="center">
                                             <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" Width="110px" OnClientClick="return validateSearch();" />
-                                            <asp:Button ID="BtnDownload" runat="server" Text="Download" OnClick="BtnDownload_Click" Width="110px" />
+                                            <asp:Button ID="BtnDownload" runat="server" Text="Download" OnClick="BtnDownload_Click" Width="110px" Visible="false"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -189,14 +189,11 @@
                                     <MasterTableView AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="intPaymentId" HeaderText="Payment ID"></telerik:GridBoundColumn>
-                                            <%--<telerik:GridBoundColumn DataField="geoLocation" HeaderText="Geo Location"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="currency" HeaderText="Currency"></telerik:GridBoundColumn>--%>
-                                            <telerik:GridBoundColumn DataField="paymentCycle" HeaderText="Payment Cycle"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="paymentStatus" HeaderText="Payment Status"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="component" HeaderText="Component"></telerik:GridBoundColumn>
-                                            <%--<telerik:GridBoundColumn DataField="paymentPartner" HeaderText="Payment Partner"></telerik:GridBoundColumn>--%>
-                                            <telerik:GridBoundColumn DataField="paymentAmount" HeaderText="Payment Amount"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="paymentDate" HeaderText="Payment Date" DataFormatString="{0:MM/dd/yyyy}"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PaymentCycle" HeaderText="Payment Cycle"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PaymentStatus" HeaderText="Payment Status"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="Component" HeaderText="Component"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PaymentAmount" HeaderText="Payment Amount"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" DataFormatString="{0:MM/dd/yyyy}"></telerik:GridBoundColumn>
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
@@ -206,6 +203,11 @@
                 </div>
             </div>
         </ContentTemplate>
+
+        <Triggers>
+            <asp:PostBackTrigger ControlID="BtnDownload" />
+        </Triggers>
+
     </asp:UpdatePanel>
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
         <ProgressTemplate>
