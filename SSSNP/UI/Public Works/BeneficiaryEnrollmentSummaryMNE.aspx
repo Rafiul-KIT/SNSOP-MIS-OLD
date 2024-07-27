@@ -116,7 +116,8 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtAge" runat="server" Width="180px"></asp:TextBox>
+                                                        <%-- %><asp:TextBox ID="txtAge" runat="server" Width="180px"></asp:TextBox>--%>
+                                                        <asp:TextBox ID="txtAge" runat="server" Width="180px" style="color: gray;" placeholder="Enter Age" onfocus="this.style.color='black';" onblur="if(this.value=='') this.style.color='gray';"></asp:TextBox>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -139,9 +140,9 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlComponent" runat="server" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
-                                                            <asp:ListItem Value="LIPW">LIPW</asp:ListItem>
-                                                            <asp:ListItem Value="DIS">DIS</asp:ListItem>
+                                                            <%--<asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="Component 1 (Public Works)">LIPW</asp:ListItem>
+                                                            <asp:ListItem Value="Component 2 (Direct Income Support)">DIS</asp:ListItem>--%>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -155,8 +156,8 @@
                                     </tr>
                                 </table>
                                 <telerik:RadGrid ID="rgResults" runat="server" AutoGenerateColumns="False" AllowPaging="True" PageSize="10"
-                                    OnNeedDataSource="rgResults_NeedDataSource">
-                                    <MasterTableView>
+                                    OnNeedDataSource="rgResults_NeedDataSource" AllowCustomPaging="True">
+                                    <MasterTableView AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="BeneficiaryId" HeaderText="Beneficiary ID"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="EnrollmentNo" HeaderText="Enrollment No"></telerik:GridBoundColumn>

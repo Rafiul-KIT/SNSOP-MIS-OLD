@@ -543,6 +543,7 @@
     <Content Include="UI\Public Works\IPwiseStatus.aspx" />
     <Content Include="UI\Public Works\IPWOrkProposals.aspx" />
     <Content Include="UI\Public Works\IPWOrkProposalsDraft.aspx" />
+    <Content Include="UI\Public Works\KeyMonitoringIndicatorsMNE.aspx" />
     <Content Include="UI\Public Works\LIPWExports.aspx" />
     <Content Include="UI\Public Works\Lookups\BeneficiaryLookup.aspx" />
     <Content Include="UI\Public Works\Lookups\BeneficiaryLookup1.aspx" />
@@ -621,7 +622,9 @@
     <Content Include="UI\Public Works\PDCWorkProgress12.aspx" />
     <Content Include="UI\Public Works\PublicWorksApproval.aspx" />
     <Content Include="UI\Public Works\ReportsDashboard.aspx" />
+    <Content Include="UI\Public Works\ReportsMNE.aspx" />
     <Content Include="UI\Public Works\Result.aspx" />
+    <Content Include="UI\Public Works\ResultsFrameworkMNE.aspx" />
     <Content Include="UI\Public Works\Review_Invoice.aspx" />
     <Content Include="UI\Public Works\rptAttendanceFailure.aspx" />
     <Content Include="UI\Public Works\RptBDC.aspx" />
@@ -1526,6 +1529,13 @@
     <Compile Include="UI\Public Works\IPWOrkProposalsDraft.aspx.designer.cs">
       <DependentUpon>IPWOrkProposalsDraft.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\KeyMonitoringIndicatorsMNE.aspx.cs">
+      <DependentUpon>KeyMonitoringIndicatorsMNE.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\KeyMonitoringIndicatorsMNE.aspx.designer.cs">
+      <DependentUpon>KeyMonitoringIndicatorsMNE.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\LIPWExports.aspx.cs">
       <DependentUpon>LIPWExports.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1812,8 +1822,22 @@
     <Compile Include="UI\Public Works\ReportsDashboard.aspx.designer.cs">
       <DependentUpon>ReportsDashboard.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\ReportsMNE.aspx.cs">
+      <DependentUpon>ReportsMNE.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\ReportsMNE.aspx.designer.cs">
+      <DependentUpon>ReportsMNE.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\Result.aspx.designer.cs">
       <DependentUpon>Result.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\ResultsFrameworkMNE.aspx.cs">
+      <DependentUpon>ResultsFrameworkMNE.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\ResultsFrameworkMNE.aspx.designer.cs">
+      <DependentUpon>ResultsFrameworkMNE.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\Review_Invoice.aspx.designer.cs">
       <DependentUpon>Review_Invoice.aspx</DependentUpon>

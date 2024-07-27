@@ -14,6 +14,9 @@ using System.Web.Script.Serialization;
 using SSSNP.Entity.Payroll_Download;
 using SSSNP.Entity.Payroll;
 using SSSNP_SNSOP.UI.Public_Works;
+using System.Data;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace SSSNP_SNSOP
 {
@@ -36,7 +39,8 @@ namespace SSSNP_SNSOP
             GBV_ATTACHMENT_DEDICATED = 7,
             SYSTEM_REPORT = 8,
             SYSTEM_REPORT_ELRP = 9,
-            ENCRYPTED_PAYROLL_DATA = 10 // Add new case for encrypted payroll data
+            ENCRYPTED_PAYROLL_DATA = 10,// Add new case for encrypted payroll data
+            CASH_TRANSFER_SUMMARY = 11 // Add new case for cash transfer summary download
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -83,6 +87,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.ENCRYPTED_PAYROLL_DATA:
                     EncryptedPayrollDataHandler();
+                    return "OK";
+                case HandlerAttachment.CASH_TRANSFER_SUMMARY:
+                    CashTransferSummaryHandler();
                     return "OK";
                     //break;
 
@@ -389,6 +396,75 @@ namespace SSSNP_SNSOP
             System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
         }
         //downlaod encrypted payroll data module end
+
+
+
+
+        // Cash transfer summary started
+        private void CashTransferSummaryHandler()
+        {
+            try
+            {
+                // Retrieve the data from the session
+                var dt = Session["CashTransferSummaryData"] as DataTable;
+                if (dt == null)
+                {
+                    throw new Exception("Cash transfer summary data is missing.");
+                }
+
+                // Generate PDF from the DataTable
+                GeneratePDF(dt);
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in CashTransferSummaryHandler: " + ex.Message, ex);
+            }
+        }
+
+        private void GeneratePDF(DataTable dt)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (Document document = new Document())
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                    document.Open();
+                    PdfPTable table = new PdfPTable(dt.Columns.Count);
+
+                    // Add headers
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        table.AddCell(new Phrase(column.ColumnName));
+                    }
+
+                    // Add data
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            table.AddCell(new Phrase(row[col].ToString()));
+                        }
+                    }
+
+                    document.Add(table);
+                    document.Close();
+                }
+
+                // Write the stream to the response
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("Content-Disposition", "attachment; filename=CashTransferSummary.pdf");
+                Response.BinaryWrite(ms.ToArray());
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+            }
+        }
+
+        private void LogError(string message, Exception ex)
+        {
+            // Log error details to a file, event log, or database.
+            System.Diagnostics.Debug.WriteLine($"{message}: {ex}");
+        }
+
 
 
     }
