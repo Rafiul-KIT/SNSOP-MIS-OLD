@@ -294,13 +294,13 @@
 
                                             <li id="LiIp3" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-wrench"></i>Works</a>
                                                 <ul class="down_menu">
-                                                    <li><a href="IPWOrkProposals.aspx">Work Proposals</a> </li>
+                                                    <li id="workProposalMenu" visible="false" runat="server"><a href="IPWOrkProposals.aspx">Work Proposals</a> </li>
 
-                                                    <li><a href="IPBeneficiaryRegistration.aspx">Beneficiary Enrollment</a> </li>
-                                                    <li><a href="IPJobCard.aspx">Job Card</a> </li>
-                                                    <li><a href="IPPrintCardID.aspx">Print ID Card</a> </li>
-                                                    <li><a href="PDCWorkProgress.aspx">Work Progress</a> </li>
-                                                    <li><a href="LIPWExports.aspx">LIPW Exports</a> </li>
+                                                    <li id="beneficiaryRegistrationMenu" visible="false" runat="server"><a href="IPBeneficiaryRegistration.aspx">Beneficiary Enrollment</a> </li>
+                                                    <li id="jobCardMenu" visible="false" runat="server"><a href="IPJobCard.aspx">Job Card</a> </li>
+                                                    <li id="printIdCardMenu" visible="false" runat="server"><a href="IPPrintCardID.aspx">Print ID Card</a> </li>
+                                                    <li id="workProgressMenu" visible="false" runat="server"><a href="PDCWorkProgress.aspx">Work Progress</a> </li>
+                                                    <li id="lipwExportMenu" visible="false" runat="server"><a href="LIPWExports.aspx">LIPW Exports</a> </li>
                                                 </ul>
                                             </li>
                                             <li id="LiIp4" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-check-square-o"></i>Attendance</a>

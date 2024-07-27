@@ -115,6 +115,12 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiIp1.Visible = true;
                 LiIp2.Visible = true;
                 LiIp3.Visible = true;
+                workProposalMenu.Visible = true;
+                beneficiaryRegistrationMenu.Visible = true;
+                jobCardMenu.Visible = true;
+                printIdCardMenu.Visible = true;
+                workProgressMenu.Visible = true;
+                lipwExportMenu.Visible = true;
                 LiIp4.Visible = true;
                 LiIp5.Visible = true;
 
@@ -136,6 +142,12 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 grmReport.Visible = true;
                 grmImporting.Visible = true;
 
+            }
+            if (Session["user_type"].ToString() == "FSP")
+            {
+                LiIp3.Visible = true;
+                printIdCardMenu.Visible = true;
+                Li1.Visible = false;
             }
             if (Session["user_type"].ToString() == "TST")
             {

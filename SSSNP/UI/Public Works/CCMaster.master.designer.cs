@@ -121,6 +121,60 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiIp3;
 
     /// <summary>
+    /// workProposalMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl workProposalMenu;
+
+    /// <summary>
+    /// beneficiaryRegistrationMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl beneficiaryRegistrationMenu;
+
+    /// <summary>
+    /// jobCardMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl jobCardMenu;
+
+    /// <summary>
+    /// printIdCardMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl printIdCardMenu;
+
+    /// <summary>
+    /// workProgressMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl workProgressMenu;
+
+    /// <summary>
+    /// lipwExportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lipwExportMenu;
+
+    /// <summary>
     /// LiIp4 control.
     /// </summary>
     /// <remarks>
