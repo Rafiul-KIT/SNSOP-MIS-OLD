@@ -332,9 +332,9 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
                     cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
                     cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
-                    Log($"Executing query: {query} with parameters: " +
+                    /*Log($"Executing query: {query} with parameters: " +
                         $"StateId = {state}, CountyId = {county}, PayamId = {payam}, BomaId = {boma}, Age = {age}, Gender = {gender}, Component = {component}, Offset = {pageIndex * pageSize}, PageSize = {pageSize}");
-
+*/
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     da.Fill(dt);
                 }

@@ -53,7 +53,7 @@ public partial class CashTransferSummaryMNE : Page
 
     private void LoadInitialData()
     {
-        LoadDropdownData(ddlState, "SELECT intStateid, StateName FROM tm_States", "StateName", "intStateid");
+        LoadDropdownData();
 
         // Populate fixed dropdowns for Payment Cycle and Status
         ddlPaymentCycle.Items.Add(new ListItem("--Select--", ""));
@@ -63,12 +63,12 @@ public partial class CashTransferSummaryMNE : Page
         }
 
         ddlStatus.Items.Add(new ListItem("--Select--", ""));
-        ddlStatus.Items.Add(new ListItem("IP Applied", ""));
+        ddlStatus.Items.Add(new ListItem("IP Applied", "0"));
         ddlStatus.Items.Add(new ListItem("IP Approver Approved", "1"));
         ddlStatus.Items.Add(new ListItem("Initial Reviewer Approved", "2"));
         ddlStatus.Items.Add(new ListItem("Financial Approver Approved", "3"));
         ddlStatus.Items.Add(new ListItem("Final Payment Authorizer Approved", "4"));
-        ddlStatus.Items.Add(new ListItem("Reconciled", "5"));
+        ddlStatus.Items.Add(new ListItem("Reconciled", "6"));
         ddlStatus.Items.Add(new ListItem("IP Approver Rejected", "11"));
         ddlStatus.Items.Add(new ListItem("Initial Reviewer Rejected", "12"));
         ddlStatus.Items.Add(new ListItem("Financial Approver Rejected", "13"));
@@ -79,7 +79,7 @@ public partial class CashTransferSummaryMNE : Page
         ddlComponent.Items.Add(new ListItem("DIS", "Component 2 (Direct Income Support)"));
     }
 
-    private void LoadDropdownData(DropDownList ddl, string query, string textField, string valueField)
+    private void LoadDropdownData()
     {
         try
         {
@@ -209,7 +209,7 @@ public partial class CashTransferSummaryMNE : Page
     {
         try
         {
-            Log("BtnSearch_Click started.");
+            //Log("BtnSearch_Click started.");
 
             rgResults.Visible = true; // Show the grid when the search button is clicked
 
@@ -236,14 +236,14 @@ public partial class CashTransferSummaryMNE : Page
 
             Session["CashTransferSummarySearchParams"] = searchParams;
 
-            // DataTable dt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, 0, rgResults.PageSize);
-            // Session["CashTransferSummaryData"] = dt; // Store the data in session
 
             int totalCount = GetTotalPaymentRecordsCount(state, county, payam, boma, paymentCycle, status, component);
-
             Session["TotalRecordCount"] = totalCount;
             
-            System.Diagnostics.Debug.WriteLine(totalCount);
+            DataTable totaldt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, 0, rgResults.PageSize);//to store total data
+            Session["CashTransferSummaryData"] = totaldt; // Store the data in session
+
+            //System.Diagnostics.Debug.WriteLine(totalCount);
 
             rgResults.CurrentPageIndex = 0; // Reset to the first page
             rgResults.Rebind();
@@ -272,27 +272,10 @@ public partial class CashTransferSummaryMNE : Page
             {
                 conn.Open(); // Ensure the connection is opened
 
-                /*string query = @"
-                SELECT COUNT(*)
-                FROM td_WorkWageRequest w
-                INNER JOIN tbl_BeneficiaryDet b ON w.intWagePaymentReqid = b.intBenid
-                INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-                WHERE (@StateId IS NULL OR m.intStateid = @StateId)
-                AND (@CountyId IS NULL OR m.intCountieid = @CountyId)
-                AND (@PayamId IS NULL OR m.intPayamid = @PayamId)
-                AND (@BomaId IS NULL OR m.intBomasid = @BomaId)
-                AND (@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
-                AND (@Status IS NULL OR w.Status = @Status)
-                AND (@Component IS NULL OR w.Component = @Component);";*/
-
                 string query = @"
                 SELECT COUNT(*)
                 FROM td_WorkWageRequest w
                 INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-                INNER JOIN tm_States s ON m.intStateid = s.intStateid
-                INNER JOIN tm_Counties c ON m.intCountieid = c.intCountieid
-                INNER JOIN tm_Payams p ON m.intPayamid = p.intPayamid
-                INNER JOIN tm_Bomas b ON m.intBomasid = b.intBomasid
                 LEFT JOIN tr_BenWagesPayment bw ON w.intWorkid = bw.intWorkid
                 WHERE(@StateId IS NULL OR m.intStateid = @StateId)
                 AND(@CountyId IS NULL OR m.intCountieid = @CountyId)
@@ -354,14 +337,14 @@ public partial class CashTransferSummaryMNE : Page
             string status = ddlStatus.SelectedValue;
             string component = ddlComponent.SelectedValue;
 
-            int totalRecords = (int)Session["TotalRecordCount"]; // Use cached total record count
-            DataTable totaldt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, 0, totalRecords);//to store total data
+            /*int totalRecords = (int)Session["TotalRecordCount"]; // Use cached total record count
+            DataTable totaldt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, 0, rgResults.PageSize);//to store total data
             Session["CashTransferSummaryData"] = totaldt; // Store the data in session
-
+*/
 
             DataTable dt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, rgResults.CurrentPageIndex, rgResults.PageSize);//to store only grid data
             rgResults.DataSource = dt;
-            rgResults.VirtualItemCount = totalRecords; // Set the total number of records
+            rgResults.VirtualItemCount = (int)Session["TotalRecordCount"]; // Set the total number of records
         }
         catch (Exception ex)
         {
@@ -386,12 +369,12 @@ public partial class CashTransferSummaryMNE : Page
                     w.intWagePaymentReqid AS intPaymentId,
                     w.PaymentCycle,
                     CASE 
-                        WHEN w.Status = '' THEN 'IP Applied'
+                        WHEN w.Status = '0' THEN 'IP Applied'
                         WHEN w.Status = '1' THEN 'IP Approver Approved'
                         WHEN w.Status = '2' THEN 'Initial Reviewer Approved'
                         WHEN w.Status = '3' THEN 'Financial Approver Approved'
                         WHEN w.Status = '4' THEN 'Final Payment Authorizer Approved'
-                        WHEN w.Status = '5' THEN 'Reconciled'
+                        WHEN w.Status = '6' THEN 'Reconciled'
                         WHEN w.Status = '11' THEN 'IP Approver Rejected'
                         WHEN w.Status = '12' THEN 'Initial Reviewer Rejected'
                         WHEN w.Status = '13' THEN 'Financial Approver Rejected'
@@ -403,10 +386,6 @@ public partial class CashTransferSummaryMNE : Page
                     bw.PaidDate AS PaymentDate
                 FROM td_WorkWageRequest w
                 INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-                INNER JOIN tm_States s ON m.intStateid = s.intStateid
-                INNER JOIN tm_Counties c ON m.intCountieid = c.intCountieid
-                INNER JOIN tm_Payams p ON m.intPayamid = p.intPayamid
-                INNER JOIN tm_Bomas b ON m.intBomasid = b.intBomasid
                 LEFT JOIN tr_BenWagesPayment bw ON w.intWorkid = bw.intWorkid
                 WHERE (@StateId IS NULL OR m.intStateid = @StateId)
                 AND (@CountyId IS NULL OR m.intCountieid = @CountyId)
