@@ -121,7 +121,53 @@ namespace SSSNP_SNSOP
             Response.Close();
 
         }
-       
+
+        private void Non_GBVAttachmentHandler(bool isNonGBVTemplate)
+        {
+            string filenameFull;
+            string filename;
+
+            if (isNonGBVTemplate)
+            {
+                filenameFull = Server.MapPath("~/Template/NonGBVTemplateFile.xlsx");
+                filename = "NonGBVTemplateFile.xlsx";
+            }
+            else
+            {
+                filenameFull = Server.MapPath("~/Template/GBVTemplateFile.xlsx");
+                filename = "GBVTemplateFile.xlsx";
+            }
+
+            try
+            {
+                byte[] buffer;
+
+                using (FileStream fs = new FileStream(filenameFull, FileMode.Open))
+                {
+
+                    buffer = new byte[(int)fs.Length];
+                    fs.Read(buffer, 0, (int)fs.Length);
+                    fs.Close();
+                }
+
+                Response.ClearHeaders();
+                Response.ContentType = "application/octet-stream";
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
+                Response.AddHeader("Content-Length", buffer.Length.ToString());
+
+
+                Response.BinaryWrite((byte[])buffer);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            Response.Flush();
+            Response.Close();
+
+        }
+
         private void GBVAttachmentHandler(object valueFunction)
         {
             if (valueFunction == null) return;
