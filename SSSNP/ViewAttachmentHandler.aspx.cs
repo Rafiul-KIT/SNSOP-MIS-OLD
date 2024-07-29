@@ -17,6 +17,7 @@ using SSSNP_SNSOP.UI.Public_Works;
 using System.Data;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using OfficeOpenXml;
 
 namespace SSSNP_SNSOP
 {
@@ -40,7 +41,7 @@ namespace SSSNP_SNSOP
             SYSTEM_REPORT = 8,
             SYSTEM_REPORT_ELRP = 9,
             ENCRYPTED_PAYROLL_DATA = 10,// Add new case for encrypted payroll data
-            CASH_TRANSFER_SUMMARY = 11 // Add new case for cash transfer summary download
+            MNE_MODULE_SUMMARY = 11 // Add new case for cash transfer summary download
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -88,8 +89,8 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.ENCRYPTED_PAYROLL_DATA:
                     EncryptedPayrollDataHandler();
                     return "OK";
-                case HandlerAttachment.CASH_TRANSFER_SUMMARY:
-                    CashTransferSummaryHandler();
+                case HandlerAttachment.MNE_MODULE_SUMMARY:
+                    MNEModuleSummaryHandler();
                     return "OK";
                     //break;
 
@@ -401,63 +402,75 @@ namespace SSSNP_SNSOP
 
 
         // Cash transfer summary started
-        private void CashTransferSummaryHandler()
+        private void MNEModuleSummaryHandler()
         {
             try
             {
                 // Retrieve the data from the session
-                var dt = Session["CashTransferSummaryData"] as DataTable;
+                var dt = Session["Report"] as DataTable;
                 if (dt == null)
                 {
-                    throw new Exception("Cash transfer summary data is missing.");
+                    throw new Exception("Report data is missing.");
                 }
 
                 // Generate PDF from the DataTable
-                GeneratePDF(dt);
+                GenerateExcel(dt);
             }
             catch (Exception ex)
             {
-                LogError("Error in CashTransferSummaryHandler: " + ex.Message, ex);
+                LogError("Error in MNEModuleSummaryHandler: " + ex.Message, ex);
             }
         }
 
-        private void GeneratePDF(DataTable dt)
+        private void GenerateExcel(DataTable dt)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (ExcelPackage package = new ExcelPackage())
             {
-                using (Document document = new Document())
+                // Add a new worksheet to the empty workbook
+                var worksheet = package.Workbook.Worksheets.Add("Sheet1");
+
+
+                // Add the headers
+                for (int col = 0; col < dt.Columns.Count; col++)
                 {
-                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
-                    document.Open();
-                    PdfPTable table = new PdfPTable(dt.Columns.Count);
-
-                    // Add headers
-                    foreach (DataColumn column in dt.Columns)
-                    {
-                        table.AddCell(new Phrase(column.ColumnName));
-                    }
-
-                    // Add data
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        foreach (DataColumn col in dt.Columns)
-                        {
-                            table.AddCell(new Phrase(row[col].ToString()));
-                        }
-                    }
-
-                    document.Add(table);
-                    document.Close();
+                    worksheet.Cells[1, col + 1].Value = dt.Columns[col].ColumnName;
+                    // Optional: Format header cells for better visibility
+                    worksheet.Cells[1, col + 1].Style.Font.Bold = true;
                 }
 
+                // Add the data
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    for (int col = 0; col < dt.Columns.Count; col++)
+                    {
+                        // Handle potential null or DBNull values gracefully
+                        var cellValue = dt.Rows[row][col];
+                        worksheet.Cells[row + 2, col + 1].Value = cellValue == DBNull.Value ? "" : cellValue.ToString();
+                    }
+                }
+
+                // Auto-fit columns for all cells
+                worksheet.Cells.AutoFitColumns();
+
+                // Set other styling options as needed (e.g., borders, alignment, number formats)
+
+                byte[] fileContents = package.GetAsByteArray();
+
                 // Write the stream to the response
-                Response.Clear();
-                Response.ContentType = "application/pdf";
-                Response.AddHeader("Content-Disposition", "attachment; filename=CashTransferSummary.pdf");
-                Response.BinaryWrite(ms.ToArray());
+                HttpContext.Current.Response.Clear();
+                HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment; filename = ReportSummary.xlsx");
+        
+                HttpContext.Current.Response.AddHeader("Content-Length", fileContents.Length.ToString());
+
+                HttpContext.Current.Response.BinaryWrite(fileContents);
+
                 HttpContext.Current.ApplicationInstance.CompleteRequest();
             }
         }
+
+
 
         private void LogError(string message, Exception ex)
         {

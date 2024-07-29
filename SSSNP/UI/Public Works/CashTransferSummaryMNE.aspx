@@ -103,16 +103,6 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlPaymentCycle" runat="server" Width="180px">
-                                                            <%--<asp:ListItem>--Select--</asp:ListItem>--%>
-                                                            <%--<asp:ListItem Value="1">Payment Cycle 1</asp:ListItem>
-                                                            <asp:ListItem Value="2">Payment Cycle 2</asp:ListItem>
-                                                            <asp:ListItem Value="3">Payment Cycle 3</asp:ListItem>
-                                                            <asp:ListItem Value="4">Payment Cycle 4</asp:ListItem>
-                                                            <asp:ListItem Value="5">Payment Cycle 5</asp:ListItem>
-                                                            <asp:ListItem Value="6">Payment Cycle 6</asp:ListItem>
-                                                            <asp:ListItem Value="7">Payment Cycle 7</asp:ListItem>
-                                                            <asp:ListItem Value="8">Payment Cycle 8</asp:ListItem>
-                                                            <asp:ListItem Value="9">Payment Cycle 9</asp:ListItem>--%>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -123,17 +113,6 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlStatus" runat="server" Width="180px">
-                                                            <%--<asp:ListItem>--Select--</asp:ListItem>--%>
-                                                            <%--<asp:ListItem Value="">IP Applied</asp:ListItem>
-                                                            <asp:ListItem Value="1">IP Approver Approved</asp:ListItem>
-                                                            <asp:ListItem Value="2">Initial Reviewer Approved</asp:ListItem>
-                                                            <asp:ListItem Value="3">Finantial Approver Approved</asp:ListItem>
-                                                            <asp:ListItem Value="4">Final Payment Authorizer Approved</asp:ListItem>
-                                                            <asp:ListItem Value="5">Reconciled</asp:ListItem>
-                                                            <asp:ListItem Value="11">IP Approver Rejected</asp:ListItem>
-                                                            <asp:ListItem Value="12">Initial Reviewer Rejected</asp:ListItem>
-                                                            <asp:ListItem Value="13">Finantial Approver Rejected</asp:ListItem>
-                                                            <asp:ListItem Value="14">Final Payment Authorizer Rejected</asp:ListItem>--%>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -144,9 +123,6 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlComponent" runat="server" Width="180px">
-                                                            <%--<asp:ListItem>--Select--</asp:ListItem>--%>
-                                                            <%--<asp:ListItem Value="LIPW">LIPW</asp:ListItem>
-                                                            <asp:ListItem Value="DIS">DIS</asp:ListItem>--%>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>

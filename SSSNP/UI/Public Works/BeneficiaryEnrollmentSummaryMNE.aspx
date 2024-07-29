@@ -152,6 +152,7 @@
                                     <tr>
                                         <td colspan="2" style="padding: 5px; margin: 5px" valign="top" align="center">
                                             <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" Width="110px" OnClientClick="return validateSearch();" />
+                                            <asp:Button ID="BtnDownload" runat="server" Text="Download" OnClick="BtnDownload_Click" Width="110px" Visible="false"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -180,6 +181,10 @@
                 </div>
             </div>
         </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="BtnDownload" />
+        </Triggers>
+
     </asp:UpdatePanel>
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
         <ProgressTemplate>

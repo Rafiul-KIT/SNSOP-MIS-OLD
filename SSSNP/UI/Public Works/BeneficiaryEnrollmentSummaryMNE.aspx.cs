@@ -5,6 +5,7 @@ using System.Configuration;
 using Telerik.Web.UI;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web;
 
 public partial class BeneficiaryEnrollmentSummaryMNE : Page
 {
@@ -14,11 +15,9 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
     {
         try
         {
-            Log("Page_Load started.");
             InitializeServices();
             if (!IsPostBack)
             {
-                Log("IsPostBack is false.");
                 LoadStates();
                 LoadGenderDropdown();
                 LoadComponentDropdown();
@@ -188,8 +187,6 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
     {
         try
         {
-            Log("BtnSearch_Click started.");
-
             int parsedAge;
             if (!string.IsNullOrEmpty(txtAge.Text) && !int.TryParse(txtAge.Text, out parsedAge))
             {
@@ -213,11 +210,38 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
 
             rgResults.CurrentPageIndex = 0; // Reset to the first page
             rgResults.Rebind();
-            Log("Search button clicked.");
+
+            BtnDownload.Visible = (int)Session["TotalRecordCount"] > 0;
         }
         catch (Exception ex)
         {
             LogError("Error in BtnSearch_Click: " + ex.Message, ex);
+            throw;
+        }
+    }
+
+    protected void BtnDownload_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string state = ddlState.SelectedValue;
+            string county = ddlCounty.SelectedValue;
+            string payam = ddlPayam.SelectedValue;
+            string boma = ddlBoma.SelectedValue;
+            string age = txtAge.Text;
+            string gender = ddlGender.SelectedValue;
+            string component = ddlComponent.SelectedValue;
+
+            DataTable totaldt = GetAllEnrolledBeneficiaries(state, county, payam, boma, age, gender, component);//to store total data
+            Session["Report"] = totaldt; // Store the data in session
+
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=11";
+            Response.Redirect(redirectUrl, false); // Redirect to handler with the type for cash transfer summary
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+        catch (Exception ex)
+        {
+            LogError("Error in BtnDownload_Click: " + ex.Message, ex);
             throw;
         }
     }
@@ -332,9 +356,6 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
                     cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
                     cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
-                    /*Log($"Executing query: {query} with parameters: " +
-                        $"StateId = {state}, CountyId = {county}, PayamId = {payam}, BomaId = {boma}, Age = {age}, Gender = {gender}, Component = {component}, Offset = {pageIndex * pageSize}, PageSize = {pageSize}");
-*/
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     da.Fill(dt);
                 }
@@ -348,6 +369,56 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
 
         return dt;
     }
+
+
+    private DataTable GetAllEnrolledBeneficiaries(string state, string county, string payam, string boma, string age, string gender, string component)
+    {
+        DataTable dt = new DataTable();
+        string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+        try
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open(); // Ensure the connection is opened
+
+                string query = @"
+                SELECT intBenid AS BeneficiaryId, EnrollmentNo, NameofHousehold, FamilySize, Sex AS Gender, Age,
+                    intStateid, intCountieid, intPayamid, intBomasid, SelectionCriteria AS Component, Created_dt AS EnrollmentDate
+                FROM tbl_BeneficiaryDet
+                WHERE (@StateId IS NULL OR @StateId = '' OR intStateid = @StateId)
+                AND (@CountyId IS NULL OR @CountyId = '' OR intCountieid = @CountyId)
+                AND (@PayamId IS NULL OR @PayamId = '' OR intPayamid = @PayamId)
+                AND (@BomaId IS NULL OR @BomaId = '' OR intBomasid = @BomaId)
+                AND (@Age IS NULL OR @Age = '' OR Age = @Age)
+                AND (@Gender IS NULL OR @Gender = '' OR Sex = @Gender)
+                AND (@Component IS NULL OR @Component = '' OR SelectionCriteria = @Component)
+                ORDER BY intBenid;";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@StateId", string.IsNullOrEmpty(state) || state == "--Select--" ? (object)DBNull.Value : state);
+                    cmd.Parameters.AddWithValue("@CountyId", string.IsNullOrEmpty(county) || county == "--Select--" ? (object)DBNull.Value : county);
+                    cmd.Parameters.AddWithValue("@PayamId", string.IsNullOrEmpty(payam) || payam == "--Select--" ? (object)DBNull.Value : payam);
+                    cmd.Parameters.AddWithValue("@BomaId", string.IsNullOrEmpty(boma) || boma == "--Select--" ? (object)DBNull.Value : boma);
+                    cmd.Parameters.AddWithValue("@Age", string.IsNullOrEmpty(age) ? (object)DBNull.Value : age);
+                    cmd.Parameters.AddWithValue("@Gender", string.IsNullOrEmpty(gender) ? (object)DBNull.Value : gender);
+                    cmd.Parameters.AddWithValue("@Component", string.IsNullOrEmpty(component) || component == "--Select--" ? (object)DBNull.Value : component);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            LogError("Error in GetEnrolledBeneficiaries: " + ex.Message, ex);
+            throw;
+        }
+
+        return dt;
+    }
+
 
 
     private void Log(string message)
