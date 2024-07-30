@@ -41,55 +41,66 @@
                             <div class="panel-body">
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 100%">
                                     <tr>
+                                        <td style="padding: 5px; margin: 5px" colspan="3" align="center">&nbsp;</td>
+                                    </tr>
+                                    <tr>
                                         <td style="padding: 5px; margin: 5px" valign="top">
                                             <table cellpadding="4" cellspacing="5" style="width: 100%">
                                                 <!-- Geo Location Filters -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelState" runat="server" Width="165px">State Name</asp:Label>
+                                                        <asp:Label ID="LabelState" runat="server" CssClass="LBLBLACK" Width="165px">State Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlState" runat="server" Width="180px" AutoPostBack="True"
+                                                        <asp:DropDownList ID="ddlState" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px" AutoPostBack="True"
                                                             OnSelectedIndexChanged="ddlState_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelCounty" runat="server" Width="165px">County / Municipality Name</asp:Label>
+                                                        <asp:Label ID="LabelCounty" runat="server" CssClass="LBLBLACK" Width="165px">County / Municipality Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlCounty" runat="server" Width="180px" AutoPostBack="True"
+                                                        <asp:DropDownList ID="ddlCounty" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px" AutoPostBack="True"
                                                             OnSelectedIndexChanged="ddlCounty_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelPayam" runat="server" Width="165px">Payam / Block Name</asp:Label>
+                                                        <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlPayam" runat="server" Width="180px" AutoPostBack="True"
+                                                        <asp:DropDownList ID="ddlPayam" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px" AutoPostBack="True"
                                                             OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelBoma" runat="server" Width="165px">Boma / Quarter Council Name</asp:Label>
+                                                        <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlBoma" runat="server" Width="180px">
+                                                        <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -98,31 +109,36 @@
                                                 <!-- Other Filters -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelAge" runat="server" Width="165px">Payment Cycle</asp:Label>
+                                                        <asp:Label ID="LabelAge" runat="server" CssClass="LBLBLACK" Width="165px">Payment Cycle</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlPaymentCycle" runat="server" Width="180px">
+                                                        <asp:DropDownList ID="ddlPaymentCycle" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px">
                                                         </asp:DropDownList>
                                                     </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelStatus" runat="server" Width="165px">Status</asp:Label>
+                                                        <asp:Label ID="LabelStatus" runat="server" CssClass="LBLBLACK" Width="165px">Status</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlStatus" runat="server" Width="180px">
+                                                        <asp:DropDownList ID="ddlStatus" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px">
                                                         </asp:DropDownList>
                                                     </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelComponent" runat="server" Width="165px">Component</asp:Label>
+                                                        <asp:Label ID="LabelComponent" runat="server" CssClass="LBLBLACK" Width="165px">Component</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlComponent" runat="server" Width="180px">
+                                                        <asp:DropDownList ID="ddlComponent" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px">
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -156,13 +172,23 @@
                                     <tr>
                                         <td colspan="2" style="padding: 5px; margin: 5px" valign="top" align="center">
                                             <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" Width="110px" OnClientClick="return validateSearch();" />
-                                            <asp:Button ID="BtnDownload" runat="server" Text="Download" OnClick="BtnDownload_Click" Width="110px" Visible="false"/>
+                                            <asp:Button ID="BtnDownloadPdf" runat="server" Text="Download PDF" OnClick="BtnDownload_Pdf" Width="110px" Visible="false"/>
+                                            <asp:Button ID="BtnDownloadExl" runat="server" Text="Download Excel" OnClick="BtnDownload_Exl" Width="110px" Visible="false"/>
                                         </td>
                                     </tr>
                                 </table>
-                                <telerik:RadGrid ID="rgResults" runat="server" AutoGenerateColumns="False" AllowPaging="True" PageSize="10"
+                                <telerik:RadGrid ID="rgResults" runat="server" AutoGenerateColumns="False" AllowSorting="true" AllowPaging="True" PageSize="10" GridLines="Both"
                                     OnNeedDataSource="rgResults_NeedDataSource" AllowCustomPaging="True">
-                                    <MasterTableView AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
+                                    <PagerStyle Mode="NextPrevAndNumeric" />
+                                    <HeaderStyle CssClass="MyGridHeader" />
+                                    <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                    <ClientSettings Selecting-AllowRowSelect="true">
+                                        <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
+                                        <Selecting AllowRowSelect="True" />
+                                    </ClientSettings>
+                                    <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
+                                        <HeaderStyle CssClass="MyGridHeader" />
+                                        <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="intPaymentId" HeaderText="Payment ID"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="PaymentCycle" HeaderText="Payment Cycle"></telerik:GridBoundColumn>

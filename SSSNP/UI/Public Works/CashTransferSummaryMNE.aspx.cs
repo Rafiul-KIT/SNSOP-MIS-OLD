@@ -17,6 +17,7 @@ public partial class CashTransferSummaryMNE : Page
     {
         try
         {
+            Log("Page_Load started.");
             InitializeServices();
             if (!IsPostBack)
             {
@@ -225,7 +226,9 @@ public partial class CashTransferSummaryMNE : Page
             rgResults.Rebind();
 
             // Show the download button if there are records
-            BtnDownload.Visible = totalCount > 0;
+            BtnDownloadPdf.Visible = totalCount > 0;
+            BtnDownloadExl.Visible = totalCount > 0;
+
         }
         catch (Exception ex)
         {
@@ -234,7 +237,33 @@ public partial class CashTransferSummaryMNE : Page
         }
     }
 
-    protected void BtnDownload_Click(object sender, EventArgs e)
+    protected void BtnDownload_Pdf(object sender, EventArgs e)
+    {
+        try
+        {
+            string state = ddlState.SelectedValue;
+            string county = ddlCounty.SelectedValue;
+            string payam = ddlPayam.SelectedValue;
+            string boma = ddlBoma.SelectedValue;
+            string paymentCycle = ddlPaymentCycle.SelectedValue;
+            string status = ddlStatus.SelectedValue;
+            string component = ddlComponent.SelectedValue;
+
+            DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component);//to store total data
+            Session["Report"] = totaldt; // Store the data in session
+
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=12";
+            Response.Redirect(redirectUrl, false); // Redirect to handler with the type for cash transfer summary
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+        catch (Exception ex)
+        {
+            LogError("Error in BtnDownload_Pdf: " + ex.Message, ex);
+            throw;
+        }
+    }
+
+    protected void BtnDownload_Exl(object sender, EventArgs e)
     {
         try
         {
@@ -255,7 +284,7 @@ public partial class CashTransferSummaryMNE : Page
         }
         catch (Exception ex)
         {
-            LogError("Error in BtnDownload_Click: " + ex.Message, ex);
+            LogError("Error in BtnDownload_Exl: " + ex.Message, ex);
             throw;
         }
     }

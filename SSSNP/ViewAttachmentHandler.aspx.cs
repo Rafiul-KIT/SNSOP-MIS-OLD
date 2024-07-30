@@ -41,7 +41,8 @@ namespace SSSNP_SNSOP
             SYSTEM_REPORT = 8,
             SYSTEM_REPORT_ELRP = 9,
             ENCRYPTED_PAYROLL_DATA = 10,// Add new case for encrypted payroll data
-            MNE_MODULE_SUMMARY = 11 // Add new case for cash transfer summary download
+            MNE_MODULE_Exl_Download = 11, // Add new case for MNE_MODULE_Exl_Download
+            MNE_MODULE_Pdf_Download = 12  // Add new case for MNE_MODULE_Pdf_Download
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -89,8 +90,11 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.ENCRYPTED_PAYROLL_DATA:
                     EncryptedPayrollDataHandler();
                     return "OK";
-                case HandlerAttachment.MNE_MODULE_SUMMARY:
-                    MNEModuleSummaryHandler();
+                case HandlerAttachment.MNE_MODULE_Exl_Download:
+                    MNEModuleExlHandler();
+                    return "OK";
+                case HandlerAttachment.MNE_MODULE_Pdf_Download:
+                    MNEModulePdfHandler();
                     return "OK";
                     //break;
 
@@ -390,7 +394,7 @@ namespace SSSNP_SNSOP
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    LogError(ex);
                 }
 
                 Response.Flush(); // Ensure all data is sent to the client
@@ -447,8 +451,8 @@ namespace SSSNP_SNSOP
 
 
 
-        // Cash transfer summary started
-        private void MNEModuleSummaryHandler()
+        // Excel Download started
+        private void MNEModuleExlHandler()
         {
             try
             {
@@ -464,7 +468,7 @@ namespace SSSNP_SNSOP
             }
             catch (Exception ex)
             {
-                LogError("Error in MNEModuleSummaryHandler: " + ex.Message, ex);
+                LogError("Error in MNEModuleExlHandler: " + ex.Message, ex);
             }
         }
 
@@ -503,28 +507,104 @@ namespace SSSNP_SNSOP
                 byte[] fileContents = package.GetAsByteArray();
 
                 // Write the stream to the response
-                HttpContext.Current.Response.Clear();
-                HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.ClearHeaders();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("Content-Disposition", "attachment; filename = ReportSummary.xlsx");
+                Response.AddHeader("Content-Length", fileContents.Length.ToString());
 
-                HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment; filename = ReportSummary.xlsx");
-        
-                HttpContext.Current.Response.AddHeader("Content-Length", fileContents.Length.ToString());
+                Response.BinaryWrite(fileContents);
+                //HttpContext.Current.ApplicationInstance.CompleteRequest();
 
-                HttpContext.Current.Response.BinaryWrite(fileContents);
-
-                HttpContext.Current.ApplicationInstance.CompleteRequest();
+                Response.Flush(); 
+                Response.Close();
             }
         }
 
+        // Excel Download ended
 
+
+
+        //Pdf Download Started
+        private void MNEModulePdfHandler()
+        {
+            try
+            {
+                // Retrieve the data from the session
+                var dt = Session["Report"] as DataTable;
+                if (dt == null)
+                {
+                    throw new Exception("Report data is missing.");
+                }
+
+                // Generate PDF from the DataTable
+                GeneratePDF(dt);
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in MNEModulePdfHandler: " + ex.Message, ex);
+            }
+        }
+        private void GeneratePDF(DataTable dt)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (Document document = new Document(PageSize.A4, 10, 10, 10, 10))
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                    document.Open();
+                    PdfPTable table = new PdfPTable(dt.Columns.Count);
+
+                    // Calculate column widths
+                    float[] columnWidths = new float[dt.Columns.Count];
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        // Set a minimum width for each column
+                        columnWidths[i] = 50f;
+                    }
+
+                    // Add headers and calculate widths
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        PdfPCell cell = new PdfPCell(new Phrase(column.ColumnName));
+                        table.AddCell(cell);
+                        columnWidths[dt.Columns.IndexOf(column)] = Math.Max(columnWidths[dt.Columns.IndexOf(column)], cell.MinimumHeight);
+                    }
+
+                    // Add data and calculate widths
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            PdfPCell cell = new PdfPCell(new Phrase(row[col].ToString()));
+                            table.AddCell(cell);
+                            columnWidths[dt.Columns.IndexOf(col)] = Math.Max(columnWidths[dt.Columns.IndexOf(col)], cell.MinimumHeight);
+                        }
+                    }
+
+                    // Set column widths
+                    table.SetWidths(columnWidths);
+
+                    document.Add(table);
+                    document.Close();
+                }
+
+                // Write the stream to the response
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("Content-Disposition", "attachment; filename=ReportSummary.pdf");
+                Response.BinaryWrite(ms.ToArray());
+
+                Response.Flush();
+                Response.Close();
+            }
+        }
+
+        //Pdf Download ended
 
         private void LogError(string message, Exception ex)
         {
             // Log error details to a file, event log, or database.
             System.Diagnostics.Debug.WriteLine($"{message}: {ex}");
         }
-
-
-
     }
 }
