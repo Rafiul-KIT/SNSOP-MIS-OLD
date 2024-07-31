@@ -17,6 +17,7 @@ using SSSNP_SNSOP.UI.Public_Works;
 using System.Data;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using OfficeOpenXml;
 
 namespace SSSNP_SNSOP
 {
@@ -40,7 +41,9 @@ namespace SSSNP_SNSOP
             SYSTEM_REPORT = 8,
             SYSTEM_REPORT_ELRP = 9,
             ENCRYPTED_PAYROLL_DATA = 10,// Add new case for encrypted payroll data
-            CASH_TRANSFER_SUMMARY = 11 // Add new case for cash transfer summary download
+            MNE_MODULE_Pdf_Download = 11,// Add new case for MNE_MODULE_Pdf_Download
+            MNE_MODULE_Exl_Download = 12 // Add new case for MNE_MODULE_Exl_Download
+         
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -88,8 +91,11 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.ENCRYPTED_PAYROLL_DATA:
                     EncryptedPayrollDataHandler();
                     return "OK";
-                case HandlerAttachment.CASH_TRANSFER_SUMMARY:
-                    CashTransferSummaryHandler();
+                case HandlerAttachment.MNE_MODULE_Exl_Download:
+                    MNEModuleExlHandler();
+                    return "OK";
+                case HandlerAttachment.MNE_MODULE_Pdf_Download:
+                    MNEModulePdfHandler();
                     return "OK";
                     //break;
 
@@ -389,7 +395,7 @@ namespace SSSNP_SNSOP
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    LogError(ex);
                 }
 
                 Response.Flush(); // Ensure all data is sent to the client
@@ -444,19 +450,14 @@ namespace SSSNP_SNSOP
         //downlaod encrypted payroll data module end
 
 
-
-
-        // Cash transfer summary started
-        private void CashTransferSummaryHandler()
+        // MNE module pdf started
+        private void MNEModulePdfHandler()
         {
             try
             {
                 // Retrieve the data from the session
-                var dt = Session["CashTransferSummaryData"] as DataTable;
-                if (dt == null)
-                {
-                    throw new Exception("Cash transfer summary data is missing.");
-                }
+                var dt = Session["ReportPdf"] as DataTable;
+                if (dt == null) throw new Exception("Cash transfer summary data is missing.");
 
                 // Generate PDF from the DataTable
                 GeneratePDF(dt);
@@ -464,6 +465,7 @@ namespace SSSNP_SNSOP
             catch (Exception ex)
             {
                 LogError("Error in CashTransferSummaryHandler: " + ex.Message, ex);
+                throw;
             }
         }
 
@@ -471,16 +473,39 @@ namespace SSSNP_SNSOP
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                using (Document document = new Document())
+                // Set the document size to legal and rotate it to landscape for more width
+                using (Document document = new Document(PageSize.LEGAL.Rotate(), 10f, 10f, 10f, 10f))
                 {
                     PdfWriter writer = PdfWriter.GetInstance(document, ms);
                     document.Open();
-                    PdfPTable table = new PdfPTable(dt.Columns.Count);
 
-                    // Add headers
+                    // Set the font and size
+                    Font font = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+
+                    // Calculate column widths based on the number of columns
+                    float[] columnWidths = new float[dt.Columns.Count];
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        columnWidths[i] = 1f; // Adjust as necessary
+                    }
+
+                    PdfPTable table = new PdfPTable(dt.Columns.Count)
+                    {
+                        WidthPercentage = 100
+                    };
+                    table.SetWidths(columnWidths);
+
+                    // Add headers with font styling
                     foreach (DataColumn column in dt.Columns)
                     {
-                        table.AddCell(new Phrase(column.ColumnName));
+                        PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, font))
+                        {
+                            HorizontalAlignment = Element.ALIGN_CENTER,
+                            VerticalAlignment = Element.ALIGN_MIDDLE,
+                            BackgroundColor = new BaseColor(230, 230, 250), // Light color for headers
+                            Padding = 5
+                        };
+                        table.AddCell(headerCell);
                     }
 
                     // Add data
@@ -488,7 +513,13 @@ namespace SSSNP_SNSOP
                     {
                         foreach (DataColumn col in dt.Columns)
                         {
-                            table.AddCell(new Phrase(row[col].ToString()));
+                            PdfPCell dataCell = new PdfPCell(new Phrase(row[col].ToString(), font))
+                            {
+                                HorizontalAlignment = Element.ALIGN_LEFT,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                Padding = 5
+                            };
+                            table.AddCell(dataCell);
                         }
                     }
 
@@ -499,18 +530,89 @@ namespace SSSNP_SNSOP
                 // Write the stream to the response
                 Response.Clear();
                 Response.ContentType = "application/pdf";
-                Response.AddHeader("Content-Disposition", "attachment; filename=CashTransferSummary.pdf");
+                Response.AddHeader("Content-Disposition", "attachment; filename=ReportSummary.pdf");
                 Response.BinaryWrite(ms.ToArray());
                 HttpContext.Current.ApplicationInstance.CompleteRequest();
             }
         }
 
-        private void LogError(string message, Exception ex)
+        // MNE module pdf ended
+
+        // Excel Download started
+        private void MNEModuleExlHandler()
         {
-            // Log error details to a file, event log, or database.
-            System.Diagnostics.Debug.WriteLine($"{message}: {ex}");
+            try
+            {
+                // Retrieve the data from the session
+                var dt = Session["ReportExl"] as DataTable;
+                if (dt == null)
+                {
+                    throw new Exception("Report data is missing.");
+                }
+
+                // Generate PDF from the DataTable
+                GenerateExcel(dt);
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in MNEModuleExlHandler: " + ex.Message, ex);
+            }
         }
 
+        private void GenerateExcel(DataTable dt)
+        {
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                // Add a new worksheet to the empty workbook
+                var worksheet = package.Workbook.Worksheets.Add("Sheet1");
+
+
+                // Add the headers
+                for (int col = 0; col < dt.Columns.Count; col++)
+                {
+                    worksheet.Cells[1, col + 1].Value = dt.Columns[col].ColumnName;
+                    // Optional: Format header cells for better visibility
+                    worksheet.Cells[1, col + 1].Style.Font.Bold = true;
+                }
+
+                // Add the data
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    for (int col = 0; col < dt.Columns.Count; col++)
+                    {
+                        // Handle potential null or DBNull values gracefully
+                        var cellValue = dt.Rows[row][col];
+                        worksheet.Cells[row + 2, col + 1].Value = cellValue == DBNull.Value ? "" : cellValue.ToString();
+                    }
+                }
+
+                // Auto-fit columns for all cells
+                worksheet.Cells.AutoFitColumns();
+
+                // Set other styling options as needed (e.g., borders, alignment, number formats)
+
+                byte[] fileContents = package.GetAsByteArray();
+
+                // Write the stream to the response
+                Response.ClearHeaders();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("Content-Disposition", "attachment; filename = ReportSummary.xlsx");
+                Response.AddHeader("Content-Length", fileContents.Length.ToString());
+
+                Response.BinaryWrite(fileContents);
+                //HttpContext.Current.ApplicationInstance.CompleteRequest();
+
+                Response.Flush(); 
+                Response.Close();
+            }
+        }
+
+        // Excel Download ended
+
+        private void LogError(string v, Exception ex)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }

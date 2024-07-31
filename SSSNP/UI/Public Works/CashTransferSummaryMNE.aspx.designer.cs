@@ -157,13 +157,22 @@ public partial class CashTransferSummaryMNE
     protected global::System.Web.UI.WebControls.Button BtnSearch;
 
     /// <summary>
-    /// BtnDownload control.
+    /// BtnDownloadPdf control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Button BtnDownload;
+    protected global::System.Web.UI.WebControls.Button BtnDownloadPdf;
+
+    /// <summary>
+    /// BtnDownloadExl control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button BtnDownloadExl;
 
     /// <summary>
     /// rgResults control.
