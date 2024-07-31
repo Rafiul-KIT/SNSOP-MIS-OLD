@@ -250,9 +250,9 @@ public partial class CashTransferSummaryMNE : Page
             string component = ddlComponent.SelectedValue;
 
             DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component);//to store total data
-            Session["Report"] = totaldt; // Store the data in session
+            Session["ReportPdf"] = totaldt; // Store the data in session
 
-            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=12";
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=11";
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for cash transfer summary
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
@@ -276,9 +276,9 @@ public partial class CashTransferSummaryMNE : Page
             string component = ddlComponent.SelectedValue;
 
             DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component);//to store total data
-            Session["Report"] = totaldt; // Store the data in session
+            Session["ReportExl"] = totaldt; // Store the data in session
 
-            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=11";
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=12";
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for cash transfer summary
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }

@@ -55,6 +55,9 @@
                             <div class="panel-body">
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 100%">
                                     <tr>
+                                        <td style="padding: 5px; margin: 5px" colspan="3" align="center">&nbsp;</td>
+                                    </tr>
+                                    <tr>
                                         <td style="padding: 5px; margin: 5px" valign="top">
                                             <table cellpadding="4" cellspacing="5" style="width: 100%">
                                                 <!-- Geo Location Filters -->
@@ -165,8 +168,12 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="padding: 5px; margin: 5px" valign="top" align="center">
-                                            <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" Width="110px" OnClientClick="return validateSearch();" />
-                                            <asp:Button ID="BtnDownload" runat="server" Text="Download" OnClick="BtnDownload_Click" Width="110px" Visible="false"/>
+                                            <asp:Button ID="BtnSearch" runat="server" Text="Search" OnClick="BtnSearch_Click" CssClass="btn btn-primary"
+                                                Height="32px" Width="110px" OnClientClick="return validateSearch();" />
+                                            <asp:Button ID="BtnDownloadPdf" runat="server" Text="Download PDF" OnClick="BtnDownload_Pdf" CssClass="btn btn-primary"
+                                                Height="32px" Visible="false"/>
+                                            <asp:Button ID="BtnDownloadExl" runat="server" Text="Download Excel" OnClick="BtnDownload_Exl" CssClass="btn btn-primary"
+                                                Height="32px" Visible="false"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -205,7 +212,8 @@
             </div>
         </ContentTemplate>
         <Triggers>
-            <asp:PostBackTrigger ControlID="BtnDownload" />
+            <asp:PostBackTrigger ControlID="BtnDownloadExl" />
+            <asp:PostBackTrigger ControlID="BtnDownloadPdf" />
         </Triggers>
 
     </asp:UpdatePanel>

@@ -211,7 +211,8 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
             rgResults.CurrentPageIndex = 0; // Reset to the first page
             rgResults.Rebind();
 
-            BtnDownload.Visible = (int)Session["TotalRecordCount"] > 0;
+            BtnDownloadExl.Visible = (int)Session["TotalRecordCount"] > 0;
+            BtnDownloadPdf.Visible = (int)Session["TotalRecordCount"] > 0;
         }
         catch (Exception ex)
         {
@@ -220,7 +221,7 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
         }
     }
 
-    protected void BtnDownload_Click(object sender, EventArgs e)
+    protected void BtnDownload_Pdf(object sender, EventArgs e)
     {
         try
         {
@@ -233,9 +234,34 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
             string component = ddlComponent.SelectedValue;
 
             DataTable totaldt = GetAllEnrolledBeneficiaries(state, county, payam, boma, age, gender, component);//to store total data
-            Session["Report"] = totaldt; // Store the data in session
+            Session["ReportPdf"] = totaldt; // Store the data in session
 
             string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=11";
+            Response.Redirect(redirectUrl, false); // Redirect to handler with the type for cash transfer summary
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+        catch (Exception ex)
+        {
+            LogError("Error in BtnDownloadPdf: " + ex.Message, ex);
+            throw;
+        }
+    }
+    protected void BtnDownload_Exl(object sender, EventArgs e)
+    {
+        try
+        {
+            string state = ddlState.SelectedValue;
+            string county = ddlCounty.SelectedValue;
+            string payam = ddlPayam.SelectedValue;
+            string boma = ddlBoma.SelectedValue;
+            string age = txtAge.Text;
+            string gender = ddlGender.SelectedValue;
+            string component = ddlComponent.SelectedValue;
+
+            DataTable totaldt = GetAllEnrolledBeneficiaries(state, county, payam, boma, age, gender, component);//to store total data
+            Session["ReportExl"] = totaldt; // Store the data in session
+
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=12";
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for cash transfer summary
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
@@ -245,6 +271,7 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
             throw;
         }
     }
+
 
     //Add Method to Get Total Record Count
     private int GetTotalEnrolledBeneficiariesCount(string state, string county, string payam, string boma, string age, string gender, string component)

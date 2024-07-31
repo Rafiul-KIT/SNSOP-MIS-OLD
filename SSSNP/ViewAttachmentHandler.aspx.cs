@@ -41,8 +41,9 @@ namespace SSSNP_SNSOP
             SYSTEM_REPORT = 8,
             SYSTEM_REPORT_ELRP = 9,
             ENCRYPTED_PAYROLL_DATA = 10,// Add new case for encrypted payroll data
-            MNE_MODULE_Exl_Download = 11, // Add new case for MNE_MODULE_Exl_Download
-            MNE_MODULE_Pdf_Download = 12  // Add new case for MNE_MODULE_Pdf_Download
+            MNE_MODULE_Pdf_Download = 11,// Add new case for MNE_MODULE_Pdf_Download
+            MNE_MODULE_Exl_Download = 12 // Add new case for MNE_MODULE_Exl_Download
+         
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -449,7 +450,93 @@ namespace SSSNP_SNSOP
         //downlaod encrypted payroll data module end
 
 
+        // MNE module pdf started
+        private void MNEModulePdfHandler()
+        {
+            try
+            {
+                // Retrieve the data from the session
+                var dt = Session["ReportPdf"] as DataTable;
+                if (dt == null) throw new Exception("Cash transfer summary data is missing.");
 
+                // Generate PDF from the DataTable
+                GeneratePDF(dt);
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in CashTransferSummaryHandler: " + ex.Message, ex);
+                throw;
+            }
+        }
+
+        private void GeneratePDF(DataTable dt)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // Set the document size to legal and rotate it to landscape for more width
+                using (Document document = new Document(PageSize.LEGAL.Rotate(), 10f, 10f, 10f, 10f))
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                    document.Open();
+
+                    // Set the font and size
+                    Font font = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+
+                    // Calculate column widths based on the number of columns
+                    float[] columnWidths = new float[dt.Columns.Count];
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        columnWidths[i] = 1f; // Adjust as necessary
+                    }
+
+                    PdfPTable table = new PdfPTable(dt.Columns.Count)
+                    {
+                        WidthPercentage = 100
+                    };
+                    table.SetWidths(columnWidths);
+
+                    // Add headers with font styling
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, font))
+                        {
+                            HorizontalAlignment = Element.ALIGN_CENTER,
+                            VerticalAlignment = Element.ALIGN_MIDDLE,
+                            BackgroundColor = new BaseColor(230, 230, 250), // Light color for headers
+                            Padding = 5
+                        };
+                        table.AddCell(headerCell);
+                    }
+
+                    // Add data
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            PdfPCell dataCell = new PdfPCell(new Phrase(row[col].ToString(), font))
+                            {
+                                HorizontalAlignment = Element.ALIGN_LEFT,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                Padding = 5
+                            };
+                            table.AddCell(dataCell);
+                        }
+                    }
+
+                    document.Add(table);
+                    document.Close();
+                }
+
+                // Write the stream to the response
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("Content-Disposition", "attachment; filename=ReportSummary.pdf");
+                Response.BinaryWrite(ms.ToArray());
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+            }
+        }
+
+        // MNE module pdf ended
 
         // Excel Download started
         private void MNEModuleExlHandler()
@@ -457,7 +544,7 @@ namespace SSSNP_SNSOP
             try
             {
                 // Retrieve the data from the session
-                var dt = Session["Report"] as DataTable;
+                var dt = Session["ReportExl"] as DataTable;
                 if (dt == null)
                 {
                     throw new Exception("Report data is missing.");
@@ -522,89 +609,11 @@ namespace SSSNP_SNSOP
 
         // Excel Download ended
 
-
-
-        //Pdf Download Started
-        private void MNEModulePdfHandler()
+        private void LogError(string v, Exception ex)
         {
-            try
-            {
-                // Retrieve the data from the session
-                var dt = Session["Report"] as DataTable;
-                if (dt == null)
-                {
-                    throw new Exception("Report data is missing.");
-                }
-
-                // Generate PDF from the DataTable
-                GeneratePDF(dt);
-            }
-            catch (Exception ex)
-            {
-                LogError("Error in MNEModulePdfHandler: " + ex.Message, ex);
-            }
-        }
-        private void GeneratePDF(DataTable dt)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                using (Document document = new Document(PageSize.A4, 10, 10, 10, 10))
-                {
-                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
-                    document.Open();
-                    PdfPTable table = new PdfPTable(dt.Columns.Count);
-
-                    // Calculate column widths
-                    float[] columnWidths = new float[dt.Columns.Count];
-                    for (int i = 0; i < dt.Columns.Count; i++)
-                    {
-                        // Set a minimum width for each column
-                        columnWidths[i] = 50f;
-                    }
-
-                    // Add headers and calculate widths
-                    foreach (DataColumn column in dt.Columns)
-                    {
-                        PdfPCell cell = new PdfPCell(new Phrase(column.ColumnName));
-                        table.AddCell(cell);
-                        columnWidths[dt.Columns.IndexOf(column)] = Math.Max(columnWidths[dt.Columns.IndexOf(column)], cell.MinimumHeight);
-                    }
-
-                    // Add data and calculate widths
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        foreach (DataColumn col in dt.Columns)
-                        {
-                            PdfPCell cell = new PdfPCell(new Phrase(row[col].ToString()));
-                            table.AddCell(cell);
-                            columnWidths[dt.Columns.IndexOf(col)] = Math.Max(columnWidths[dt.Columns.IndexOf(col)], cell.MinimumHeight);
-                        }
-                    }
-
-                    // Set column widths
-                    table.SetWidths(columnWidths);
-
-                    document.Add(table);
-                    document.Close();
-                }
-
-                // Write the stream to the response
-                Response.Clear();
-                Response.ContentType = "application/pdf";
-                Response.AddHeader("Content-Disposition", "attachment; filename=ReportSummary.pdf");
-                Response.BinaryWrite(ms.ToArray());
-
-                Response.Flush();
-                Response.Close();
-            }
+            throw new NotImplementedException();
         }
 
-        //Pdf Download ended
 
-        private void LogError(string message, Exception ex)
-        {
-            // Log error details to a file, event log, or database.
-            System.Diagnostics.Debug.WriteLine($"{message}: {ex}");
-        }
     }
 }
