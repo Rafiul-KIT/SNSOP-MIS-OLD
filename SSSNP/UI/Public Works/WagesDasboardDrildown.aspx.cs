@@ -709,7 +709,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
 
             string uri = ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
 
-            String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaG92b24iLCJpYXQiOjE3MDg4ODY5OTYsImV4cCI6MTg2NjU2Njk5Nn0.L-75R-EYM1GbrAqj-KdRpWLjxfxCMdVsAboepITEnI2I6AtTUtRhTgQaevzb5GOLWPnGaAUzggcC6SsArnMj-g";
+            String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
             uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
             if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))

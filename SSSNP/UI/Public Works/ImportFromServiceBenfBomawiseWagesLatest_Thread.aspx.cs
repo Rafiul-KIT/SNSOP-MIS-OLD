@@ -206,7 +206,7 @@ public partial class ImportFromServiceBenfBomawiseWagesLatest_Thread : System.We
                         httpWReq.PreAuthenticate = true;
                         //httpWReq.Headers.Add("Authorization", "Bearer " + apikey.HashSHA512());
 
-                        var token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWtpYiIsImlhdCI6MTcxNDk4MTEwOCwiZXhwIjoxODcyNjYxMTA4fQ.7FgalnXhBOcC7q-nYfONbxmc7My4iUOeWpN2eK3b7vc_br43NCEFiKWIrXs1cJTsU_Ds_ZZLHRB28c-jdgiBRw";
+                        var token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
                         httpWReq.Headers.Add("Authorization", "Bearer " + token);
 
 

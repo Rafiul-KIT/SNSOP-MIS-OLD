@@ -192,9 +192,7 @@ namespace SSSNP_SNSOP.Core.OleDbMapping
         {
             try
             {
-                if (string.IsNullOrEmpty(value.ToString())) return null;
-
-                DateTime dt;
+                if (string.IsNullOrEmpty(value.ToString())) return null;                
 
                 DateTime dateValue;
                 CultureInfo culture = CultureInfo.CurrentCulture;
@@ -203,6 +201,7 @@ namespace SSSNP_SNSOP.Core.OleDbMapping
                 if (dateValue == DateTime.MinValue) return null;
                 return dateValue;
 
+                //DateTime dt;
 
                 // DateTime.TryParse(value, out dt);
                 // Commented out as this does not work as intended on 31-07-2024

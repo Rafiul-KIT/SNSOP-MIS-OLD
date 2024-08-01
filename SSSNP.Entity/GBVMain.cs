@@ -40,7 +40,7 @@ namespace SSSNP_SNSOP.Entity
         public string Gender { get; set; }
         [AttributeMappingProperty(ColumnName = "Age", PropertyName = "AgeOfSurvivor", IsMandatory = true)]
         public string AgeOfSurvivor { get; set; }
-        [AttributeMappingProperty(ColumnName = "SSSNP Beneficiary", PropertyName = "SSSNPBeneficiary", IsMandatory = true)]
+        [AttributeMappingProperty(ColumnName = "SNSOP Beneficiary", PropertyName = "SSSNPBeneficiary", IsMandatory = true)]
         public string SSSNPBeneficiary { get; set; }
         [AttributeMappingProperty(ColumnName = "Suspect Associated", PropertyName = "SuspectAssociatedWithProject", ApplyLookupMapping = true, LookupMappingName = "LK_TrueFalseMapping")]
         public bool? SuspectAssociatedWithProject { get; set; }
