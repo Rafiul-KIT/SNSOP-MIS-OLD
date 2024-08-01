@@ -358,17 +358,32 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
                 conn.Open(); // Ensure the connection is opened
 
                 string query = @"
-                SELECT intBenid AS BeneficiaryId, EnrollmentNo, NameofHousehold, FamilySize, Sex AS Gender, Age,
-                    intStateid, intCountieid, intPayamid, intBomasid, SelectionCriteria AS Component, Created_dt AS EnrollmentDate
-                FROM tbl_BeneficiaryDet
-                WHERE (@StateId IS NULL OR @StateId = '' OR intStateid = @StateId)
-                AND (@CountyId IS NULL OR @CountyId = '' OR intCountieid = @CountyId)
-                AND (@PayamId IS NULL OR @PayamId = '' OR intPayamid = @PayamId)
-                AND (@BomaId IS NULL OR @BomaId = '' OR intBomasid = @BomaId)
-                AND (@Age IS NULL OR @Age = '' OR Age = @Age)
-                AND (@Gender IS NULL OR @Gender = '' OR Sex = @Gender)
-                AND (@Component IS NULL OR @Component = '' OR SelectionCriteria = @Component)
-                ORDER BY intBenid
+                SELECT 
+                    b.intBenid AS BeneficiaryId, 
+                    b.EnrollmentNo, 
+                    b.NameofHousehold, 
+                    b.FamilySize, 
+                    b.Sex AS Gender, 
+                    b.Age,
+                    s.StateName,
+                    c.CountieName,
+                    p.PayamName,
+                    bm.BomaName,
+                    b.SelectionCriteria AS Component, 
+                    b.Created_dt AS EnrollmentDate
+                FROM tbl_BeneficiaryDet b
+                LEFT JOIN tm_States s ON b.intStateid = s.intStateid
+                LEFT JOIN tm_Counties c ON b.intCountieid = c.intCountieid
+                LEFT JOIN tm_Payams p ON b.intPayamid = p.intPayamid
+                LEFT JOIN tm_Bomas bm ON b.intBomasid = bm.intBomasid
+                WHERE (@StateId IS NULL OR @StateId = '' OR b.intStateid = @StateId)
+                AND (@CountyId IS NULL OR @CountyId = '' OR b.intCountieid = @CountyId)
+                AND (@PayamId IS NULL OR @PayamId = '' OR b.intPayamid = @PayamId)
+                AND (@BomaId IS NULL OR @BomaId = '' OR b.intBomasid = @BomaId)
+                AND (@Age IS NULL OR @Age = '' OR b.Age = @Age)
+                AND (@Gender IS NULL OR @Gender = '' OR b.Sex = @Gender)
+                AND (@Component IS NULL OR @Component = '' OR b.SelectionCriteria = @Component)
+                ORDER BY b.intBenid
                 OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -410,16 +425,31 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
                 conn.Open(); // Ensure the connection is opened
 
                 string query = @"
-                SELECT intBenid AS BeneficiaryId, EnrollmentNo, NameofHousehold, FamilySize, Sex AS Gender, Age,
-                    intStateid, intCountieid, intPayamid, intBomasid, SelectionCriteria AS Component, Created_dt AS EnrollmentDate
-                FROM tbl_BeneficiaryDet
-                WHERE (@StateId IS NULL OR @StateId = '' OR intStateid = @StateId)
-                AND (@CountyId IS NULL OR @CountyId = '' OR intCountieid = @CountyId)
-                AND (@PayamId IS NULL OR @PayamId = '' OR intPayamid = @PayamId)
-                AND (@BomaId IS NULL OR @BomaId = '' OR intBomasid = @BomaId)
-                AND (@Age IS NULL OR @Age = '' OR Age = @Age)
-                AND (@Gender IS NULL OR @Gender = '' OR Sex = @Gender)
-                AND (@Component IS NULL OR @Component = '' OR SelectionCriteria = @Component)
+                SELECT 
+                    b.intBenid AS BeneficiaryId, 
+                    b.EnrollmentNo, 
+                    b.NameofHousehold, 
+                    b.FamilySize, 
+                    b.Sex AS Gender, 
+                    b.Age,
+                    s.StateName,
+                    c.CountieName,
+                    p.PayamName,
+                    bm.BomaName,
+                    b.SelectionCriteria AS Component, 
+                    b.Created_dt AS EnrollmentDate
+                FROM tbl_BeneficiaryDet b
+                LEFT JOIN tm_States s ON b.intStateid = s.intStateid
+                LEFT JOIN tm_Counties c ON b.intCountieid = c.intCountieid
+                LEFT JOIN tm_Payams p ON b.intPayamid = p.intPayamid
+                LEFT JOIN tm_Bomas bm ON b.intBomasid = bm.intBomasid
+                WHERE (@StateId IS NULL OR @StateId = '' OR b.intStateid = @StateId)
+                AND (@CountyId IS NULL OR @CountyId = '' OR b.intCountieid = @CountyId)
+                AND (@PayamId IS NULL OR @PayamId = '' OR b.intPayamid = @PayamId)
+                AND (@BomaId IS NULL OR @BomaId = '' OR b.intBomasid = @BomaId)
+                AND (@Age IS NULL OR @Age = '' OR b.Age = @Age)
+                AND (@Gender IS NULL OR @Gender = '' OR b.Sex = @Gender)
+                AND (@Component IS NULL OR @Component = '' OR b.SelectionCriteria = @Component)
                 ORDER BY intBenid;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))

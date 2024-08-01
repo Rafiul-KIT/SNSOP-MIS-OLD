@@ -196,10 +196,10 @@
                                             <telerik:GridBoundColumn DataField="FamilySize" HeaderText="Family Size"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="Gender" HeaderText="Gender"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="Age" HeaderText="Age"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="intStateid" HeaderText="State ID"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="intCountieid" HeaderText="County ID"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="intPayamid" HeaderText="Payam ID"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="intBomasid" HeaderText="Boma ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="StateName" HeaderText="State"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="CountieName" HeaderText="County"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PayamName" HeaderText="Payam"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="BomaName" HeaderText="Boma"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="Component" HeaderText="Component"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="EnrollmentDate" HeaderText="Enrollment Date"></telerik:GridBoundColumn>
                                         </Columns>
