@@ -29,6 +29,7 @@
 		<property name="PayamName"></property>
 		<property name="BomaName"></property>
 		<property name="StatusName"></property>
+		<property name="OrderById"></property>
 		<property name="CreateGBVMain"></property>
 
 	</properties>
@@ -59,7 +60,7 @@
 				m.DateOfIncident,
 				m.IncidentReportedBy,
 				m.SSSNPBeneficiary,
-				case when stat.StatusID=1 then 1 else 2 end orderById
+				case when stat.StatusID=1 then 1 else 2 end as OrderById
 
 				FROM [GBVMain] as M left join GBVDetails as d on (d.GBVMainID = m.GBVMainID and d.Deleted = 0)
 						inner join tm_States as S on s.intStateid = m.StateID 
@@ -68,7 +69,6 @@
 						inner join tm_Bomas as B on b.intBomasid = m.BomaID 
 						inner join LK_GBVStatus as Stat on (stat.StatusID = m.Status  and stat.GBVStatus = 1)
 				WHERE M.Deleted = 0
-				order by orderById asc
 				]]>
 
 			</query>
