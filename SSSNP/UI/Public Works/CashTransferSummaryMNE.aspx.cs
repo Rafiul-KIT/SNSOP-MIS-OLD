@@ -76,6 +76,10 @@ public partial class CashTransferSummaryMNE : Page
         ddlComponent.Items.Add(new ListItem("--Select--", ""));
         ddlComponent.Items.Add(new ListItem("LIPW", "Component 1 (Public Works)"));
         ddlComponent.Items.Add(new ListItem("DIS", "Component 2 (Direct Income Support)"));
+
+        ddlPaidStatus.Items.Add(new ListItem("--Select--", ""));
+        ddlPaidStatus.Items.Add(new ListItem("Paid", "Paid"));
+        ddlPaidStatus.Items.Add(new ListItem("Unpaid", "Unpaid"));
     }
 
     private void LoadDropdownData()
@@ -218,8 +222,9 @@ public partial class CashTransferSummaryMNE : Page
             string paymentCycle = ddlPaymentCycle.SelectedValue;
             string status = ddlStatus.SelectedValue;
             string component = ddlComponent.SelectedValue;
+            string paidStatus = ddlPaidStatus.SelectedValue;
 
-            int totalCount = GetTotalPaymentRecordsCount(state, county, payam, boma, paymentCycle, status, component);
+            int totalCount = GetTotalPaymentRecordsCount(state, county, payam, boma, paymentCycle, status, component, paidStatus);
             Session["TotalRecordCount"] = totalCount;
 
             rgResults.CurrentPageIndex = 0; // Reset to the first page
@@ -248,8 +253,9 @@ public partial class CashTransferSummaryMNE : Page
             string paymentCycle = ddlPaymentCycle.SelectedValue;
             string status = ddlStatus.SelectedValue;
             string component = ddlComponent.SelectedValue;
+            string paidStatus = ddlPaidStatus.SelectedValue;
 
-            DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component);//to store total data
+            DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component, paidStatus);//to store total data
             Session["ReportPdf"] = totaldt; // Store the data in session
 
             string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=11";
@@ -274,8 +280,9 @@ public partial class CashTransferSummaryMNE : Page
             string paymentCycle = ddlPaymentCycle.SelectedValue;
             string status = ddlStatus.SelectedValue;
             string component = ddlComponent.SelectedValue;
+            string paidStatus = ddlPaidStatus.SelectedValue;
 
-            DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component);//to store total data
+            DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component, paidStatus);//to store total data
             Session["ReportExl"] = totaldt; // Store the data in session
 
             string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=12";
@@ -289,7 +296,7 @@ public partial class CashTransferSummaryMNE : Page
         }
     }
 
-    private int GetTotalPaymentRecordsCount(string state, string county, string payam, string boma, string paymentCycle, string status, string component)
+    private int GetTotalPaymentRecordsCount(string state, string county, string payam, string boma, string paymentCycle, string status, string component, string paidStatus)
     {
         int totalRecords = 0;
         string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -302,16 +309,25 @@ public partial class CashTransferSummaryMNE : Page
 
                 string query = @"
                 SELECT COUNT(*)
-                FROM td_WorkWageRequest w
-                INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-                LEFT JOIN tr_BenWagesPayment bw ON w.intWorkid = bw.intWorkid
-                WHERE(@StateId IS NULL OR m.intStateid = @StateId)
-                AND(@CountyId IS NULL OR m.intCountieid = @CountyId)
-                AND(@PayamId IS NULL OR m.intPayamid = @PayamId)
-                AND(@BomaId IS NULL OR m.intBomasid = @BomaId)
-                AND(@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
-                AND(@Status IS NULL OR w.Status = @Status)
-                AND(@Component IS NULL OR w.Component = @Component);";
+                FROM 
+                    tbl_WorkMaster wm
+                INNER JOIN 
+                    td_WorkWageRequest wwr ON wm.intWorkid = wwr.intWorkid
+                INNER JOIN 
+                    td_WageReqBenDet wbd ON wwr.intWagePaymentReqid = wbd.intWagePaymentReqid
+                LEFT JOIN 
+                    tr_BenWagesPayment bwp ON wbd.intBenid = bwp.intBenid AND wwr.intWorkid = bwp.intWorkid
+                WHERE 
+                    (@StateId IS NULL OR wm.intStateid = @StateId)
+                    AND (@CountyId IS NULL OR wm.intCountieid = @CountyId)
+                    AND (@PayamId IS NULL OR wm.intPayamid = @PayamId)
+                    AND (@BomaId IS NULL OR wm.intBomasid = @BomaId)
+                    AND (@PaymentCycle IS NULL OR wwr.PaymentCycle = @PaymentCycle)
+                    AND (@Status IS NULL OR wwr.Status = @Status)
+                    AND (@Component IS NULL OR wwr.Component = @Component)
+                    AND (@PaidStatus IS NULL 
+                             OR (@PaidStatus = 'Paid' AND bwp.PaidAmountUSD IS NOT NULL)
+                             OR (@PaidStatus = 'Unpaid' AND bwp.PaidAmountUSD IS NULL));";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -322,6 +338,8 @@ public partial class CashTransferSummaryMNE : Page
                     cmd.Parameters.AddWithValue("@PaymentCycle", (string.IsNullOrEmpty(paymentCycle) || paymentCycle == "--Select--") ? (object)DBNull.Value : paymentCycle);
                     cmd.Parameters.AddWithValue("@Status", (string.IsNullOrEmpty(status) || status == "--Select--") ? (object)DBNull.Value : status);
                     cmd.Parameters.AddWithValue("@Component", (string.IsNullOrEmpty(component) || component == "--Select--") ? (object)DBNull.Value : component);
+                    cmd.Parameters.AddWithValue("@PaidStatus", (string.IsNullOrEmpty(paidStatus) || paidStatus == "--Select--") ? (object)DBNull.Value : paidStatus);
+
 
                     totalRecords = (int)cmd.ExecuteScalar();
                 }
@@ -348,8 +366,9 @@ public partial class CashTransferSummaryMNE : Page
             string paymentCycle = ddlPaymentCycle.SelectedValue;
             string status = ddlStatus.SelectedValue;
             string component = ddlComponent.SelectedValue;
+            string paidStatus = ddlPaidStatus.SelectedValue;
 
-            DataTable dt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, rgResults.CurrentPageIndex, rgResults.PageSize);//to store only grid data
+            DataTable dt = GetPaymentData(state, county, payam, boma, paymentCycle, status, component, paidStatus, rgResults.CurrentPageIndex, rgResults.PageSize);//to store only grid data
             rgResults.DataSource = dt;
             rgResults.VirtualItemCount = (int)Session["TotalRecordCount"]; // Set the total number of records
         }
@@ -360,7 +379,7 @@ public partial class CashTransferSummaryMNE : Page
         }
     }
 
-    private DataTable GetPaymentData(string state, string county, string payam, string boma, string paymentCycle, string status, string component, int pageIndex, int pageSize)
+    private DataTable GetPaymentData(string state, string county, string payam, string boma, string paymentCycle, string status, string component, string paidStatus, int pageIndex, int pageSize)
     {
         DataTable dt = new DataTable();
         string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -373,36 +392,50 @@ public partial class CashTransferSummaryMNE : Page
 
                 string query = @"
                 SELECT 
-                    w.intWagePaymentReqid AS intPaymentId,
-                    w.PaymentCycle,
+                    wwr.intWagePaymentReqid AS intPaymentId,
+                    wbd.intBenid,
+                    wwr.PaymentCycle,
                     CASE 
-                        WHEN w.Status = '0' THEN 'IP Applied'
-                        WHEN w.Status = '1' THEN 'IP Approver Approved'
-                        WHEN w.Status = '2' THEN 'Initial Reviewer Approved'
-                        WHEN w.Status = '3' THEN 'Financial Approver Approved'
-                        WHEN w.Status = '4' THEN 'Final Payment Authorizer Approved'
-                        WHEN w.Status = '6' THEN 'Reconciled'
-                        WHEN w.Status = '11' THEN 'IP Approver Rejected'
-                        WHEN w.Status = '12' THEN 'Initial Reviewer Rejected'
-                        WHEN w.Status = '13' THEN 'Financial Approver Rejected'
-                        WHEN w.Status = '14' THEN 'Final Payment Authorizer Rejected'
+                        WHEN wwr.Status = '0' THEN 'IP Applied'
+                        WHEN wwr.Status = '1' THEN 'IP Approver Approved'
+                        WHEN wwr.Status = '2' THEN 'Initial Reviewer Approved'
+                        WHEN wwr.Status = '3' THEN 'Financial Approver Approved'
+                        WHEN wwr.Status = '4' THEN 'Final Payment Authorizer Approved'
+                        WHEN wwr.Status = '6' THEN 'Reconciled'
+                        WHEN wwr.Status = '11' THEN 'IP Approver Rejected'
+                        WHEN wwr.Status = '12' THEN 'Initial Reviewer Rejected'
+                        WHEN wwr.Status = '13' THEN 'Financial Approver Rejected'
+                        WHEN wwr.Status = '14' THEN 'Final Payment Authorizer Rejected'
                         ELSE 'Unknown Status'
                     END AS PaymentStatus,
-                    w.Component,
-                    bw.PaidAmountUSD AS PaymentAmount,
-                    bw.PaidDate AS PaymentDate
-                FROM td_WorkWageRequest w
-                INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-                LEFT JOIN tr_BenWagesPayment bw ON w.intWorkid = bw.intWorkid
-                WHERE (@StateId IS NULL OR m.intStateid = @StateId)
-                AND (@CountyId IS NULL OR m.intCountieid = @CountyId)
-                AND (@PayamId IS NULL OR m.intPayamid = @PayamId)
-                AND (@BomaId IS NULL OR m.intBomasid = @BomaId)
-                AND (@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
-                AND (@Status IS NULL OR w.Status = @Status)
-                AND (@Component IS NULL OR w.Component = @Component)
-                ORDER BY w.intWagePaymentReqid
-                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+                    wwr.Component,
+                    ISNULL(CONVERT(VARCHAR, bwp.PaidAmountUSD), 'Not Paid') AS PaymentAmount,
+                    ISNULL(CONVERT(VARCHAR, bwp.PaidDate, 101), 'No Date') AS PaymentDate
+                FROM 
+                    tbl_WorkMaster wm
+                INNER JOIN 
+                    td_WorkWageRequest wwr ON wm.intWorkid = wwr.intWorkid
+                INNER JOIN 
+                    td_WageReqBenDet wbd ON wwr.intWagePaymentReqid = wbd.intWagePaymentReqid
+                LEFT JOIN 
+                    tr_BenWagesPayment bwp ON wbd.intBenid = bwp.intBenid AND wwr.intWorkid = bwp.intWorkid
+                WHERE 
+                    (@StateId IS NULL OR wm.intStateid = @StateId)
+                    AND (@CountyId IS NULL OR wm.intCountieid = @CountyId)
+                    AND (@PayamId IS NULL OR wm.intPayamid = @PayamId)
+                    AND (@BomaId IS NULL OR wm.intBomasid = @BomaId)
+                    AND (@PaymentCycle IS NULL OR wwr.PaymentCycle = @PaymentCycle)
+                    AND (@Status IS NULL OR wwr.Status = @Status)
+                    AND (@Component IS NULL OR wwr.Component = @Component)
+                    AND (@PaidStatus IS NULL 
+                         OR (@PaidStatus = 'Paid' AND bwp.PaidAmountUSD IS NOT NULL)
+                         OR (@PaidStatus = 'Unpaid' AND bwp.PaidAmountUSD IS NULL))
+                ORDER BY 
+                    wwr.intWagePaymentReqid
+                OFFSET 
+                    @Offset ROWS 
+                FETCH NEXT 
+                    @PageSize ROWS ONLY;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -414,6 +447,7 @@ public partial class CashTransferSummaryMNE : Page
                     cmd.Parameters.AddWithValue("@PaymentCycle", (string.IsNullOrEmpty(paymentCycle) || paymentCycle == "--Select--") ? (object)DBNull.Value : paymentCycle);
                     cmd.Parameters.AddWithValue("@Status", (string.IsNullOrEmpty(status) || status == "--Select--") ? (object)DBNull.Value : status);
                     cmd.Parameters.AddWithValue("@Component", (string.IsNullOrEmpty(component) || component == "--Select--") ? (object)DBNull.Value : component);
+                    cmd.Parameters.AddWithValue("@PaidStatus", (string.IsNullOrEmpty(paidStatus) || paidStatus == "--Select--") ? (object)DBNull.Value : paidStatus);
                     cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
                     cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
@@ -434,7 +468,7 @@ public partial class CashTransferSummaryMNE : Page
 
 
 
-    private DataTable GetAllPaymentData(string state, string county, string payam, string boma, string paymentCycle, string status, string component)
+    private DataTable GetAllPaymentData(string state, string county, string payam, string boma, string paymentCycle, string status, string component, string paidStatus)
     {
         DataTable dt = new DataTable();
         string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -447,35 +481,46 @@ public partial class CashTransferSummaryMNE : Page
 
                 string query = @"
                 SELECT 
-                    w.intWagePaymentReqid AS intPaymentId,
-                    w.PaymentCycle,
+                    wwr.intWagePaymentReqid AS intPaymentId,
+                    wbd.intBenid,
+                    wwr.PaymentCycle,
                     CASE 
-                        WHEN w.Status = '0' THEN 'IP Applied'
-                        WHEN w.Status = '1' THEN 'IP Approver Approved'
-                        WHEN w.Status = '2' THEN 'Initial Reviewer Approved'
-                        WHEN w.Status = '3' THEN 'Financial Approver Approved'
-                        WHEN w.Status = '4' THEN 'Final Payment Authorizer Approved'
-                        WHEN w.Status = '6' THEN 'Reconciled'
-                        WHEN w.Status = '11' THEN 'IP Approver Rejected'
-                        WHEN w.Status = '12' THEN 'Initial Reviewer Rejected'
-                        WHEN w.Status = '13' THEN 'Financial Approver Rejected'
-                        WHEN w.Status = '14' THEN 'Final Payment Authorizer Rejected'
+                        WHEN wwr.Status = '0' THEN 'IP Applied'
+                        WHEN wwr.Status = '1' THEN 'IP Approver Approved'
+                        WHEN wwr.Status = '2' THEN 'Initial Reviewer Approved'
+                        WHEN wwr.Status = '3' THEN 'Financial Approver Approved'
+                        WHEN wwr.Status = '4' THEN 'Final Payment Authorizer Approved'
+                        WHEN wwr.Status = '6' THEN 'Reconciled'
+                        WHEN wwr.Status = '11' THEN 'IP Approver Rejected'
+                        WHEN wwr.Status = '12' THEN 'Initial Reviewer Rejected'
+                        WHEN wwr.Status = '13' THEN 'Financial Approver Rejected'
+                        WHEN wwr.Status = '14' THEN 'Final Payment Authorizer Rejected'
                         ELSE 'Unknown Status'
                     END AS PaymentStatus,
-                    w.Component,
-                    bw.PaidAmountUSD AS PaymentAmount,
-                    bw.PaidDate AS PaymentDate
-                FROM td_WorkWageRequest w
-                INNER JOIN tbl_WorkMaster m ON w.intWorkid = m.intWorkid
-                LEFT JOIN tr_BenWagesPayment bw ON w.intWorkid = bw.intWorkid
-                WHERE (@StateId IS NULL OR m.intStateid = @StateId)
-                AND (@CountyId IS NULL OR m.intCountieid = @CountyId)
-                AND (@PayamId IS NULL OR m.intPayamid = @PayamId)
-                AND (@BomaId IS NULL OR m.intBomasid = @BomaId)
-                AND (@PaymentCycle IS NULL OR w.PaymentCycle = @PaymentCycle)
-                AND (@Status IS NULL OR w.Status = @Status)
-                AND (@Component IS NULL OR w.Component = @Component)
-                ORDER BY w.intWagePaymentReqid;";
+                    wwr.Component,
+                    ISNULL(CONVERT(VARCHAR, bwp.PaidAmountUSD), 'Not Paid') AS PaymentAmount,
+                    ISNULL(CONVERT(VARCHAR, bwp.PaidDate, 101), 'No Date') AS PaymentDate
+                FROM 
+                    tbl_WorkMaster wm
+                INNER JOIN 
+                    td_WorkWageRequest wwr ON wm.intWorkid = wwr.intWorkid
+                INNER JOIN 
+                    td_WageReqBenDet wbd ON wwr.intWagePaymentReqid = wbd.intWagePaymentReqid
+                LEFT JOIN 
+                    tr_BenWagesPayment bwp ON wbd.intBenid = bwp.intBenid AND wwr.intWorkid = bwp.intWorkid
+                WHERE 
+                    (@StateId IS NULL OR wm.intStateid = @StateId)
+                    AND (@CountyId IS NULL OR wm.intCountieid = @CountyId)
+                    AND (@PayamId IS NULL OR wm.intPayamid = @PayamId)
+                    AND (@BomaId IS NULL OR wm.intBomasid = @BomaId)
+                    AND (@PaymentCycle IS NULL OR wwr.PaymentCycle = @PaymentCycle)
+                    AND (@Status IS NULL OR wwr.Status = @Status)
+                    AND (@Component IS NULL OR wwr.Component = @Component)
+                    AND (@PaidStatus IS NULL 
+                         OR (@PaidStatus = 'Paid' AND bwp.PaidAmountUSD IS NOT NULL)
+                         OR (@PaidStatus = 'Unpaid' AND bwp.PaidAmountUSD IS NULL))
+                ORDER BY 
+                    wwr.intWagePaymentReqid;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -487,6 +532,8 @@ public partial class CashTransferSummaryMNE : Page
                     cmd.Parameters.AddWithValue("@PaymentCycle", (string.IsNullOrEmpty(paymentCycle) || paymentCycle == "--Select--") ? (object)DBNull.Value : paymentCycle);
                     cmd.Parameters.AddWithValue("@Status", (string.IsNullOrEmpty(status) || status == "--Select--") ? (object)DBNull.Value : status);
                     cmd.Parameters.AddWithValue("@Component", (string.IsNullOrEmpty(component) || component == "--Select--") ? (object)DBNull.Value : component);
+                    cmd.Parameters.AddWithValue("@PaidStatus", (string.IsNullOrEmpty(paidStatus) || paidStatus == "--Select--") ? (object)DBNull.Value : paidStatus);
+
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     da.Fill(dt);

@@ -142,6 +142,17 @@
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="Label1" runat="server" CssClass="LBLBLACK" Width="165px">Payment Status</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlPaidStatus" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px">
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                </tr>
                                                 <%--<tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelFromDate" runat="server" Width="165px">From Date</asp:Label>
@@ -194,6 +205,7 @@
                                         <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="intPaymentId" HeaderText="Payment ID"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="intBenid" HeaderText="Beneficiary ID"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="PaymentCycle" HeaderText="Payment Cycle"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="PaymentStatus" HeaderText="Payment Status"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="Component" HeaderText="Component"></telerik:GridBoundColumn>
