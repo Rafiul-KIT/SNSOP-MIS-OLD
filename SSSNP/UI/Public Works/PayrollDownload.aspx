@@ -137,6 +137,12 @@
                                             <asp:Label ID="LblWarning" runat="server" ForeColor="Red" Visible="False"></asp:Label>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
+                                            <!-- New Label for Download warning -->
+                                            <asp:Label ID="LblDownloadWarning" runat="server" ForeColor="Red" Visible="False"></asp:Label>
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>

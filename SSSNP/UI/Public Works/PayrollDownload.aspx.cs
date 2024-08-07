@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -263,7 +264,10 @@ public partial class PayrollDownload : System.Web.UI.Page
 
                 if (lockedStatus == "UNLOCKED")
                 {
-                    BtnDownload.Visible = true;
+                    bool isDownloaded = CheckDownloadStatus(request.state, request.county, request.payam, request.boma);
+                    BtnDownload.Visible = !isDownloaded;
+                    LblDownloadWarning.Visible = isDownloaded;
+                    LblDownloadWarning.Text = isDownloaded ? "This data has already been downloaded." : string.Empty;
                 }
                 else if (lockedStatus == "LOCKED")
                 {
@@ -289,6 +293,25 @@ public partial class PayrollDownload : System.Web.UI.Page
         catch (Exception ex)
         {
             LogError(ex);
+        }
+    }
+
+
+    private bool CheckDownloadStatus(int stateId, int countyId, int payamId, int bomaId)
+    {
+        string query = "SELECT COUNT(*) FROM tbl_audit_payroll_download WHERE intStateid = @StateId AND intCountieid = @CountyId AND intPayamid = @PayamId AND intBomasid = @BomaId";
+        using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
+        {
+            using (var cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@StateId", stateId);
+                cmd.Parameters.AddWithValue("@CountyId", countyId);
+                cmd.Parameters.AddWithValue("@PayamId", payamId);
+                cmd.Parameters.AddWithValue("@BomaId", bomaId);
+                conn.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
         }
     }
 
@@ -442,12 +465,59 @@ public partial class PayrollDownload : System.Web.UI.Page
     {
         if (Session["PDResponse"] != null)
         {
+            int userId = GetCurrentUserId(); // Retrieve the current user's ID from the session
+            int stateId = int.Parse(ddlState.SelectedValue);
+            int countyId = int.Parse(ddlCounty.SelectedValue);
+            int payamId = int.Parse(ddlPayam.SelectedValue);
+            int bomaId = int.Parse(ddlBoma.SelectedValue);
+
+            // Insert the audit record into the database
+            InsertAuditRecord(userId, stateId, countyId, payamId, bomaId);
+
             string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
     }
 
+
+    private void InsertAuditRecord(int userId, int stateId, int countyId, int payamId, int bomaId)
+    {
+        string query = "INSERT INTO tbl_audit_payroll_download (AuditId, UserId, DownloadTime, intStateid, intCountieid, intPayamid, intBomasid) " +
+                       "VALUES (@AuditId, @UserId, @DownloadTime, @StateId, @CountyId, @PayamId, @BomaId)";
+
+        using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
+        {
+            using (var cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@AuditId", Guid.NewGuid().ToString("N").Substring(0, 10)); // Generate a unique AuditId
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                cmd.Parameters.AddWithValue("@DownloadTime", DateTime.Now); // Use DateTime.Now to get the current date and time
+                cmd.Parameters.AddWithValue("@StateId", stateId);
+                cmd.Parameters.AddWithValue("@CountyId", countyId);
+                cmd.Parameters.AddWithValue("@PayamId", payamId);
+                cmd.Parameters.AddWithValue("@BomaId", bomaId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+
+
+    private int GetCurrentUserId()
+    {
+        // Check if the session contains the user ID
+        if (Session["uid"] != null)
+        {
+            return Convert.ToInt32(Session["uid"]);
+        }
+        else
+        {
+            // Handle the case where the user ID is not found in the session
+            // You can throw an exception or return a default value
+            throw new Exception("User ID not found in session.");
+        }
+    }
 
 
     private void LogError(Exception ex)
