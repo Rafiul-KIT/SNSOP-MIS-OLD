@@ -15,7 +15,7 @@ namespace SSSNP_SNSOP.Entity
         public string PayamName { get; set; }
         public string BomaName { get; set; }
         public string StatusName { get; set; }
-
+        public int OrderById { get; set; }
 
     }
 }

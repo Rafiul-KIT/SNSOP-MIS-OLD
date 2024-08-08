@@ -192,15 +192,24 @@ namespace SSSNP_SNSOP.Core.OleDbMapping
         {
             try
             {
-                if (string.IsNullOrEmpty(value.ToString())) return null;
+                if (string.IsNullOrEmpty(value.ToString())) return null;                
 
-                DateTime dt;
+                DateTime dateValue;
+                CultureInfo culture = CultureInfo.CurrentCulture;
+                DateTimeStyles styles = DateTimeStyles.None;
+                DateTime.TryParse(value, culture, styles, out dateValue);
+                if (dateValue == DateTime.MinValue) return null;
+                return dateValue;
+
+                //DateTime dt;
+
                 // DateTime.TryParse(value, out dt);
-                dt = Convert.ToDateTime(value.ToLower(), new CultureInfo("it-IT"));
+                // Commented out as this does not work as intended on 31-07-2024
+                //dt = Convert.ToDateTime(value.ToLower(), new CultureInfo("it-IT"));
 
-                if (dt == DateTime.MinValue) return null;
-                return dt;
-                               
+                //if (dt == DateTime.MinValue) return null;
+                //return dt;
+                // Commented out as this does not work as intended on 31-07-2024
 
             }
             catch (Exception ex)

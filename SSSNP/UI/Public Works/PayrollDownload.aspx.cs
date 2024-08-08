@@ -199,7 +199,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         };
 
         string uri = ConfigurationManager.AppSettings["DownloadPayroll"];
-        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWtpYiIsImlhdCI6MTcxNDk4MTEwOCwiZXhwIjoxODcyNjYxMTA4fQ.7FgalnXhBOcC7q-nYfONbxmc7My4iUOeWpN2eK3b7vc_br43NCEFiKWIrXs1cJTsU_Ds_ZZLHRB28c-jdgiBRw";
+        String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
         uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
         if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
@@ -401,7 +401,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         };
 
         string uri = ConfigurationManager.AppSettings["UnlockPayroll"];
-        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWtpYiIsImlhdCI6MTcxNDk4MTEwOCwiZXhwIjoxODcyNjYxMTA4fQ.7FgalnXhBOcC7q-nYfONbxmc7My4iUOeWpN2eK3b7vc_br43NCEFiKWIrXs1cJTsU_Ds_ZZLHRB28c-jdgiBRw";
+        String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
         uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
         if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))

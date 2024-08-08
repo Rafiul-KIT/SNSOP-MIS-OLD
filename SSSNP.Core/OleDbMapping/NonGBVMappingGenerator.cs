@@ -226,13 +226,19 @@ namespace SSSNP_SNSOP.Core.OleDbMapping
             {
                 if (string.IsNullOrEmpty(value.ToString())) return null;
 
-             
-                DateTime dt;
+                DateTime dateValue;
+                CultureInfo culture = CultureInfo.CurrentCulture;
+                DateTimeStyles styles = DateTimeStyles.None;
+                DateTime.TryParse(value, culture, styles, out dateValue);
+                if (dateValue == DateTime.MinValue) return null;
+                return dateValue;
 
-                dt = Convert.ToDateTime(value.ToLower(), new CultureInfo("it-IT"));
+                //DateTime dt;
+
+                //dt = Convert.ToDateTime(value.ToLower(), new CultureInfo("it-IT"));
                              
-                if (dt == DateTime.MinValue) return null;
-                return dt;
+                //if (dt == DateTime.MinValue) return null;
+                //return dt;
 
 
             }

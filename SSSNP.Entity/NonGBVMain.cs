@@ -39,7 +39,7 @@ namespace SSSNP_SNSOP.Entity
         public string Gender { get; set; }
         [AttributeMappingProperty(ColumnName = "Age", PropertyName = "Age")]
         public string Age { get; set; }
-        [AttributeMappingProperty(ColumnName = "SSSNP Beneficiary", PropertyName = "SSSNPBeneficiary")]
+        [AttributeMappingProperty(ColumnName = "SNSOP Beneficiary", PropertyName = "SSSNPBeneficiary")]
         public string SSSNPBeneficiary { get; set; }
         [AttributeMappingProperty(ColumnName = "Category Of Grievance", PropertyName = "TypeOfGrievanceID", ApplyLookupMapping = true, LookupMappingName = "LK_TypeOfGrievanceID")]
         public int? TypeOfGrievanceID { get; set; }

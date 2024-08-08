@@ -483,6 +483,16 @@ namespace SSSNP_SNSOP.Core.DataAccess
                                                 ConditionFilterCriteriaOperator.QueryOperator.AND));
             }
 
+            TopClause topClause = new TopClause { LimitValue = 100000 };
+            criteria.AddTopClause(topClause);
+
+            OrderByClause orderByClause = new OrderByClause
+            {
+                Desc = false,
+                PropertyName = "OrderById"
+            };
+            criteria.AddOrderByClause(orderByClause);
+
             return (IFilterCriteria)criteria;
 
         }
@@ -539,6 +549,16 @@ namespace SSSNP_SNSOP.Core.DataAccess
                                                 ConditionFilterCriteriaOperator.CriteriaOperator.EQUAL,
                                                 ConditionFilterCriteriaOperator.QueryOperator.AND));
             }
+
+            TopClause topClause = new TopClause { LimitValue = 100000 };
+            criteria.AddTopClause(topClause);
+
+            OrderByClause orderByClause = new OrderByClause
+            {
+                Desc = false,
+                PropertyName = "OrderById"
+            };
+            criteria.AddOrderByClause(orderByClause);
 
             return (IFilterCriteria)criteria;
 

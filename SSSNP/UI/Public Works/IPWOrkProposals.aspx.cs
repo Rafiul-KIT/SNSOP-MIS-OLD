@@ -905,12 +905,13 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                 success.Visible = true;
                 Failure.Visible = false;
                 clear();
-                Response.Redirect("Result.aspx");
 
                 if (screeningStatus == "1")
                 {
                     sendEmailToQualityEngineer();
                 }
+
+                Response.Redirect("Result.aspx");
             }
             else
             {
