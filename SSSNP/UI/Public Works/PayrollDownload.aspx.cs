@@ -264,10 +264,7 @@ public partial class PayrollDownload : System.Web.UI.Page
 
                 if (lockedStatus == "UNLOCKED")
                 {
-                    bool isDownloaded = CheckDownloadStatus(request.state, request.county, request.payam, request.boma);
-                    BtnDownload.Visible = !isDownloaded;
-                    LblDownloadWarning.Visible = isDownloaded;
-                    LblDownloadWarning.Text = isDownloaded ? "This data has already been downloaded." : string.Empty;
+                    BtnDownload.Visible = true;
                 }
                 else if (lockedStatus == "LOCKED")
                 {
@@ -297,23 +294,6 @@ public partial class PayrollDownload : System.Web.UI.Page
     }
 
 
-    private bool CheckDownloadStatus(int stateId, int countyId, int payamId, int bomaId)
-    {
-        string query = "SELECT COUNT(*) FROM tbl_audit_payroll_download WHERE intStateid = @StateId AND intCountieid = @CountyId AND intPayamid = @PayamId AND intBomasid = @BomaId";
-        using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
-        {
-            using (var cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@StateId", stateId);
-                cmd.Parameters.AddWithValue("@CountyId", countyId);
-                cmd.Parameters.AddWithValue("@PayamId", payamId);
-                cmd.Parameters.AddWithValue("@BomaId", bomaId);
-                conn.Open();
-                int count = (int)cmd.ExecuteScalar();
-                return count > 0;
-            }
-        }
-    }
 
     private void BindResultsToGrid(List<PDPayrollDataDto> data)
     {
