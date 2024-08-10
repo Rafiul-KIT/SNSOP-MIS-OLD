@@ -575,7 +575,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
                 } 
                 else
                 {
-                    string emailBody = "A wage request with number: " + row.Cells[3].Text + " has been rejected by Cordinator. " +
+                    string emailBody = "A wage request with number: " + row.Cells[3].Text + " has been rejected by Initial Reviewer. " +
                         "Please Review it.";
                     emailService.sendEmailToIpApprover("SNSOP Wage Request", emailBody);
                 }
@@ -644,15 +644,15 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         string newUserType = "";
         if (userType == "Cordinator")
         {
-            newUserType = "Initial Reviewer";
+            newUserType = "Financial Approver";
         } 
         else if (userType == "Specialist")
         {
-            newUserType = "Financial Approver";
+            newUserType = approved ? "Initial Reviewer" : "Final Payment Authorizer";
         }
         else if (userType == "Manager")
         {
-            newUserType = "Final Payment Authorizer";
+            newUserType = "Financial Approver";
         }
 
         string emailBody = "";
