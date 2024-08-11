@@ -202,10 +202,10 @@ public partial class PayrollDownload : System.Web.UI.Page
         String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
         uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
-        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+        /*if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
         {
             uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
-        }
+        }*/
         Uri urlCheck = new Uri(uri);
         HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
         httpWReq.PreAuthenticate = true;
@@ -256,8 +256,8 @@ public partial class PayrollDownload : System.Web.UI.Page
                 Session["PaymentCycle"] = paymentCycle;
                 Session["WagePaymentReqId"] = wagePaymentReqId;
 
-                BtnDownload.Visible = false;
-                BtnUnlock.Visible = false;
+                BtnDownload.Visible = true;
+                BtnUnlock.Visible = true;
 
                 LblLockedStatus.Visible = true;
                 LblLockedStatus.Text = "Locked Status: " + lockedStatus;
@@ -380,14 +380,14 @@ public partial class PayrollDownload : System.Web.UI.Page
             wagePaymentReqId = wagePaymentReqId
         };
 
-        string uri = ConfigurationManager.AppSettings["UnlockPayroll"];
+        //string uri = ConfigurationManager.AppSettings["UnlockPayroll"];
         String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
-        uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
-        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+        var uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
+        /*if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
         {
             uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
-        }
+        }*/
 
         Uri urlCheck = new Uri(uri);
         HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
@@ -441,7 +441,7 @@ public partial class PayrollDownload : System.Web.UI.Page
     }
 
 
-    protected void BtnDownload_Click(object sender, EventArgs e)
+    /*protected void BtnDownload_Click(object sender, EventArgs e)
     {
         if (Session["PDResponse"] != null)
         {
@@ -458,9 +458,105 @@ public partial class PayrollDownload : System.Web.UI.Page
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
+    }*/
+
+    protected void BtnDownload_Click(object sender, EventArgs e)
+    {
+        if (Session["PDResponse"] != null)
+        {
+            int userId = GetCurrentUserId(); // Retrieve the current user's ID from the session
+            int stateId = int.Parse(ddlState.SelectedValue);
+            int countyId = int.Parse(ddlCounty.SelectedValue);
+            int payamId = int.Parse(ddlPayam.SelectedValue);
+            int bomaId = int.Parse(ddlBoma.SelectedValue);
+
+            var paymentCycle = Session["PaymentCycle"]?.ToString();
+            var wagePaymentReqId = Session["WagePaymentReqId"] != null ? int.Parse(Session["WagePaymentReqId"].ToString()) : 0;
+
+            var request = new
+            {
+                boma = bomaId,
+                county = countyId,
+                payam = payamId,
+                paymentCycle = paymentCycle,
+                state = stateId,
+                supportType = "LIPW",
+                wagePaymentReqId = wagePaymentReqId
+            };
+
+            // Define the API endpoint and access token
+            String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
+
+            var uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["LockPayroll"];
+            /*if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+            {
+                uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["LockPayroll"];
+            }*/
+
+            Uri urlCheck = new Uri(uri);
+            HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
+            httpWReq.PreAuthenticate = true;
+            httpWReq.Headers.Add("Authorization", "Bearer " + token);
+            httpWReq.Headers.Add("DeviceId", "29feb6211b04-a56d-7d6a-e79e-018b2f19");
+
+            try
+            {
+                string reqStr = JsonConvert.SerializeObject(request);
+                var data = Encoding.ASCII.GetBytes(reqStr);
+                httpWReq.Method = "POST";
+                httpWReq.ContentType = "application/json";
+                httpWReq.ContentLength = data.Length;
+
+                using (var newStream = httpWReq.GetRequestStream())
+                {
+                    newStream.Write(data, 0, data.Length);
+                }
+
+                HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    string jsonResponse = reader.ReadToEnd();
+                    var downloadResponse = JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+                    // Check the responseCode
+                    int responseCode = downloadResponse.responseCode;
+                    string responseMessage = downloadResponse.responseMessage;
+
+                    if (responseCode == 0) // 0 means "Unlocked" and successfully locked now
+                    {
+                        // Redirect after successful API call
+                        string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";
+                        Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
+                        HttpContext.Current.ApplicationInstance.CompleteRequest();
+
+                        // Insert the audit record into the database
+                        InsertAuditRecord(userId, stateId, countyId, payamId, bomaId);
+                    }
+                    else if (responseCode == 1) // 1 means "Locked"
+                    {
+                        // Display a warning that the payroll is locked
+                        LblWarning.Text = responseMessage;
+                        LblWarning.Visible = true;
+                    }
+                    else
+                    {
+                        // Handle unexpected response codes
+                        System.Diagnostics.Debug.WriteLine($"Unexpected response code: {responseCode}. Message: {responseMessage}");
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                LogError(webEx);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
     }
 
-
+ 
     private void InsertAuditRecord(int userId, int stateId, int countyId, int payamId, int bomaId)
     {
         string query = "INSERT INTO tbl_audit_payroll_download (AuditId, UserId, DownloadTime, intStateid, intCountieid, intPayamid, intBomasid) " +

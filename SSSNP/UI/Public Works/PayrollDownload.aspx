@@ -119,7 +119,7 @@
                                             <asp:Button ID="BtnDownload" runat="server" CssClass="btn btn-primary"
                                                 Height="32px" OnClick="BtnDownload_Click" TabIndex="10" Text="Download"
                                                 ValidationGroup="group" Width="110px" Visible="false" />
-                                            <asp:Button ID="BtnUnlock" runat="server" CssClass="btn btn-secondary"
+                                            <asp:Button ID="BtnUnlock" runat="server" CssClass="btn btn-primary"
                                                 Height="32px" OnClick="BtnUnlock_Click" TabIndex="10" Text="Unlock"
                                                 ValidationGroup="group" Width="110px" Visible="false" />
                                             <asp:HiddenField ID="HiddenLockedStatus" runat="server" />
@@ -153,8 +153,8 @@
                                         <table runat="server" id="tblResults" visible="false" style="padding: 5px">
                                             <tr>
                                                 <td>
-                                                    <telerik:RadGrid ID="rgResults" PageSize="20" AllowPaging="True" AutoGenerateColumns="false" runat="server" AllowSorting="true" GridLines="Both"
-                                                        OnNeedDataSource="rgResults_NeedDataSource" OnItemDataBound="rgResults_ItemDataBound">
+                                                    <telerik:RadGrid ID="rgResults" PageSize="10" AllowPaging="True" AutoGenerateColumns="false" runat="server" AllowSorting="true" GridLines="Both"
+                                                        OnNeedDataSource="rgResults_NeedDataSource" OnItemDataBound="rgResults_ItemDataBound" AllowCustomPaging="True">
                                                         <PagerStyle Mode="NextPrevAndNumeric" />
                                                         <HeaderStyle CssClass="MyGridHeader" />
                                                         <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
@@ -162,7 +162,7 @@
                                                             <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
                                                             <Selecting AllowRowSelect="True" />
                                                         </ClientSettings>
-                                                        <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" DataKeyNames="intWagePaymentReqid">
+                                                        <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" DataKeyNames="intWagePaymentReqid" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
                                                             <NoRecordsTemplate>&nbsp;&nbsp;&nbsp;No results found</NoRecordsTemplate>
                                                             <HeaderStyle CssClass="MyGridHeader" />
                                                             <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
