@@ -173,6 +173,10 @@ public partial class PayrollDownload : System.Web.UI.Page
 
     protected void BtnSearch_Click(object sender, EventArgs e)
     {
+        // Clear session data before starting a new search
+        Session["PayrollData"] = null;
+        Session["TotalItemCount"] = null;
+
         // Validate dropdown selections
         if (string.IsNullOrEmpty(ddlState.SelectedValue) || ddlState.SelectedValue == "0" ||
             string.IsNullOrEmpty(ddlCounty.SelectedValue) || ddlCounty.SelectedValue == "0" ||
@@ -238,6 +242,8 @@ public partial class PayrollDownload : System.Web.UI.Page
             // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
 
             Session["PDResponse"] = pdResponse;
+            int totalCount = pdResponse.totalCount;
+            Session["TotalItemCount"] = totalCount;
 
             if (pdResponse != null && pdResponse.data != null && pdResponse.data.Count > 0)
             {
@@ -351,10 +357,13 @@ public partial class PayrollDownload : System.Web.UI.Page
         if (Session["PayrollData"] != null)
         {
             rgResults.DataSource = Session["PayrollData"];
+            int totalCount = (int)Session["TotalItemCount"];
+            rgResults.VirtualItemCount = totalCount;
         }
         else
         {
             rgResults.DataSource = new List<PDPayrollDataDto>();
+            rgResults.VirtualItemCount = 0;
         }
     }
 
