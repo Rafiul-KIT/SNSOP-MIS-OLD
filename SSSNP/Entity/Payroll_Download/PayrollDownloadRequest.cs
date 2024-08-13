@@ -9,7 +9,7 @@ namespace SSSNP.Entity.Payroll_Download
         public int payam { get; set; }
         public int boma { get; set; }
 
-        public string supportType { get; set; } = "LIPW"; // Default value
+        public string supportType { get; set; }
 
         /*public DateTime createdFrom { get; set; }
         public DateTime createdTo { get; set; } 
