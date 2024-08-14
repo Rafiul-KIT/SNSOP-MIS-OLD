@@ -332,6 +332,11 @@
                                                     <li><a href="ReportsMNE.aspx">Reports</a> </li>
                                                 </ul>
                                             </li>
+                                            <li id="LiUM" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-users"></i>User Management</a>
+                                                <ul class ="down_menu">
+                                                    <li><a href ="UserManagement.aspx">System User management</a></li>
+                                                </ul>
+                                            </li>
                                             <li id="LiIp6" visible="false" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-comments"></i>Grievances and Safeguards</a>
                                                 <ul class="down_menu">
                                                     <li id="nongbvMenu" visible="false" runat="server"><a href="NonGBVManagement.aspx?oType=1">NGBV Grievances</a></li>

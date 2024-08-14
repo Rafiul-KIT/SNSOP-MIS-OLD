@@ -77,6 +77,12 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlPayam.Items.Add(new ListItem("--Select--", ""));
         ddlBoma.Items.Add(new ListItem("--Select--", ""));
 
+        ddlSupportType.ClearSelection();
+        ddlSupportType.Items.Clear();
+        ddlSupportType.Items.Add(new ListItem("--Select--", ""));
+        ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
+        ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+
         if (!string.IsNullOrEmpty(ddlState.SelectedValue))
         {
             try
@@ -112,6 +118,12 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlPayam.Items.Add(new ListItem("--Select--", ""));
         ddlBoma.Items.Add(new ListItem("--Select--", ""));
 
+        ddlSupportType.ClearSelection();
+        ddlSupportType.Items.Clear();
+        ddlSupportType.Items.Add(new ListItem("--Select--", ""));
+        ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
+        ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+
         if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
         {
             try
@@ -143,6 +155,14 @@ public partial class PayrollDownload : System.Web.UI.Page
     {
         ddlBoma.Items.Clear();
         ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
+        ddlSupportType.ClearSelection();
+        ddlSupportType.Items.Clear();
+        ddlSupportType.Items.Add(new ListItem("--Select--", ""));
+        ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
+        ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+
+
         if (!string.IsNullOrEmpty(ddlPayam.SelectedValue))
         {
             try
@@ -170,16 +190,32 @@ public partial class PayrollDownload : System.Web.UI.Page
         }
     }
 
+    protected void ddlBoma_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Reset the SupportType dropdown
+        ddlSupportType.ClearSelection();
+        ddlSupportType.Items.Clear();
+        ddlSupportType.Items.Add(new ListItem("--Select--", ""));
+        ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
+        ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+
+    }
+
 
     protected void BtnSearch_Click(object sender, EventArgs e)
     {
+        // Clear session data before starting a new search
+        Session["PayrollData"] = null;
+        Session["TotalItemCount"] = null;
+
         // Validate dropdown selections
         if (string.IsNullOrEmpty(ddlState.SelectedValue) || ddlState.SelectedValue == "0" ||
-            string.IsNullOrEmpty(ddlCounty.SelectedValue) || ddlCounty.SelectedValue == "0" ||
-            string.IsNullOrEmpty(ddlPayam.SelectedValue) || ddlPayam.SelectedValue == "0" ||
-            string.IsNullOrEmpty(ddlBoma.SelectedValue) || ddlBoma.SelectedValue == "0")
+        string.IsNullOrEmpty(ddlCounty.SelectedValue) || ddlCounty.SelectedValue == "0" ||
+        string.IsNullOrEmpty(ddlPayam.SelectedValue) || ddlPayam.SelectedValue == "0" ||
+        string.IsNullOrEmpty(ddlBoma.SelectedValue) || ddlBoma.SelectedValue == "0" ||
+        string.IsNullOrEmpty(ddlSupportType.SelectedValue) || ddlSupportType.SelectedValue == "")
         {
-            LblWarning.Text = "Please select all the Geo Location fields.";
+            LblWarning.Text = "Please select all the Geo Location fields and Support Type.";
             LblWarning.Visible = true;
             return;
         }
@@ -195,7 +231,8 @@ public partial class PayrollDownload : System.Web.UI.Page
             state = int.Parse(ddlState.SelectedValue),
             county = int.Parse(ddlCounty.SelectedValue),
             payam = int.Parse(ddlPayam.SelectedValue),
-            boma = int.Parse(ddlBoma.SelectedValue)
+            boma = int.Parse(ddlBoma.SelectedValue),
+            supportType = ddlSupportType.SelectedValue
         };
 
         string uri = ConfigurationManager.AppSettings["DownloadPayroll"];
@@ -238,6 +275,8 @@ public partial class PayrollDownload : System.Web.UI.Page
             // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
 
             Session["PDResponse"] = pdResponse;
+            int totalCount = pdResponse.totalCount;
+            Session["TotalItemCount"] = totalCount;
 
             if (pdResponse != null && pdResponse.data != null && pdResponse.data.Count > 0)
             {
@@ -351,10 +390,13 @@ public partial class PayrollDownload : System.Web.UI.Page
         if (Session["PayrollData"] != null)
         {
             rgResults.DataSource = Session["PayrollData"];
+            int totalCount = (int)Session["TotalItemCount"];
+            rgResults.VirtualItemCount = totalCount;
         }
         else
         {
             rgResults.DataSource = new List<PDPayrollDataDto>();
+            rgResults.VirtualItemCount = 0;
         }
     }
 
@@ -376,7 +418,7 @@ public partial class PayrollDownload : System.Web.UI.Page
             payam = int.Parse(ddlPayam.SelectedValue),
             paymentCycle = paymentCycle,
             state = int.Parse(ddlState.SelectedValue),
-            supportType = "LIPW",
+            supportType = ddlSupportType.SelectedValue,
             wagePaymentReqId = wagePaymentReqId
         };
 
@@ -480,7 +522,7 @@ public partial class PayrollDownload : System.Web.UI.Page
                 payam = payamId,
                 paymentCycle = paymentCycle,
                 state = stateId,
-                supportType = "LIPW",
+                supportType = ddlSupportType.SelectedValue,
                 wagePaymentReqId = wagePaymentReqId
             };
 

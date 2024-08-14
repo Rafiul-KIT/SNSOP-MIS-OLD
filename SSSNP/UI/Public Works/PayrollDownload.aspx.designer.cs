@@ -94,6 +94,24 @@ public partial class PayrollDownload
     protected global::System.Web.UI.WebControls.DropDownList ddlBoma;
 
     /// <summary>
+    /// LabelSupportType control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label LabelSupportType;
+
+    /// <summary>
+    /// ddlSupportType control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlSupportType;
+
+    /// <summary>
     /// BtnSearch control.
     /// </summary>
     /// <remarks>

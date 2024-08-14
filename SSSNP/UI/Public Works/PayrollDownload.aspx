@@ -74,11 +74,6 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
-                                            </table>
-                                        </td>
-                                        <td style="width: 27px">&nbsp;</td>
-                                        <td valign="top">
-                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
@@ -94,6 +89,26 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 27px">&nbsp;</td>
+                                        <td valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
+                                                <%--<tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlPayam" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                                </tr>--%>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name</asp:Label>
@@ -101,6 +116,20 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelSupportType" runat="server" CssClass="LBLBLACK" Width="165px">Support Type</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlSupportType" runat="server" class="form-control txtbox"
                                                             Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
 
