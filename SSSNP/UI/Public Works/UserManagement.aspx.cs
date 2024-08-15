@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.SessionState;
-using System.Text.RegularExpressions;
-
+using System.Web;
 
 namespace SSSNP.UI.Public_Works
 {
-    public partial class UserManagement : System.Web.UI.Page
+    public partial class UserManagement : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -18,6 +12,13 @@ namespace SSSNP.UI.Public_Works
             {
                 // Initialization code here if needed
             }
+        }
+
+        protected void btnLookup_Click(object sender, EventArgs e)
+        {
+            // Use ScriptManager to open the popup window
+            //string script = "window.open('Lookups/UserManagementLookup.aspx', 'Lookup', 'width=800,height=600');";
+            //ScriptManager.RegisterStartupScript(this, GetType(), "OpenWindow", script, true);
         }
 
         // Method to populate fields after selection from the lookup page

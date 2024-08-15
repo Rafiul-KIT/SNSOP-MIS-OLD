@@ -15,6 +15,15 @@ namespace SSSNP.UI.Public_Works.Lookups
     {
 
         /// <summary>
+        /// LabelUserName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelUserName;
+
+        /// <summary>
         /// txtFilterUserName control.
         /// </summary>
         /// <remarks>
@@ -22,6 +31,15 @@ namespace SSSNP.UI.Public_Works.Lookups
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFilterUserName;
+
+        /// <summary>
+        /// LabelUserType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelUserType;
 
         /// <summary>
         /// txtFilterUserType control.
@@ -33,6 +51,15 @@ namespace SSSNP.UI.Public_Works.Lookups
         protected global::System.Web.UI.WebControls.TextBox txtFilterUserType;
 
         /// <summary>
+        /// LabelEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelEmail;
+
+        /// <summary>
         /// txtFilterEmail control.
         /// </summary>
         /// <remarks>
@@ -40,6 +67,15 @@ namespace SSSNP.UI.Public_Works.Lookups
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFilterEmail;
+
+        /// <summary>
+        /// Label348 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label348;
 
         /// <summary>
         /// btnSearch control.
@@ -51,12 +87,21 @@ namespace SSSNP.UI.Public_Works.Lookups
         protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
-        /// grdDetails control.
+        /// BtnClear control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdDetails;
+        protected global::System.Web.UI.WebControls.Button BtnClear;
+
+        /// <summary>
+        /// RadGridDetails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadGrid RadGridDetails;
     }
 }
