@@ -573,6 +573,7 @@
     <Content Include="UI\Public Works\Lookups\Qualification.aspx" />
     <Content Include="UI\Public Works\Lookups\SpecialistLookup.aspx" />
     <Content Include="UI\Public Works\Lookups\States.aspx" />
+    <Content Include="UI\Public Works\Lookups\UserManagementLookup.aspx" />
     <Content Include="UI\Public Works\Lookups\WorkProgressLookup.aspx" />
     <Content Include="UI\Public Works\Lookups\WorkProgressLookUpLatest.aspx" />
     <Content Include="UI\Public Works\Lookups\WorkProgressLookupNew.aspx" />
@@ -684,6 +685,7 @@
     <Content Include="UI\Public Works\UploadsTrainee.aspx" />
     <Content Include="UI\Public Works\UploadsTraineeUpdate.aspx" />
     <Content Include="UI\Public Works\UploadWagesSelection.aspx" />
+    <Content Include="UI\Public Works\UserManagement.aspx" />
     <Content Include="UI\Public Works\Verify_Invoice.aspx" />
     <Content Include="UI\Public Works\viewAttachemnt.aspx" />
     <Content Include="UI\Public Works\ViewBenfWages.aspx" />
@@ -1636,6 +1638,13 @@
     <Compile Include="UI\Public Works\Lookups\States.aspx.designer.cs">
       <DependentUpon>States.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\Lookups\UserManagementLookup.aspx.cs">
+      <DependentUpon>UserManagementLookup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\Lookups\UserManagementLookup.aspx.designer.cs">
+      <DependentUpon>UserManagementLookup.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\Lookups\WorkProgressLookup.aspx.designer.cs">
       <DependentUpon>WorkProgressLookup.aspx</DependentUpon>
     </Compile>
@@ -2034,6 +2043,13 @@
     </Compile>
     <Compile Include="UI\Public Works\UploadWagesSelection.aspx.designer.cs">
       <DependentUpon>UploadWagesSelection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\UserManagement.aspx.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\UserManagement.aspx.designer.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\Verify_Invoice.aspx.designer.cs">
       <DependentUpon>Verify_Invoice.aspx</DependentUpon>
