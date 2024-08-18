@@ -37,6 +37,7 @@
                                     <tr>
                                         <td>
                                             <table cellpadding="4" cellspacing="5" style="width: 83%">
+                                                <!-- User ID Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelUserId" runat="server" CssClass="LBLBLACK" Width="165px">User ID</asp:Label>
@@ -47,6 +48,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                                <!-- User Name Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelUserName" runat="server" CssClass="LBLBLACK" Width="165px">User Name</asp:Label>
@@ -56,6 +58,7 @@
                                                         <asp:TextBox ID="txtUserName" runat="server" CssClass="form-control txtbox" Width="180px" />
                                                     </td>
                                                 </tr>
+                                                <!-- User Type Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelUserType" runat="server" CssClass="LBLBLACK" Width="165px">User Type</asp:Label>
@@ -66,6 +69,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                                <!-- User Code Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelUserCode" runat="server" CssClass="LBLBLACK" Width="165px">User Code</asp:Label>
@@ -76,6 +80,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                                <!-- Email Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelEmail" runat="server" CssClass="LBLBLACK" Width="165px">Email</asp:Label>
@@ -90,36 +95,51 @@
                                         </td>
                                         <td valign="top">
                                             <table cellpadding="4" cellspacing="5" style="width: 83%">
+                                                <!-- Status Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelStatus" runat="server" CssClass="LBLBLACK" Width="165px">Status</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtStatus" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
+                                                            <asp:ListItem Text="Select" Value="" />
+                                                            <asp:ListItem Text="Yes" Value="Y" />
+                                                            <asp:ListItem Text="No" Value="N" />
+                                                        </asp:DropDownList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                                <!-- GBV User Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelGBVUser" runat="server" CssClass="LBLBLACK" Width="165px">GBV User</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtGBVUser" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:RadioButtonList ID="rblGBVUser" runat="server" RepeatDirection="Horizontal">
+                                                            <asp:ListItem Text="Yes" Value="True"></asp:ListItem>
+                                                            <asp:ListItem Text="No" Value="False"></asp:ListItem>
+                                                        </asp:RadioButtonList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelIPApprover" runat="server" CssClass="LBLBLACK" Width="165px">IP Approver</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtIPApprover" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:RadioButtonList ID="rblIPApprover" runat="server" RepeatDirection="Horizontal">
+                                                            <asp:ListItem Text="Yes" Value="True"></asp:ListItem>
+                                                            <asp:ListItem Text="No" Value="False"></asp:ListItem>
+                                                        </asp:RadioButtonList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+
+                                                <!-- Email Receiver Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelEmailReceiver" runat="server" CssClass="LBLBLACK" Width="165px">Email Receiver</asp:Label>
@@ -130,12 +150,21 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+
+                                                <!-- Additional visible fields here -->
+                                                <asp:HiddenField ID="hfCreatedBy" runat="server" />
+                                                <asp:HiddenField ID="hfCreatedDt" runat="server" />
+                                                <asp:HiddenField ID="hfModifiedBy" runat="server" />
+                                                <asp:HiddenField ID="hfModifiedDt" runat="server" />
                                             </table>
                                         </td>
                                     </tr>
+                                    <!-- Update Button -->
                                     <tr>
                                         <td colspan="2" align="center" style="padding: 5px; margin: 5px">
-                                            <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-success" Text="Update" OnClick="btnUpdate_Click" />
+                                            <asp:Button ID="btnInsert" runat="server" CssClass="btn btn-primary" Text="Insert New User" OnClick="btnInsert_Click" />
+                                            <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-success" Text="Update User" OnClick="btnUpdate_Click" />
+                                            <asp:Button ID="btnClear" runat="server" CssClass="btn btn-secondary" Text="Clear" OnClick="btnClear_Click" />
                                         </td>
                                     </tr>
                                 </table>
@@ -145,6 +174,7 @@
                 </div>
             </div>
 
+            <!-- JavaScript Functions -->
             <script type="text/javascript">
                 var popupWindow;
 
@@ -159,17 +189,24 @@
                     }
                 };
 
-                function ApplyChanges(userid, username, usertype, usercode, status, email, gbvuser, ipapprover, emailreceiver) {
-                    document.getElementById('<%= txtUserId.ClientID %>').value = userid;
-                    document.getElementById('<%= txtUserName.ClientID %>').value = username;
-                    document.getElementById('<%= txtUserType.ClientID %>').value = usertype;
-                    document.getElementById('<%= txtUserCode.ClientID %>').value = usercode;
-                    document.getElementById('<%= txtStatus.ClientID %>').value = status;
+                function ApplyChanges(userId, userName, userType, userCode, status, email, gbvUser, ipApprover, emailReceiver, createdBy, createdDt, modifiedBy, modifiedDt) {
+                    document.getElementById('<%= txtUserId.ClientID %>').value = userId;
+                    document.getElementById('<%= txtUserName.ClientID %>').value = userName;
+                    document.getElementById('<%= txtUserType.ClientID %>').value = userType;
+                    document.getElementById('<%= txtUserCode.ClientID %>').value = userCode;
+                    document.getElementById('<%= ddlStatus.ClientID %>').value = status;
                     document.getElementById('<%= txtEmail.ClientID %>').value = email;
-                    document.getElementById('<%= txtGBVUser.ClientID %>').value = gbvuser;
-                    document.getElementById('<%= txtIPApprover.ClientID %>').value = ipapprover;
-                    document.getElementById('<%= txtEmailReceiver.ClientID %>').value = emailreceiver;
+                    document.getElementById('<%= rblGBVUser.ClientID %>').value = gbvUser;
+                    document.getElementById('<%= rblIPApprover.ClientID %>').value = ipApprover;
+                    document.getElementById('<%= txtEmailReceiver.ClientID %>').value = emailReceiver;
+
+                    // Store Created_by, Created_dt, Modified_by, Modified_dt in hidden fields
+                    document.getElementById('<%= hfCreatedBy.ClientID %>').value = createdBy;
+                    document.getElementById('<%= hfCreatedDt.ClientID %>').value = createdDt;
+                    document.getElementById('<%= hfModifiedBy.ClientID %>').value = modifiedBy;
+                    document.getElementById('<%= hfModifiedDt.ClientID %>').value = modifiedDt;
                 }
+
             </script>
         </ContentTemplate>
     </asp:UpdatePanel>

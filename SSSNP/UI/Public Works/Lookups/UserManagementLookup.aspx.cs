@@ -2,7 +2,6 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
 namespace SSSNP.UI.Public_Works.Lookups
@@ -19,7 +18,7 @@ namespace SSSNP.UI.Public_Works.Lookups
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            //RadGridDetails.Rebind();
+            RadGridDetails.Rebind(); // Rebind the grid to refresh data based on new search criteria
         }
 
         protected void BtnClear_Click(object sender, EventArgs e)
@@ -27,53 +26,46 @@ namespace SSSNP.UI.Public_Works.Lookups
             txtFilterUserName.Text = string.Empty;
             txtFilterUserType.Text = string.Empty;
             txtFilterEmail.Text = string.Empty;
-            //RadGridDetails.DataSource = null;
-            //RadGridDetails.Rebind();
+            RadGridDetails.DataSource = null;
+            RadGridDetails.Rebind();
         }
 
-        /*protected void RadGridDetails_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
+        protected void RadGridDetails_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
-
             try
             {
+                // Get search criteria from the textboxes
+                string userId = txtFilterUserName.Text.Trim();
+                string userType = txtFilterUserType.Text.Trim();
+                string email = txtFilterEmail.Text.Trim();
+
+                string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    conn.Open();
-                    LogMessage("Database connection opened successfully.");
-
-                    string query = "SELECT 1";  // Simple test query
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand("GetUserInfoKIT", conn))
                     {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Add parameters and handle nulls
+                        cmd.Parameters.AddWithValue("@User_id", string.IsNullOrEmpty(userId) ? (object)DBNull.Value : "%" + userId + "%");
+                        cmd.Parameters.AddWithValue("@User_type", string.IsNullOrEmpty(userType) ? (object)DBNull.Value : userType);
+                        cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(email) ? (object)DBNull.Value : email);
+
+                        conn.Open();
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
-
                         RadGridDetails.DataSource = dataTable;
-                        LogMessage("Query executed successfully.");
                     }
                 }
             }
             catch (Exception ex)
             {
-                LogMessage($"An error occurred: {ex.Message}");
+                // Handle exception, log it or display a message
+                Response.Write("Error: " + ex.Message);
             }
         }
-
-
-        private void LogMessage(string message)
-        {
-            // Implement your logging logic here
-            // For example, logging to a label on the page
-            Label lblLog = (Label)FindControl("lblLog");
-            if (lblLog != null)
-            {
-                lblLog.Text += $"{DateTime.Now}: {message}<br />";
-            }
-        }
-
-
 
         protected void RadGridDetails_ItemCommand(object sender, GridCommandEventArgs e)
         {
@@ -93,6 +85,6 @@ namespace SSSNP.UI.Public_Works.Lookups
                 string script = $"window.opener.ApplyChanges('{userId}', '{userName}', '{userType}', '{userCode}', '{status}', '{email}', '{gbvUser}', '{ipApprover}', '{emailReceiver}'); window.close();";
                 ClientScript.RegisterStartupScript(this.GetType(), "SelectRow", script, true);
             }
-        }*/
+        }
     }
 }

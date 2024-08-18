@@ -141,13 +141,13 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Label LabelStatus;
 
         /// <summary>
-        /// txtStatus control.
+        /// ddlStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtStatus;
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
 
         /// <summary>
         /// LabelGBVUser control.
@@ -159,13 +159,13 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Label LabelGBVUser;
 
         /// <summary>
-        /// txtGBVUser control.
+        /// rblGBVUser control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtGBVUser;
+        protected global::System.Web.UI.WebControls.RadioButtonList rblGBVUser;
 
         /// <summary>
         /// LabelIPApprover control.
@@ -177,13 +177,13 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Label LabelIPApprover;
 
         /// <summary>
-        /// txtIPApprover control.
+        /// rblIPApprover control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtIPApprover;
+        protected global::System.Web.UI.WebControls.RadioButtonList rblIPApprover;
 
         /// <summary>
         /// LabelEmailReceiver control.
@@ -204,6 +204,51 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.TextBox txtEmailReceiver;
 
         /// <summary>
+        /// hfCreatedBy control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfCreatedBy;
+
+        /// <summary>
+        /// hfCreatedDt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfCreatedDt;
+
+        /// <summary>
+        /// hfModifiedBy control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfModifiedBy;
+
+        /// <summary>
+        /// hfModifiedDt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfModifiedDt;
+
+        /// <summary>
+        /// btnInsert control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnInsert;
+
+        /// <summary>
         /// btnUpdate control.
         /// </summary>
         /// <remarks>
@@ -211,5 +256,14 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnUpdate;
+
+        /// <summary>
+        /// btnClear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnClear;
     }
 }
