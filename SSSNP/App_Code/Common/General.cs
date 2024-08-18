@@ -26392,6 +26392,38 @@ public class General
         return value;
     }
 
+    public DataSet GetGenericDashboardKIT(string Year, string IPid)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("GenericDashboardKIT", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            if (Year.Trim() == "" || Year.Trim() == null)
+                da.SelectCommand.Parameters.Add("@Year", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@Year", SqlDbType.VarChar).Value = Year.ToString();
+
+            if (IPid.Trim() == "" || IPid.Trim() == null)
+                da.SelectCommand.Parameters.Add("@IPid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@IPid", SqlDbType.VarChar).Value = IPid.ToString();
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
 
 
     public DataSet YearwiseDashboardforAdminIP(string Year, string IPid)
