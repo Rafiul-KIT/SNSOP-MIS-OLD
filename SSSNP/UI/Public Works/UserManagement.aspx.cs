@@ -1,6 +1,7 @@
-﻿/*using System;
+﻿using System;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Web.UI;
-using System.Web;
 
 namespace SSSNP.UI.Public_Works
 {
@@ -14,17 +15,8 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-        *//*protected void btnLookup_Click(object sender, EventArgs e)
-        {
-            // Use ScriptManager to open the popup window
-            //string script = "window.open('Lookups/UserManagementLookup.aspx', 'Lookup', 'width=800,height=600');";
-            //ScriptManager.RegisterStartupScript(this, GetType(), "OpenWindow", script, true);
-        }*//*
-
-        // Method to populate fields after selection from the lookup page
         public void ApplyChanges(string userId, string userName, string userType, string userCode, string status, string email, string gbvUser, string ipApprover, string emailReceiver)
         {
-            // Populate the textboxes with the data received from the lookup page
             txtUserId.Text = userId;
             txtUserName.Text = userName;
             txtUserType.Text = userType;
@@ -35,38 +27,32 @@ namespace SSSNP.UI.Public_Works
             txtIPApprover.Text = ipApprover;
             txtEmailReceiver.Text = emailReceiver;
         }
-    }
-}
-*/
 
-using System;
-using System.Web.UI;
-
-namespace SSSNP.UI.Public_Works
-{
-    public partial class UserManagement : Page
-    {
-        protected void Page_Load(object sender, EventArgs e)
+        protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+            string query = "EXEC InsUpdUserKIT @User_id, @User_name, @User_type, @User_code, @Status, @Created_by, @Modified_by, @Email, @GBVUser, @IP_Approver, @email_receiver";
+
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                // Initialization code here if needed
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@User_id", txtUserId.Text);
+                    cmd.Parameters.AddWithValue("@User_name", txtUserName.Text);
+                    cmd.Parameters.AddWithValue("@User_type", txtUserType.Text);
+                    cmd.Parameters.AddWithValue("@User_code", txtUserCode.Text);
+                    cmd.Parameters.AddWithValue("@Status", txtStatus.Text);
+                    cmd.Parameters.AddWithValue("@Created_by", Session["UserId"]); // Assuming you have the user ID stored in the session
+                    cmd.Parameters.AddWithValue("@Modified_by", Session["UserId"]);
+                    cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
+                    cmd.Parameters.AddWithValue("@GBVUser", txtGBVUser.Text);
+                    cmd.Parameters.AddWithValue("@IP_Approver", txtIPApprover.Text);
+                    cmd.Parameters.AddWithValue("@email_receiver", txtEmailReceiver.Text);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
-
-        // Method to populate fields after selection from the lookup page
-        /*public void ApplyChanges(string userId, string userName, string userType, string userCode, string status, string email, string gbvUser, string ipApprover, string emailReceiver)
-        {
-            // Populate the textboxes with the data received from the lookup page
-            txtUserId.Text = userId;
-            txtUserName.Text = userName;
-            txtUserType.Text = userType;
-            txtUserCode.Text = userCode;
-            txtStatus.Text = status;
-            txtEmail.Text = email;
-            txtGBVUser.Text = gbvUser;
-            txtIPApprover.Text = ipApprover;
-            txtEmailReceiver.Text = emailReceiver;
-        }*/
     }
 }

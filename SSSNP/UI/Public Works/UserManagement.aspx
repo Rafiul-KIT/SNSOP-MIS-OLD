@@ -133,6 +133,11 @@
                                             </table>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="2" align="center" style="padding: 5px; margin: 5px">
+                                            <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-success" Text="Update" OnClick="btnUpdate_Click" />
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -140,32 +145,32 @@
                 </div>
             </div>
 
-           <script type="text/javascript">
-               var popupWindow;
+            <script type="text/javascript">
+                var popupWindow;
 
-               function OpenLookupPopup() {
-                   popupWindow = window.open('Lookups/UserManagementLookup.aspx', 'Lookup', 'scrollbars=yes,resizable=yes,width=1000,height=650');
-                   return false;
-               }
+                function OpenLookupPopup() {
+                    popupWindow = window.open('Lookups/UserManagementLookup.aspx', 'Lookup', 'scrollbars=yes,resizable=yes,width=1000,height=650');
+                    return false;
+                }
 
-               window.onbeforeunload = function () {
-                   if (popupWindow && !popupWindow.closed) {
-                       popupWindow.close();
-                   }
-               };
+                window.onbeforeunload = function () {
+                    if (popupWindow && !popupWindow.closed) {
+                        popupWindow.close();
+                    }
+                };
 
-               function ApplyChanges(userid, username, usertype, usercode, status, email, gbvuser, ipapprover, emailreceiver) {
-                   document.getElementById('<%= txtUserId.ClientID %>').value = userid;
-                   document.getElementById('<%= txtUserName.ClientID %>').value = username;
-                   document.getElementById('<%= txtUserType.ClientID %>').value = usertype;
-                   document.getElementById('<%= txtUserCode.ClientID %>').value = usercode;
-                   document.getElementById('<%= txtStatus.ClientID %>').value = status;
-                   document.getElementById('<%= txtEmail.ClientID %>').value = email;
-                   document.getElementById('<%= txtGBVUser.ClientID %>').value = gbvuser;
-                   document.getElementById('<%= txtIPApprover.ClientID %>').value = ipapprover;
-                   document.getElementById('<%= txtEmailReceiver.ClientID %>').value = emailreceiver;
-               }
-           </script>
+                function ApplyChanges(userid, username, usertype, usercode, status, email, gbvuser, ipapprover, emailreceiver) {
+                    document.getElementById('<%= txtUserId.ClientID %>').value = userid;
+                    document.getElementById('<%= txtUserName.ClientID %>').value = username;
+                    document.getElementById('<%= txtUserType.ClientID %>').value = usertype;
+                    document.getElementById('<%= txtUserCode.ClientID %>').value = usercode;
+                    document.getElementById('<%= txtStatus.ClientID %>').value = status;
+                    document.getElementById('<%= txtEmail.ClientID %>').value = email;
+                    document.getElementById('<%= txtGBVUser.ClientID %>').value = gbvuser;
+                    document.getElementById('<%= txtIPApprover.ClientID %>').value = ipapprover;
+                    document.getElementById('<%= txtEmailReceiver.ClientID %>').value = emailreceiver;
+                }
+            </script>
         </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Content>
