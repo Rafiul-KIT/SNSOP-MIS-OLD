@@ -68,10 +68,10 @@ public partial class CashTransferSummaryMNE : Page
         ddlStatus.Items.Add(new ListItem("Financial Approver Approved", "3"));
         ddlStatus.Items.Add(new ListItem("Final Payment Authorizer Approved", "4"));
         ddlStatus.Items.Add(new ListItem("Reconciled", "6"));
-        ddlStatus.Items.Add(new ListItem("IP Approver Rejected", "11"));
-        ddlStatus.Items.Add(new ListItem("Initial Reviewer Rejected", "12"));
-        ddlStatus.Items.Add(new ListItem("Financial Approver Rejected", "13"));
-        ddlStatus.Items.Add(new ListItem("Final Payment Authorizer Rejected", "14"));
+        ddlStatus.Items.Add(new ListItem("IP Approver Rejected", "105"));
+        ddlStatus.Items.Add(new ListItem("Initial Reviewer Rejected", "100"));
+        ddlStatus.Items.Add(new ListItem("Financial Approver Rejected", "101"));
+        ddlStatus.Items.Add(new ListItem("Final Payment Authorizer Rejected", "102"));
 
         ddlComponent.Items.Add(new ListItem("--Select--", ""));
         ddlComponent.Items.Add(new ListItem("LIPW", "Component 1 (Public Works)"));
@@ -392,8 +392,9 @@ public partial class CashTransferSummaryMNE : Page
 
                 string query = @"
                 SELECT 
-                    wwr.intWagePaymentReqid AS intPaymentId,
-                    wbd.intBenid,
+                    wwr.ReqNo AS ReqNo,
+                    tbd.NameofHousehold,
+                    tbd.household_number,
                     wwr.PaymentCycle,
                     CASE 
                         WHEN wwr.Status = '0' THEN 'IP Applied'
@@ -402,10 +403,10 @@ public partial class CashTransferSummaryMNE : Page
                         WHEN wwr.Status = '3' THEN 'Financial Approver Approved'
                         WHEN wwr.Status = '4' THEN 'Final Payment Authorizer Approved'
                         WHEN wwr.Status = '6' THEN 'Reconciled'
-                        WHEN wwr.Status = '11' THEN 'IP Approver Rejected'
-                        WHEN wwr.Status = '12' THEN 'Initial Reviewer Rejected'
-                        WHEN wwr.Status = '13' THEN 'Financial Approver Rejected'
-                        WHEN wwr.Status = '14' THEN 'Final Payment Authorizer Rejected'
+                        WHEN wwr.Status = '105' THEN 'IP Approver Rejected'
+                        WHEN wwr.Status = '100' THEN 'Initial Reviewer Rejected'
+                        WHEN wwr.Status = '101' THEN 'Financial Approver Rejected'
+                        WHEN wwr.Status = '102' THEN 'Final Payment Authorizer Rejected'
                         ELSE 'Unknown Status'
                     END AS PaymentStatus,
                     wwr.Component,
@@ -417,13 +418,15 @@ public partial class CashTransferSummaryMNE : Page
                     td_WorkWageRequest wwr ON wm.intWorkid = wwr.intWorkid
                 INNER JOIN 
                     td_WageReqBenDet wbd ON wwr.intWagePaymentReqid = wbd.intWagePaymentReqid
+                INNER JOIN
+                    tbl_BeneficiaryDet tbd on tbd.intBenid = wbd.intBenid
                 LEFT JOIN 
-                    tr_BenWagesPayment bwp ON wbd.intBenid = bwp.intBenid AND wwr.intWorkid = bwp.intWorkid
+                    tr_BenWagesPayment bwp ON wbd.intBenid = bwp.intBenid AND wwr.intWagePaymentReqid = bwp.uuid
                 WHERE 
-                    (@StateId IS NULL OR wm.intStateid = @StateId)
-                    AND (@CountyId IS NULL OR wm.intCountieid = @CountyId)
-                    AND (@PayamId IS NULL OR wm.intPayamid = @PayamId)
-                    AND (@BomaId IS NULL OR wm.intBomasid = @BomaId)
+                    (@StateId IS NULL OR tbd.intStateid = @StateId)
+                    AND (@CountyId IS NULL OR tbd.intCountieid = @CountyId)
+                    AND (@PayamId IS NULL OR tbd.intPayamid = @PayamId)
+                    AND (@BomaId IS NULL OR tbd.intBomasid = @BomaId)
                     AND (@PaymentCycle IS NULL OR wwr.PaymentCycle = @PaymentCycle)
                     AND (@Status IS NULL OR wwr.Status = @Status)
                     AND (@Component IS NULL OR wwr.Component = @Component)
@@ -481,8 +484,9 @@ public partial class CashTransferSummaryMNE : Page
 
                 string query = @"
                 SELECT 
-                    wwr.intWagePaymentReqid AS intPaymentId,
-                    wbd.intBenid,
+                    wwr.ReqNo AS ReqNo,
+                    tbd.NameofHousehold,
+                    tbd.household_number,
                     wwr.PaymentCycle,
                     CASE 
                         WHEN wwr.Status = '0' THEN 'IP Applied'
@@ -491,10 +495,10 @@ public partial class CashTransferSummaryMNE : Page
                         WHEN wwr.Status = '3' THEN 'Financial Approver Approved'
                         WHEN wwr.Status = '4' THEN 'Final Payment Authorizer Approved'
                         WHEN wwr.Status = '6' THEN 'Reconciled'
-                        WHEN wwr.Status = '11' THEN 'IP Approver Rejected'
-                        WHEN wwr.Status = '12' THEN 'Initial Reviewer Rejected'
-                        WHEN wwr.Status = '13' THEN 'Financial Approver Rejected'
-                        WHEN wwr.Status = '14' THEN 'Final Payment Authorizer Rejected'
+                        WHEN wwr.Status = '105' THEN 'IP Approver Rejected'
+                        WHEN wwr.Status = '100' THEN 'Initial Reviewer Rejected'
+                        WHEN wwr.Status = '101' THEN 'Financial Approver Rejected'
+                        WHEN wwr.Status = '102' THEN 'Final Payment Authorizer Rejected'
                         ELSE 'Unknown Status'
                     END AS PaymentStatus,
                     wwr.Component,
@@ -506,13 +510,15 @@ public partial class CashTransferSummaryMNE : Page
                     td_WorkWageRequest wwr ON wm.intWorkid = wwr.intWorkid
                 INNER JOIN 
                     td_WageReqBenDet wbd ON wwr.intWagePaymentReqid = wbd.intWagePaymentReqid
+                INNER JOIN
+                    tbl_BeneficiaryDet tbd on tbd.intBenid = wbd.intBenid
                 LEFT JOIN 
-                    tr_BenWagesPayment bwp ON wbd.intBenid = bwp.intBenid AND wwr.intWorkid = bwp.intWorkid
+                    tr_BenWagesPayment bwp ON wbd.intBenid = bwp.intBenid AND wwr.intWagePaymentReqid = bwp.uuid
                 WHERE 
-                    (@StateId IS NULL OR wm.intStateid = @StateId)
-                    AND (@CountyId IS NULL OR wm.intCountieid = @CountyId)
-                    AND (@PayamId IS NULL OR wm.intPayamid = @PayamId)
-                    AND (@BomaId IS NULL OR wm.intBomasid = @BomaId)
+                    (@StateId IS NULL OR tbd.intStateid = @StateId)
+                    AND (@CountyId IS NULL OR tbd.intCountieid = @CountyId)
+                    AND (@PayamId IS NULL OR tbd.intPayamid = @PayamId)
+                    AND (@BomaId IS NULL OR tbd.intBomasid = @BomaId)
                     AND (@PaymentCycle IS NULL OR wwr.PaymentCycle = @PaymentCycle)
                     AND (@Status IS NULL OR wwr.Status = @Status)
                     AND (@Component IS NULL OR wwr.Component = @Component)

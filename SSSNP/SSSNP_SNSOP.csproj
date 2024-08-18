@@ -206,7 +206,6 @@
     <Content Include="Alternatetwo\readme.txt" />
     <Content Include="assets\Background.png" />
     <Content Include="assets\Loading.gif" />
-    <Content Include="error.txt" />
     <Content Include="Resource\Images\snsop-id-card-bg2.png" />
     <Content Include="Resource\Images\snsop-id-card-bg1.png" />
     <Content Include="Resource\Styles\css\payroll-download-style.css" />

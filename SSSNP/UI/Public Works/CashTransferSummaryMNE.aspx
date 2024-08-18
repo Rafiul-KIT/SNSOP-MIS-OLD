@@ -204,13 +204,30 @@
                                         <HeaderStyle CssClass="MyGridHeader" />
                                         <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
                                         <Columns>
-                                            <telerik:GridBoundColumn DataField="intPaymentId" HeaderText="Payment ID"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="intBenid" HeaderText="Beneficiary ID"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="PaymentCycle" HeaderText="Payment Cycle"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="PaymentStatus" HeaderText="Payment Status"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="Component" HeaderText="Component"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="PaymentAmount" HeaderText="Payment Amount"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" DataFormatString="{0:MM/dd/yyyy}"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="ReqNo" HeaderText="Wage Request No">
+                                                <HeaderStyle Width="10%" />
+                                            </telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Beneficiary Name">
+                                                <HeaderStyle Width="20%" />
+                                            </telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="household_number" HeaderText="Household Number">
+                                                <HeaderStyle Width="25%" />
+                                            </telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PaymentCycle" HeaderText="Payment Cycle">
+                                                <HeaderStyle Width="5%" />
+                                            </telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PaymentStatus" HeaderText="Payment Status">
+                                                <HeaderStyle Width="10%" />
+                                            </telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="Component" HeaderText="Component">
+                                                <HeaderStyle Width="10%" />
+                                            </telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PaymentAmount" HeaderText="Payment Amount">
+                                                <HeaderStyle Width="10%" />
+                                            </telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" DataFormatString="{0:MM/dd/yyyy}">
+                                                <HeaderStyle Width="10%" />
+                                            </telerik:GridBoundColumn>
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>

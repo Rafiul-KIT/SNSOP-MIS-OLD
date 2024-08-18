@@ -142,6 +142,7 @@ public partial class ViewBenfWages : System.Web.UI.Page
                     lblmanager.Text = dsn.Tables[0].Rows[0]["SManager"].ToString();
                     lblfromdate.Text = Convert.ToDateTime(dsn.Tables[0].Rows[0]["ReqFromDate"].ToString().Trim()).ToString("dd-MM-yyyy");
                     lbltodate.Text = Convert.ToDateTime(dsn.Tables[0].Rows[0]["ReqToDate"].ToString().Trim()).ToString("dd-MM-yyyy");
+                    lblRequestNumber.Text = dsn.Tables[0].Rows[0]["ReqNo"].ToString();
 
                     if (Session["user_type"].ToString().Trim() == "Cordinator" || Session["user_type"].ToString().Trim() == "IP")
                     {
