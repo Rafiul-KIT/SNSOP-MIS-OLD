@@ -81,10 +81,16 @@ namespace SSSNP.UI.Public_Works.Lookups
                 string gbvUser = args[6];
                 string ipApprover = args[7];
                 string emailReceiver = args[8];
+                string createdBy = args[9];
+                string createdDt = args[10];
+                string modifiedBy = args[11];
+                string modifiedDt = args[12];
 
-                string script = $"window.opener.ApplyChanges('{userId}', '{userName}', '{userType}', '{userCode}', '{status}', '{email}', '{gbvUser}', '{ipApprover}', '{emailReceiver}'); window.close();";
+                // Pass all the values to the ApplyChanges JavaScript function
+                string script = $"window.opener.ApplyChanges('{userId}', '{userName}', '{userType}', '{userCode}', '{status}', '{email}', '{gbvUser}', '{ipApprover}', '{emailReceiver}', '{createdBy}', '{createdDt}', '{modifiedBy}', '{modifiedDt}'); window.close();";
                 ClientScript.RegisterStartupScript(this.GetType(), "SelectRow", script, true);
             }
         }
+
     }
 }

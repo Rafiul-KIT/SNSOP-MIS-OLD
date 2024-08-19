@@ -24,6 +24,15 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
 
         /// <summary>
+        /// lblMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMessage;
+
+        /// <summary>
         /// LabelSearch control.
         /// </summary>
         /// <remarks>
@@ -87,13 +96,13 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Label LabelUserType;
 
         /// <summary>
-        /// txtUserType control.
+        /// ddlUserType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUserType;
+        protected global::System.Web.UI.WebControls.DropDownList ddlUserType;
 
         /// <summary>
         /// LabelUserCode control.

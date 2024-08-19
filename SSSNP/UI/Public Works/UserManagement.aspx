@@ -25,6 +25,9 @@
                                 <h3 class="panel-title">System User Management</h3>
                             </div>
                             <div class="panel-body">
+                                <!-- Add a label to display error messages -->
+                                <asp:Label ID="lblMessage" runat="server" CssClass="text-danger" Visible="false"></asp:Label>
+                                
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 90%">
                                     <tr>
                                         <td style="padding: 5px; margin: 5px" colspan="2" align="center">
@@ -65,7 +68,26 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtUserType" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:DropDownList ID="ddlUserType" runat="server" CssClass="form-control">
+                                                            <asp:ListItem Text="Select User Type" Value="" />
+                                                            <asp:ListItem Text="Cordinator" Value="Cordinator" />
+                                                            <asp:ListItem Text="Manager" Value="Manager" />
+                                                            <asp:ListItem Text="IP" Value="IP" />
+                                                            <asp:ListItem Text="QualEng" Value="QualEng" />
+                                                            <asp:ListItem Text="TST" Value="TST" />
+                                                            <asp:ListItem Text="ManagerGRM" Value="ManagerGRM" />
+                                                            <asp:ListItem Text="Adm" Value="Adm" />
+                                                            <asp:ListItem Text="Specialist" Value="Specialist" />
+                                                            <asp:ListItem Text="WB" Value="WB" />
+                                                            <asp:ListItem Text="EnvSpec" Value="EnvSpec" />
+                                                            <asp:ListItem Text="GenderSpec" Value="GenderSpec" />
+                                                            <asp:ListItem Text="SocDevSpec" Value="SocDevSpec" />
+                                                            <asp:ListItem Text="PcuSpec" Value="PcuSpec" />
+                                                            <asp:ListItem Text="FSP" Value="FSP" />
+                                                            <asp:ListItem Text="Report" Value="Report" />
+                                                            <asp:ListItem Text="MIS" Value="MIS" />
+                                                            <asp:ListItem Text="EntryGRM" Value="EntryGRM" />
+                                                        </asp:DropDownList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
@@ -192,7 +214,7 @@
                 function ApplyChanges(userId, userName, userType, userCode, status, email, gbvUser, ipApprover, emailReceiver, createdBy, createdDt, modifiedBy, modifiedDt) {
                     document.getElementById('<%= txtUserId.ClientID %>').value = userId;
                     document.getElementById('<%= txtUserName.ClientID %>').value = userName;
-                    document.getElementById('<%= txtUserType.ClientID %>').value = userType;
+                    document.getElementById('<%= ddlUserType.ClientID %>').value = userType;
                     document.getElementById('<%= txtUserCode.ClientID %>').value = userCode;
                     document.getElementById('<%= ddlStatus.ClientID %>').value = status;
                     document.getElementById('<%= txtEmail.ClientID %>').value = email;
@@ -200,12 +222,13 @@
                     document.getElementById('<%= rblIPApprover.ClientID %>').value = ipApprover;
                     document.getElementById('<%= txtEmailReceiver.ClientID %>').value = emailReceiver;
 
-                    // Store Created_by, Created_dt, Modified_by, Modified_dt in hidden fields
+                    // Populate the hidden fields with the created and modified details
                     document.getElementById('<%= hfCreatedBy.ClientID %>').value = createdBy;
                     document.getElementById('<%= hfCreatedDt.ClientID %>').value = createdDt;
                     document.getElementById('<%= hfModifiedBy.ClientID %>').value = modifiedBy;
                     document.getElementById('<%= hfModifiedDt.ClientID %>').value = modifiedDt;
                 }
+
 
             </script>
         </ContentTemplate>
