@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Text;
 using System.Web.UI;
-using Newtonsoft.Json.Linq;
+using Microsoft.Identity.Client;
+using Newtonsoft.Json;
 
 namespace SSSNP.UI.Public_Works
 {
@@ -20,46 +21,42 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-        protected async void BtnInsert_Click(object sender, EventArgs e)
+        protected void BtnInsert_Click(object sender, EventArgs e)
         {
             try
             {
                 string userEmail = txtEmail.Text;
                 string userName = txtUserName.Text;
 
+                // Check if the email already exists in the database
+                if (EmailExistsInDatabase(userEmail))
+                {
+                    ShowWarning("The email address is already registered. Please try with a different email address.");
+                    return;
+                }
+
                 // Get the access token from Azure AD
-                string accessToken = await GetAccessTokenAsync();
+                string accessToken = GetAccessToken();
 
                 if (!string.IsNullOrEmpty(accessToken))
                 {
-                    bool invitationSent = false;
+                    // Create the user in Azure AD
+                    bool isUserCreated = CreateExternalUser(accessToken, userEmail, userName);
 
-                    // Check if the user is external or internal
-                    if (IsExternalUser(userEmail))
+                    if (isUserCreated)
                     {
-                        // Send invitation to external user
-                        invitationSent = await InviteExternalUserAsync(accessToken, userEmail, userName);
-                    }
-                    else
-                    {
-                        // Create internal user in Azure AD
-                        invitationSent = await CreateInternalUserAsync(accessToken, userEmail, userName);
-                    }
-
-                    if (invitationSent)
-                    {
-                        // If the invitation or user creation was successful, insert or update the user in your database
+                        // Only insert the user into the database if the Azure AD user creation was successful
                         InsertOrUpdateUser(isInsert: true);
-                        ShowMessage("User inserted successfully.");
+                        ShowMessage("User created successfully.");
                     }
                     else
                     {
-                        ShowWarning("Failed to send invitation or create user. User was not inserted.");
+                        ShowWarning("Failed to create user in Microsoft Active Directory! Make sure the email address you have entered is registered into Microsoft Account.");
                     }
                 }
                 else
                 {
-                    ShowWarning("Failed to acquire Azure AD access token.");
+                    ShowWarning("Failed to acquire Azure AD access token. Could not create user.");
                 }
             }
             catch (Exception ex)
@@ -68,48 +65,46 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-        protected async void BtnUpdate_Click(object sender, EventArgs e)
+
+        protected void BtnUpdate_Click(object sender, EventArgs e)
         {
             try
             {
                 string userEmail = txtEmail.Text;
                 string userName = txtUserName.Text;
+                string originalEmail = hfOriginalEmail.Value;
 
-                // Check if the email exists in the database
-                if (!EmailExistsInDatabase(userEmail))
+                // Check if the email exists in the database and if it has changed from the original lookup
+                if (EmailExistsInDatabase(userEmail))
+                {
+                    if (userEmail != originalEmail)
+                    {
+                        ShowWarning("The email address cannot be changed. Please revert to the original email or cancel the update.");
+                        return;
+                    }
+                }
+                else
                 {
                     ShowWarning("The email is not registered.");
                     return;
                 }
-
                 // Get the access token from Azure AD
-                string accessToken = await GetAccessTokenAsync();
+                string accessToken = GetAccessToken();
 
                 if (!string.IsNullOrEmpty(accessToken))
                 {
-                    bool updateSuccess = false;
+                    // Update the user in Azure AD (this could involve different logic based on your needs)
+                    bool isUserUpdated = CreateExternalUser(accessToken, userEmail, userName);
 
-                    // Check if the user is external or internal
-                    if (IsExternalUser(userEmail))
+                    if (isUserUpdated)
                     {
-                        // Update the invitation for an external user (if needed)
-                        updateSuccess = await UpdateExternalUserAsync(accessToken, userEmail, userName);
-                    }
-                    else
-                    {
-                        // Update internal user in Azure AD (if needed)
-                        updateSuccess = await UpdateInternalUserAsync(accessToken, userEmail, userName);
-                    }
-
-                    if (updateSuccess)
-                    {
-                        // If the update in Azure AD was successful, update the user in your database
+                        // Update the user in the database
                         InsertOrUpdateUser(isInsert: false);
                         ShowMessage("User updated successfully.");
                     }
                     else
                     {
-                        ShowWarning("Failed to update the user in Azure AD. User was not updated.");
+                        ShowWarning("Failed to update user into database! Please contact your system administrator.");
                     }
                 }
                 else
@@ -123,111 +118,108 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-        private async Task<string> GetAccessTokenAsync()
+
+        private string GetAccessToken()
         {
-            using (var client = new HttpClient())
+            try
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, "https://login.microsoftonline.com/4a9fe01e-5c9c-4cb8-b299-fb5211533420/oauth2/v2.0/token");
+                string clientId = "2d80a939-a955-4c38-a911-a1f8cb986a2c";
+                string tenantId = "4a9fe01e-5c9c-4cb8-b299-fb5211533420";
+                string clientSecret = "3BP8Q~TikdfxoOyfWjyWRj2RXlujNlS2LZQFnb-S";
 
-                var parameters = new[]
-                {
-                    new KeyValuePair<string, string>("client_id", "2d80a939-a955-4c38-a911-a1f8cb986a2c"),
-                    new KeyValuePair<string, string>("scope", "https://graph.microsoft.com/.default"),
-                    new KeyValuePair<string, string>("client_secret", "3BP8Q~TikdfxoOyfWjyWRj2RXlujNlS2LZQFnb-S"),
-                    new KeyValuePair<string, string>("grant_type", "client_credentials")
-                };
+                IConfidentialClientApplication confidentialClient = ConfidentialClientApplicationBuilder
+                    .Create(clientId)
+                    .WithClientSecret(clientSecret)
+                    .WithAuthority(new Uri($"https://login.microsoftonline.com/{tenantId}/v2.0"))
+                    .Build();
 
-                request.Content = new FormUrlEncodedContent(parameters);
+                string[] scopes = new[] { "https://graph.microsoft.com/.default" };
 
-                var response = await client.SendAsync(request);
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var tokenResponse = JObject.Parse(content);
-                    return tokenResponse["access_token"].ToString();
-                }
-
+                AuthenticationResult authResult = confidentialClient
+                    .AcquireTokenForClient(scopes)
+                    .ExecuteAsync().GetAwaiter().GetResult();
+                //Debug.WriteLine(authResult.AccessToken);
+                return authResult.AccessToken;
+            }
+            catch (Exception ex)
+            {
+                ShowWarning($"Error generating access token: {ex.Message}");
                 return null;
             }
         }
 
-        private async Task<bool> InviteExternalUserAsync(string accessToken, string userEmail, string userName)
-        {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-                var invitationPayload = new
+        private static bool CreateExternalUser(string accessToken, string userEmail, string userName)
+        {
+            string uri = "https://graph.microsoft.com/v1.0/invitations"; // Azure AD API endpoint for user invitation
+            Uri urlCheck = new Uri(uri);
+
+            //Debug.WriteLine("after urlccheck");
+            // Create the HTTP request
+            HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
+            httpWReq.PreAuthenticate = true;
+            httpWReq.Headers.Add("Authorization", "Bearer " + accessToken);
+            httpWReq.ContentType = "application/json";
+            httpWReq.Method = "POST";
+
+            try
+            {
+                // Create the request body
+                var request = new UserCreationModel()
                 {
+                    invitedUserDisplayName = userName,
                     invitedUserEmailAddress = userEmail,
                     inviteRedirectUrl = "https://dev.karoothitbd.com:5051",
-                    invitedUserDisplayName = userName,
                     sendInvitationMessage = true
                 };
 
-                var response = await client.PostAsJsonAsync("https://graph.microsoft.com/v1.0/invitations", invitationPayload);
+                string reqStr = JsonConvert.SerializeObject(request);
+                var data = Encoding.ASCII.GetBytes(reqStr);
+                httpWReq.ContentLength = data.Length;
 
-                return response.IsSuccessStatusCode;
-            }
-        }
-
-        private async Task<bool> CreateInternalUserAsync(string accessToken, string userEmail, string userName)
-        {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-                var internalUserPayload = new
+                // Write the request body to the request stream
+                using (var newStream = httpWReq.GetRequestStream())
                 {
-                    accountEnabled = true,
-                    displayName = userName,
-                    mailNickname = userName.Split('@')[0],
-                    userPrincipalName = userEmail,
-                    passwordProfile = new
+                    newStream.Write(data, 0, data.Length);
+                    newStream.Flush();
+                    newStream.Close();
+                }
+
+                // Get the response from the API
+                using (HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                     {
-                        forceChangePasswordNextSignIn = true,
-                        password = "StrongPassword!23"
+                        string jsonResponse = reader.ReadToEnd();
+                        //Debug.WriteLine("User created successfully: " + jsonResponse);
+                        return true; // Indicate that the user was created successfully
                     }
-                };
-
-                var response = await client.PostAsJsonAsync("https://graph.microsoft.com/v1.0/users", internalUserPayload);
-
-                return response.IsSuccessStatusCode;
+                }
             }
-        }
-
-        private async Task<bool> UpdateExternalUserAsync(string accessToken, string userEmail, string userName)
-        {
-            // Example: Resend invitation or update external user details
-            // You can adjust this method to handle the specific update operations needed.
-            return await InviteExternalUserAsync(accessToken, userEmail, userName);
-        }
-
-        private async Task<bool> UpdateInternalUserAsync(string accessToken, string userEmail, string userName)
-        {
-            using (var client = new HttpClient())
+            catch (WebException ex)
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-                var internalUserPayload = new
+                // Handle WebException, which can occur due to network issues or HTTP errors
+                //Debug.WriteLine($"An error occurred while calling the API: {ex.Message}");
+                if (ex.Response != null)
                 {
-                    accountEnabled = true,
-                    displayName = userName,
-                    mailNickname = userName.Split('@')[0]
-                    // Add other properties to update as needed
-                };
-
-                var response = await client.PatchAsJsonAsync($"https://graph.microsoft.com/v1.0/users/{userEmail}", internalUserPayload);
-
-                return response.IsSuccessStatusCode;
+                    using (var responseStream = ex.Response.GetResponseStream())
+                    using (var reader = new StreamReader(responseStream))
+                    {
+                        string errorResponse = reader.ReadToEnd();
+                        //Debug.WriteLine("Error details: " + errorResponse);
+                    }
+                }
+                return false; // Indicate that the user creation failed
+            }
+            catch (Exception ex)
+            {
+                // Handle any other exceptions
+                //Debug.WriteLine($"An unexpected error occurred: {ex.Message}");
+                return false; // Indicate that the user creation failed
             }
         }
 
-        private bool IsExternalUser(string userEmail)
-        {
-            // Replace "yourdomain.com" with your actual domain
-            return !userEmail.EndsWith("@yourdomain.com", StringComparison.OrdinalIgnoreCase);
-        }
+
 
         private bool EmailExistsInDatabase(string email)
         {
@@ -239,7 +231,6 @@ namespace SSSNP.UI.Public_Works
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Email", email);
-
                     conn.Open();
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
                     return count > 0;
@@ -249,7 +240,6 @@ namespace SSSNP.UI.Public_Works
 
         private void InsertOrUpdateUser(bool isInsert)
         {
-            // Your existing code to insert or update the user in your database
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
             string query = "InsUpdUserKIT";
 
@@ -261,7 +251,6 @@ namespace SSSNP.UI.Public_Works
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                        // Add parameters with NULL handling
                         cmd.Parameters.AddWithValue("@User_id", string.IsNullOrEmpty(txtUserId.Text) ? (object)DBNull.Value : txtUserId.Text);
                         cmd.Parameters.AddWithValue("@User_name", string.IsNullOrEmpty(txtUserName.Text) ? (object)DBNull.Value : txtUserName.Text);
                         cmd.Parameters.AddWithValue("@User_type", string.IsNullOrEmpty(ddlUserType.SelectedValue) ? (object)DBNull.Value : ddlUserType.SelectedValue);
@@ -270,41 +259,19 @@ namespace SSSNP.UI.Public_Works
                         cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(txtEmail.Text) ? (object)DBNull.Value : txtEmail.Text);
                         cmd.Parameters.AddWithValue("@GBVUser", string.IsNullOrEmpty(rblGBVUser.SelectedValue) ? (object)DBNull.Value : (object)(rblGBVUser.SelectedValue == "True"));
                         cmd.Parameters.AddWithValue("@IP_Approver", string.IsNullOrEmpty(rblIPApprover.SelectedValue) ? (object)DBNull.Value : (object)(rblIPApprover.SelectedValue == "True"));
+                        cmd.Parameters.AddWithValue("@email_receiver", string.IsNullOrEmpty(rblEmailReceiver.SelectedValue) ? (object)DBNull.Value : (object)int.Parse(rblEmailReceiver.SelectedValue));
 
-                        if (int.TryParse(txtEmailReceiver.Text, out int emailReceiver))
-                        {
-                            cmd.Parameters.AddWithValue("@email_receiver", emailReceiver);
-                        }
-                        else
-                        {
-                            cmd.Parameters.AddWithValue("@email_receiver", DBNull.Value);
-                        }
-
-                        int? createdBy = null;
-                        int? modifiedBy = null;
 
                         if (isInsert)
                         {
-                            if (Session["uid"] != null && int.TryParse(Session["uid"].ToString(), out int createdByValue))
-                            {
-                                createdBy = createdByValue;
-                            }
-                            modifiedBy = null;
+                            cmd.Parameters.AddWithValue("@Created_by", Session["uid"] != null ? (object)Session["uid"] : DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Modified_by", DBNull.Value);
                         }
                         else
                         {
-                            if (Session["uid"] != null && int.TryParse(Session["uid"].ToString(), out int modifiedByValue))
-                            {
-                                modifiedBy = modifiedByValue;
-                            }
-                            if (int.TryParse(hfCreatedBy.Value, out int createdByValue))
-                            {
-                                createdBy = createdByValue;
-                            }
+                            cmd.Parameters.AddWithValue("@Modified_by", Session["uid"] != null ? (object)Session["uid"] : DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Created_by", hfCreatedBy.Value);
                         }
-
-                        cmd.Parameters.AddWithValue("@Created_by", createdBy.HasValue ? (object)createdBy.Value : DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Modified_by", modifiedBy.HasValue ? (object)modifiedBy.Value : DBNull.Value);
 
                         conn.Open();
                         cmd.ExecuteNonQuery();
@@ -333,7 +300,6 @@ namespace SSSNP.UI.Public_Works
 
         protected void btnClear_Click(object sender, EventArgs e)
         {
-            // Clear all fields
             txtUserId.Text = "";
             txtUserName.Text = "";
             ddlUserType.SelectedIndex = 0;
@@ -342,7 +308,16 @@ namespace SSSNP.UI.Public_Works
             ddlStatus.SelectedIndex = 0;
             rblGBVUser.ClearSelection();
             rblIPApprover.ClearSelection();
-            txtEmailReceiver.Text = "";
+            rblEmailReceiver.Text = "";
+            lblMessage.Text = "";
         }
+    }
+
+    public class UserCreationModel
+    {
+        public string invitedUserDisplayName { get; set; }
+        public string invitedUserEmailAddress { get; set; }
+        public string inviteRedirectUrl { get; set; }
+        public bool sendInvitationMessage { get; set; }
     }
 }

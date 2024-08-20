@@ -24,15 +24,6 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
 
         /// <summary>
-        /// lblMessage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMessage;
-
-        /// <summary>
         /// LabelSearch control.
         /// </summary>
         /// <remarks>
@@ -204,13 +195,13 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Label LabelEmailReceiver;
 
         /// <summary>
-        /// txtEmailReceiver control.
+        /// rblEmailReceiver control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEmailReceiver;
+        protected global::System.Web.UI.WebControls.RadioButtonList rblEmailReceiver;
 
         /// <summary>
         /// hfCreatedBy control.
@@ -249,6 +240,15 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.HiddenField hfModifiedDt;
 
         /// <summary>
+        /// hfOriginalEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfOriginalEmail;
+
+        /// <summary>
         /// btnInsert control.
         /// </summary>
         /// <remarks>
@@ -274,5 +274,23 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnClear;
+
+        /// <summary>
+        /// lblMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMessage;
+
+        /// <summary>
+        /// UpdateProgress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdateProgress UpdateProgress;
     }
 }

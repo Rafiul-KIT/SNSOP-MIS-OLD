@@ -25,9 +25,6 @@
                                 <h3 class="panel-title">System User Management</h3>
                             </div>
                             <div class="panel-body">
-                                <!-- Add a label to display error messages -->
-                                <asp:Label ID="lblMessage" runat="server" CssClass="text-danger" Visible="false"></asp:Label>
-                                
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 90%">
                                     <tr>
                                         <td style="padding: 5px; margin: 5px" colspan="2" align="center">
@@ -168,7 +165,10 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtEmailReceiver" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:RadioButtonList ID="rblEmailReceiver" runat="server" RepeatDirection="Horizontal">
+                                                            <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                                            <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                                                        </asp:RadioButtonList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
@@ -178,6 +178,8 @@
                                                 <asp:HiddenField ID="hfCreatedDt" runat="server" />
                                                 <asp:HiddenField ID="hfModifiedBy" runat="server" />
                                                 <asp:HiddenField ID="hfModifiedDt" runat="server" />
+                                                <asp:HiddenField ID="hfOriginalEmail" runat="server" />
+
                                             </table>
                                         </td>
                                     </tr>
@@ -185,8 +187,13 @@
                                     <tr>
                                         <td colspan="2" align="center" style="padding: 5px; margin: 5px">
                                             <asp:Button ID="btnInsert" runat="server" CssClass="btn btn-primary" Text="Insert New User" OnClick="BtnInsert_Click" />
-                                            <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-success" Text="Update User" OnClick="btnUpdate_Click" />
+                                            <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-success" Text="Update User" OnClick="BtnUpdate_Click" />
                                             <asp:Button ID="btnClear" runat="server" CssClass="btn btn-secondary" Text="Clear" OnClick="btnClear_Click" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="center">
+                                            <asp:Label ID="lblMessage" runat="server" CssClass="text-danger" Visible="false"></asp:Label>
                                         </td>
                                     </tr>
                                 </table>
@@ -220,15 +227,33 @@
                     document.getElementById('<%= txtEmail.ClientID %>').value = email;
                     document.getElementById('<%= rblGBVUser.ClientID %>').value = gbvUser;
                     document.getElementById('<%= rblIPApprover.ClientID %>').value = ipApprover;
-                    document.getElementById('<%= txtEmailReceiver.ClientID %>').value = emailReceiver;
+                    document.getElementById('<%= rblEmailReceiver.ClientID %>').value = emailReceiver;
 
                     // Populate the hidden fields with the created and modified details
                     document.getElementById('<%= hfCreatedBy.ClientID %>').value = createdBy;
                     document.getElementById('<%= hfCreatedDt.ClientID %>').value = createdDt;
                     document.getElementById('<%= hfModifiedBy.ClientID %>').value = modifiedBy;
                     document.getElementById('<%= hfModifiedDt.ClientID %>').value = modifiedDt;
+
+                    // Store the original email
+                    document.getElementById('<%= hfOriginalEmail.ClientID %>').value = email;
                 }
             </script>
         </ContentTemplate>
+
+        <Triggers>
+            <asp:PostBackTrigger ControlID="btnLookup" />
+            <asp:PostBackTrigger ControlID="btnClear" />
+        </Triggers>
     </asp:UpdatePanel>
+
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>
