@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : User Management" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="UserManagement.aspx.cs" Inherits="SSSNP.UI.Public_Works.UserManagement" %>
+﻿<%@ Page Title=":: :: SSSNP : : User Management" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="UserManagement.aspx.cs" Inherits="SSSNP.UI.Public_Works.UserManagement" Async ="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
@@ -184,7 +184,7 @@
                                     <!-- Update Button -->
                                     <tr>
                                         <td colspan="2" align="center" style="padding: 5px; margin: 5px">
-                                            <asp:Button ID="btnInsert" runat="server" CssClass="btn btn-primary" Text="Insert New User" OnClick="btnInsert_Click" />
+                                            <asp:Button ID="btnInsert" runat="server" CssClass="btn btn-primary" Text="Insert New User" OnClick="BtnInsert_Click" />
                                             <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-success" Text="Update User" OnClick="btnUpdate_Click" />
                                             <asp:Button ID="btnClear" runat="server" CssClass="btn btn-secondary" Text="Clear" OnClick="btnClear_Click" />
                                         </td>
@@ -228,8 +228,6 @@
                     document.getElementById('<%= hfModifiedBy.ClientID %>').value = modifiedBy;
                     document.getElementById('<%= hfModifiedDt.ClientID %>').value = modifiedDt;
                 }
-
-
             </script>
         </ContentTemplate>
     </asp:UpdatePanel>
