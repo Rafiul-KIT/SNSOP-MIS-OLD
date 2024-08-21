@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
@@ -19,7 +20,7 @@ namespace SSSNP
         protected void Application_Start(object sender, EventArgs e)
         {
             DataPartitionManagers config = (DataPartitionManagers)ConfigurationManager.GetSection("dataPartitions");
-
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             //new WageRequestApiManager().SendWageRequestByApi("8959");
         }
 
