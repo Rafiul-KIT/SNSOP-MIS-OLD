@@ -225,9 +225,27 @@
                     document.getElementById('<%= txtUserCode.ClientID %>').value = userCode;
                     document.getElementById('<%= ddlStatus.ClientID %>').value = status;
                     document.getElementById('<%= txtEmail.ClientID %>').value = email;
-                    document.getElementById('<%= rblGBVUser.ClientID %>').value = gbvUser;
-                    document.getElementById('<%= rblIPApprover.ClientID %>').value = ipApprover;
-                    document.getElementById('<%= rblEmailReceiver.ClientID %>').value = emailReceiver;
+
+                    // Set GBV User radio button
+                    if (gbvUser === "True") {
+                        document.getElementById('<%= rblGBVUser.ClientID %>_0').checked = true;
+                    } else if (gbvUser === "False") {
+                        document.getElementById('<%= rblGBVUser.ClientID %>_1').checked = true;
+                    }
+
+                    // Set IP Approver radio button
+                    if (ipApprover === "True") {
+                        document.getElementById('<%= rblIPApprover.ClientID %>_0').checked = true;
+                    } else if (ipApprover === "False") {
+                        document.getElementById('<%= rblIPApprover.ClientID %>_1').checked = true;
+                    }
+
+                    // Set Email Receiver radio button
+                    if (emailReceiver === "1") {
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_0').checked = true;
+                    } else if (emailReceiver === "2") {
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_1').checked = true;
+                    }
 
                     // Populate the hidden fields with the created and modified details
                     document.getElementById('<%= hfCreatedBy.ClientID %>').value = createdBy;
@@ -238,6 +256,7 @@
                     // Store the original email
                     document.getElementById('<%= hfOriginalEmail.ClientID %>').value = email;
                 }
+
             </script>
         </ContentTemplate>
 
