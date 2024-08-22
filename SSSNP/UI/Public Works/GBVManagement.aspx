@@ -58,7 +58,7 @@
                         <h3 class="panel-title" id="h3" runat="server">GBV Management
                         </h3>
                     </div>
-                    <asp:UpdatePanel runat="server" ID="upPanelMain">
+                    <asp:UpdatePanel runat="server" ID="upd1">
                         <ContentTemplate>
 
                             <asp:HiddenField runat="server" ID="hfAttach_DescriptionIncident" Value="" />
@@ -432,13 +432,13 @@
                                         </td>
                                         <td style="padding: 5px; margin: 5px">:</td>
                                         <td style="padding: 5px; margin: 5px">
-                                           
+
                                             <asp:DropDownList ID="ddlVerbalConsent" runat="server" AutoPostBack="True" class="form-control txtbox" Height="33px" Width="180px">
                                                 <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
                                                 <asp:ListItem Text="YES" Value="YES"></asp:ListItem>
                                                 <asp:ListItem Text="NO" Value="NO"></asp:ListItem>
                                             </asp:DropDownList>
-                                           
+
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
@@ -514,7 +514,7 @@
                                 <div style="padding: 20px" align="center">
                                     <asp:Button ID="BtnSave" runat="server" CssClass="btn btn-success" Height="32px" TabIndex="10" Text="Save" Width="120px" OnClick="BtnSave_Click" />
                                     &nbsp; &nbsp;                                         
-                                            <asp:Button ID="BtnDelete"  Enabled="false" runat="server" CssClass="btn btn-danger" Height="32px" OnClientClick="return confirm('Do you want to delete the record ? ');" TabIndex="10" Text="Delete" Width="120px" OnClick="BtnDelete_Click" />
+                                            <asp:Button ID="BtnDelete" Enabled="false" runat="server" CssClass="btn btn-danger" Height="32px" OnClientClick="return confirm('Do you want to delete the record ? ');" TabIndex="10" Text="Delete" Width="120px" OnClick="BtnDelete_Click" />
 
                                     &nbsp; &nbsp;                                         
                                             <asp:Button ID="BtnHome" runat="server" CssClass="btn btn-primary" Height="32px" TabIndex="10" Text="Search" Width="120px" OnClick="BtnHome_Click" />
@@ -604,6 +604,15 @@
 
                         </ContentTemplate>
                     </asp:UpdatePanel>
+                    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+                        <ProgressTemplate>
+                            <div class="overlay">
+                                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                                </div>
+                            </div>
+                        </ProgressTemplate>
+                    </asp:UpdateProgress>
                 </div>
             </td>
         </tr>

@@ -24,13 +24,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl h3;
 
         /// <summary>
-        /// upPanelMain control.
+        /// upd1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel upPanelMain;
+        protected global::System.Web.UI.UpdatePanel upd1;
 
         /// <summary>
         /// hfAttach_DescriptionIncident control.
@@ -787,5 +787,14 @@ namespace SSSNP_SNSOP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadWindowManager RadWindowManager1;
+
+        /// <summary>
+        /// UpdateProgress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdateProgress UpdateProgress;
     }
 }
