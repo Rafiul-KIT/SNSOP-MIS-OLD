@@ -69,7 +69,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlUserType" runat="server" CssClass="form-control">
+                                                        <asp:DropDownList ID="ddlUserType" runat="server" CssClass="form-control" Width="180px">
                                                             <asp:ListItem Text="Select User Type" Value="" />
                                                             <asp:ListItem Text="Cordinator" Value="Cordinator" />
                                                             <asp:ListItem Text="Manager" Value="Manager" />
@@ -113,7 +113,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="150" />
+                                                        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="150" ToolTip='<%# Eval("Email") %>' />
                                                         <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail"
                                                             ErrorMessage="Email is required." CssClass="text-danger" Display="Dynamic" />
                                                         <asp:RegularExpressionValidator ID="revEmail" runat="server" ControlToValidate="txtEmail"
@@ -132,7 +132,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control">
+                                                        <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control" Width="180px">
                                                             <asp:ListItem Text="Select" Value="" />
                                                             <asp:ListItem Text="Yes" Value="Y" />
                                                             <asp:ListItem Text="No" Value="N" />
@@ -192,8 +192,8 @@
                                     <!-- Save and Clear Buttons -->
                                     <tr>
                                         <td colspan="2" align="center" style="padding: 5px; margin: 5px">
-                                            <asp:Button ID="btnSave" runat="server" CssClass="btn btn-primary" Text="Save" OnClientClick="return validateForm();" OnClick="BtnSave_Click" />
-                                            <asp:Button ID="btnClear" runat="server" CssClass="btn btn-secondary" Text="Clear" OnClick="btnClear_Click" />
+                                            <asp:Button ID="btnSave" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="BtnSave_Click" />
+                                            <asp:Button ID="btnClear" runat="server" CssClass="btn btn-secondary" Text="Clear" OnClick="btnClear_Click" CausesValidation="False" OnClientClick="clearValidationMessages();" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -260,15 +260,21 @@
 
                     // Store the original email
                     document.getElementById('<%= hfOriginalEmail.ClientID %>').value = email;
+
+                    // Clear any validation messages
+                    clearValidationMessages();
                 }
 
-                // Client-side validation
+                /*// Client-side validation
+                 * 
+                 * OnClientClick="return validateForm();"
+                 * 
                 function validateForm() {
-                    var userId = document.getElementById('<%= txtUserId.ClientID %>').value;
-                    var userName = document.getElementById('<%= txtUserName.ClientID %>').value;
-                    var userType = document.getElementById('<%= ddlUserType.ClientID %>').value;
-                    var userCode = document.getElementById('<%= txtUserCode.ClientID %>').value;
-                    var email = document.getElementById('<%= txtEmail.ClientID %>').value;
+                    var userId = document.getElementById('*/<%= txtUserId.ClientID %>/*').value;
+                    var userName = document.getElementById('*/<%= txtUserName.ClientID %>/*').value;
+                    var userType = document.getElementById('*/<%= ddlUserType.ClientID %>/*').value;
+                    var userCode = document.getElementById('*/<%= txtUserCode.ClientID %>/*').value;
+                    var email = document.getElementById('*/<%= txtEmail.ClientID %>/*').value;
 
                     if (!userId || !userName || !userType || !userCode || !email) {
                         alert("Please fill in all required fields.");
@@ -276,6 +282,13 @@
                     }
 
                     return true;
+                }*/
+
+                function clearValidationMessages() {
+                    var validators = document.getElementsByClassName('text-danger');
+                    for (var i = 0; i < validators.length; i++) {
+                        validators[i].style.display = 'none';
+                    }
                 }
             </script>
         </ContentTemplate>

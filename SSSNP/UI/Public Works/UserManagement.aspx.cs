@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 
@@ -345,6 +346,13 @@ namespace SSSNP.UI.Public_Works
             rblIPApprover.ClearSelection();
             rblEmailReceiver.ClearSelection();
             lblMessage.Text = "";
+
+            // Clear server-side validation warnings if needed
+            Page.Validate();
+            foreach (BaseValidator validator in Page.Validators)
+            {
+                validator.IsValid = true;
+            }
         }
     }
 

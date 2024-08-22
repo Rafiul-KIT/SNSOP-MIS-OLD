@@ -134,7 +134,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiIp11.Visible = true;
                 LiPayroll.Visible = true;
                 LiMNE.Visible = true;
-                LiUM.Visible = true;
+                //LiUM.Visible = true;
 
                 nongbvMenu.Visible = true;
                 nongbvDashboardMenu.Visible = true;
@@ -174,6 +174,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiIp11.Visible = true;
                 LiPayroll.Visible = true;
                 LiMNE.Visible = true;
+                LiUM.Visible = true;
 
                 nongbvMenu.Visible = true;
                 nongbvDashboardMenu.Visible = true;
@@ -346,6 +347,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiTST6.Visible = true;
                 LiTST7.Visible = true;
                 LiTST8.Visible = true;
+                LiUM.Visible = true;
             }
 
             
