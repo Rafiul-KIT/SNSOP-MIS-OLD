@@ -25,6 +25,7 @@
                                 <h3 class="panel-title">System User Management</h3>
                             </div>
                             <div class="panel-body">
+                                <%--<asp:ValidationSummary ID="ValidationSummary1" runat="server" CssClass="text-danger" DisplayMode="BulletList" HeaderText="Please fix the following errors:" />--%>
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 90%">
                                     <tr>
                                         <td style="padding: 5px; margin: 5px" colspan="2" align="center">
@@ -44,9 +45,10 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtUserId" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:TextBox ID="txtUserId" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="50" />
+                                                        <asp:RequiredFieldValidator ID="rfvUserId" runat="server" ControlToValidate="txtUserId"
+                                                            ErrorMessage="User ID is required." CssClass="text-danger" Display="Dynamic" />
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <!-- User Name Field -->
                                                 <tr>
@@ -55,7 +57,9 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtUserName" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:TextBox ID="txtUserName" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="100" />
+                                                        <asp:RequiredFieldValidator ID="rfvUserName" runat="server" ControlToValidate="txtUserName"
+                                                            ErrorMessage="User Name is required." CssClass="text-danger" Display="Dynamic" />
                                                     </td>
                                                 </tr>
                                                 <!-- User Type Field -->
@@ -85,6 +89,8 @@
                                                             <asp:ListItem Text="MIS" Value="MIS" />
                                                             <asp:ListItem Text="EntryGRM" Value="EntryGRM" />
                                                         </asp:DropDownList>
+                                                        <asp:RequiredFieldValidator ID="rfvUserType" runat="server" ControlToValidate="ddlUserType"
+                                                            InitialValue="" ErrorMessage="User Type is required." CssClass="text-danger" Display="Dynamic" />
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
@@ -95,9 +101,10 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtUserCode" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:TextBox ID="txtUserCode" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="10" />
+                                                        <asp:RequiredFieldValidator ID="rfvUserCode" runat="server" ControlToValidate="txtUserCode"
+                                                            ErrorMessage="User Code is required." CssClass="text-danger" Display="Dynamic" />
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <!-- Email Field -->
                                                 <tr>
@@ -106,9 +113,13 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control txtbox" Width="180px" />
+                                                        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="150" />
+                                                        <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail"
+                                                            ErrorMessage="Email is required." CssClass="text-danger" Display="Dynamic" />
+                                                        <asp:RegularExpressionValidator ID="revEmail" runat="server" ControlToValidate="txtEmail"
+                                                            ErrorMessage="Invalid email format." CssClass="text-danger" Display="Dynamic"
+                                                            ValidationExpression="^[^@\s]+@[^@\s]+\.[^@\s]+$" />
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -126,8 +137,9 @@
                                                             <asp:ListItem Text="Yes" Value="Y" />
                                                             <asp:ListItem Text="No" Value="N" />
                                                         </asp:DropDownList>
+                                                        <asp:RequiredFieldValidator ID="rfvStatus" runat="server" ControlToValidate="ddlStatus"
+                                                            InitialValue="" ErrorMessage="Status is required." CssClass="text-danger" Display="Dynamic" />
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <!-- GBV User Field -->
                                                 <tr>
@@ -141,9 +153,8 @@
                                                             <asp:ListItem Text="No" Value="False"></asp:ListItem>
                                                         </asp:RadioButtonList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
-
+                                                <!-- IP Approver Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelIPApprover" runat="server" CssClass="LBLBLACK" Width="165px">IP Approver</asp:Label>
@@ -155,9 +166,7 @@
                                                             <asp:ListItem Text="No" Value="False"></asp:ListItem>
                                                         </asp:RadioButtonList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
-
                                                 <!-- Email Receiver Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
@@ -170,24 +179,20 @@
                                                             <asp:ListItem Text="No" Value="2"></asp:ListItem>
                                                         </asp:RadioButtonList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
-
-                                                <!-- Additional visible fields here -->
+                                                <!-- Additional hidden fields -->
                                                 <asp:HiddenField ID="hfCreatedBy" runat="server" />
                                                 <asp:HiddenField ID="hfCreatedDt" runat="server" />
                                                 <asp:HiddenField ID="hfModifiedBy" runat="server" />
                                                 <asp:HiddenField ID="hfModifiedDt" runat="server" />
                                                 <asp:HiddenField ID="hfOriginalEmail" runat="server" />
-
                                             </table>
                                         </td>
                                     </tr>
-                                    <!-- Update Button -->
+                                    <!-- Save and Clear Buttons -->
                                     <tr>
                                         <td colspan="2" align="center" style="padding: 5px; margin: 5px">
-                                            <asp:Button ID="btnInsert" runat="server" CssClass="btn btn-primary" Text="Insert New User" OnClick="BtnInsert_Click" />
-                                            <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-success" Text="Update User" OnClick="BtnUpdate_Click" />
+                                            <asp:Button ID="btnSave" runat="server" CssClass="btn btn-primary" Text="Save" OnClientClick="return validateForm();" OnClick="BtnSave_Click" />
                                             <asp:Button ID="btnClear" runat="server" CssClass="btn btn-secondary" Text="Clear" OnClick="btnClear_Click" />
                                         </td>
                                     </tr>
@@ -257,6 +262,21 @@
                     document.getElementById('<%= hfOriginalEmail.ClientID %>').value = email;
                 }
 
+                // Client-side validation
+                function validateForm() {
+                    var userId = document.getElementById('<%= txtUserId.ClientID %>').value;
+                    var userName = document.getElementById('<%= txtUserName.ClientID %>').value;
+                    var userType = document.getElementById('<%= ddlUserType.ClientID %>').value;
+                    var userCode = document.getElementById('<%= txtUserCode.ClientID %>').value;
+                    var email = document.getElementById('<%= txtEmail.ClientID %>').value;
+
+                    if (!userId || !userName || !userType || !userCode || !email) {
+                        alert("Please fill in all required fields.");
+                        return false;
+                    }
+
+                    return true;
+                }
             </script>
         </ContentTemplate>
 
