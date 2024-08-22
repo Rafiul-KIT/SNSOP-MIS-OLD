@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 
@@ -13,6 +14,8 @@ namespace SSSNP.UI.Public_Works
 {
     public partial class UserManagement : Page
     {
+        private static readonly object _lock = new object();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -21,31 +24,90 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-        protected void BtnInsert_Click(object sender, EventArgs e)
+        protected void BtnSave_Click(object sender, EventArgs e)
         {
             try
             {
-                string userEmail = txtEmail.Text;
-                string userName = txtUserName.Text;
-
-                // Check if the email already exists in the database
-                if (EmailExistsInDatabase(userEmail))
+                // Server-side validation for mandatory fields
+                if (string.IsNullOrEmpty(txtUserId.Text))
                 {
-                    ShowWarning("The email address is already registered. Please try with a different email address.");
+                    ShowWarning("User ID is required.");
                     return;
                 }
 
-                // Get the access token from Azure AD
+                if (string.IsNullOrEmpty(txtUserName.Text))
+                {
+                    ShowWarning("User Name is required.");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(ddlUserType.SelectedValue))
+                {
+                    ShowWarning("User Type is required.");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(txtUserCode.Text))
+                {
+                    ShowWarning("User Code is required.");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(ddlStatus.SelectedValue))
+                {
+                    ShowWarning("Status is required.");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(txtEmail.Text))
+                {
+                    ShowWarning("Email is required.");
+                    return;
+                }
+
+                // Additional length checks if necessary
+                if (txtUserId.Text.Length > 50 || txtUserCode.Text.Length > 10 || txtEmail.Text.Length > 150)
+                {
+                    ShowWarning("Input exceeds the maximum allowed length.");
+                    return;
+                }
+
+                string userEmail = txtEmail.Text;
+                string userName = txtUserName.Text;
+
+                // Acquire a lock to ensure thread safety during operations
+                lock (_lock)
+                {
+                    bool emailExists = EmailExistsInDatabase(userEmail);
+
+                    if (!emailExists)
+                    {
+                        InsertOperation(userEmail, userName);
+                    }
+                    else
+                    {
+                        UpdateOperation(userEmail, userName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowWarning($"Error during save operation: {ex.Message}");
+            }
+        }
+
+        protected void InsertOperation(string userEmail, string userName)
+        {
+            try
+            {
                 string accessToken = GetAccessToken();
 
                 if (!string.IsNullOrEmpty(accessToken))
                 {
-                    // Create the user in Azure AD
-                    bool isUserCreated = CreateExternalUser(accessToken, userEmail, userName);
+                    bool isUserCreated = CreateOrUpdateExternalUser(accessToken, userEmail, userName);
 
                     if (isUserCreated)
                     {
-                        // Only insert the user into the database if the Azure AD user creation was successful
                         InsertOrUpdateUser(isInsert: true);
                         ShowMessage("User created successfully.");
                     }
@@ -61,50 +123,37 @@ namespace SSSNP.UI.Public_Works
             }
             catch (Exception ex)
             {
+                
                 ShowWarning($"Error during insert operation: {ex.Message}");
             }
         }
 
-
-        protected void BtnUpdate_Click(object sender, EventArgs e)
+        protected void UpdateOperation(string userEmail, string userName)
         {
             try
             {
-                string userEmail = txtEmail.Text;
-                string userName = txtUserName.Text;
                 string originalEmail = hfOriginalEmail.Value;
 
-                // Check if the email exists in the database and if it has changed from the original lookup
-                if (EmailExistsInDatabase(userEmail))
+                if (userEmail != originalEmail)
                 {
-                    if (userEmail != originalEmail)
-                    {
-                        ShowWarning("The email address cannot be changed. Please revert to the original email or cancel the update.");
-                        return;
-                    }
-                }
-                else
-                {
-                    ShowWarning("The email is not registered.");
+                    ShowWarning("Please check first from look up if the user has been registered.");
                     return;
                 }
-                // Get the access token from Azure AD
+
                 string accessToken = GetAccessToken();
 
                 if (!string.IsNullOrEmpty(accessToken))
                 {
-                    // Update the user in Azure AD (this could involve different logic based on your needs)
-                    bool isUserUpdated = CreateExternalUser(accessToken, userEmail, userName);
+                    bool isUserUpdated = CreateOrUpdateExternalUser(accessToken, userEmail, userName);
 
                     if (isUserUpdated)
                     {
-                        // Update the user in the database
                         InsertOrUpdateUser(isInsert: false);
                         ShowMessage("User updated successfully.");
                     }
                     else
                     {
-                        ShowWarning("Failed to update user into database! Please contact your system administrator.");
+                        ShowWarning("Failed to update user in Microsoft Active Directory! Please contact your system administrator.");
                     }
                 }
                 else
@@ -114,18 +163,18 @@ namespace SSSNP.UI.Public_Works
             }
             catch (Exception ex)
             {
+                
                 ShowWarning($"Error during update operation: {ex.Message}");
             }
         }
-
 
         private string GetAccessToken()
         {
             try
             {
-                string clientId = "2d80a939-a955-4c38-a911-a1f8cb986a2c";
-                string tenantId = "4a9fe01e-5c9c-4cb8-b299-fb5211533420";
-                string clientSecret = "3BP8Q~TikdfxoOyfWjyWRj2RXlujNlS2LZQFnb-S";
+                string clientId = ConfigurationManager.AppSettings["AzureADClientId"];
+                string tenantId = ConfigurationManager.AppSettings["AzureADTenantId"];
+                string clientSecret = ConfigurationManager.AppSettings["AzureADClientSecret"];
 
                 IConfidentialClientApplication confidentialClient = ConfidentialClientApplicationBuilder
                     .Create(clientId)
@@ -138,24 +187,22 @@ namespace SSSNP.UI.Public_Works
                 AuthenticationResult authResult = confidentialClient
                     .AcquireTokenForClient(scopes)
                     .ExecuteAsync().GetAwaiter().GetResult();
-                //Debug.WriteLine(authResult.AccessToken);
+
                 return authResult.AccessToken;
             }
             catch (Exception ex)
             {
+                
                 ShowWarning($"Error generating access token: {ex.Message}");
                 return null;
             }
         }
 
-
-        private static bool CreateExternalUser(string accessToken, string userEmail, string userName)
+        private bool CreateOrUpdateExternalUser(string accessToken, string userEmail, string userName)
         {
-            string uri = "https://graph.microsoft.com/v1.0/invitations"; // Azure AD API endpoint for user invitation
+            string uri = "https://graph.microsoft.com/v1.0/invitations";
             Uri urlCheck = new Uri(uri);
 
-            //Debug.WriteLine("after urlccheck");
-            // Create the HTTP request
             HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
             httpWReq.PreAuthenticate = true;
             httpWReq.Headers.Add("Authorization", "Bearer " + accessToken);
@@ -164,12 +211,11 @@ namespace SSSNP.UI.Public_Works
 
             try
             {
-                // Create the request body
                 var request = new UserCreationModel()
                 {
                     invitedUserDisplayName = userName,
                     invitedUserEmailAddress = userEmail,
-                    inviteRedirectUrl = "https://dev.karoothitbd.com:5051",
+                    inviteRedirectUrl = ConfigurationManager.AppSettings["InviteRedirectUrl"],
                     sendInvitationMessage = true
                 };
 
@@ -177,64 +223,54 @@ namespace SSSNP.UI.Public_Works
                 var data = Encoding.ASCII.GetBytes(reqStr);
                 httpWReq.ContentLength = data.Length;
 
-                // Write the request body to the request stream
                 using (var newStream = httpWReq.GetRequestStream())
                 {
                     newStream.Write(data, 0, data.Length);
-                    newStream.Flush();
-                    newStream.Close();
                 }
 
-                // Get the response from the API
                 using (HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse())
                 {
                     using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                     {
                         string jsonResponse = reader.ReadToEnd();
-                        //Debug.WriteLine("User created successfully: " + jsonResponse);
-                        return true; // Indicate that the user was created successfully
+                        return true;
                     }
                 }
             }
             catch (WebException ex)
             {
-                // Handle WebException, which can occur due to network issues or HTTP errors
-                //Debug.WriteLine($"An error occurred while calling the API: {ex.Message}");
-                if (ex.Response != null)
-                {
-                    using (var responseStream = ex.Response.GetResponseStream())
-                    using (var reader = new StreamReader(responseStream))
-                    {
-                        string errorResponse = reader.ReadToEnd();
-                        //Debug.WriteLine("Error details: " + errorResponse);
-                    }
-                }
-                return false; // Indicate that the user creation failed
+                ShowWarning($"Error : {ex.Message}");
+                return false;
             }
             catch (Exception ex)
             {
-                // Handle any other exceptions
-                //Debug.WriteLine($"An unexpected error occurred: {ex.Message}");
-                return false; // Indicate that the user creation failed
+                ShowWarning($"Error : {ex.Message}");
+                return false;
             }
         }
-
-
 
         private bool EmailExistsInDatabase(string email)
         {
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
             string query = "SELECT COUNT(1) FROM tbl_Users WHERE Email = @Email";
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    cmd.Parameters.AddWithValue("@Email", email);
-                    conn.Open();
-                    int count = Convert.ToInt32(cmd.ExecuteScalar());
-                    return count > 0;
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        conn.Open();
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        return count > 0;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowWarning($"Error checking email in database: {ex.Message}");
+                return false;
             }
         }
 
@@ -261,7 +297,6 @@ namespace SSSNP.UI.Public_Works
                         cmd.Parameters.AddWithValue("@IP_Approver", string.IsNullOrEmpty(rblIPApprover.SelectedValue) ? (object)DBNull.Value : (object)(rblIPApprover.SelectedValue == "True"));
                         cmd.Parameters.AddWithValue("@email_receiver", string.IsNullOrEmpty(rblEmailReceiver.SelectedValue) ? (object)DBNull.Value : (object)int.Parse(rblEmailReceiver.SelectedValue));
 
-
                         if (isInsert)
                         {
                             cmd.Parameters.AddWithValue("@Created_by", Session["uid"] != null ? (object)Session["uid"] : DBNull.Value);
@@ -284,6 +319,7 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+       
         private void ShowWarning(string message)
         {
             lblMessage.Text = message;
@@ -308,8 +344,15 @@ namespace SSSNP.UI.Public_Works
             ddlStatus.SelectedIndex = 0;
             rblGBVUser.ClearSelection();
             rblIPApprover.ClearSelection();
-            rblEmailReceiver.Text = "";
+            rblEmailReceiver.ClearSelection();
             lblMessage.Text = "";
+
+            // Clear server-side validation warnings if needed
+            Page.Validate();
+            foreach (BaseValidator validator in Page.Validators)
+            {
+                validator.IsValid = true;
+            }
         }
     }
 
