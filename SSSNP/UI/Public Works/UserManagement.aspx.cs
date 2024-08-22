@@ -215,7 +215,7 @@ namespace SSSNP.UI.Public_Works
                 {
                     invitedUserDisplayName = userName,
                     invitedUserEmailAddress = userEmail,
-                    inviteRedirectUrl = ConfigurationManager.AppSettings["InviteRedirectUrl"],
+                    inviteRedirectUrl = ConfigurationManager.AppSettings["SSSNPWEB"].ToString(),
                     sendInvitationMessage = true
                 };
 
