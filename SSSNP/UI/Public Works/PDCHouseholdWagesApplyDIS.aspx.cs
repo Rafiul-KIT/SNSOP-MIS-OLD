@@ -299,7 +299,7 @@ public partial class PDCHouseholdWagesApplyDIS : System.Web.UI.Page
         {
 
         }
-        SendMailforWagesDISDraft(status, "", Session["username"].ToString());
+        //SendMailforWagesDISDraft(status, "", Session["username"].ToString());
 
         string subject = "SNSOP MIS – Notification on Wage Payroll for Review";
 
