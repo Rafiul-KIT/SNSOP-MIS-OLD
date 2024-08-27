@@ -1,3 +1,77 @@
+-- 26-08-2024
+
+CREATE Procedure [dbo].[GenericDashboardKIT]
+(
+    @Year varchar(10),
+    @IPid varchar(8)
+)
+as
+    begin
+    if(@Year='ALL')
+        begin
+            select 'No. of Implementing Partners' as [Profession],td_IPDetails.IPName as cnt
+            from td_IPDetails where td_IPDetails.intIp like @IPid;
+            select count(distinct intStateid) state_count, count(distinct intCountieid) county_count,
+                   count(distinct intPayamId) payam_count, count(distinct intBomasid) boma_count
+            from tbl_WorkMaster where IPid like @IPid;
+            select count(distinct intBenid) enrolled_count, sum(IIF(Sex = 'M', 1, 0)) male_count, sum(IIF(Sex = 'F', 1, 0)) female_count
+            from tbl_BeneficiaryDet where intIP like @IPid;
+            select count(distinct intBenTempid) total_beneficiary_count,
+            sum(IIF(BenStatus = '1', 1, 0)) pending_beneficiary_count
+            from tbl_BeneficiaryServiceDet where intIP like @IPid;
+        end
+    else
+        begin
+            select 'No. of Implementing Partners' as [Profession],td_IPDetails.IPName as cnt
+            from td_IPDetails  where td_IPDetails.intIp like @IPid;
+            select count(distinct intStateid) state_count, count(distinct intCountieid) county_count,
+                   count(distinct intPayamId) payam_count, count(distinct intBomasid) boma_count
+            from tbl_WorkMaster where IPid like @IPid and YEAR(Created_dt)=@Year;
+            select count(distinct intBenid) enrolled_count, sum(IIF(Sex = 'M', 1, 0)) male_count, sum(IIF(Sex = 'F', 1, 0)) female_count
+            from tbl_BeneficiaryDet where intIP like @IPid and YEAR(Created_dt)=@Year;
+            select count(distinct intBenTempid) total_beneficiary_count,
+                   sum(IIF(BenStatus = '1', 1, 0)) pending_beneficiary_count
+            from tbl_BeneficiaryServiceDet where intIP like @IPid and YEAR(Created_dt)=@Year;
+        end
+    end;
+	
+
+CREATE Procedure [dbo].[GetUserInfoKIT]
+(
+    @User_id varchar(50), @User_type varchar(10), @Email varchar(150)
+) AS
+Begin
+    select *from tbl_Users
+    where 1=1
+    and (@User_id is null or @User_id='' or User_id like @User_id)
+    and (@User_type is null or @User_type='' or User_type = @User_type)
+    and (@Email is null or @Email='' or Email = @Email)
+END
+go
+
+
+CREATE Procedure [dbo].[InsUpdUserKIT]
+(
+    @User_id varchar(50), @User_name varchar(100), @User_type varchar(10), @User_code varchar(10), @Status varchar,
+    @Created_by int, @Modified_by int, @Email varchar(150), @GBVUser bit, @IP_Approver bit, @email_receiver tinyint
+) AS
+Begin
+    IF NOT EXISTS(SELECT intUserid from tbl_Users where Email=@Email)
+        INSERT INTO tbl_Users(User_id, User_name, User_type, User_code, Status,
+                              Created_by, Created_dt, Modified_by, Modified_dt, Email, GBVUser, email_receiver) values
+    (@User_id, @User_name, @User_type, @User_code, @Status,
+                            @Created_by, GETDATE(), null, null, @Email, @GBVUser, @email_receiver)
+    ELSE UPDATE tbl_Users set
+    User_id=@User_id, User_name=@User_name, User_type=@User_type, User_code=@User_code, Status=@Status,
+    Modified_by=@Modified_by, Modified_dt=GETDATE(), GBVUser=@GBVUser, IP_Approver=@IP_Approver, email_receiver=@email_receiver
+                          where Email=@Email
+End
+go
+
+
+
+-- 26-08-2024
+
 
 alter table tbl_BeneficiaryServiceDet add household_photo_url varchar(255), alt1_photo_url varchar(255), alt2_photo_url varchar(255);
 alter table tbl_BeneficiaryDet add household_photo_url varchar(255), alt1_photo_url varchar(255), alt2_photo_url varchar(255);

@@ -304,10 +304,9 @@
                                         <td style="padding: 5px; margin: 5px">
                                             <asp:DropDownList class="form-control dropdown" Height="33px" Width="180px" runat="server" ID="ddlSSSNPBeneficiary">
                                                 <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
-                                                <%--<asp:ListItem Text="NO" Value="NO"></asp:ListItem>--%>
                                                 <asp:ListItem Text="LIPW" Value="LIPW"></asp:ListItem>
                                                 <asp:ListItem Text="DIS" Value="DIS"></asp:ListItem>
-                                                <%--<asp:ListItem Text="SSSNP" Value="SSSNP"></asp:ListItem>--%>
+                                                <asp:ListItem Text="NO" Value="NO"></asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>

@@ -322,9 +322,9 @@
                                         <td style="padding: 5px; margin: 5px">
                                             <asp:DropDownList class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="ddlSSSNPBeneficiary" AutoPostBack="True">
                                                 <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
-                                                <%--<asp:ListItem Text="No" Value="NO"></asp:ListItem>--%>
                                                 <asp:ListItem Text="LIPW" Value="LIPW"></asp:ListItem>
                                                 <asp:ListItem Text="DIS" Value="DIS"></asp:ListItem>
+                                                <asp:ListItem Text="NO" Value="NO"></asp:ListItem>
                                             </asp:DropDownList>
 
                                         </td>
