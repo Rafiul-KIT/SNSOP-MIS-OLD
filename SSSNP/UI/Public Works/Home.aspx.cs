@@ -45,7 +45,8 @@ public partial class Home : System.Web.UI.Page
         DataSet ds = Gen.GetGenericDashboardKIT(Convert.ToString(ddlYear.SelectedValue), Session["User_Code"].ToString().Trim());
         if (ds != null && ds.Tables != null && ds.Tables.Count > 0)
         {
-            lblNameOfIP.Text = ds.Tables[0].Rows[0]["cnt"].ToString();
+            //lblNameOfIP.Text = ds.Tables[0].Rows[0]["cnt"].ToString();
+            lblNameOfIP.Text = "UNOPS Field Office";
             if (ds.Tables.Count > 1)
             {
                 ImplementingStateCount.Text = ds.Tables[1].Rows[0]["state_count"].ToString();

@@ -234,22 +234,37 @@
                     // Set GBV User radio button
                     if (gbvUser === "True") {
                         document.getElementById('<%= rblGBVUser.ClientID %>_0').checked = true;
+                        document.getElementById('<%= rblGBVUser.ClientID %>_1').checked = false;
                     } else if (gbvUser === "False") {
                         document.getElementById('<%= rblGBVUser.ClientID %>_1').checked = true;
+                        document.getElementById('<%= rblGBVUser.ClientID %>_0').checked = false;
+                    } else {
+                        document.getElementById('<%= rblGBVUser.ClientID %>_0').checked = false;
+                        document.getElementById('<%= rblGBVUser.ClientID %>_1').checked = false;
                     }
 
                     // Set IP Approver radio button
                     if (ipApprover === "True") {
                         document.getElementById('<%= rblIPApprover.ClientID %>_0').checked = true;
+                        document.getElementById('<%= rblIPApprover.ClientID %>_1').checked = false;
                     } else if (ipApprover === "False") {
                         document.getElementById('<%= rblIPApprover.ClientID %>_1').checked = true;
+                        document.getElementById('<%= rblIPApprover.ClientID %>_0').checked = false;
+                    } else {
+                        document.getElementById('<%= rblIPApprover.ClientID %>_0').checked = false;
+                        document.getElementById('<%= rblIPApprover.ClientID %>_1').checked = false;
                     }
 
                     // Set Email Receiver radio button
                     if (emailReceiver === "1") {
                         document.getElementById('<%= rblEmailReceiver.ClientID %>_0').checked = true;
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_1').checked = false;
                     } else if (emailReceiver === "2") {
                         document.getElementById('<%= rblEmailReceiver.ClientID %>_1').checked = true;
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_0').checked = false;
+                    } else {
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_0').checked = false;
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_1').checked = false;
                     }
 
                     // Populate the hidden fields with the created and modified details
