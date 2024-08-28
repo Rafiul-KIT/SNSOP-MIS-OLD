@@ -56,7 +56,7 @@
 				,M.[Status]
 				,M.[StatusLastModificationDate]
 				,CASE
-				WHEN  (dateadd(DAY,14, [Date]) < getdate() and m.Status <> 5) then '1'
+				WHEN  (dateadd(DAY,9, [Date]) < getdate() and m.Status <> 5) then '1'
 					else  '0'
 				END as Expired,
 				s.StateName ,

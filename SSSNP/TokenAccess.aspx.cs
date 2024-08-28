@@ -73,13 +73,10 @@ namespace SSSNP_SNSOP
                                 {
                                     Session["GBVUser"] = "0";
                                 }
-                                                                
                             }
                             catch (Exception ex)
                             {
                                 Session["GBVUser"] = "0";
-
-
                             }
                         }
                         
@@ -126,15 +123,9 @@ namespace SSSNP_SNSOP
                         {
                             Response.Redirect("UI/Public Works/Home.aspx", false);
                         }
-
-
-
-
-
                     }
                     else
                     {
-
                         throw new Exception("Token Access Exception ValidateAuthentication - Username=" + preferred_user);
                         //return;
                     }
@@ -142,12 +133,8 @@ namespace SSSNP_SNSOP
             }
             catch (Exception ex)
             {
-
                 throw new Exception ("TokenAccess General Exception", ex);
             }
-            
-
-        }
-                
+        }                
     }
 }

@@ -104,7 +104,7 @@ namespace SSSNP.Asynch
                 string emailBody = "<H2>Dear GRM Manager (SNSOP MIS),</H2> <br><br>";
 
                 String sql1 = "select count(*) count from NonGBVMain m where 1=1 " +
-                    " and dateadd(DAY,14, [Date]) < getdate() " +
+                    " and dateadd(DAY,9, [Date]) < getdate() " +
                     " and m.Status <> 5 and Deleted = 0";
                 DataTable dt1 = _dbOperation.GetDataTable(sql1);
                 if (dt1 != null && dt1.Rows != null && dt1.Rows.Count > 0)
@@ -122,7 +122,7 @@ namespace SSSNP.Asynch
                 }
 
                 String sql2 = "select count(*) count from GBVMain m where 1=1 " +
-                    " and dateadd(DAY,14, [Date]) < getdate() " +
+                    " and dateadd(DAY,9, [Date]) < getdate() " +
                     " and m.Status <> 5 and Deleted = 0";
                 DataTable dt2 = _dbOperation.GetDataTable(sql2);
                 if (dt2 != null && dt2.Rows != null && dt2.Rows.Count > 0)

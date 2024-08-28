@@ -42,11 +42,18 @@ public partial class Home : System.Web.UI.Page
     void FillDetails()
     {
         hasflash.Value = ddlYear.SelectedValue;
-        DataSet ds = Gen.GetGenericDashboardKIT(Convert.ToString(ddlYear.SelectedValue), Session["User_Code"].ToString().Trim());
+        string UserCode = ""; // Session["User_Code"].ToString().Trim()
+        UserCode = "1001";
+        DataSet ds = Gen.GetGenericDashboardKIT(Convert.ToString(ddlYear.SelectedValue), UserCode);
         if (ds != null && ds.Tables != null && ds.Tables.Count > 0)
         {
-            //lblNameOfIP.Text = ds.Tables[0].Rows[0]["cnt"].ToString();
-            lblNameOfIP.Text = "UNOPS Field Office";
+            if (ds.Tables[0].Rows != null && ds.Tables[0].Rows.Count > 0)
+            {
+                lblNameOfIP.Text = ds.Tables[0].Rows[0]["cnt"].ToString();
+            } else
+            {
+                lblNameOfIP.Text = "UNOPS Field Office";
+            }
             if (ds.Tables.Count > 1)
             {
                 ImplementingStateCount.Text = ds.Tables[1].Rows[0]["state_count"].ToString();

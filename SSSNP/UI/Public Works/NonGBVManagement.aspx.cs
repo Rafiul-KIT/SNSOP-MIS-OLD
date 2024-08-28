@@ -185,7 +185,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             if (!Page.IsPostBack)
             {
-                if (CUser.Current.IsPcuSpecRole)
+                if (CUser.Current.IsPcuSpecRole || CUser.Current.IsWBGBVManagerRole)
                 {
                     lblSNNote.Text += "<br/>You have only viewing privilege";
                     btnNewDetails.Enabled = false;

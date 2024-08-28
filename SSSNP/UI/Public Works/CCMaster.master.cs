@@ -407,7 +407,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 nongbvDashboardMenu.Visible = true;
                 Li1.Visible = false;
             }
-            if (Session["user_type"].ToString() == "PcuSpec")
+            if (Session["user_type"].ToString() == "PcuSpec" || Session["user_type"].ToString() == "WBGBVMgr")
             {
                 LiIp6.Visible = true;
                 nongbvMenu.Visible = true;
