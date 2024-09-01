@@ -297,6 +297,7 @@ public partial class PayrollDownload : System.Web.UI.Page
 
                 BtnDownload.Visible = true;
                 BtnUnlock.Visible = true;
+                BtnDownloadPdf.Visible = true;
 
                 LblLockedStatus.Visible = true;
                 LblLockedStatus.Text = "Locked Status: " + lockedStatus;
@@ -304,10 +305,13 @@ public partial class PayrollDownload : System.Web.UI.Page
                 if (lockedStatus == "UNLOCKED")
                 {
                     BtnDownload.Visible = true;
+                    BtnDownloadPdf.Visible = true;
                 }
                 else if (lockedStatus == "LOCKED")
                 {
                     BtnUnlock.Visible = true;
+                    BtnDownloadPdf.Visible = false;
+                    BtnDownload.Visible = false;
                 }
             }
 
@@ -322,6 +326,7 @@ public partial class PayrollDownload : System.Web.UI.Page
                 // Update button visibility and locked status label
                 BtnDownload.Visible = false;
                 BtnUnlock.Visible = false;
+                BtnDownloadPdf.Visible = false;
                 LblLockedStatus.Visible = false;
             }
         }
@@ -598,7 +603,43 @@ public partial class PayrollDownload : System.Web.UI.Page
         }
     }
 
- 
+
+    protected void BtnDownloadPdf_Click(object sender, EventArgs e)
+    {
+        if (Session["PDResponse"] != null)
+        {
+            try
+            {
+                /*// Prepare the necessary parameters for PDF generation
+                int userId = GetCurrentUserId(); // Retrieve the current user's ID from the session
+                int stateId = int.Parse(ddlState.SelectedValue);
+                int countyId = int.Parse(ddlCounty.SelectedValue);
+                int payamId = int.Parse(ddlPayam.SelectedValue);
+                int bomaId = int.Parse(ddlBoma.SelectedValue);
+
+                // Insert the audit record into the database (optional step)
+                InsertAuditRecord(userId, stateId, countyId, payamId, bomaId);*/
+
+                // Redirect to ViewAttachmentHandler with the appropriate query parameters for PDF download
+                string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=13"; // AttachmentType=13 for PDF_PAYROLL_DATA
+                Response.Redirect(redirectUrl, false);
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+        else
+        {
+            // Display a message indicating that there is no data to download
+            LblWarning.Text = "No payroll data available to download.";
+            LblWarning.Visible = true;
+        }
+    }
+
+
+
     private void InsertAuditRecord(int userId, int stateId, int countyId, int payamId, int bomaId)
     {
         string query = "INSERT INTO tbl_audit_payroll_download (AuditId, UserId, DownloadTime, intStateid, intCountieid, intPayamid, intBomasid) " +
