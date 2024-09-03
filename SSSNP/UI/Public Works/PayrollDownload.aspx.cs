@@ -82,6 +82,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlSupportType.Items.Add(new ListItem("--Select--", ""));
         ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
         ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+        ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
         if (!string.IsNullOrEmpty(ddlState.SelectedValue))
         {
@@ -123,6 +124,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlSupportType.Items.Add(new ListItem("--Select--", ""));
         ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
         ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+        ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
         if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
         {
@@ -161,6 +163,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlSupportType.Items.Add(new ListItem("--Select--", ""));
         ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
         ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+        ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
 
         if (!string.IsNullOrEmpty(ddlPayam.SelectedValue))
@@ -198,6 +201,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlSupportType.Items.Add(new ListItem("--Select--", ""));
         ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
         ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+        ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
     }
 
@@ -275,12 +279,17 @@ public partial class PayrollDownload : System.Web.UI.Page
             // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
 
             Session["PDResponse"] = pdResponse;
-            int totalCount = pdResponse.totalCount;
-            Session["TotalItemCount"] = totalCount;
+            /*int totalCount = pdResponse.totalCount;
+            Session["TotalItemCount"] = totalCount;*/
 
             if (pdResponse != null && pdResponse.data != null && pdResponse.data.Count > 0)
             {
-                Session["PayrollData"] = pdResponse.data.SelectMany(c => c.payrollData).ToList();
+                //Session["PayrollData"] = pdResponse.data.SelectMany(c => c.payrollData).ToList();
+                var allPayrollData = pdResponse.data.SelectMany(c => c.payrollData).ToList();
+                int totalCount = allPayrollData.Count; // Get the total count from all payroll data
+
+                Session["PayrollData"] = allPayrollData;
+                Session["TotalItemCount"] = totalCount;
                 rgResults.Rebind();  // Trigger the NeedDataSource event
 
                 // Update button visibility based on lockedStatus
@@ -291,13 +300,25 @@ public partial class PayrollDownload : System.Web.UI.Page
 
                 // Store paymentCycle and wagePaymentReqId in session
                 var paymentCycle = firstData?.payrollData.FirstOrDefault()?.paymentCycle;
-                var wagePaymentReqId = firstData?.payrollData.FirstOrDefault()?.intWagePaymentReqid;
                 Session["PaymentCycle"] = paymentCycle;
-                Session["WagePaymentReqId"] = wagePaymentReqId;
+                //var wagePaymentReqId = firstData?.payrollData.FirstOrDefault()?.intWagePaymentReqid;
 
-                BtnDownload.Visible = true;
-                BtnUnlock.Visible = true;
-                BtnDownloadPdf.Visible = true;
+                // Initialize session variables for wage payment request IDs
+                Session["WagePaymentReqIdDIS"] = null;
+                Session["WagePaymentReqIdLIPW"] = null;
+
+                foreach (var payroll in allPayrollData)
+                {
+                    if (payroll.supportType == "DIS")
+                    {
+                        Session["WagePaymentReqIdDIS"] = payroll.intWagePaymentReqid;
+                    }
+                    else if (payroll.supportType == "LIPW")
+                    {
+                        Session["WagePaymentReqIdLIPW"] = payroll.intWagePaymentReqid;
+                    }
+                }
+                //Session["WagePaymentReqId"] = wagePaymentReqId;
 
                 LblLockedStatus.Visible = true;
                 LblLockedStatus.Text = "Locked Status: " + lockedStatus;
@@ -310,8 +331,14 @@ public partial class PayrollDownload : System.Web.UI.Page
                 else if (lockedStatus == "LOCKED")
                 {
                     BtnUnlock.Visible = true;
-                    BtnDownloadPdf.Visible = false;
+                    BtnDownloadPdf.Visible = true;
                     BtnDownload.Visible = false;
+                }
+                else if (lockedStatus == "RECONCILED")
+                {
+                    BtnDownload.Visible = false;
+                    BtnDownloadPdf.Visible = true;
+                    BtnUnlock.Visible = false;
                 }
             }
 
@@ -414,7 +441,9 @@ public partial class PayrollDownload : System.Web.UI.Page
     protected void BtnUnlock_Click(object sender, EventArgs e)
     {
         var paymentCycle = Session["PaymentCycle"]?.ToString();
-        var wagePaymentReqId = Session["WagePaymentReqId"] != null ? int.Parse(Session["WagePaymentReqId"].ToString()) : 0;
+        var supportType = ddlSupportType.SelectedValue;
+        var wagePaymentReqIdLIPW = Session["WagePaymentReqIdLIPW"] != null ? int.Parse(Session["WagePaymentReqIdLIPW"].ToString()) : (int?)null;
+        var wagePaymentReqIdDIS = Session["WagePaymentReqIdDIS"] != null ? int.Parse(Session["WagePaymentReqIdDIS"].ToString()) : (int?)null;
 
         var request = new
         {
@@ -424,7 +453,8 @@ public partial class PayrollDownload : System.Web.UI.Page
             paymentCycle = paymentCycle,
             state = int.Parse(ddlState.SelectedValue),
             supportType = ddlSupportType.SelectedValue,
-            wagePaymentReqId = wagePaymentReqId
+            wagePaymentReqIdLIPW = (supportType == "ALL" || supportType == "LIPW") ? wagePaymentReqIdLIPW : null,
+            wagePaymentReqIdDIS = (supportType == "ALL" || supportType == "DIS") ? wagePaymentReqIdDIS : null
         };
 
         //string uri = ConfigurationManager.AppSettings["UnlockPayroll"];
@@ -516,9 +546,11 @@ public partial class PayrollDownload : System.Web.UI.Page
             int countyId = int.Parse(ddlCounty.SelectedValue);
             int payamId = int.Parse(ddlPayam.SelectedValue);
             int bomaId = int.Parse(ddlBoma.SelectedValue);
+            var supportType = ddlSupportType.SelectedValue;
 
             var paymentCycle = Session["PaymentCycle"]?.ToString();
-            var wagePaymentReqId = Session["WagePaymentReqId"] != null ? int.Parse(Session["WagePaymentReqId"].ToString()) : 0;
+            var wagePaymentReqIdLIPW = Session["WagePaymentReqIdLIPW"] != null ? int.Parse(Session["WagePaymentReqIdLIPW"].ToString()) : (int?)null;
+            var wagePaymentReqIdDIS = Session["WagePaymentReqIdDIS"] != null ? int.Parse(Session["WagePaymentReqIdDIS"].ToString()) : (int?)null;
 
             var request = new
             {
@@ -527,8 +559,9 @@ public partial class PayrollDownload : System.Web.UI.Page
                 payam = payamId,
                 paymentCycle = paymentCycle,
                 state = stateId,
-                supportType = ddlSupportType.SelectedValue,
-                wagePaymentReqId = wagePaymentReqId
+                supportType = supportType,
+                wagePaymentReqIdLIPW = (supportType == "ALL" || supportType == "LIPW") ? wagePaymentReqIdLIPW : null,
+                wagePaymentReqIdDIS = (supportType == "ALL" || supportType == "DIS") ? wagePaymentReqIdDIS : null
             };
 
             // Define the API endpoint and access token
@@ -584,6 +617,7 @@ public partial class PayrollDownload : System.Web.UI.Page
                         // Display a warning that the payroll is locked
                         LblWarning.Text = responseMessage;
                         LblWarning.Visible = true;
+                        LblLockedStatus.Text = "Locked Status: LOCKED";
                     }
                     else
                     {
@@ -610,14 +644,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         {
             try
             {
-                /*// Prepare the necessary parameters for PDF generation
-                int userId = GetCurrentUserId(); // Retrieve the current user's ID from the session
-                int stateId = int.Parse(ddlState.SelectedValue);
-                int countyId = int.Parse(ddlCounty.SelectedValue);
-                int payamId = int.Parse(ddlPayam.SelectedValue);
-                int bomaId = int.Parse(ddlBoma.SelectedValue);
-
-                // Insert the audit record into the database (optional step)
+              /*// Insert the audit record into the database (optional step)
                 InsertAuditRecord(userId, stateId, countyId, payamId, bomaId);*/
 
                 // Redirect to ViewAttachmentHandler with the appropriate query parameters for PDF download
