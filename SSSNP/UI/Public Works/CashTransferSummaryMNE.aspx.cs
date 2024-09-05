@@ -410,7 +410,7 @@ public partial class CashTransferSummaryMNE : Page
                         ELSE 'Unknown Status'
                     END AS PaymentStatus,
                     wwr.Component,
-                    ISNULL(CONVERT(VARCHAR, bwp.PaidAmountUSD), 'Not Paid') AS PaymentAmount,
+                    ISNULL(CONVERT(VARCHAR, bwp.PaidAmountUSD), '0.00') AS PaymentAmount,
                     ISNULL(CONVERT(VARCHAR, bwp.PaidDate, 101), 'No Date') AS PaymentDate
                 FROM 
                     tbl_WorkMaster wm
