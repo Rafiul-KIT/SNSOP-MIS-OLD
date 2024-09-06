@@ -318,6 +318,13 @@
 
                                                 </ul>
                                             </li>
+                                            <li id="LiPaymentCycleDocument" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-pencil-square-o"></i>Payment Cycle Docs</a>
+                                                <ul class="down_menu">
+                                                    <li id="liUploadPaymentCycleDoc" visible="false" runat="server"><a href="UploadPaymentCycleDocuments.aspx">Upload Documents</a> </li>
+                                                    <li id="liViewPaymentCycleDoc" visible="false" runat="server"><a href="ViewPaymentCycleDocuments.aspx">View Documents</a> </li>
+
+                                                </ul>
+                                            </li>
                                             <li id="LiPayroll" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-money"></i> Payroll</a>
                                                  <ul class="down_menu">
                                                     <li><a href="PayrollDownload.aspx">Payroll Download</a></li>

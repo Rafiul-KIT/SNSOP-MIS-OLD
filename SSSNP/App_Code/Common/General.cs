@@ -2219,7 +2219,143 @@ public class General
         }
     }
 
+    // Payment Cycle Doc Details
+    public int savePaymentCycleDocDetails(string pcYear, int paymentCycle,
+        string doc1FileName,
+        string doc2FileName,
+        string doc3FileName,
+        int uploadedBy
+        )
+    {
+        SqlCommand com = new SqlCommand();
+        com.CommandType = CommandType.StoredProcedure;
+        com.CommandText = "InsUpdPaymentCycleDocDetails";
 
+
+        if (pcYear == "" || pcYear == null)
+            com.Parameters.Add("@pc_year", SqlDbType.VarChar).Value = DBNull.Value;
+        else
+            com.Parameters.Add("@pc_year", SqlDbType.VarChar).Value = pcYear.Trim();
+
+        com.Parameters.Add("@payment_cycle", SqlDbType.Int).Value = paymentCycle;
+
+        if (doc1FileName == null || doc1FileName == "")
+            com.Parameters.Add("@document_1_file_name", SqlDbType.VarChar).Value = DBNull.Value;
+        else
+            com.Parameters.Add("@document_1_file_name", SqlDbType.VarChar).Value = doc1FileName.Trim();
+
+        if (doc2FileName == null || doc2FileName == "")
+            com.Parameters.Add("@document_2_file_name", SqlDbType.VarChar).Value = DBNull.Value;
+        else
+            com.Parameters.Add("@document_2_file_name", SqlDbType.VarChar).Value = doc2FileName.Trim();
+
+        if (doc3FileName == null || doc3FileName == "")
+            com.Parameters.Add("@document_3_file_name", SqlDbType.VarChar).Value = DBNull.Value;
+        else
+            com.Parameters.Add("@document_3_file_name", SqlDbType.VarChar).Value = doc3FileName.Trim();
+
+        com.Parameters.Add("@uploaded_by", SqlDbType.Int).Value = uploadedBy;
+
+        con.OpenConnection();
+        com.Connection = con.GetConnection;
+
+        try
+        {
+            //return com.ExecuteNonQuery();
+            int result = Convert.ToInt32(com.ExecuteScalar());
+
+            #region TraceLog Implementation
+            try
+            {
+                string appSettingValue = System.Configuration.ConfigurationManager.AppSettings["TraceLogs"];
+
+                if (appSettingValue != null && appSettingValue.ToLower() == "true")
+                {
+                    CreateAudit(com, TraceLogOperationType.Insert, null, "InsUpdPaymentCycleDocDetails");
+                }
+            }
+            catch (Exception) { }
+            #endregion
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+            return 0;
+        }
+        finally
+        {
+            com.Dispose();
+            con.CloseConnection();
+        }
+    }
+
+    public DataSet getPaymentCycleDocuments(string pcYear, string paymentCycle)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("getPaymentCycleDocDetails", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            if (pcYear.Trim() == "" || pcYear.Trim() == null)
+                da.SelectCommand.Parameters.Add("@pc_year", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@pc_year", SqlDbType.VarChar).Value = pcYear.ToString();
+
+            if (paymentCycle.Trim() == "" || paymentCycle.Trim() == null)
+                da.SelectCommand.Parameters.Add("@payment_cycle", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@payment_cycle", SqlDbType.VarChar).Value = paymentCycle.ToString();
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
+
+    public DataSet getPaymentCycleDocCount(string pcYear, string paymentCycle)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("getPaymentCycleDocCount", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            if (pcYear.Trim() == "" || pcYear.Trim() == null)
+                da.SelectCommand.Parameters.Add("@pc_year", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@pc_year", SqlDbType.VarChar).Value = pcYear.ToString();
+
+            if (paymentCycle.Trim() == "" || paymentCycle.Trim() == null)
+                da.SelectCommand.Parameters.Add("@payment_cycle", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@payment_cycle", SqlDbType.VarChar).Value = paymentCycle.ToString();
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
 
     // Insert into to Database Area of work Details
     public int insrtAreaofWork(string intAreaofWork, string Created_by)

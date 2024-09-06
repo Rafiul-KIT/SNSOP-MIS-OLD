@@ -83,6 +83,10 @@ public partial class CCMaster : System.Web.UI.MasterPage
         liFrim.Visible = false;
         LiPA8.Visible = false;
 
+        LiPaymentCycleDocument.Visible = false;
+        liUploadPaymentCycleDoc.Visible = false;
+        liViewPaymentCycleDoc.Visible = false;
+
         if (Session.Count > 0)
         {
             lblwecome.Text = Session["username"].ToString();
@@ -143,6 +147,9 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 grmReport.Visible = true;
                 grmImporting.Visible = true;
 
+                LiPaymentCycleDocument.Visible = true;
+                liUploadPaymentCycleDoc.Visible = false;
+                liViewPaymentCycleDoc.Visible = true;
             }
             if (Session["user_type"].ToString() == "FSP")
             {
@@ -150,6 +157,10 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 printIdCardMenu.Visible = true;
                 Li1.Visible = false;
                 LiPayroll.Visible = true;
+
+                LiPaymentCycleDocument.Visible = true;
+                liUploadPaymentCycleDoc.Visible = false;
+                liViewPaymentCycleDoc.Visible = true;
             }
             if (Session["user_type"].ToString() == "MIS")
             {
@@ -349,7 +360,12 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiTST8.Visible = true;
                 LiUM.Visible = true;
             }
-
+            if (Session["user_type"].ToString() == ConfigurationManager.AppSettings["PaymentCycleDocumentUploadRole"].ToString())
+            {
+                LiPaymentCycleDocument.Visible = true;
+                liUploadPaymentCycleDoc.Visible = true;
+                liViewPaymentCycleDoc.Visible = true;
+            }
             
             if (Session["user_type"].ToString() == "PC")
             {

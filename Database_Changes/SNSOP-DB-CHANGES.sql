@@ -1,3 +1,56 @@
+-- 04-09-2024
+
+CREATE Procedure [dbo].[InsUpdPaymentCycleDocDetails]
+(
+    @pc_year varchar(10),
+    @payment_cycle int,
+    @document_1_file_name varchar(200),
+    @document_2_file_name varchar(200),
+    @document_3_file_name varchar(200),
+    @uploaded_by int
+) AS
+    Begin
+        IF NOT EXISTS(SELECT id from tbl_payment_cycle_document_details where pc_year=@pc_year and payment_cycle=@payment_cycle)
+            INSERT INTO tbl_payment_cycle_document_details(pc_year, payment_cycle, document_1_file_name, document_2_file_name, document_3_file_name, uploaded_at, uploaded_by)
+                                                    values (@pc_year, @payment_cycle, @document_1_file_name, @document_2_file_name, @document_3_file_name, getdate(), @uploaded_by)
+        ELSE UPDATE tbl_payment_cycle_document_details set document_1_file_name=@document_1_file_name,
+                                                           document_2_file_name=@document_2_file_name,
+                                                           document_3_file_name=@document_3_file_name,
+                                                           uploaded_at=getdate(),
+                                                           uploaded_by=@uploaded_by
+                                                           where pc_year=@pc_year and payment_cycle=@payment_cycle
+    End
+go
+
+CREATE Procedure [dbo].[getPaymentCycleDocDetails]
+(
+    @pc_year varchar(10),
+    @payment_cycle varchar(2)
+) AS
+Begin
+    select pc_year Year, payment_cycle PaymentCycle,
+           document_1_file_name Document1,
+           document_2_file_name Document2,
+           document_3_file_name Document3,
+           uploaded_at UploadDate
+           FROM dbo.tbl_payment_cycle_document_details
+             WHERE pc_year like @pc_year and payment_cycle like @payment_cycle
+End
+go
+
+CREATE Procedure [dbo].[getPaymentCycleDocCount]
+(
+    @pc_year varchar(10),
+    @payment_cycle varchar(2)
+) AS
+Begin
+    select count(*) FROM dbo.tbl_payment_cycle_document_details
+    WHERE pc_year like @pc_year and payment_cycle like @payment_cycle
+End
+go
+
+-- 04-09-2024
+
 -- 26-08-2024
 
 CREATE Procedure [dbo].[GenericDashboardKIT]
