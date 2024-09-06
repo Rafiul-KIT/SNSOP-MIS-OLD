@@ -193,6 +193,51 @@ public partial class CashTransferSummaryMNE
     protected global::System.Web.UI.WebControls.Button BtnDownloadExl;
 
     /// <summary>
+    /// BtnClear control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button BtnClear;
+
+    /// <summary>
+    /// pnlTotals control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Panel pnlTotals;
+
+    /// <summary>
+    /// lblTotalPaidBeneficiary control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTotalPaidBeneficiary;
+
+    /// <summary>
+    /// lblTotalUnpaidBeneficiary control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTotalUnpaidBeneficiary;
+
+    /// <summary>
+    /// lblTotalPaidAmount control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTotalPaidAmount;
+
+    /// <summary>
     /// rgResults control.
     /// </summary>
     /// <remarks>

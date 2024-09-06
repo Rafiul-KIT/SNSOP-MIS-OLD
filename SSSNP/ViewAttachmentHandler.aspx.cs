@@ -18,6 +18,7 @@ using System.Data;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using OfficeOpenXml;
+using Image = iTextSharp.text.Image;
 
 namespace SSSNP_SNSOP
 {
@@ -41,6 +42,7 @@ namespace SSSNP_SNSOP
             SYSTEM_REPORT = 8,
             SYSTEM_REPORT_ELRP = 9,
             ENCRYPTED_PAYROLL_DATA = 10,// Add new case for encrypted payroll data
+            PDF_PAYROLL_DATA = 13, 
             MNE_MODULE_Pdf_Download = 11,// Add new case for MNE_MODULE_Pdf_Download
             MNE_MODULE_Exl_Download = 12 // Add new case for MNE_MODULE_Exl_Download
          
@@ -90,6 +92,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.ENCRYPTED_PAYROLL_DATA:
                     EncryptedPayrollDataHandler();
+                    return "OK";
+                case HandlerAttachment.PDF_PAYROLL_DATA:
+                    GeneratePayrollPdf();
                     return "OK";
                 case HandlerAttachment.MNE_MODULE_Exl_Download:
                     MNEModuleExlHandler();
@@ -449,6 +454,246 @@ namespace SSSNP_SNSOP
         }
         //downlaod encrypted payroll data module end
 
+        //download payroll data in pdf started
+        public void GeneratePayrollPdf()
+        {
+            // Retrieve the ApiResponse object from the session
+            PayrollDownloadResponse apiResponse = Session["PDResponse"] as PayrollDownloadResponse;
+            if (apiResponse == null)
+            {
+                throw new InvalidOperationException("apiResponse is not initialized in the session.");
+            }
+
+            // Retrieve geo location data from session
+            string stateName = Session["SelectedStateName"] as string ?? "N/A";
+            string countyName = Session["SelectedCountyName"] as string ?? "N/A";
+            string payamName = Session["SelectedPayamName"] as string ?? "N/A";
+            string bomaName = Session["SelectedBomaName"] as string ?? "N/A";
+
+            // Define a custom page size with increased width
+            Rectangle customPageSize = new Rectangle(PageSize.LEGAL.Width + 200f, PageSize.LEGAL.Height);
+
+            // Create a new PDF document
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(customPageSize.Rotate(), 25, 25, 30, 30); // Increased width and rotated to landscape
+                PdfWriter.GetInstance(document, ms);
+                document.Open();
+
+                // Create a font for the title with size 16 and bold
+                Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+
+                Paragraph title = new Paragraph("Payroll Data", titleFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                };
+                document.Add(title);
+
+                // Add Wage Request label with current date
+                Paragraph wageRequest = new Paragraph("Wage Request: " + DateTime.Now.ToString("dd-MM-yyyy"))
+                {
+                    Alignment = Element.ALIGN_LEFT
+                };
+                document.Add(wageRequest);
+
+                // Add geo location data (State, County, Payam, Boma)
+                document.Add(new Paragraph("State: " + stateName));
+                document.Add(new Paragraph("County: " + countyName));
+                document.Add(new Paragraph("Payam: " + payamName));
+                document.Add(new Paragraph("Boma: " + bomaName));
+
+                // Add space before main table
+                document.Add(new Paragraph(" "));
+
+                // Create table with 24 columns for payroll details
+                PdfPTable table = new PdfPTable(19)
+                {
+                    WidthPercentage = 100
+                };
+
+                // Set widths for each column to match the section sizes
+                table.SetWidths(new float[] {
+            1f, 1.5f, 2f, 1f, 1f,            // Beneficiary (5 columns: Photo, ID, Name, Gender, Age)
+            1f, 1.5f, 2f, 1f, 1f,            // First Alternate (5 columns: Photo, ID, Name, Gender, Age)
+            1f, 1.5f, 2f, 1f, 1f,            // Second Alternate (5 columns: Photo, ID, Name, Gender, Age)
+            1f, 1.5f, 1.5f,                  // Payment (3 columns: Cycle, Support Type, Wage Total)
+            1.5f                               // Signature (1 column)
+        });
+
+                // Add section headers
+                AddSectionHeaderToPdfTable(table, "Beneficiary", 5);
+                AddSectionHeaderToPdfTable(table, "First Alternate", 5);
+                AddSectionHeaderToPdfTable(table, "Second Alternate", 5);
+                AddSectionHeaderToPdfTable(table, "Payment", 3);
+                AddSectionHeaderToPdfTable(table, "Signature", 1);
+
+                // Add payroll data headers (columns)
+                AddCellToPdfTableHeader(table, "ID");
+                AddCellToPdfTableHeader(table, "Photo");
+                AddCellToPdfTableHeader(table, "Name");
+                AddCellToPdfTableHeader(table, "Gender");
+                AddCellToPdfTableHeader(table, "Age");
+
+                AddCellToPdfTableHeader(table, "ID");
+                AddCellToPdfTableHeader(table, "Photo");
+                AddCellToPdfTableHeader(table, "Name");
+                AddCellToPdfTableHeader(table, "Gender");
+                AddCellToPdfTableHeader(table, "Age");
+
+                AddCellToPdfTableHeader(table, "ID");
+                AddCellToPdfTableHeader(table, "Photo");
+                AddCellToPdfTableHeader(table, "Name");
+                AddCellToPdfTableHeader(table, "Gender");
+                AddCellToPdfTableHeader(table, "Age");
+
+                AddCellToPdfTableHeader(table, "Cycle");
+                AddCellToPdfTableHeader(table, "Support Type");
+                AddCellToPdfTableHeader(table, "Wage Total");
+
+                AddCellToPdfTableHeader(table, "Sign");
+
+                // Iterate through payroll data in the container and add rows
+                foreach (var container in apiResponse.data)
+                {
+                    foreach (var payroll in container.payrollData)
+                    {
+                        // Beneficiary Details
+                        AddCellToPdfTableBody(table, payroll.intBenid.ToString());
+                        AddPhotoToPdfTable(table, payroll.houseHoldDetail.biometric.Photo);
+                        AddCellToPdfTableBody(table, $"{payroll.houseHoldDetail.firstName} {payroll.houseHoldDetail.middleName} {payroll.houseHoldDetail.lastName}");
+                        AddCellToPdfTableBody(table, GetGenderString(payroll.houseHoldDetail.gender)); // Updated gender logic
+                        AddCellToPdfTableBody(table, payroll.houseHoldDetail.age.ToString());
+
+                        // First Alternate
+                        if (payroll.alternates.Count > 0)
+                        {
+                            var firstAlternate = payroll.alternates[0];
+                            AddCellToPdfTableBody(table, firstAlternate.id.ToString());  // ID for the first alternate
+                            AddPhotoToPdfTable(table, firstAlternate.biometric.Photo);
+                            AddCellToPdfTableBody(table, $"{firstAlternate.firstName} {firstAlternate.middleName} {firstAlternate.lastName}");
+                            AddCellToPdfTableBody(table, GetGenderString(firstAlternate.gender)); // Updated gender logic
+                            AddCellToPdfTableBody(table, firstAlternate.age.ToString());
+                        }
+                        else
+                        {
+                            for (int j = 0; j < 5; j++)
+                            {
+                                AddCellToPdfTableBody(table, string.Empty);
+                            }
+                        }
+
+                        // Second Alternate
+                        if (payroll.alternates.Count > 1)
+                        {
+                            var secondAlternate = payroll.alternates[1];
+                            AddCellToPdfTableBody(table, secondAlternate.id.ToString());  // ID for the second alternate
+                            AddPhotoToPdfTable(table, secondAlternate.biometric.Photo);
+                            AddCellToPdfTableBody(table, $"{secondAlternate.firstName} {secondAlternate.middleName} {secondAlternate.lastName}");
+                            AddCellToPdfTableBody(table, GetGenderString(secondAlternate.gender)); // Updated gender logic
+                            AddCellToPdfTableBody(table, secondAlternate.age.ToString());
+                        }
+                        else
+                        {
+                            for (int j = 0; j < 5; j++)
+                            {
+                                AddCellToPdfTableBody(table, string.Empty);
+                            }
+                        }
+
+                        // Payment and Signature
+                        AddCellToPdfTableBody(table, payroll.paymentCycle);
+                        AddCellToPdfTableBody(table, payroll.supportType);
+                        AddCellToPdfTableBody(table, payroll.wageRateUSDTotal.ToString("F2"));
+                        AddCellToPdfTableBody(table, string.Empty); // Sign - can be left blank or populated as needed
+                    }
+                }
+
+                // Add the table to the document
+                document.Add(table);
+
+                // Close the document
+                document.Close();
+
+                // Send the document to the client
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("content-disposition", "attachment;filename=PayrollData.pdf");
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.BinaryWrite(ms.ToArray());
+                Response.End();
+            }
+        }
+
+        // Helper methods remain unchanged
+        private void AddPhotoToPdfTable(PdfPTable table, string base64Photo)
+        {
+            if (!string.IsNullOrEmpty(base64Photo))
+            {
+                byte[] imageBytes = Convert.FromBase64String(base64Photo);
+                Image img = Image.GetInstance(imageBytes);
+                img.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
+
+                PdfPCell imageCell = new PdfPCell(img, true)
+                {
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_MIDDLE,
+                    Padding = 2f,// Match the fixed height of other cells// Add some padding to prevent overlap
+                    FixedHeight = 50f 
+                };
+                table.AddCell(imageCell);
+            }
+            else
+            {
+                PdfPCell emptyCell = new PdfPCell(new Phrase(string.Empty))
+                {
+                    FixedHeight = 50f // Match the fixed height of other cells
+                };
+                table.AddCell(emptyCell);
+            }
+        }
+
+        private void AddSectionHeaderToPdfTable(PdfPTable table, string headerText, int colspan)
+        {
+            PdfPCell headerCell = new PdfPCell(new Phrase(headerText, FontFactory.GetFont(FontFactory.HELVETICA, 8, Font.BOLD)))
+            {
+                Colspan = colspan,
+                BackgroundColor = BaseColor.LIGHT_GRAY,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                FixedHeight = 30f // Set a fixed height of 50 points for section cells
+            };
+            table.AddCell(headerCell);
+        }
+
+        private void AddCellToPdfTableHeader(PdfPTable table, string text)
+        {
+            PdfPCell cell = new PdfPCell(new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA, 8, Font.BOLD)))
+            {
+                BackgroundColor = BaseColor.LIGHT_GRAY,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                FixedHeight = 30f // Set a fixed height of 50 points for body cells
+            };
+            table.AddCell(cell);
+        }
+
+        private void AddCellToPdfTableBody(PdfPTable table, string text)
+        {
+            PdfPCell cell = new PdfPCell(new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA, 8)))
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_MIDDLE
+            };
+            table.AddCell(cell);
+        }
+
+        // Helper method to handle gender logic
+        private string GetGenderString(int genderValue)
+        {
+            return genderValue == 0 ? "Male" : genderValue == 1 ? "Female" : "N/A";
+        }
+
+
+        //download payroll data in pdf end
 
         // MNE module pdf started
         private void MNEModulePdfHandler()

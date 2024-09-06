@@ -130,6 +130,15 @@ public partial class PayrollDownload
     protected global::System.Web.UI.WebControls.Button BtnDownload;
 
     /// <summary>
+    /// BtnDownloadPdf control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button BtnDownloadPdf;
+
+    /// <summary>
     /// BtnUnlock control.
     /// </summary>
     /// <remarks>
