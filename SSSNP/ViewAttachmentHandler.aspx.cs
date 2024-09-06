@@ -480,9 +480,10 @@ namespace SSSNP_SNSOP
                 PdfWriter.GetInstance(document, ms);
                 document.Open();
 
+                // Create a font for the title with size 16 and bold
+                Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
 
-                // Add title
-                Paragraph title = new Paragraph("Payroll Data")
+                Paragraph title = new Paragraph("Payroll Data", titleFont)
                 {
                     Alignment = Element.ALIGN_CENTER
                 };
@@ -560,7 +561,7 @@ namespace SSSNP_SNSOP
                         AddCellToPdfTableBody(table, payroll.intBenid.ToString());
                         AddPhotoToPdfTable(table, payroll.houseHoldDetail.biometric.Photo);
                         AddCellToPdfTableBody(table, $"{payroll.houseHoldDetail.firstName} {payroll.houseHoldDetail.middleName} {payroll.houseHoldDetail.lastName}");
-                        AddCellToPdfTableBody(table, payroll.houseHoldDetail.gender.ToString());
+                        AddCellToPdfTableBody(table, GetGenderString(payroll.houseHoldDetail.gender)); // Updated gender logic
                         AddCellToPdfTableBody(table, payroll.houseHoldDetail.age.ToString());
 
                         // First Alternate
@@ -570,7 +571,7 @@ namespace SSSNP_SNSOP
                             AddCellToPdfTableBody(table, firstAlternate.id.ToString());  // ID for the first alternate
                             AddPhotoToPdfTable(table, firstAlternate.biometric.Photo);
                             AddCellToPdfTableBody(table, $"{firstAlternate.firstName} {firstAlternate.middleName} {firstAlternate.lastName}");
-                            AddCellToPdfTableBody(table, firstAlternate.gender.ToString());
+                            AddCellToPdfTableBody(table, GetGenderString(firstAlternate.gender)); // Updated gender logic
                             AddCellToPdfTableBody(table, firstAlternate.age.ToString());
                         }
                         else
@@ -588,7 +589,7 @@ namespace SSSNP_SNSOP
                             AddCellToPdfTableBody(table, secondAlternate.id.ToString());  // ID for the second alternate
                             AddPhotoToPdfTable(table, secondAlternate.biometric.Photo);
                             AddCellToPdfTableBody(table, $"{secondAlternate.firstName} {secondAlternate.middleName} {secondAlternate.lastName}");
-                            AddCellToPdfTableBody(table, secondAlternate.gender.ToString());
+                            AddCellToPdfTableBody(table, GetGenderString(secondAlternate.gender)); // Updated gender logic
                             AddCellToPdfTableBody(table, secondAlternate.age.ToString());
                         }
                         else
@@ -629,18 +630,24 @@ namespace SSSNP_SNSOP
             {
                 byte[] imageBytes = Convert.FromBase64String(base64Photo);
                 Image img = Image.GetInstance(imageBytes);
-                img.ScaleAbsolute(30f, 37.5f); // Adjust image size
+                img.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
+
                 PdfPCell imageCell = new PdfPCell(img, true)
                 {
                     HorizontalAlignment = Element.ALIGN_CENTER,
                     VerticalAlignment = Element.ALIGN_MIDDLE,
-                    Padding = 2f // Add some padding to prevent overlap
+                    Padding = 2f,// Match the fixed height of other cells// Add some padding to prevent overlap
+                    FixedHeight = 50f 
                 };
                 table.AddCell(imageCell);
             }
             else
             {
-                table.AddCell(string.Empty); // Empty cell if no photo
+                PdfPCell emptyCell = new PdfPCell(new Phrase(string.Empty))
+                {
+                    FixedHeight = 50f // Match the fixed height of other cells
+                };
+                table.AddCell(emptyCell);
             }
         }
 
@@ -651,7 +658,8 @@ namespace SSSNP_SNSOP
                 Colspan = colspan,
                 BackgroundColor = BaseColor.LIGHT_GRAY,
                 HorizontalAlignment = Element.ALIGN_CENTER,
-                VerticalAlignment = Element.ALIGN_MIDDLE
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                FixedHeight = 30f // Set a fixed height of 50 points for section cells
             };
             table.AddCell(headerCell);
         }
@@ -662,7 +670,8 @@ namespace SSSNP_SNSOP
             {
                 BackgroundColor = BaseColor.LIGHT_GRAY,
                 HorizontalAlignment = Element.ALIGN_CENTER,
-                VerticalAlignment = Element.ALIGN_MIDDLE
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                FixedHeight = 30f // Set a fixed height of 50 points for body cells
             };
             table.AddCell(cell);
         }
@@ -675,6 +684,12 @@ namespace SSSNP_SNSOP
                 VerticalAlignment = Element.ALIGN_MIDDLE
             };
             table.AddCell(cell);
+        }
+
+        // Helper method to handle gender logic
+        private string GetGenderString(int genderValue)
+        {
+            return genderValue == 0 ? "Male" : genderValue == 1 ? "Female" : "N/A";
         }
 
 
