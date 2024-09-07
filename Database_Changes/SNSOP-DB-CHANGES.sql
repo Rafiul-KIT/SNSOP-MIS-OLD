@@ -1,3 +1,14 @@
+-- 08-09-2024
+
+update LK_GBVStatus set StatusName='Resolved' where StatusID=5;
+update LK_GBVStatus set StatusName='Referred' where StatusID=15;
+update LK_GBVStatus set StatusName='Unresolved' where StatusID=1;
+update NonGBVMain set Status=1 where Status in (2,3,6,7,14,16,17);
+update GBVMain set Status=1 where Status in (2,3,6,7,14,16,17);
+delete from LK_GBVStatus where StatusID in (2,3,6,7,14,16,17);
+
+-- 08-09-2024
+
 -- 04-09-2024
 
 CREATE Procedure [dbo].[InsUpdPaymentCycleDocDetails]

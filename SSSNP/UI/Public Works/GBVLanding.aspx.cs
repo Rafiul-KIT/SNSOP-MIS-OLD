@@ -79,7 +79,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             Gen.getStates(ddlState);
 
-            List<LK_GBVStatus> lk_status = SSSNPContext.SSSNPManager.GetNonGBVStatus();
+            List<LK_GBVStatus> lk_status = SSSNPContext.SSSNPManager.GetGBVStatus();
             lk_status.Insert(0, new LK_GBVStatus() { StatusName = "--Select--", StatusID = 0 });
             ddlStatus.DataSource = lk_status;
             ddlStatus.DataTextField = "StatusName";

@@ -60,7 +60,7 @@
 				m.DateOfIncident,
 				m.IncidentReportedBy,
 				m.SSSNPBeneficiary,
-				case when stat.StatusID=1 then 1 else 2 end as OrderById
+				case when stat.StatusID=1 then 1 when stat.StatusId != 5 then 2 else 3 end as OrderById
 
 				FROM [GBVMain] as M left join GBVDetails as d on (d.GBVMainID = m.GBVMainID and d.Deleted = 0)
 						inner join tm_States as S on s.intStateid = m.StateID 

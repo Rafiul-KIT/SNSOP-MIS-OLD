@@ -490,7 +490,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 txtDate.Enabled = false;
 
                 //Set default status "Received"
-                ddlStatus.SelectedValue = ddlStatus.Items.FindByText("Received").Value;
+                ddlStatus.SelectedIndex = 0;
                 ddlStatus.Enabled = false;
 
                 hfAttach_DescriptionIncident.Value = Guid.Empty.ToString();
@@ -1017,7 +1017,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             if (ddlReferralServiceRecommended.SelectedValue == "NO")
             {
-                string idSelected = ddlStatus.Items.FindByText("Referral")?.Value;
+                string idSelected = ddlStatus.Items.FindByText("Referred")?.Value;
                 if (idSelected != null) ddlStatus.SelectedValue = idSelected;
                 
 
@@ -1031,8 +1031,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 if (OperationType == RequestOperationTypePage.NEW)
                 {
-                    string idSelected = ddlStatus.Items.FindByText("Received")?.Value;
-                    if (idSelected != null) ddlStatus.SelectedValue = idSelected;
+                    //string idSelected = ddlStatus.Items.FindByText("Received")?.Value;
+                    //if (idSelected != null) ddlStatus.SelectedValue = idSelected;
+                    ddlStatus.SelectedIndex = 0;
                 }
                 else { ddlStatus.SelectedIndex = 0; }
             }
