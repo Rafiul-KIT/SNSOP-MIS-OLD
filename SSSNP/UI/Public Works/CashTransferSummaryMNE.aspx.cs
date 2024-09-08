@@ -224,11 +224,12 @@ public partial class CashTransferSummaryMNE : Page
             string component = ddlComponent.SelectedValue;
             string paidStatus = ddlPaidStatus.SelectedValue;
 
-            int totalCount = GetTotalPaymentRecordsCount(state, county, payam, boma, paymentCycle, status, component, paidStatus);
-            Session["TotalRecordCount"] = totalCount;
+            // int totalCount = GetTotalPaymentRecordsCount(state, county, payam, boma, paymentCycle, status, component, paidStatus);
+            // Session["TotalRecordCount"] = totalCount;
 
             // Declare variables to hold the totals
-            int totalPaidBeneficiaries, totalUnpaidBeneficiaries;
+            int totalPaidBeneficiaries = 0;
+            int totalUnpaidBeneficiaries = 0;
             decimal totalPaidAmount;
 
             // Fetch the payment data and totals in a single call
@@ -239,6 +240,8 @@ public partial class CashTransferSummaryMNE : Page
             lblTotalUnpaidBeneficiary.Text = $"Total Unpaid Beneficiary: {totalUnpaidBeneficiaries}";
             lblTotalPaidAmount.Text = $"Total Paid Amount: {totalPaidAmount:N2}";
 
+            Session["TotalRecordCount"] = totalPaidBeneficiaries + totalUnpaidBeneficiaries;
+
             // Show the total panel only if there are records
             pnlTotals.Visible = dt.Rows.Count > 0;
 
@@ -246,8 +249,10 @@ public partial class CashTransferSummaryMNE : Page
             rgResults.Rebind();
 
             // Show the download button if there are records
-            BtnDownloadPdf.Visible = totalCount > 0;
-            BtnDownloadExl.Visible = totalCount > 0;
+            // BtnDownloadPdf.Visible = totalCount > 0;
+            // BtnDownloadExl.Visible = totalCount > 0;
+            BtnDownloadPdf.Visible = (totalPaidBeneficiaries > 0 || totalUnpaidBeneficiaries > 0);
+            BtnDownloadExl.Visible = (totalPaidBeneficiaries > 0 || totalUnpaidBeneficiaries > 0);
 
         }
         catch (Exception ex)
