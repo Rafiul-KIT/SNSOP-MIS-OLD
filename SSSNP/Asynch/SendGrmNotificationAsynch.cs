@@ -15,7 +15,7 @@ namespace SSSNP.Asynch
     public class SendGrmNotificationAsynch : IThreadable
     {
         // TODO: based on the day count, notifications to be sent
-        private const int SLEEP_TIME = 60 * 1000 * 60 * 12; // 30 minutes interval
+        private const int SLEEP_TIME = 60 * 1000 * 60 * 24; // 30 minutes interval
         private const string NAME = "grm_notification_daemon";
         private AutoResetEvent waitHandle = new AutoResetEvent(false);
         private AutoResetEvent abortHandle = new AutoResetEvent(false);
