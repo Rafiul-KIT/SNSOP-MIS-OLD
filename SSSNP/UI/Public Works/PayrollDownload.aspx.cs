@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -30,6 +30,27 @@ public partial class PayrollDownload : System.Web.UI.Page
         }
 
         accessToken = "";
+        SetButtonVisibility();
+    }
+
+    private void SetButtonVisibility()
+    {
+        if (Session["LockedStatus"] != null)
+        {
+            string lockedStatus = Session["LockedStatus"].ToString();
+
+            // Control button visibility based on the locked status
+            BtnUnlock.Visible = (lockedStatus == "LOCKED");
+            BtnDownload.Visible = (lockedStatus != "LOCKED");
+            BtnDownloadPdf.Visible = true;
+        }
+        else
+        {
+            // Default state when there is no status in the session
+            BtnUnlock.Visible = false;
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+        }
     }
 
     private void InitializeServices()
@@ -307,13 +328,72 @@ public partial class PayrollDownload : System.Web.UI.Page
                 Session["TotalItemCount"] = totalCount;
                 rgResults.Rebind();  // Trigger the NeedDataSource event
 
-                // Update button visibility based on lockedStatus
+                /*// Update button visibility based on lockedStatus
                 var firstData = pdResponse.data.FirstOrDefault();
                 var lockedStatus = firstData?.lockedStatus;
-                HiddenLockedStatus.Value = lockedStatus;
+                HiddenLockedStatus.Value = lockedStatus;*/
 
+                // Initialize variables to keep track of the statuses
+                bool hasLocked = false;
+                bool hasUnlocked = false;
+                bool hasReconciled = false;
+
+                // Traverse through each PDPayrollDataContainer and its payrollData to check lockedStatus
+                foreach (var container in pdResponse.data)
+                {
+                    // Check lockedStatus from the parent container
+                    if (container.lockedStatus == "LOCKED")
+                    {
+                        hasLocked = true;
+                    }
+                    else if (container.lockedStatus == "UNLOCKED")
+                    {
+                        hasUnlocked = true;
+                    }
+                    else if (container.lockedStatus == "RECONCILED")
+                    {
+                        hasReconciled = true;
+                    }
+
+                    // Check lockedStatus for each item in the payrollData list (nested)
+                    foreach (var payroll in container.payrollData)
+                    {
+                        if (payroll.status == "LOCKED")
+                        {
+                            hasLocked = true;
+                        }
+                        else if (payroll.status == "UNLOCKED")
+                        {
+                            hasUnlocked = true;
+                        }
+                        else if (payroll.status == "RECONCILED")
+                        {
+                            hasReconciled = true;
+                        }
+                    }
+                }
+
+                // Determine the final locked status based on the conditions
+                string lockedStatus;
+                if (hasLocked)
+                {
+                    lockedStatus = "LOCKED";
+                }
+                else if (hasReconciled)
+                {
+                    lockedStatus = "RECONCILED";
+                }
+                else if (hasUnlocked)
+                {
+                    lockedStatus = "UNLOCKED";
+                }
+                else
+                {
+                    lockedStatus = "UNKNOWN"; // Fallback in case no valid status is found
+                }
 
                 // Store paymentCycle and wagePaymentReqId in session
+                var firstData = pdResponse.data.FirstOrDefault();
                 var paymentCycle = firstData?.payrollData.FirstOrDefault()?.paymentCycle;
                 Session["PaymentCycle"] = paymentCycle;
                 //var wagePaymentReqId = firstData?.payrollData.FirstOrDefault()?.intWagePaymentReqid;
