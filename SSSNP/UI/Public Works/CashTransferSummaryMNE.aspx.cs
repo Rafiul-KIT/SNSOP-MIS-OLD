@@ -248,7 +248,7 @@ public partial class CashTransferSummaryMNE : Page
             // Update the labels with the calculated totals
             lblTotalPaidBeneficiary.Text = $"Total Paid Beneficiary: {totalPaidBeneficiaries}";
             lblTotalUnpaidBeneficiary.Text = $"Total Unpaid Beneficiary: {totalUnpaidBeneficiaries}";
-            lblTotalPaidAmount.Text = $"Total Paid Amount: {totalPaidAmount:N2}";
+            lblTotalPaidAmount.Text = $"Total Paid Amount(USD): {totalPaidAmount:N2}";
 
             // Show the total panel only if there are records
             pnlTotals.Visible = dt.Rows.Count > 0;
