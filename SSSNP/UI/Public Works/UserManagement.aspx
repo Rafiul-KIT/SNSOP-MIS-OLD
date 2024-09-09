@@ -41,7 +41,9 @@
                                                 <!-- User ID Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelUserId" runat="server" CssClass="LBLBLACK" Width="165px">User ID</asp:Label>
+                                                        <asp:Label ID="LabelUserId" runat="server" CssClass="LBLBLACK" Width="165px">User ID
+                                                            <span style="color: red;">*</span>
+                                                        </asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -53,7 +55,9 @@
                                                 <!-- User Name Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelUserName" runat="server" CssClass="LBLBLACK" Width="165px">User Name</asp:Label>
+                                                        <asp:Label ID="LabelUserName" runat="server" CssClass="LBLBLACK" Width="165px">User Name
+                                                            <span style="color: red;">*</span>
+                                                        </asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -65,7 +69,9 @@
                                                 <!-- User Type Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelUserType" runat="server" CssClass="LBLBLACK" Width="165px">User Type</asp:Label>
+                                                        <asp:Label ID="LabelUserType" runat="server" CssClass="LBLBLACK" Width="165px">User Type
+                                                            <span style="color: red;">*</span>
+                                                        </asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -97,7 +103,9 @@
                                                 <!-- User Code Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelUserCode" runat="server" CssClass="LBLBLACK" Width="165px">User Code</asp:Label>
+                                                        <asp:Label ID="LabelUserCode" runat="server" CssClass="LBLBLACK" Width="165px">User Code
+                                                            <span style="color: red;">*</span>
+                                                        </asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -109,7 +117,9 @@
                                                 <!-- Email Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelEmail" runat="server" CssClass="LBLBLACK" Width="165px">Email</asp:Label>
+                                                        <asp:Label ID="LabelEmail" runat="server" CssClass="LBLBLACK" Width="165px">Email
+                                                            <span style="color: red;">*</span>
+                                                        </asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -128,7 +138,9 @@
                                                 <!-- Status Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelStatus" runat="server" CssClass="LBLBLACK" Width="165px">Status</asp:Label>
+                                                        <asp:Label ID="LabelStatus" runat="server" CssClass="LBLBLACK" Width="165px">Status
+                                                            <span style="color: red;">*</span>
+                                                        </asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
