@@ -130,10 +130,6 @@ public partial class PayrollDownload : System.Web.UI.Page
                 LogError(ex);
             }
         }
-
-        // Save selected state to session
-        Session["SelectedStateId"] = ddlState.SelectedValue;
-        Session["SelectedStateName"] = ddlState.SelectedItem.Text;
     }
 
     protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
@@ -176,10 +172,6 @@ public partial class PayrollDownload : System.Web.UI.Page
                 LogError(ex);
             }
         }
-
-        // Save selected county to session
-        Session["SelectedCountyId"] = ddlCounty.SelectedValue;
-        Session["SelectedCountyName"] = ddlCounty.SelectedItem.Text;
     }
 
     protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
@@ -220,17 +212,10 @@ public partial class PayrollDownload : System.Web.UI.Page
                 LogError(ex);
             }
         }
-
-        // Save selected payam to session
-        Session["SelectedPayamId"] = ddlPayam.SelectedValue;
-        Session["SelectedPayamName"] = ddlPayam.SelectedItem.Text;
     }
 
     protected void ddlBoma_SelectedIndexChanged(object sender, EventArgs e)
     {
-        // Save selected boma to session
-        Session["SelectedBomaId"] = ddlBoma.SelectedValue;
-        Session["SelectedBomaName"] = ddlBoma.SelectedItem.Text;
         // Reset the SupportType dropdown
         ddlSupportType.ClearSelection();
         ddlSupportType.Items.Clear();
@@ -259,6 +244,19 @@ public partial class PayrollDownload : System.Web.UI.Page
             LblWarning.Visible = true;
             return;
         }
+
+        // Save selected state to session
+        Session["SelectedStateId"] = ddlState.SelectedValue;
+        Session["SelectedStateName"] = ddlState.SelectedItem.Text;
+        // Save selected county to session
+        Session["SelectedCountyId"] = ddlCounty.SelectedValue;
+        Session["SelectedCountyName"] = ddlCounty.SelectedItem.Text;
+        // Save selected payam to session
+        Session["SelectedPayamId"] = ddlPayam.SelectedValue;
+        Session["SelectedPayamName"] = ddlPayam.SelectedItem.Text;
+        // Save selected boma to session
+        Session["SelectedBomaId"] = ddlBoma.SelectedValue;
+        Session["SelectedBomaName"] = ddlBoma.SelectedItem.Text;
 
         // Hide the warning label if validation passes
         LblWarning.Visible = false;

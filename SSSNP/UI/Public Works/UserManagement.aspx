@@ -94,6 +94,7 @@
                                                             <asp:ListItem Text="Report" Value="Report" />
                                                             <asp:ListItem Text="MIS" Value="MIS" />
                                                             <asp:ListItem Text="EntryGRM" Value="EntryGRM" />
+                                                            <asp:ListItem Text="WBGBVMgr" Value="WBGBVMgr" />
                                                         </asp:DropDownList>
                                                         <asp:RequiredFieldValidator ID="rfvUserType" runat="server" ControlToValidate="ddlUserType"
                                                             InitialValue="" ErrorMessage="User Type is required." CssClass="text-danger" Display="Dynamic" />
