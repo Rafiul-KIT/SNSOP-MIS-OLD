@@ -236,7 +236,7 @@
                                             <telerik:GridBoundColumn DataField="Component" HeaderText="Component">
                                                 <HeaderStyle Width="10%" />
                                             </telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="PaymentAmount" HeaderText="Payment Amount(USD)">
+                                            <telerik:GridBoundColumn DataField="PaymentAmountUSD" HeaderText="Payment Amount(USD)">
                                                 <HeaderStyle Width="10%" />
                                             </telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" DataFormatString="{0:MM/dd/yyyy}">
