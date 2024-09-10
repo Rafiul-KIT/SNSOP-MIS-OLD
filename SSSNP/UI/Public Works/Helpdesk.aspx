@@ -129,14 +129,13 @@ function OpenPopup()
                                                         :</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtemail" runat="server" class="form-control txtbox"   MaxLength="40" TextMode="MultiLine" 
-                                                                    Width="180px" TabIndex="1"></asp:TextBox></td>
-                                                    <td style="padding: 5px; margin: 5px">
+                                                                    Width="180px" TabIndex="1"></asp:TextBox>
                                                         <asp:RegularExpressionValidator id="RegularExpressionValidator1" runat="server" ControlToValidate="txtemail"
                                                                     ErrorMessage="Please Correct Email of Trainee" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
                                                                     ValidationGroup="group">*</asp:RegularExpressionValidator>
                                                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" 
                                                                                             ControlToValidate="txtemail" ErrorMessage="Enter Officer Mail id" 
-                                                                                            ValidationGroup="group">*</asp:RequiredFieldValidator></td>
+                                                                                            ValidationGroup="group"><span style="color: red;">&ensp;*</span></asp:RequiredFieldValidator></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -160,21 +159,19 @@ function OpenPopup()
                                                                                         </asp:DropDownList>
                                                             
                                                             
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px">
+                                                   
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
                                                                                             ControlToValidate="ddlfeedback" ErrorMessage="Select the Feedback" 
-                                                                                            InitialValue="--Select--" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                                                            InitialValue="--Select--" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="Label355" runat="server" CssClass="LBLBLACK" Width="113px">Upload</asp:Label>
                                                     </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        :</td>
-                                                    <td style="padding: 5px; margin: 5px">
-                                                       <asp:FileUpload ID="txtupload" runat="server" class="form-control txtbox"  Height="30px" 
+                                                       <asp:FileUpload ID="txtupload" runat="server" class="form-control txtbox"  Height="33px" 
                                                                                             onchange="this.form.submit();" tabIndex="1" Width="180px" /><br />
                                                                                         <asp:Label id="lblScanLetter" runat="server" CssClass="LBLBLACKFOOTER"></asp:Label> &nbsp;<asp:HyperLink id="hypScanLetter" runat="server" CssClass="LBLBLACKFOOTER" Target="_blank">[hypScanLetter]</asp:HyperLink>
                                                     </td>
@@ -200,7 +197,7 @@ function OpenPopup()
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" 
                                                                                             ControlToValidate="txtsubjet" ErrorMessage="Enter the Subject/Comments" 
-                                                                                            ValidationGroup="group">*</asp:RequiredFieldValidator></td>
+                                                                                            ValidationGroup="group"><span style="color: red;">&ensp;*</span></asp:RequiredFieldValidator></td>
                                                 </tr>
                                             </table>
                                         </td>
