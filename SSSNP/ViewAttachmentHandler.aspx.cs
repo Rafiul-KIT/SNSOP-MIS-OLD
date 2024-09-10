@@ -910,7 +910,7 @@ namespace SSSNP_SNSOP
                     // Display the totals from CashTransferSummaryData above the table
                     Paragraph totalPaidBeneficiaries = new Paragraph("Total Paid Beneficiaries: " + cashTransferSummaryData.TotalPaidBeneficiaries, headerFont);
                     Paragraph totalUnpaidBeneficiaries = new Paragraph("Total Unpaid Beneficiaries: " + cashTransferSummaryData.TotalUnpaidBeneficiaries, headerFont);
-                    Paragraph totalPaidAmount = new Paragraph("Total Paid Amount: " + cashTransferSummaryData.TotalPaidAmount.ToString("N2"), headerFont);
+                    Paragraph totalPaidAmount = new Paragraph("Total Paid Amount(USD): " + cashTransferSummaryData.TotalPaidAmount.ToString("N2"), headerFont);
 
                     document.Add(totalPaidBeneficiaries);
                     document.Add(totalUnpaidBeneficiaries);
@@ -1026,7 +1026,7 @@ namespace SSSNP_SNSOP
                 worksheet.Cells["A4"].Value = "Total Unpaid Beneficiaries";
                 worksheet.Cells["B4"].Value = cashTransferSummaryData.TotalUnpaidBeneficiaries;
 
-                worksheet.Cells["A5"].Value = "Total Paid Amount";
+                worksheet.Cells["A5"].Value = "Total Paid Amount(USD)";
                 worksheet.Cells["B5"].Value = cashTransferSummaryData.TotalPaidAmount.ToString("N2");
 
                 // Leave an empty row before adding the table headers and data
