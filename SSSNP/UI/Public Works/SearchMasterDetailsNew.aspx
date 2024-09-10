@@ -87,7 +87,7 @@
                                                         <td style="padding: 5px; margin: 5px" __designer:mapid="1804">:</td>
                                                         <td style="padding: 5px; margin: 5px" __designer:mapid="1805">
                                                             <asp:DropDownList ID="ddlPayam" runat="server" class="form-control txtbox"
-                                                                Height="28px" Width="180px" AutoPostBack="True"
+                                                                Height="33px" Width="180px" AutoPostBack="True"
                                                                 OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
                                                                 <asp:ListItem>--Select--</asp:ListItem>
                                                             </asp:DropDownList>
@@ -101,7 +101,7 @@
                                                         <td style="padding: 5px; margin: 5px" __designer:mapid="180d">:</td>
                                                         <td style="padding: 5px; margin: 5px" __designer:mapid="180e">
                                                             <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox"
-                                                                Height="28px" Width="180px"
+                                                                Height="33px" Width="180px"
                                                                 OnSelectedIndexChanged="ddlBoma_SelectedIndexChanged">
                                                                 <asp:ListItem>--Select--</asp:ListItem>
                                                             </asp:DropDownList>

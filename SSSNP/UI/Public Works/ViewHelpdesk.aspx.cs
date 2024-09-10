@@ -125,7 +125,7 @@ public partial class ViewHelpdesk : System.Web.UI.Page
              else 
              {
 
-                 ddlPIA.SelectedValue = ddlPIA.Items.FindByValue(userid.Trim()).Value;
+                    ddlPIA.SelectedValue = ddlPIA.Items.FindByValue(userid.Trim()).Value;
                  ddlPIA.Enabled = false;
              }
             

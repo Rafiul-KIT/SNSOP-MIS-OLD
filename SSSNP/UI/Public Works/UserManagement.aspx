@@ -1,4 +1,5 @@
-﻿<%@ Page Title=":: :: SSSNP : : User Management" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="UserManagement.aspx.cs" Inherits="SSSNP.UI.Public_Works.UserManagement" Async ="true" %>
+﻿
+ <%@ Page Title=":: :: SSSNP : : User Management" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="UserManagement.aspx.cs" Inherits="SSSNP.UI.Public_Works.UserManagement" Async ="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
@@ -41,42 +42,37 @@
                                                 <!-- User ID Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelUserId" runat="server" CssClass="LBLBLACK" Width="165px">User ID
-                                                            <span style="color: red;">*</span>
-                                                        </asp:Label>
+                                                        <asp:Label ID="LabelUserId" runat="server" CssClass="LBLBLACK" Width="165px">User ID</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtUserId" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="50" />
                                                         <asp:RequiredFieldValidator ID="rfvUserId" runat="server" ControlToValidate="txtUserId"
-                                                            ErrorMessage="User ID is required." CssClass="text-danger" Display="Dynamic" />
+                                                            ErrorMessage="Please Enter User ID" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <!-- User Name Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelUserName" runat="server" CssClass="LBLBLACK" Width="165px">User Name
-                                                            <span style="color: red;">*</span>
-                                                        </asp:Label>
+                                                        <asp:Label ID="LabelUserName" runat="server" CssClass="LBLBLACK" Width="165px">User Name</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtUserName" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="100" />
                                                         <asp:RequiredFieldValidator ID="rfvUserName" runat="server" ControlToValidate="txtUserName"
-                                                            ErrorMessage="User Name is required." CssClass="text-danger" Display="Dynamic" />
+                                                            ErrorMessage="Please Enter User Name" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <!-- User Type Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelUserType" runat="server" CssClass="LBLBLACK" Width="165px">User Type
-                                                            <span style="color: red;">*</span>
-                                                        </asp:Label>
+                                                        <asp:Label ID="LabelUserType" runat="server" CssClass="LBLBLACK" Width="165px">User Type</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
+                                                        <div style="display: flex; align-items: center;">
                                                         <asp:DropDownList ID="ddlUserType" runat="server" CssClass="form-control" Width="180px">
-                                                            <asp:ListItem Text="Select User Type" Value="" />
+                                                            <asp:ListItem Text="--Select--" Value="" />
                                                             <asp:ListItem Text="Cordinator" Value="Cordinator" />
                                                             <asp:ListItem Text="Manager" Value="Manager" />
                                                             <asp:ListItem Text="IP" Value="IP" />
@@ -96,37 +92,36 @@
                                                             <asp:ListItem Text="EntryGRM" Value="EntryGRM" />
                                                             <asp:ListItem Text="WBGBVMgr" Value="WBGBVMgr" />
                                                         </asp:DropDownList>
-                                                        <asp:RequiredFieldValidator ID="rfvUserType" runat="server" ControlToValidate="ddlUserType"
-                                                            InitialValue="" ErrorMessage="User Type is required." CssClass="text-danger" Display="Dynamic" />
+                                                            <asp:RequiredFieldValidator ID="rfvUserType" runat="server" ControlToValidate="ddlUserType"
+                                                            InitialValue="" ErrorMessage="Please select User Type" CssClass="text-danger" Display="Dynamic">
+                                                                <span style="color: red;">&nbsp;&emsp;*</span>
+                                                            </asp:RequiredFieldValidator>
+                                                       </div>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <!-- User Code Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelUserCode" runat="server" CssClass="LBLBLACK" Width="165px">User Code
-                                                            <span style="color: red;">*</span>
-                                                        </asp:Label>
+                                                        <asp:Label ID="LabelUserCode" runat="server" CssClass="LBLBLACK" Width="165px">User Code</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtUserCode" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="10" />
                                                         <asp:RequiredFieldValidator ID="rfvUserCode" runat="server" ControlToValidate="txtUserCode"
-                                                            ErrorMessage="User Code is required." CssClass="text-danger" Display="Dynamic" />
+                                                            ErrorMessage="Please Enter User Code" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <!-- Email Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelEmail" runat="server" CssClass="LBLBLACK" Width="165px">Email
-                                                            <span style="color: red;">*</span>
-                                                        </asp:Label>
+                                                        <asp:Label ID="LabelEmail" runat="server" CssClass="LBLBLACK" Width="165px">Email</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="150" ToolTip='<%# Eval("Email") %>' />
                                                         <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail"
-                                                            ErrorMessage="Email is required." CssClass="text-danger" Display="Dynamic" />
+                                                            ErrorMessage="Please Enter Your Email" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                         <asp:RegularExpressionValidator ID="revEmail" runat="server" ControlToValidate="txtEmail"
                                                             ErrorMessage="Invalid email format." CssClass="text-danger" Display="Dynamic"
                                                             ValidationExpression="^[^@\s]+@[^@\s]+\.[^@\s]+$" />
@@ -139,19 +134,21 @@
                                                 <!-- Status Field -->
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="LabelStatus" runat="server" CssClass="LBLBLACK" Width="165px">Status
-                                                            <span style="color: red;">*</span>
-                                                        </asp:Label>
+                                                        <asp:Label ID="LabelStatus" runat="server" CssClass="LBLBLACK" Width="165px">Status</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
+                                                        <div style="display: flex; align-items: center;">
                                                         <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control" Width="180px">
                                                             <asp:ListItem Text="Select" Value="" />
                                                             <asp:ListItem Text="Yes" Value="Y" />
                                                             <asp:ListItem Text="No" Value="N" />
                                                         </asp:DropDownList>
                                                         <asp:RequiredFieldValidator ID="rfvStatus" runat="server" ControlToValidate="ddlStatus"
-                                                            InitialValue="" ErrorMessage="Status is required." CssClass="text-danger" Display="Dynamic" />
+                                                            InitialValue="" ErrorMessage="Please Select Status" CssClass="text-danger" Display="Dynamic">
+                                                            <span style="color: red;">&emsp;*</span>
+                                                        </asp:RequiredFieldValidator>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <!-- GBV User Field -->
