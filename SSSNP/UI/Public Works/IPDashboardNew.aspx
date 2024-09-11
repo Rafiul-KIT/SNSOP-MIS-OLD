@@ -35,15 +35,15 @@
                                             <div class="panel panel-default">
                                                 <div class="panel-heading" align="center">
                                                   <asp:HiddenField ID="hasflash" runat="server" />
-                                                    <table cellpadding="4" cellspacing="5" style="width: 20%">
+                                                    <table cellpadding="4" cellspacing="5">
                                                         <tr>
                                                             <td style="padding: 5px; margin: 5px">
-                                                                <asp:Label ID="Label350" runat="server" CssClass="LBLBLACK" Width="25px">Year</asp:Label>
+                                                                <asp:Label ID="Label350" runat="server" CssClass="LBLBLACK">&nbsp;&emsp;Year</asp:Label>
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px">:</td>
                                                             <td style="padding: 5px; margin: 5px">
                                                                 <asp:DropDownList ID="ddltypeip" runat="server" class="form-control txtbox"
-                                                                    Height="32px" Width="105px" OnSelectedIndexChanged="ddltypeip_SelectedIndexChanged" AutoPostBack="true">
+                                                                    Height="32px" Width="100px" OnSelectedIndexChanged="ddltypeip_SelectedIndexChanged" AutoPostBack="true">
                                                                     <asp:ListItem Text="2022" Value="2022"></asp:ListItem>
                                                                     <asp:ListItem Text="2023" Value="2023"></asp:ListItem>
                                                                     <asp:ListItem Text="2024" Value="2024"></asp:ListItem>

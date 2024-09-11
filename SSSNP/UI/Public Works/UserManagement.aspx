@@ -28,14 +28,16 @@
                             <div class="panel-body">
                                 <%--<asp:ValidationSummary ID="ValidationSummary1" runat="server" CssClass="text-danger" DisplayMode="BulletList" HeaderText="Please fix the following errors:" />--%>
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 90%">
-                                    <tr>
-                                        <td style="padding: 5px; margin: 5px" colspan="2" align="center">
-                                            <asp:Label ID="LabelSearch" runat="server" CssClass="LBLBLACK" Width="165px">Search</asp:Label>
-                                            <asp:Button ID="btnLookup" runat="server" CssClass="btn btn-primary" Height="32px"
-                                                OnClientClick="return OpenLookupPopup();" Text="Look Up" CausesValidation="False"
-                                                Font-Size="12px" Style="position: static" ToolTip="Lookup" />
-                                        </td>
-                                    </tr>
+                                   <tr>
+                                       <td colspan="2" align="center" style="text-align: center; padding: 5px; margin: 5px;">
+                                           <asp:Label ID="LabelSearch" runat="server" CssClass="LBLBLACK">Search&emsp;:</asp:Label>
+                                           &nbsp;&nbsp;
+           
+                                           <asp:Button ID="btnLookup" runat="server" CssClass="btn btn-primary" Height="32px"
+                                               OnClientClick="return OpenLookupPopup();" Text="Look Up" CausesValidation="False"
+                                               Font-Size="12px" Style="position: static" ToolTip="Lookup" />
+                                       </td>
+                                   </tr>
                                     <tr>
                                         <td>
                                             <table cellpadding="4" cellspacing="5" style="width: 83%">
@@ -47,8 +49,16 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtUserId" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="50" />
+
+                                                        <!-- Required Field Validator -->
                                                         <asp:RequiredFieldValidator ID="rfvUserId" runat="server" ControlToValidate="txtUserId"
-                                                            ErrorMessage="Please Enter User ID" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
+                                                            ErrorMessage="Please Enter User ID" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span>
+                                                        </asp:RequiredFieldValidator>
+
+                                                        <!-- Regular Expression Validator for No Spaces -->
+                                                        <asp:RegularExpressionValidator ID="revUserId" runat="server" ControlToValidate="txtUserId"
+                                                            ErrorMessage="Spaces are not allowed in User ID" ValidationExpression="^\S+$"
+                                                            CssClass="text-danger" Display="Dynamic"></asp:RegularExpressionValidator>
                                                     </td>
                                                 </tr>
                                                 <!-- User Name Field -->
@@ -101,14 +111,22 @@
                                                 </tr>
                                                 <!-- User Code Field -->
                                                 <tr>
-                                                    <td style="padding: 5px; margin: 5px">
+                                                        <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelUserCode" runat="server" CssClass="LBLBLACK" Width="165px">User Code</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtUserCode" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="10" />
+
+                                                        <!-- Required Field Validator -->
                                                         <asp:RequiredFieldValidator ID="rfvUserCode" runat="server" ControlToValidate="txtUserCode"
-                                                            ErrorMessage="Please Enter User Code" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
+                                                            ErrorMessage="Please Enter User Code" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span>
+                                                        </asp:RequiredFieldValidator>
+
+                                                        <!-- Regular Expression Validator for Integers -->
+                                                        <asp:RegularExpressionValidator ID="revUserCode" runat="server" ControlToValidate="txtUserCode"
+                                                            ErrorMessage="Please Enter a valid User Code" ValidationExpression="^\d+$"
+                                                            CssClass="text-danger" Display="Dynamic"></asp:RegularExpressionValidator>
                                                     </td>
                                                 </tr>
                                                 <!-- Email Field -->
