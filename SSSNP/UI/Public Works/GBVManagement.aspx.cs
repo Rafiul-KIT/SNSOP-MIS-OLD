@@ -490,7 +490,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 txtDate.Enabled = false;
 
                 //Set default status "Received"
-                ddlStatus.SelectedIndex = 0;
+                ddlStatus.SelectedValue = ddlStatus.Items.FindByText("Unresolved").Value;
                 ddlStatus.Enabled = false;
 
                 hfAttach_DescriptionIncident.Value = Guid.Empty.ToString();
@@ -1031,9 +1031,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 if (OperationType == RequestOperationTypePage.NEW)
                 {
-                    //string idSelected = ddlStatus.Items.FindByText("Received")?.Value;
-                    //if (idSelected != null) ddlStatus.SelectedValue = idSelected;
-                    ddlStatus.SelectedIndex = 0;
+                    string idSelected = ddlStatus.Items.FindByText("Unresolved")?.Value;
+                    if (idSelected != null) ddlStatus.SelectedValue = idSelected;
                 }
                 else { ddlStatus.SelectedIndex = 0; }
             }

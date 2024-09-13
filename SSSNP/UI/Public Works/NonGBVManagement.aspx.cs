@@ -415,7 +415,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 txtDate.Enabled = false;
 
                 //Set default status "Received"
-                ddlStatus.SelectedIndex = 0;
+                ddlStatus.SelectedValue = ddlStatus.Items.FindByText("Unresolved").Value;
                 ddlStatus.Enabled = false;
 
                 hfAttach_DescriptionCompliant.Value = Guid.Empty.ToString();
