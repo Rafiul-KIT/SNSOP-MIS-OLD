@@ -35,7 +35,7 @@
            
                                            <asp:Button ID="btnLookup" runat="server" CssClass="btn btn-primary" Height="32px"
                                                OnClientClick="return OpenLookupPopup();" Text="Look Up" CausesValidation="False"
-                                               Font-Size="12px" Style="position: static" ToolTip="Lookup" />
+                                               Font-Size="12px" Style="position: static" ToolTip="Lookup"></asp:Button>
                                        </td>
                                    </tr>
                                     <tr>
@@ -55,10 +55,10 @@
                                                             ErrorMessage="Please Enter User ID" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span>
                                                         </asp:RequiredFieldValidator>
 
-                                                        <!-- Regular Expression Validator for No Spaces -->
+                                                       <%-- <!-- Regular Expression Validator for No Spaces -->
                                                         <asp:RegularExpressionValidator ID="revUserId" runat="server" ControlToValidate="txtUserId"
                                                             ErrorMessage="Spaces are not allowed in User ID" ValidationExpression="^\S+$"
-                                                            CssClass="text-danger" Display="Dynamic"></asp:RegularExpressionValidator>
+                                                            CssClass="text-danger" Display="Dynamic"></asp:RegularExpressionValidator>--%>
                                                     </td>
                                                 </tr>
                                                 <!-- User Name Field -->
