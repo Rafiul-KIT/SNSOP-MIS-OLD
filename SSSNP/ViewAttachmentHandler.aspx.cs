@@ -41,11 +41,13 @@ namespace SSSNP_SNSOP
             GBV_ATTACHMENT_DEDICATED = 7,
             SYSTEM_REPORT = 8,
             SYSTEM_REPORT_ELRP = 9,
-            ENCRYPTED_PAYROLL_DATA = 10,// Add new case for encrypted payroll data
-            PDF_PAYROLL_DATA = 13, 
-            MNE_MODULE_Pdf_Download = 11,// Add new case for MNE_MODULE_Pdf_Download
-            MNE_MODULE_Exl_Download = 12 // Add new case for MNE_MODULE_Exl_Download
-         
+            ENCRYPTED_PAYROLL_DATA = 10,    // Add new case for encrypted payroll data 
+            MNE_MODULE_Pdf_Download = 11,   // Add new case for MNE_MODULE_Pdf_Download
+            MNE_MODULE_Exl_Download = 12,   // Add new case for MNE_MODULE_Exl_Download
+            PDF_PAYROLL_DATA = 13,
+            CASH_TRANSFER_Pdf_Download = 14,
+            CASH_TRANSFER_Exl_Download = 15
+
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -101,6 +103,12 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.MNE_MODULE_Pdf_Download:
                     MNEModulePdfHandler();
+                    return "OK";
+                case HandlerAttachment.CASH_TRANSFER_Pdf_Download:
+                    CashTransferPdfHandler();
+                    return "OK";
+                case HandlerAttachment.CASH_TRANSFER_Exl_Download:
+                    CashTransferxlHandler();
                     return "OK";
                     //break;
 
@@ -702,14 +710,14 @@ namespace SSSNP_SNSOP
             {
                 // Retrieve the data from the session
                 var dt = Session["ReportPdf"] as DataTable;
-                if (dt == null) throw new Exception("Cash transfer summary data is missing.");
+                if (dt == null) throw new Exception("Report Summary is missing.");
 
                 // Generate PDF from the DataTable
                 GeneratePDF(dt);
             }
             catch (Exception ex)
             {
-                LogError("Error in CashTransferSummaryHandler: " + ex.Message, ex);
+                LogError("Error in MNEModulePDFHandler: " + ex.Message, ex);
                 throw;
             }
         }
@@ -853,6 +861,219 @@ namespace SSSNP_SNSOP
         }
 
         // Excel Download ended
+
+        // Cash Transfer pdf started
+        private void CashTransferPdfHandler()
+        {
+            try
+            {
+                // Retrieve the CashTransferSummaryData object from the session
+                var cashTransferSummaryData = Session["CashTransferSummary"] as CashTransferSummaryMNE.CashTransferSummaryData;
+
+                if (cashTransferSummaryData == null || cashTransferSummaryData.ReportData == null)
+                    throw new Exception("Cash Transfer Summary data is missing.");
+
+                // Generate PDF using the DataTable from the CashTransferSummaryData
+                GenerateCPDF(cashTransferSummaryData);
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in Cash Transfer Summary: " + ex.Message, ex);
+                throw;
+            }
+        }
+
+        private void GenerateCPDF(CashTransferSummaryMNE.CashTransferSummaryData cashTransferSummaryData)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // Set the document size to legal and rotate it to landscape for more width
+                using (Document document = new Document(PageSize.LEGAL.Rotate(), 10f, 10f, 10f, 10f))
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                    document.Open();
+
+                    // Set the font and size
+                    Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                    Font font = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+                    Font headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+
+                    // Add the title at the top
+                    Paragraph title = new Paragraph("Cash Transfer Summary", titleFont)
+                    {
+                        Alignment = Element.ALIGN_CENTER
+                    };
+                    document.Add(title);
+
+                    document.Add(new Paragraph(" ")); // Add a space after the title
+
+                    // Display the totals from CashTransferSummaryData above the table
+                    Paragraph totalPaidBeneficiaries = new Paragraph("Total Paid Beneficiaries: " + cashTransferSummaryData.TotalPaidBeneficiaries, headerFont);
+                    Paragraph totalUnpaidBeneficiaries = new Paragraph("Total Unpaid Beneficiaries: " + cashTransferSummaryData.TotalUnpaidBeneficiaries, headerFont);
+                    Paragraph totalPaidAmount = new Paragraph("Total Paid Amount(USD): " + cashTransferSummaryData.TotalPaidAmount.ToString("N2"), headerFont);
+
+                    document.Add(totalPaidBeneficiaries);
+                    document.Add(totalUnpaidBeneficiaries);
+                    document.Add(totalPaidAmount);
+                    document.Add(new Paragraph(" ")); // Add a space before the table
+
+                    // Retrieve the DataTable from CashTransferSummaryData
+                    DataTable dt = cashTransferSummaryData.ReportData;
+
+                    // Calculate column widths based on the number of columns
+                    float[] columnWidths = new float[dt.Columns.Count];
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        columnWidths[i] = 1f; // Adjust as necessary
+                    }
+
+                    PdfPTable table = new PdfPTable(dt.Columns.Count)
+                    {
+                        WidthPercentage = 100
+                    };
+                    table.SetWidths(columnWidths);
+
+                    // Add headers with font styling
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, font))
+                        {
+                            HorizontalAlignment = Element.ALIGN_CENTER,
+                            VerticalAlignment = Element.ALIGN_MIDDLE,
+                            BackgroundColor = new BaseColor(230, 230, 250), // Light color for headers
+                            Padding = 5
+                        };
+                        table.AddCell(headerCell);
+                    }
+
+                    // Add data rows
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            PdfPCell dataCell = new PdfPCell(new Phrase(row[col].ToString(), font))
+                            {
+                                HorizontalAlignment = Element.ALIGN_LEFT,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                Padding = 5
+                            };
+                            table.AddCell(dataCell);
+                        }
+                    }
+
+                    document.Add(table);
+                    document.Close();
+                }
+
+                // Write the stream to the response
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("Content-Disposition", "attachment; filename=CashTransferSummary.pdf");
+                Response.BinaryWrite(ms.ToArray());
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+            }
+        }
+
+
+
+        // Cash Transfer pdf ended
+
+        // Cash Transfer Download started
+        // Cash Transfer Excel Download started
+        private void CashTransferxlHandler()
+        {
+            try
+            {
+                // Retrieve the CashTransferSummaryData object from the session
+                var cashTransferSummaryData = Session["CashTransferSummary"] as CashTransferSummaryMNE.CashTransferSummaryData;
+
+                if (cashTransferSummaryData == null || cashTransferSummaryData.ReportData == null)
+                    throw new Exception("Cash Transfer Summary data is missing.");
+
+                // Generate Excel using the DataTable from the CashTransferSummaryData
+                GenerateCExcel(cashTransferSummaryData);
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in Cash Transfer Summary: " + ex.Message, ex);
+            }
+        }
+
+        private void GenerateCExcel(CashTransferSummaryMNE.CashTransferSummaryData cashTransferSummaryData)
+        {
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                // Add a new worksheet to the empty workbook
+                var worksheet = package.Workbook.Worksheets.Add("Sheet1");
+
+                // Set the font for headers
+                worksheet.Cells.Style.Font.Size = 12;
+                worksheet.Cells.Style.Font.Name = "Arial";
+
+                // Add the title at the top
+                worksheet.Cells["A1"].Value = "Cash Transfer Summary";
+                worksheet.Cells["A1"].Style.Font.Bold = true;
+                worksheet.Cells["A1"].Style.Font.Size = 16;
+                worksheet.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                // Merge cells for title
+                worksheet.Cells["A1:B1"].Merge = true;
+
+                // Add the summary totals below the title
+                worksheet.Cells["A3"].Value = "Total Paid Beneficiaries";
+                worksheet.Cells["B3"].Value = cashTransferSummaryData.TotalPaidBeneficiaries;
+
+                worksheet.Cells["A4"].Value = "Total Unpaid Beneficiaries";
+                worksheet.Cells["B4"].Value = cashTransferSummaryData.TotalUnpaidBeneficiaries;
+
+                worksheet.Cells["A5"].Value = "Total Paid Amount(USD)";
+                worksheet.Cells["B5"].Value = cashTransferSummaryData.TotalPaidAmount.ToString("N2");
+
+                // Leave an empty row before adding the table headers and data
+                int startRow = 7;
+
+                // Retrieve the DataTable from CashTransferSummaryData
+                DataTable dt = cashTransferSummaryData.ReportData;
+
+                // Add the headers
+                for (int col = 0; col < dt.Columns.Count; col++)
+                {
+                    worksheet.Cells[startRow, col + 1].Value = dt.Columns[col].ColumnName;
+                    worksheet.Cells[startRow, col + 1].Style.Font.Bold = true;
+                }
+
+                // Add the data
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    for (int col = 0; col < dt.Columns.Count; col++)
+                    {
+                        // Handle potential null or DBNull values gracefully
+                        var cellValue = dt.Rows[row][col];
+                        worksheet.Cells[startRow + row + 1, col + 1].Value = cellValue == DBNull.Value ? "" : cellValue.ToString();
+                    }
+                }
+
+                // Auto-fit columns for all cells
+                worksheet.Cells.AutoFitColumns();
+
+                // Set other styling options as needed (e.g., borders, alignment, number formats)
+
+                byte[] fileContents = package.GetAsByteArray();
+
+                // Write the stream to the response
+                Response.ClearHeaders();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("Content-Disposition", "attachment; filename = CashTransferSummary.xlsx");
+                Response.AddHeader("Content-Length", fileContents.Length.ToString());
+
+                Response.BinaryWrite(fileContents);
+                Response.Flush();
+                Response.Close();
+            }
+        }
+
+
+        // Cash Transfer Download ended
 
         private void LogError(string v, Exception ex)
         {

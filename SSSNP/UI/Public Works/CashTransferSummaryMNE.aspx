@@ -200,7 +200,7 @@
                                                 <br />
                                                 <asp:Label ID="lblTotalUnpaidBeneficiary" runat="server" CssClass="LBLBLACK" Text="Total Unpaid Beneficiary: 0" />
                                                 <br />
-                                                <asp:Label ID="lblTotalPaidAmount" runat="server" CssClass="LBLBLACK" Text="Total Paid Amount: 0.00" />
+                                                <asp:Label ID="lblTotalPaidAmount" runat="server" CssClass="LBLBLACK" Text="Total Paid Amount(USD): 0.00" />
                                             </asp:Panel>
                                         </td>
                                     </tr>
@@ -236,7 +236,7 @@
                                             <telerik:GridBoundColumn DataField="Component" HeaderText="Component">
                                                 <HeaderStyle Width="10%" />
                                             </telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="PaymentAmount" HeaderText="Payment Amount">
+                                            <telerik:GridBoundColumn DataField="PaymentAmountUSD" HeaderText="Payment Amount(USD)">
                                                 <HeaderStyle Width="10%" />
                                             </telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" DataFormatString="{0:MM/dd/yyyy}">

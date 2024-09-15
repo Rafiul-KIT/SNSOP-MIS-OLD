@@ -235,10 +235,21 @@ public partial class CashTransferSummaryMNE : Page
             // Fetch the payment data and totals in a single call
             DataTable dt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component, paidStatus, out totalPaidBeneficiaries, out totalUnpaidBeneficiaries, out totalPaidAmount);
 
+            // Store the DataTable and labels inside a CashTransferSummaryData object
+            var cashTransferSummaryData = new CashTransferSummaryData
+            {
+                ReportData = dt,
+                TotalPaidBeneficiaries = totalPaidBeneficiaries,
+                TotalUnpaidBeneficiaries = totalUnpaidBeneficiaries,
+                TotalPaidAmount = totalPaidAmount
+            };
+
+            Session["CashTransferSummary"] = cashTransferSummaryData;
+
             // Update the labels with the calculated totals
             lblTotalPaidBeneficiary.Text = $"Total Paid Beneficiary: {totalPaidBeneficiaries}";
             lblTotalUnpaidBeneficiary.Text = $"Total Unpaid Beneficiary: {totalUnpaidBeneficiaries}";
-            lblTotalPaidAmount.Text = $"Total Paid Amount: {totalPaidAmount:N2}";
+            lblTotalPaidAmount.Text = $"Total Paid Amount(USD): {totalPaidAmount:N2}";
 
             Session["TotalRecordCount"] = totalPaidBeneficiaries + totalUnpaidBeneficiaries;
 
@@ -275,14 +286,14 @@ public partial class CashTransferSummaryMNE : Page
             string component = ddlComponent.SelectedValue;
             string paidStatus = ddlPaidStatus.SelectedValue;
 
-            // Declare variables to hold the totals
+            /*// Declare variables to hold the totals
             int totalPaidBeneficiaries, totalUnpaidBeneficiaries;
             decimal totalPaidAmount;
 
             DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component, paidStatus, out totalPaidBeneficiaries, out totalUnpaidBeneficiaries, out totalPaidAmount);//to store total data
             Session["ReportPdf"] = totaldt; // Store the data in session
-
-            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=11";
+*/
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=14";
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for cash transfer summary
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
@@ -306,14 +317,14 @@ public partial class CashTransferSummaryMNE : Page
             string component = ddlComponent.SelectedValue;
             string paidStatus = ddlPaidStatus.SelectedValue;
 
-            // Declare variables to hold the totals
+            /*// Declare variables to hold the totals
             int totalPaidBeneficiaries, totalUnpaidBeneficiaries;
             decimal totalPaidAmount;
 
             DataTable totaldt = GetAllPaymentData(state, county, payam, boma, paymentCycle, status, component, paidStatus, out totalPaidBeneficiaries, out totalUnpaidBeneficiaries, out totalPaidAmount);//to store total data
             Session["ReportExl"] = totaldt; // Store the data in session
-
-            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=12";
+*/
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=15";
             Response.Redirect(redirectUrl, false); // Redirect to handler with the type for cash transfer summary
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
@@ -608,7 +619,7 @@ public partial class CashTransferSummaryMNE : Page
                         ELSE 'Unknown Status'
                     END AS PaymentStatus,
                     wwr.Component,
-                    ISNULL(CONVERT(VARCHAR, bwp.PaidAmountUSD), '0.00') AS PaymentAmount,
+                    ISNULL(CONVERT(VARCHAR, bwp.PaidAmountUSD), '0.00') AS PaymentAmountUSD,
                     ISNULL(CONVERT(VARCHAR, bwp.PaidDate, 101), 'No Date') AS PaymentDate
                 FROM 
                     tbl_WorkMaster wm
@@ -660,6 +671,15 @@ public partial class CashTransferSummaryMNE : Page
         return dt;
     }
 
+
+    // Define the CashTransferSummaryData class inside the same file
+    public class CashTransferSummaryData
+    {
+        public DataTable ReportData { get; set; }
+        public int TotalPaidBeneficiaries { get; set; }
+        public int TotalUnpaidBeneficiaries { get; set; }
+        public decimal TotalPaidAmount { get; set; }
+    }
 
 
 
