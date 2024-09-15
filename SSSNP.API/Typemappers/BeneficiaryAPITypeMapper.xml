@@ -580,6 +580,7 @@
         @isReadWrite,
         @nomineeOccupation,
         @otherOccupation,
+		@afisNomineeId,
         @ReturnValue output
       </query>
     </operation>

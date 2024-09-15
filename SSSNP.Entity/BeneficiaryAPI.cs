@@ -145,6 +145,7 @@ namespace SSSNP_SNSOP.Entity
 
     public class NomineeDto
     {
+        public Int64 afisNomineeId { get; set; }
         public string applicationId { get; set; }
         public string nomineeFirstName { get; set; }
         public string nomineeMiddleName { get; set; }

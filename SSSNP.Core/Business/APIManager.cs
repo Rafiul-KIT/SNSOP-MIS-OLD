@@ -243,10 +243,10 @@ namespace SSSNP_SNSOP.Core.Business
         {
             int result;
 
-            int checkBenId = 0;
+            //int checkBenId = 0;
 
-            checkBenId = CheckHouseHoldNumberSNSOP(beneficiaryAPIExt.household_number);
-            if (checkBenId > 0) return -1;
+            //checkBenId = CheckHouseHoldNumberSNSOP(beneficiaryAPIExt.household_number);
+            //if (checkBenId > 0) return -1;
 
             BeneficiaryAPI beneficiaryAPI = GetBeneficiaryData(beneficiaryAPIExt);
 
