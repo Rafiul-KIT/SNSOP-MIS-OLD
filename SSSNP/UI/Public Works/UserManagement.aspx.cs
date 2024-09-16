@@ -172,9 +172,25 @@ namespace SSSNP.UI.Public_Works
         {
             try
             {
-                string clientId = ConfigurationManager.AppSettings["AzureADClientId"];
+                string azureADEnv = ConfigurationManager.AppSettings["AZUREAD_ENV"];
+                string clientId = "";
                 string tenantId = ConfigurationManager.AppSettings["AzureADTenantId"];
-                string clientSecret = ConfigurationManager.AppSettings["AzureADClientSecret"];
+                string clientSecret = "";
+                if (azureADEnv.Equals("local"))
+                {
+                    clientId = ConfigurationManager.AppSettings["AzureADClientIdLocal"];
+                    clientSecret = ConfigurationManager.AppSettings["AzureADClientSecretLocal"];
+                } 
+                else if (azureADEnv.Equals("dev"))
+                {
+                    clientId = ConfigurationManager.AppSettings["AzureADClientIdDev"];
+                    clientSecret = ConfigurationManager.AppSettings["AzureADClientSecretDev"];
+                } 
+                else if (azureADEnv.Equals("prod"))
+                {
+                    clientId = ConfigurationManager.AppSettings["AzureADClientIdProd"];
+                    clientSecret = ConfigurationManager.AppSettings["AzureADClientSecretProd"];
+                }
 
                 IConfidentialClientApplication confidentialClient = ConfidentialClientApplicationBuilder
                     .Create(clientId)

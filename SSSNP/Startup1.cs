@@ -79,19 +79,26 @@ namespace SSSNP
             string azureClientId = "";
             string azurePostLogoutRedirectUri = "";
             string azureRedirectUri = "";
-            if (azureADEnv.Equals("dev"))
+            if (azureADEnv.Equals("local"))
             {
                 azureClientId = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_CLIENTID_LOCAL"];
                 azurePostLogoutRedirectUri = System.Configuration.ConfigurationManager.
                     AppSettings["AZUREAD_LOGOUT_REDIRECT_URI_LOCAL"];
                 azureRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_REDIRECT_URI_LOCAL"];
             }
-            else
+            if (azureADEnv.Equals("dev"))
             {
-                azureClientId = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_CLIENTID"];
+                azureClientId = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_CLIENTID_DEV"];
                 azurePostLogoutRedirectUri = System.Configuration.ConfigurationManager.
-                    AppSettings["AZUREAD_LOGOUT_REDIRECT_URI"];
-                azureRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_REDIRECT_URI"];
+                    AppSettings["AZUREAD_LOGOUT_REDIRECT_URI_DEV"];
+                azureRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_REDIRECT_URI_DEV"];
+            }
+            else if (azureADEnv.Equals("prod"))
+            {
+                azureClientId = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_CLIENTID_PROD"];
+                azurePostLogoutRedirectUri = System.Configuration.ConfigurationManager.
+                    AppSettings["AZUREAD_LOGOUT_REDIRECT_URI_PROD"];
+                azureRedirectUri = System.Configuration.ConfigurationManager.AppSettings["AZUREAD_REDIRECT_URI_PROD"];
             }
 
 
