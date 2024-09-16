@@ -186,42 +186,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected global::System.Web.UI.WebControls.DropDownList ddlBoma;
 
         /// <summary>
-        /// Label6 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label6;
-
-        /// <summary>
-        /// txtDateCompliant control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDateCompliant;
-
-        /// <summary>
-        /// txtDateCompliant_CalendarExtender control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.CalendarExtender txtDateCompliant_CalendarExtender;
-
-        /// <summary>
-        /// filterDateCompliant control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.FilteredTextBoxExtender filterDateCompliant;
-
-        /// <summary>
         /// Label11 control.
         /// </summary>
         /// <remarks>
@@ -339,22 +303,40 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected global::System.Web.UI.WebControls.TextBox txtOtherReportingChannel;
 
         /// <summary>
-        /// Label8 control.
+        /// Label6 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label8;
+        protected global::System.Web.UI.WebControls.Label Label6;
 
         /// <summary>
-        /// txtComplaiantName control.
+        /// txtDateCompliant control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtComplaiantName;
+        protected global::System.Web.UI.WebControls.TextBox txtDateCompliant;
+
+        /// <summary>
+        /// txtDateCompliant_CalendarExtender control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.CalendarExtender txtDateCompliant_CalendarExtender;
+
+        /// <summary>
+        /// filterDateCompliant control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.FilteredTextBoxExtender filterDateCompliant;
 
         /// <summary>
         /// Label9 control.
@@ -384,13 +366,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected global::AjaxControlToolkit.FilteredTextBoxExtender txtContactNumberNumberFilter;
 
         /// <summary>
-        /// txtPhysicalAddress control.
+        /// Label8 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPhysicalAddress;
+        protected global::System.Web.UI.WebControls.Label Label8;
+
+        /// <summary>
+        /// txtComplaiantName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtComplaiantName;
 
         /// <summary>
         /// ddlGender control.
@@ -400,6 +391,24 @@ namespace SSSNP_SNSOP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGender;
+
+        /// <summary>
+        /// txtPhysicalAddress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPhysicalAddress;
+
+        /// <summary>
+        /// ddlSNSOPBeneficiary control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSNSOPBeneficiary;
 
         /// <summary>
         /// txtAge control.
@@ -420,13 +429,31 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected global::AjaxControlToolkit.FilteredTextBoxExtender txtAgeNumberFilter;
 
         /// <summary>
-        /// ddlSSSNPBeneficiary control.
+        /// supportTypeLbl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlSSSNPBeneficiary;
+        protected global::System.Web.UI.HtmlControls.HtmlTableCell supportTypeLbl;
+
+        /// <summary>
+        /// supportTypeColonLbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableCell supportTypeColonLbl;
+
+        /// <summary>
+        /// ddlSupportType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSupportType;
 
         /// <summary>
         /// Label10 control.

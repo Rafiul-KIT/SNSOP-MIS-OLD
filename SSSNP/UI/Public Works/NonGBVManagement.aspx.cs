@@ -123,7 +123,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             txtContractNumber.Text = "";
             txtAge.Text = "";
             ddlGender.SelectedValue = "0";
-            ddlSSSNPBeneficiary.SelectedValue = "0";
+            ddlSNSOPBeneficiary.SelectedValue = "1";
+            ddlSupportType.SelectedValue = "0";
             ddlTypeOfGrievance.SelectedValue = "0";
             ddlTypeOfGrievanceDetail.SelectedValue = "0";
             txtTypeOfGrievanceOther.Text = "";
@@ -262,7 +263,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             txtContractNumber.Enabled = !value;
             txtAge.Enabled = !value;
             ddlGender.Enabled = !value;
-            ddlSSSNPBeneficiary.Enabled = !value;
+            ddlSNSOPBeneficiary.Enabled = !value;
+            ddlSupportType.Enabled = !value;
             ddlTypeOfGrievance.Enabled = !value;
             ddlTypeOfGrievanceDetail.Enabled = !value;
             txtTypeOfGrievanceOther.Enabled = !value;
@@ -348,7 +350,16 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 txtContractNumber.Text = main.ContactNumber;
                 txtAge.Text = main.Age;
                 ddlGender.SelectedValue = main.Gender;
-                ddlSSSNPBeneficiary.SelectedValue = main.SSSNPBeneficiary;
+                if (main.SSSNPBeneficiary != null && main.SSSNPBeneficiary != "0")
+                {
+                    ddlSNSOPBeneficiary.SelectedValue = "1";
+                    ddlSNSOPBeneficiary_SelectedIndexChanged(null, null);
+                    ddlSupportType.SelectedValue = main.SSSNPBeneficiary;
+                } else
+                {
+                    ddlSNSOPBeneficiary.SelectedValue = "2";
+                    ddlSNSOPBeneficiary_SelectedIndexChanged(null, null);
+                }
                 ddlTypeOfGrievance.SelectedValue = main.TypeOfGrievanceID != null ? main.TypeOfGrievanceID.ToString() : "0";
 
                 // ddlTypeOfComplaint.SelectedValue = main.TypeOfComplaintID.ToString();
@@ -418,6 +429,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 ddlStatus.SelectedValue = ddlStatus.Items.FindByText("Unresolved").Value;
                 ddlStatus.Enabled = false;
 
+                ddlTypeOfGrievance.SelectedValue = "1";
+
                 hfAttach_DescriptionCompliant.Value = Guid.Empty.ToString();
                 hfAttach_DescriptionCompliantID.Value = "0";
 
@@ -428,6 +441,27 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 throw;
             }
         }
+
+
+        protected void ddlSNSOPBeneficiary_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddlSNSOPBeneficiary.SelectedValue != null && ddlSNSOPBeneficiary.SelectedValue.ToString().Equals("1"))
+            {
+                supportTypeLbl.Visible = true;
+                supportTypeColonLbl.Visible = true;
+                ddlSupportType.Visible = true;
+                ddlSupportType.Enabled = true;
+            }
+            else
+            {
+                supportTypeLbl.Visible = false;
+                supportTypeColonLbl.Visible = false;
+                ddlSupportType.Visible = false;
+                ddlSupportType.Enabled = false;
+                ddlSupportType.SelectedValue = "0";
+            }
+        }
+
         protected void ddlTypeOfGrievance_SelectedIndexChanged(object sender, EventArgs e)
         {
             GetTypeOfGrievanceDetail();
@@ -777,6 +811,14 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 errorMessage = "Please Select Status";
                 return false;
             }
+            if (ddlSNSOPBeneficiary.SelectedValue != null && ddlSNSOPBeneficiary.SelectedValue.ToString().Equals("1"))
+            {
+                if (main.SSSNPBeneficiary == null || main.SSSNPBeneficiary == "0")
+                {
+                    errorMessage = "Please select support type";
+                    return false;
+                }
+            }
             errorMessage = "";
             return true;
         }
@@ -803,7 +845,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             result.PhysicalAddress = SSSNPHelper.TryParseString(txtPhysicalAddress.Text.Trim());
             result.ReportingChannel = SSSNPHelper.TryParseString(ddlReportingChannel.SelectedValue);
             result.ReportingChannelOther = SSSNPHelper.TryParseString(txtOtherReportingChannel.Text.Trim());
-            result.SSSNPBeneficiary = SSSNPHelper.TryParseString(ddlSSSNPBeneficiary.SelectedValue);
+            result.SSSNPBeneficiary = SSSNPHelper.TryParseString(ddlSupportType.SelectedValue);
             result.Status = SSSNPHelper.TryParseInt(ddlStatus.SelectedValue);
             // result.StatusLastModificationDate = (DateTime) DateTime.Now ;
             result.TypeOfGrievanceOther = SSSNPHelper.TryParseString(txtTypeOfGrievanceOther.Text.Trim());

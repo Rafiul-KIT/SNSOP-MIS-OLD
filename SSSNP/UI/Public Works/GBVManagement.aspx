@@ -320,15 +320,36 @@
                                         </td>
                                         <td style="padding: 5px; margin: 5px">:</td>
                                         <td style="padding: 5px; margin: 5px">
-                                            <asp:DropDownList class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="ddlSSSNPBeneficiary" AutoPostBack="True">
+                                            <asp:DropDownList class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="ddlSNSOPBeneficiary" AutoPostBack="True" OnSelectedIndexChanged="ddlSNSOPBeneficiary_SelectedIndexChanged">
+                                                <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                                <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px"></td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:Label ID="Label16" runat="server" CssClass="LBLBLACK" Width="128px">Suspect Known?</asp:Label>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px">:</td>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:DropDownList class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="ddlSuspectKnown" AutoPostBack="True" OnSelectedIndexChanged="ddlSuspectKnown_SelectedIndexChanged">
+                                                <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
+                                                <asp:ListItem Text="YES" Value="YES"></asp:ListItem>
+                                                <asp:ListItem Text="NO" Value="NO"></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp; </td>
+                                                                            <td style="padding: 5px; margin: 5px" id="supportTypeLbl">Support Type</td>
+                                        <td style="padding: 5px; margin: 5px" id="supportTypeColonLbl">:</td>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:DropDownList class="form-control dropdown" Height="33px" Width="180px" runat="server" ID="ddlSupportType">
                                                 <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
                                                 <asp:ListItem Text="LIPW" Value="LIPW"></asp:ListItem>
                                                 <asp:ListItem Text="DIS" Value="DIS"></asp:ListItem>
-                                                <asp:ListItem Text="NO" Value="NO"></asp:ListItem>
                                             </asp:DropDownList>
-
                                         </td>
-                                        <td style="padding: 5px; margin: 5px"></td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                     </tr>
                                     <tr>
@@ -355,33 +376,6 @@
                                         <td style="padding: 5px; margin: 5px"></td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                     </tr>
-                                    <tr>
-                                        <td style="padding: 5px; margin: 5px">
-                                            <asp:Label ID="Label16" runat="server" CssClass="LBLBLACK" Width="128px">Suspect Known?</asp:Label>
-                                        </td>
-                                        <td style="padding: 5px; margin: 5px">:</td>
-                                        <td style="padding: 5px; margin: 5px">
-                                            <asp:DropDownList class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="ddlSuspectKnown" AutoPostBack="True" OnSelectedIndexChanged="ddlSuspectKnown_SelectedIndexChanged">
-                                                <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
-                                                <asp:ListItem Text="YES" Value="YES"></asp:ListItem>
-                                                <asp:ListItem Text="NO" Value="NO"></asp:ListItem>
-                                            </asp:DropDownList>
-                                        </td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp; </td>
-
-                                        <td style="padding: 5px; margin: 5px">
-                                            <asp:Label ID="Label17" runat="server" CssClass="LBLBLACK" Width="128px">Suspect's details (name...)</asp:Label>
-                                        </td>
-                                        <td style="padding: 5px; margin: 5px">:</td>
-                                        <td style="padding: 5px; margin: 5px">
-                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="250px" Enabled="false" runat="server" ID="txtSuspectDetails" Text=""></asp:TextBox>
-                                        </td>
-                                        <td style="padding: 5px; margin: 5px"></td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                    </tr>
-
-
-
 
                                     <tr>
                                         <td style="padding: 5px; margin: 5px">
@@ -403,10 +397,12 @@
                                             </asp:DropDownList>
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">Referral Services Recommended Details</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                         <td style="padding: 5px; margin: 5px">
-                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="250px" Enabled="false" runat="server" ID="txtRecommendedDetails" Text=""></asp:TextBox>
+                                            <asp:Label ID="Label17" runat="server" CssClass="LBLBLACK" Width="128px">Suspect's details (name...)</asp:Label>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px">:</td>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="250px" Enabled="false" runat="server" ID="txtSuspectDetails" Text=""></asp:TextBox>
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                     </tr>
@@ -420,9 +416,11 @@
                                             <asp:TextBox class="form-control txtbox" Height="33px" Width="250px" Enabled="true" runat="server" ID="txtStatusAfterReferral" Text=""></asp:TextBox>
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                        <td style="padding: 5px; margin: 5px">Referral Services Recommended Details</td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="250px" Enabled="false" runat="server" ID="txtRecommendedDetails" Text=""></asp:TextBox>
+                                        </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                     </tr>
 

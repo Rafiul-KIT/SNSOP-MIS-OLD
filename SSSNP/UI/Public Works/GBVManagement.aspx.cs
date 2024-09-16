@@ -130,7 +130,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             txtContactNumber.Text = "";
             ddlGender.SelectedValue = "0";
             txtAge.Text = "";
-            ddlSSSNPBeneficiary.SelectedValue = "0";
+            ddlSNSOPBeneficiary.SelectedValue = "1";
+            ddlSupportType.SelectedValue = "0";
             ddlSuspect.SelectedValue = "0";
             txtSuspectNotes.Text = "";
             ddlSuspectKnown.SelectedValue = "0";
@@ -325,7 +326,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             txtContactNumber.Enabled = !value;
             ddlGender.Enabled = !value;
             txtAge.Enabled = !value;
-            ddlSSSNPBeneficiary.Enabled = !value;
+            ddlSNSOPBeneficiary.Enabled = !value;
+            ddlSupportType.Enabled = !value;
             ddlSuspect.Enabled = !value;
             txtSuspectNotes.Enabled = false;
             ddlSuspectKnown.Enabled = !value;
@@ -419,7 +421,17 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 txtContactNumber.Text = main.ContactNumber;
                 ddlGender.SelectedValue = main.Gender != null ? main.Gender.ToString() : "0";
                 txtAge.Text = main.AgeOfSurvivor;
-                ddlSSSNPBeneficiary.SelectedValue = main.SSSNPBeneficiary != null ? main.SSSNPBeneficiary.ToString() : "0";
+                if (main.SSSNPBeneficiary != null && main.SSSNPBeneficiary != "0")
+                {
+                    ddlSNSOPBeneficiary.SelectedValue = "1";
+                    ddlSNSOPBeneficiary_SelectedIndexChanged(null, null);
+                    ddlSupportType.SelectedValue = main.SSSNPBeneficiary;
+                }
+                else
+                {
+                    ddlSNSOPBeneficiary.SelectedValue = "2";
+                    ddlSNSOPBeneficiary_SelectedIndexChanged(null, null);
+                }
                 ddlSuspect.SelectedValue = main.SuspectAssociatedWithProject == null ? "0" : (main.SuspectAssociatedWithProject == true ? "YES" : "NO");
                 if (main.SuspectAssociatedWithProject != null && (bool)main.SuspectAssociatedWithProject) txtSuspectNotes.Enabled = true;
 
@@ -577,6 +589,26 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 ddlBoma.Enabled = false;
             }
         }
+
+        protected void ddlSNSOPBeneficiary_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddlSNSOPBeneficiary.SelectedValue != null && ddlSNSOPBeneficiary.SelectedValue.ToString().Equals("1"))
+            {
+                supportTypeLbl.Visible = true;
+                supportTypeColonLbl.Visible = true;
+                ddlSupportType.Visible = true;
+                ddlSupportType.Enabled = true;
+            }
+            else
+            {
+                supportTypeLbl.Visible = false;
+                supportTypeColonLbl.Visible = false;
+                ddlSupportType.Visible = false;
+                ddlSupportType.Enabled = false;
+                ddlSupportType.SelectedValue = "0";
+            }
+        }
+
         protected void ddlReportingChannel_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddlReportingChannel.SelectedValue == "Other")
@@ -749,7 +781,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             if (string.IsNullOrEmpty(main.Gender) || main.Gender == "0") { errorMessage = "Please select Gender"; return false; }
             if (string.IsNullOrEmpty(main.AgeOfSurvivor)) { errorMessage = "Please Insert Age of Survivor"; return false; }
 
-            if (string.IsNullOrEmpty(main.SSSNPBeneficiary) || main.SSSNPBeneficiary == "0") { errorMessage = "Please select SSSNP Beneficiary"; return false; }
+            //if (string.IsNullOrEmpty(main.SSSNPBeneficiary) || main.SSSNPBeneficiary == "0") { errorMessage = "Please select SSSNP Beneficiary"; return false; }
 
             if (main.ConsentSigned != null && (bool)main.ConsentSigned)
             {
@@ -760,6 +792,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     return false;
                 }
 
+            }
+
+            if (ddlSNSOPBeneficiary.SelectedValue != null && ddlSNSOPBeneficiary.SelectedValue.ToString().Equals("1"))
+            {
+                if (main.SSSNPBeneficiary == null || main.SSSNPBeneficiary == "0")
+                {
+                    errorMessage = "Please select support type";
+                    return false;
+                }
             }
 
             errorMessage = "";
@@ -979,7 +1020,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             result.ContactNumber = SSSNPHelper.TryParseString(txtContactNumber.Text.Trim());
             result.Gender = SSSNPHelper.TryParseString(ddlGender.SelectedValue);
             result.AgeOfSurvivor = SSSNPHelper.TryParseString(txtAge.Text.Trim());
-            result.SSSNPBeneficiary = SSSNPHelper.TryParseString(ddlSSSNPBeneficiary.SelectedValue);
+            result.SSSNPBeneficiary = SSSNPHelper.TryParseString(ddlSupportType.SelectedValue);
             result.SuspectAssociatedWithProject = ddlSuspect.SelectedValue == "0" ? null : SSSNPHelper.TryParseYesNo(ddlSuspect.SelectedValue, true);
             result.SuspectAssosiatedWithProjectNotes = SSSNPHelper.TryParseString(txtSuspectNotes.Text.Trim());
 

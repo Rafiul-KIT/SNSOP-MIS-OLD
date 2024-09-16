@@ -908,7 +908,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 ddlEscaletedReferredExternally.Enabled = false;
                 ddlAppealOutcomeSatisfactory.SelectedValue = "0";
                 ddlAppealOutcomeSatisfactory.Enabled = false;
-                ddlStatus.SelectedValue = "6";
+                ddlStatus.SelectedValue = "1";
 
                 ddlAppealOutcomeSatisfactory.Enabled = true;
                 ddlAppealOutcomeSatisfactory.SelectedValue = "0";
@@ -1068,7 +1068,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 //ddlAppealLodged.SelectedValue = "NO";
                 //ddlAppealLodged.Enabled = true;
 
-                ddlStatus.SelectedValue = "7";
+                ddlStatus.SelectedValue = "1";
 
             }
             else
@@ -1103,7 +1103,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 ddlAppealOutcomeSatisfactory.SelectedValue = "0";
                 ddlAppealOutcomeSatisfactory.Enabled = false;
 
-                ddlStatus.SelectedValue = "2";
+                ddlStatus.SelectedValue = "1";
             }
             else 
             {
@@ -1131,7 +1131,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 ddlAppealOutcomeSatisfactory.SelectedValue = "0";
                 ddlAppealOutcomeSatisfactory.Enabled = false;
 
-                ddlStatus.SelectedValue = "3";
+                ddlStatus.SelectedValue = "1";
 
             }
             else
