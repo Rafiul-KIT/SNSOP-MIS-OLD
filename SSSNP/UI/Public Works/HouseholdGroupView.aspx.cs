@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Web;
 using System.Web.UI;
 
 namespace SSSNP.UI.Public_Works
@@ -34,5 +35,15 @@ namespace SSSNP.UI.Public_Works
             gvData.DataSource = dt;
             gvData.DataBind();
         }
+
+        protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
+        {
+            // Redirect to the ViewAttachmentHandler to download the Excel file
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=16"; // Ensure AttachmentType is set correctly
+            Response.Redirect(redirectUrl, false);
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+
+
     }
 }

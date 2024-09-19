@@ -46,7 +46,8 @@ namespace SSSNP_SNSOP
             MNE_MODULE_Exl_Download = 12,   // Add new case for MNE_MODULE_Exl_Download
             PDF_PAYROLL_DATA = 13,
             CASH_TRANSFER_Pdf_Download = 14,
-            CASH_TRANSFER_Exl_Download = 15
+            CASH_TRANSFER_Exl_Download = 15,
+            HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE = 16
 
         }
 
@@ -109,6 +110,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.CASH_TRANSFER_Exl_Download:
                     CashTransferxlHandler();
+                    return "OK";
+                case HandlerAttachment.HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE:
+                    HouseholdTemplateExlTemplate();
                     return "OK";
                     //break;
 
@@ -1074,6 +1078,49 @@ namespace SSSNP_SNSOP
 
 
         // Cash Transfer Download ended
+
+        //Household group view excel template
+        private void HouseholdTemplateExlTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Household Group Template");
+
+                    // Add headers to the worksheet
+                    worksheet.Cells[1, 1].Value = "Group ID";
+                    worksheet.Cells[1, 2].Value = "Group Name";
+                    worksheet.Cells[1, 3].Value = "Group Latitude";
+                    worksheet.Cells[1, 4].Value = "Group Longitude";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 17; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=HouseholdGroupViewTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.End();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                //LogError("Error generating Excel template: " + ex.Message, ex);
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+        //Household group view excel template
 
         private void LogError(string v, Exception ex)
         {

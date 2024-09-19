@@ -34,12 +34,14 @@
                                     <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Enabled="false" />
                                 </div>
 
-                                <!-- Upload and Download Buttons -->
+                                <!-- Upload and Download Links -->
                                 <div class="form-group">
                                     <asp:Button ID="btnUpload" runat="server" CssClass="btn btn-warning" Text="Upload File" Enabled="false" />
                                     <br /><br />
-                                    <asp:LinkButton ID="lnkDownloadTemplate" runat="server">Download Import File Template</asp:LinkButton>
-                                    <%--<asp:Label ID="lblTemplateType" runat="server" Text="Non-GBV Template File selected" />--%>
+
+                                    <!-- Link for Downloading Excel Template -->
+                                    <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click">Download Import File Template</asp:LinkButton>
+
                                 </div>
 
                                 <!-- Action Buttons -->
