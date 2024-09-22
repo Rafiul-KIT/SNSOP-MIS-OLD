@@ -45,6 +45,15 @@ public partial class CCMaster : System.Web.UI.MasterPage
         liUploadPaymentCycleDoc.Visible = value;
         liViewPaymentCycleDoc.Visible = value;
 
+        LiComponent2.Visible = value;
+        BeneficiaryRandomizationandEnrollment.Visible = value;
+        HouseholdGroupView.Visible = value;
+        TrainingandAttendanceTracking.Visible = value;
+        BusinessPlanDevelopment.Visible = value;
+        LivelihoodGrantDisbursement.Visible = value;
+        FinancialServicesLinkageTracking.Visible = value;
+        CoachingSessionTracking.Visible = value;
+
         LiPayroll.Visible = value;
 
         LiMNE.Visible = value;
