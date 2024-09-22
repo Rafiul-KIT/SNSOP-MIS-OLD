@@ -69,12 +69,48 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Button btnImport;
 
         /// <summary>
-        /// gvData control.
+        /// DivSuccess control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvData;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivSuccess;
+
+        /// <summary>
+        /// lblMessageSuccess control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMessageSuccess;
+
+        /// <summary>
+        /// DivFailure control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivFailure;
+
+        /// <summary>
+        /// lblMessageError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMessageError;
+
+        /// <summary>
+        /// RadGrid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadGrid RadGrid;
     }
 }

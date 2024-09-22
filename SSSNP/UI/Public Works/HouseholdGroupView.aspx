@@ -1,4 +1,7 @@
 ﻿<%@ Page Title=":: :: SSSNP : : Household Group View" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="HouseholdGroupView.aspx.cs" Inherits="SSSNP.UI.Public_Works.HouseholdGroupView" %>
+
+<%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:UpdatePanel ID="upd1" runat="server">
         <ContentTemplate>
@@ -28,44 +31,52 @@
                             </div>
 
                             <div class="panel-body">
-                                <!-- File Upload for Excel (Disabled) -->
+                                <!-- File Upload for Excel -->
                                 <div class="form-group">
                                     <label for="fileUpload" class="control-label">Attachment:</label>
-                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Enabled="false" />
+                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Enabled="true"/>
                                 </div>
 
                                 <!-- Upload and Download Links -->
                                 <div class="form-group">
-                                    <asp:Button ID="btnUpload" runat="server" CssClass="btn btn-warning" Text="Upload File" Enabled="false" />
+                                    <asp:Button ID="btnUpload" runat="server" CssClass="btn btn-warning" Text="Upload File" OnClick="btnUpload_Click" />
                                     <br /><br />
 
                                     <!-- Link for Downloading Excel Template -->
                                     <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click">Download Import File Template</asp:LinkButton>
-
                                 </div>
 
                                 <!-- Action Buttons -->
                                 <div class="form-group">
-                                    <asp:Button ID="btnAnalyze" runat="server" CssClass="btn btn-warning" Text="Analyze" Enabled="false" />
-                                    <asp:Button ID="btnImport" runat="server" CssClass="btn btn-success" Text="Import" Enabled="false" />
+                                    <asp:Button ID="btnAnalyze" runat="server" CssClass="btn btn-warning" Text="Analyze" Enabled="false" OnClick="btnAnalyze_Click"/>
+                                    <asp:Button ID="btnImport" runat="server" CssClass="btn btn-success" Text="Import" Enabled="false" OnClick="btnImport_Click"/>
                                 </div>
 
-                                <!-- Grid to Display Data -->
-                                <div class="form-group">
-                                    <asp:GridView ID="gvData" runat="server" CssClass="table table-bordered" AutoGenerateColumns="false">
-                                        <Columns>
-                                            <asp:BoundField DataField="GroupID" HeaderText="Group ID" />
-                                            <asp:BoundField DataField="GroupName" HeaderText="Group Name" />
-                                            <asp:BoundField DataField="Latitude" HeaderText="Latitude" />
-                                            <asp:BoundField DataField="Longitude" HeaderText="Longitude" />
-                                        </Columns>
-                                    </asp:GridView>
+                                <!-- Success and Failure Messages -->
+                                <div id="DivSuccess" runat="server" visible="false" class="alert alert-success">
+                                    <asp:Label ID="lblMessageSuccess" runat="server" />
                                 </div>
+                                <div id="DivFailure" runat="server" visible="false" class="alert alert-danger">
+                                    <asp:Label ID="lblMessageError" runat="server" />
+                                </div>
+
+                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10">
+                                    <MasterTableView>
+                                        <Columns>
+                                            <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" UniqueName="GroupName" />
+                                            <telerik:GridBoundColumn DataField="Latitude" HeaderText="Latitude" UniqueName="Latitude" DataFormatString="{0:N7}" />
+                                            <telerik:GridBoundColumn DataField="Longitude" HeaderText="Longitude" UniqueName="Longitude" DataFormatString="{0:N7}" />
+                                        </Columns>
+                                    </MasterTableView>
+                                </telerik:RadGrid>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="btnUpload" />
+        </Triggers>
     </asp:UpdatePanel>
 </asp:Content>

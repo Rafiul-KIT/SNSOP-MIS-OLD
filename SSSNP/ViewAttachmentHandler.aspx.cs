@@ -1089,14 +1089,17 @@ namespace SSSNP_SNSOP
                     // Create a new worksheet
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Household Group Template");
 
-                    // Add headers to the worksheet
-                    worksheet.Cells[1, 1].Value = "Group ID";
-                    worksheet.Cells[1, 2].Value = "Group Name";
-                    worksheet.Cells[1, 3].Value = "Group Latitude";
-                    worksheet.Cells[1, 4].Value = "Group Longitude";
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Group Name";
+                    worksheet.Cells[1, 2].Value = "Latitude";
+                    worksheet.Cells[1, 3].Value = "Longitude";
+                    /*worksheet.Cells[1, 4].Value = "Created By";
+                    worksheet.Cells[1, 5].Value = "Created Date";
+                    worksheet.Cells[1, 6].Value = "Modified By";
+                    worksheet.Cells[1, 7].Value = "Modified Date";*/
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 17; col++)
+                    for (int col = 1; col <= 3; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -1109,16 +1112,16 @@ namespace SSSNP_SNSOP
                     // Write the file to the response stream
                     Response.BinaryWrite(package.GetAsByteArray());
                     Response.Flush();
-                    Response.End();
+                    Response.Close();
                 }
             }
             catch (Exception ex)
             {
                 // Log the error if needed
-                //LogError("Error generating Excel template: " + ex.Message, ex);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex}");
             }
         }
+
 
         //Household group view excel template
 
