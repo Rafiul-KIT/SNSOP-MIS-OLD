@@ -327,7 +327,13 @@
                                             </li>
                                             <li id="LiComponent2" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-group"></i>Component 2</a>
                                                  <ul class="down_menu">
-                                                    <li id="lihouseholdgroupview" runat="server"><a href="HouseholdGroupView.aspx">Household Group View</a></li>
+                                                     <li id="BeneficiaryRandomizationandEnrollment" runat="server"><a href="BeneficiaryRandomizationandEnrollment.aspx">Beneficiary Randomization and Enrollment</a></li>
+                                                      <li id="HouseholdGroupView" runat="server"><a href="HouseholdGroupView.aspx">Household Group View</a></li>
+                                                     <li id="TrainingandAttendanceTracking" runat="server"><a href="TrainingandAttendanceTracking.aspx">Training and Attendance Tracking</a></li>
+                                                     <li id="BusinessPlanDevelopment" runat="server"><a href="BusinessPlanDevelopment.aspx">Business Plan Development</a></li>
+                                                     <li id="LivelihoodGrantDisbursement" runat="server"><a href="LivelihoodGrantDisbursement.aspx">LivelihoodGrantDisbursement</a></li>
+                                                     <li id="FinancialServicesLinkageTracking" runat="server"><a href="FinancialServicesLinkageTracking.aspx">Financial Services Linkage Tracking</a></li>
+                                                     <li id="CoachingSessionTracking" runat="server"><a href="CoachingSessionTracking.aspx">Coaching Session Tracking</a></li>
                                                  </ul>
                                             </li>
                                             <li id="LiPayroll" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-money"></i> Payroll</a>

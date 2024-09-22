@@ -34,8 +34,22 @@
                                 <!-- File Upload for Excel -->
                                 <div class="form-group">
                                     <label for="fileUpload" class="control-label">Attachment:</label>
-                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Enabled="true"/>
+                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Enabled="true" onchange="adjustWidth(this)" />
                                 </div>
+
+                                <script type="text/javascript">
+                                    function adjustWidth(input) {
+                                        var fileName = input.value.split('\\').pop(); // Get file name
+                                        var length = fileName.length;
+
+                                        // Set a base width and increase based on file name length
+                                        var newWidth = Math.max(200, length * 10); // Adjust the multiplier for finer control
+
+                                        // Apply the calculated width (max 100% to avoid overflow)
+                                        input.style.width = newWidth + 'px';
+                                    }
+                                </script>
+
 
                                 <!-- Upload and Download Links -->
                                 <div class="form-group">
@@ -43,11 +57,11 @@
                                     <br /><br />
 
                                     <!-- Link for Downloading Excel Template -->
-                                    <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click">Download Import File Template</asp:LinkButton>
+                                    <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click">Import Household Group Template File</asp:LinkButton>
                                 </div>
 
                                 <!-- Action Buttons -->
-                                <div class="form-group">
+                                <div class="form-group" align="center">
                                     <asp:Button ID="btnAnalyze" runat="server" CssClass="btn btn-warning" Text="Analyze" Enabled="false" OnClick="btnAnalyze_Click"/>
                                     <asp:Button ID="btnImport" runat="server" CssClass="btn btn-success" Text="Import" Enabled="false" OnClick="btnImport_Click"/>
                                 </div>
