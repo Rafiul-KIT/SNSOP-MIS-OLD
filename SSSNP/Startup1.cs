@@ -12,7 +12,10 @@ using Microsoft.Owin.Security.Notifications;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
 using SSSNP.Asynch;
+using SSSNP.Service;
 using SSSNP_SNSOP.Core.DbHandler;
+using SSSNP_SNSOP.Core.Model;
+using SSSNP_SNSOP.Core.Model.Component2;
 using SSSNP_SNSOP.Core.Threads;
 
 
@@ -24,6 +27,34 @@ namespace SSSNP
 
         public void ConfigureAuth(IAppBuilder app)
         {
+            // Mock :: Training and Attendance Tracking Module
+            
+            var list = new List<TrainingAndAttendanceModel>();
+            var req1 = new TrainingAndAttendanceModel()
+            {
+                HouseholdNumber = "h1",
+                ClassesHeld = 15,
+                ClassesAttended = 10,
+                ClassesMissed = 5,
+                CourseCode = "FINLIT"
+            };
+            list.Add(req1);
+            var req2 = new TrainingAndAttendanceModel()
+            {
+                HouseholdNumber = "h3",
+                ClassesHeld = 14,
+                ClassesAttended = 11,
+                ClassesMissed = 3,
+                CourseCode = "LIVETECH"
+            };
+            list.Add(req2);
+
+            ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
+            
+            // Mock :: Training and Attendance Tracking Module
+
+
+
             //// test code for db operations: START
             //var buildProfile = ConfigurationManager.AppSettings["build.profile.active"].ToString();
             //string connStr = "";

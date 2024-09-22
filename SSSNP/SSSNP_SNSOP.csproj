@@ -820,6 +820,7 @@
     <Compile Include="Entity\Payroll_Download\PDPayrollAlternateDto.cs" />
     <Compile Include="Entity\Payroll_Download\PDPayrollDataDto.cs" />
     <Compile Include="Network\NetworkService.cs" />
+    <Compile Include="Service\Component2Service.cs" />
     <Compile Include="Service\LookupManagerService.cs" />
     <Compile Include="Service\WageRequestApiManager.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
