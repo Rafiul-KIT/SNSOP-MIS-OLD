@@ -220,6 +220,78 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl liViewPaymentCycleDoc;
 
     /// <summary>
+    /// LiComponent2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiComponent2;
+
+    /// <summary>
+    /// BeneficiaryRandomizationandEnrollment control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl BeneficiaryRandomizationandEnrollment;
+
+    /// <summary>
+    /// HouseholdGroupView control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl HouseholdGroupView;
+
+    /// <summary>
+    /// TrainingandAttendanceTracking control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl TrainingandAttendanceTracking;
+
+    /// <summary>
+    /// BusinessPlanDevelopment control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl BusinessPlanDevelopment;
+
+    /// <summary>
+    /// LivelihoodGrantDisbursement control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LivelihoodGrantDisbursement;
+
+    /// <summary>
+    /// FinancialServicesLinkageTracking control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl FinancialServicesLinkageTracking;
+
+    /// <summary>
+    /// CoachingSessionTracking control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl CoachingSessionTracking;
+
+    /// <summary>
     /// LiPayroll control.
     /// </summary>
     /// <remarks>

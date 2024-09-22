@@ -1,3 +1,427 @@
+-- 19-09-2024
+
+alter table tbl_Nominee add afis_nominee_id bigint unique;
+
+alter procedure [dbo].[insertNomineeInfo]
+
+    @applicationId	varchar(100),
+    @nomineeFirstName varchar(100),
+    @nomineeMiddleName varchar(100),
+    @nomineeLastName varchar(100),
+    @nomineeNickName varchar(100),
+    @relationshipWithHouseholdHead int,
+    @relationshipOther varchar(100),
+    @nomineeAge	int,
+    @nomineeGender int,
+    @isReadWrite int,
+    @nomineeOccupation int,
+    @otherOccupation	varchar(100),
+    @afisNomineeId bigint,
+    @ReturnVal int output
+
+as begin
+    if not exists(select id from tbl_Nominee where afis_nominee_id=@afisNomineeId and @afisNomineeId is not null)
+
+        insert into tbl_Nominee
+        (
+            application_id,
+            nominee_first_name,
+            nominee_middle_name,
+            nominee_last_name,
+            nominee_nick_name,
+            relationship_with_household,
+            nominee_age,
+            nominee_gender,
+            is_read_write,
+            nominee_occupation,
+            other_occupation,
+            relationship_other,
+            afis_nominee_id
+        )
+        values
+            (
+
+                @applicationId,
+                @nomineeFirstName,
+                @nomineeMiddleName,
+                @nomineeLastName,
+                @nomineeNickName,
+                @relationshipWithHouseholdHead,
+                @nomineeAge,
+                @nomineeGender,
+                @isReadWrite,
+                @nomineeOccupation,
+                @otherOccupation,
+                @relationshipOther,
+                @afisNomineeId
+            )
+    else update tbl_Nominee set
+                                nominee_first_name = @nomineeFirstName,
+                                nominee_middle_name = @nomineeMiddleName,
+                                nominee_last_name = @nomineeLastName,
+                                nominee_nick_name = @nomineeNickName,
+                                relationship_with_household = @relationshipWithHouseholdHead,
+                                nominee_age = @nomineeAge,
+                                nominee_gender = @nomineeGender,
+                                is_read_write = @isReadWrite,
+                                nominee_occupation = @nomineeOccupation,
+                                other_occupation = @otherOccupation,
+                                relationship_other = @relationshipOther
+         where afis_nominee_id = @afisNomineeId
+    Declare @ids  as int
+    set @ids=@@IDENTITY
+    set @ReturnVal = @ids
+
+    return @ReturnVal
+end
+go
+
+-----
+
+alter procedure [dbo].[insertbenficiaryDetfromapi]
+
+    @intIP	varchar(100),
+    @household_number	varchar(100),
+    @BeneficiaryType	varchar(100),
+    @GroupId	varchar(100),
+    @supervisor_id	varchar(100),
+    @member_number	varchar(100),
+    @FamilySize	varchar(100),
+    @NameofHousehold	varchar(100),
+    @Age	varchar(100),
+    @NameofSpouse	varchar(100),
+    @NationalID	varchar(100),
+    @ContactNo	varchar(100),
+    @Sex	varchar(1),
+    @female_dependants	varchar(100),
+    @male_dependants	varchar(100),
+    @NoofDependents	varchar(100),
+    @NumberChildrenAgeAbove5years	varchar(100),
+    @NumberChildrenAgeAbove18years	varchar(100),
+    @NumberAdultsAgeBetween30_45	varchar(100),
+    @NumberAdultsAgeBetween45_64	varchar(100),
+    @NumberAdultsAgeAbove65	varchar(100),
+    @SOurceofIncome	varchar(100),
+    @FamilyIncome	varchar(100),
+    @intStateid	varchar(100),
+    @intCountieid	varchar(100),
+    @intPayamid	varchar(100),
+    @intBomasid	varchar(100),
+    @latitude	varchar(100),
+    @longitude	varchar(100),
+    @LegalStatus	varchar(100),
+    @PhotoName	varchar(100),
+    @id_url	varchar(100),
+    @TransferDate	varchar(100),
+    @TransferUpdateat	varchar(100),
+    @Created_by varchar(100),
+    @SelectionCriteria varchar(100),
+    @SelectionReason varchar(max),
+    @liTemplate varchar(MAX),
+    @lmTemplate  varchar(MAX),
+    @lrTemplate  varchar(MAX),
+    @lsTemplate  varchar(MAX),
+    @ltTemplate varchar(MAX),
+    @riTemplate varchar(MAX),
+    @rmTemplate varchar(MAX),
+    @rrTemplate varchar(MAX),
+    @rsTemplate varchar(MAX),
+    @rtTemplate varchar(MAX),
+    @household_photo_url varchar(255),
+    @alt1_photo_url varchar(255),
+    @alt2_photo_url varchar(255),
+    @alt1Name varchar(100),
+    @alt1Gender varchar(1),
+    @alt1Age int,
+    @alt1Nid varchar(20),
+    @alt1Mobile varchar(30),
+    @alt2Name varchar(100),
+    @alt2Gender varchar(1),
+    @alt2Age int,
+    @alt2Nid varchar(20),
+    @alt2Mobile varchar(30),
+    @ReturnVal int output
+
+as begin
+
+    Declare @BomasCode  varchar(50),@exist_household_number nvarchar(200),@exist_servicehousehold_number nvarchar(200)
+
+    set @BomasCode=(select top 1 BomaCode from tm_Bomas where intBomasid =@intBomasid)
+    set @exist_household_number = (select top 1  household_number from tbl_BeneficiaryDet where household_number = @household_number)
+    set @exist_servicehousehold_number = (select top 1 household_number from tbl_BeneficiaryServiceDet where household_number = @household_number)
+    Declare @checkcnt as int
+    set @checkcnt=1
+    if(@intIP <>'' and @intIP <>'null' )
+        begin
+            set @checkcnt=(select count(*) from td_IPDetails as ip where ip.intIP=@intIP)
+        End
+    if (@BomasCode is null)
+        begin
+            set @ReturnVal =  98
+
+        end
+    else if(@exist_household_number!='')
+        begin
+            set @ReturnVal =  99
+        end
+        -- else if(@exist_servicehousehold_number!='')
+-- begin
+-- set @ReturnVal =  97
+-- end
+    else if(@intIP ='' or @intIP ='null')
+        begin
+            set @ReturnVal =  96
+        end
+    else if(@BomasCode ='' or @BomasCode ='null')
+        begin
+            set @ReturnVal =  95
+        end
+    else if(@household_number ='' or @household_number ='null')
+        begin
+            set @ReturnVal =  94
+        end
+    else if(@intStateid ='' or @intStateid ='null')
+        begin
+            set @ReturnVal =  93
+        end
+    else if(@intCountieid ='' or @intCountieid ='null')
+        begin
+            set @ReturnVal =  92
+        end
+    else if(@intPayamid ='' or @intPayamid ='null')
+        begin
+            set @ReturnVal =  91
+        end
+    else if(@intBomasid ='' or @intBomasid ='null')
+        begin
+            set @ReturnVal =  85
+        end
+    else if(@NameofHousehold ='' or @NameofHousehold ='null')
+        begin
+            set @ReturnVal =  90
+        end
+    else if(@intIP <>'' and @intIP <>'null' and @checkcnt=0)
+        begin
+
+            set @ReturnVal =  89
+
+        end
+    else if(@intBomasid <>'' and @intBomasid <>'null' and @intPayamid <>'' and (select top 1 intPayamid from tm_Bomas where intBomasid like @intBomasid) <> @intPayamid )
+        begin
+
+            set @ReturnVal =  88
+
+
+        end
+    else if(@intPayamid <>'' and @intCountieid <>'' and (select top 1 intCountieid from tm_Payams where intPayamid like @intPayamid) <> @intCountieid )
+        begin
+
+            set @ReturnVal =  87
+
+
+        end
+    else if(@intCountieid <>'' and @intStateid <>'' and (select top 1 intStateid from tm_Counties where intCountieid like @intCountieid) <> @intStateid )
+        begin
+
+            set @ReturnVal =  86
+
+
+        end
+    else
+        begin
+
+            Declare @Prefix varchar(50)
+            Set @Prefix = Case When @BeneficiaryType = 'Group' Then @BomasCode + '/' + @GroupId + '/' Else @BomasCode + '/' + @BeneficiaryType + '/' End;
+
+            Declare @MaxEnrollmentNo varchar(50);
+--Select @MaxEnrollmentNo =  @Prefix + FORMAT(ISNULL(Max(CONVERT(int,SUBSTRING(EnrollmentNo,Len(@Prefix)+1,3))),0) + 1,'000') from tbl_BeneficiaryDet Where EnrollmentNo Like @Prefix + '%'; 
+            Select @MaxEnrollmentNo =  @BomasCode  + REPLACE( REPLACE( REPLACE(CONVERT(VARCHAR(23), SYSDATETIME(), 121),':',''),'.',''),'-','')
+
+            if not exists (select EnrollmentNo from tbl_BeneficiaryServiceDet where household_number=@household_number)
+
+                insert into tbl_BeneficiaryServiceDet
+                (
+
+                    intIP,
+                    household_number,
+                    EnrollmentNo,
+                    BeneficiaryType,
+                    GroupId,
+                    supervisor_id,
+                    member_number,
+                    FamilySize,
+                    NameofHousehold,
+                    Age,
+                    NameofSpouse,
+                    NationalID,
+                    ContactNo,
+                    Sex,
+                    female_dependants,
+                    male_dependants,
+                    NoofDependents,
+                    NumberChildrenAgeAbove5years,
+                    NumberChildrenAgeAbove18years,
+                    NumberAdultsAgeBetween30_45,
+                    NumberAdultsAgeBetween45_64,
+                    NumberAdultsAgeAbove65,
+                    SOurceofIncome,
+                    FamilyIncome,
+                    intStateid,
+                    intCountieid,
+                    intPayamid,
+                    intBomasid,
+                    latitude,
+                    longitude,
+                    LegalStatus,
+                    PhotoName,
+                    id_url,
+                    TransferDate,
+                    TransferUpdateat,Created_by,API_Status	,
+                    SelectionCriteria,
+                    SelectionReason,
+                    household_photo_url,
+                    alt1_photo_url,
+                    alt2_photo_url,
+                    Name1stAlternatePayee,
+                    FirstAlternatePayeeGender,
+                    FirstAlternatePayeeAge,
+                    FirstAlternatePayeeNationID,
+                    FirstAlternatePayeeMobile,
+                    Name2ndAlternatePayee,
+                    SecondAlternatePayeeGender,
+                    SecondAlternatePayeeAge,
+                    SecondAlternateNationalID,
+                    SecondAlternatePayeeMobile
+                )
+                values
+
+                    (
+
+                        @intIP,
+                        @household_number,
+                        @MaxEnrollmentNo,
+                        @BeneficiaryType,
+                        @GroupId,
+                        @supervisor_id,
+                        @member_number,
+                        @FamilySize,
+                        @NameofHousehold,
+                        @Age,
+                        @NameofSpouse,
+                        @NationalID,
+                        @ContactNo,
+                        @Sex,
+                        @female_dependants,
+                        @male_dependants,
+                        @NoofDependents,
+                        @NumberChildrenAgeAbove5years,
+                        @NumberChildrenAgeAbove18years,
+                        @NumberAdultsAgeBetween30_45,
+                        @NumberAdultsAgeBetween45_64,
+                        @NumberAdultsAgeAbove65,
+                        @SOurceofIncome,
+                        @FamilyIncome,
+                        @intStateid,
+                        @intCountieid,
+                        @intPayamid,
+                        @intBomasid,
+                        @latitude,
+                        @longitude,
+                        @LegalStatus,
+                        @PhotoName,
+                        @id_url,
+                        @TransferDate,
+                        @TransferUpdateat,
+                        @Created_by,'Success'	,
+                        @SelectionCriteria,
+                        @SelectionReason,
+                        @household_photo_url,
+                        @alt1_photo_url,
+                        @alt2_photo_url,
+                        @alt1Name,
+                        @alt1Gender,
+                        @alt1Age,
+                        @alt1Nid,
+                        @alt1Mobile,
+                        @alt2Name,
+                        @alt2Gender,
+                        @alt2Age,
+                        @alt2Nid,
+                        @alt2Mobile
+                    )
+
+            else update tbl_BeneficiaryServiceDet set
+                                                      intIP = @intIP,
+                                                      household_number = @household_number,
+                                                      BeneficiaryType = @BeneficiaryType,
+                                                      GroupId = @GroupId,
+                                                      supervisor_id = @supervisor_id,
+                                                      member_number = @member_number,
+                                                      FamilySize = @FamilySize,
+                                                      NameofHousehold = @NameofHousehold,
+                                                      Age = @Age,
+                                                      NameofSpouse = @NameofHousehold,
+                                                      NationalID = @NationalID,
+                                                      ContactNo = @ContactNo,
+                                                      Sex = @Sex,
+                                                      female_dependants = @female_dependants,
+                                                      male_dependants = @male_dependants,
+                                                      NoofDependents = @NoofDependents,
+                                                      NumberChildrenAgeAbove5years = @NumberChildrenAgeAbove5years,
+                                                      NumberChildrenAgeAbove18years = @NumberChildrenAgeAbove18years,
+                                                      NumberAdultsAgeBetween30_45 = @NumberAdultsAgeBetween30_45,
+                                                      NumberAdultsAgeBetween45_64 = @NumberAdultsAgeBetween45_64,
+                                                      NumberAdultsAgeAbove65 = @NumberAdultsAgeAbove65,
+                                                      SOurceofIncome = @SOurceofIncome,
+                                                      FamilyIncome = @FamilyIncome,
+                                                      intStateid = @intStateid,
+                                                      intCountieid = @intCountieid,
+                                                      intPayamid = @intPayamid,
+                                                      intBomasid = @intBomasid,
+                                                      latitude = @latitude,
+                                                      longitude = @longitude,
+                                                      LegalStatus = @LegalStatus,
+                                                      PhotoName = @PhotoName,
+                                                      id_url = @id_url,
+                                                      TransferDate = @TransferDate,
+                                                      TransferUpdateat = @TransferUpdateat,
+                                                      Created_by = @Created_by,
+                                                      API_Status = 'Success',
+                                                      SelectionCriteria = @SelectionCriteria,
+                                                      SelectionReason = @SelectionReason,
+                                                      household_photo_url = @household_photo_url,
+                                                      alt1_photo_url = @alt1_photo_url,
+                                                      alt2_photo_url = @alt2_photo_url,
+                                                      Name1stAlternatePayee = @alt1Name,
+                                                      FirstAlternatePayeeGender = @alt1Gender,
+                                                      FirstAlternatePayeeAge = @alt1Age,
+                                                      FirstAlternatePayeeNationID = @alt1Nid,
+                                                      FirstAlternatePayeeMobile = @alt1Mobile,
+                                                      Name2ndAlternatePayee = @alt2Name,
+                                                      SecondAlternatePayeeGender = @alt2Gender,
+                                                      SecondAlternatePayeeAge = @alt2Age,
+                                                      SecondAlternateNationalID = @alt2Nid,
+                                                      SecondAlternatePayeeMobile = @alt2Mobile,
+                                                      Modified_dt=GETDATE(),
+                                                      Modified_by=1
+                 where household_number=@household_number and BenStatus != '2'
+
+            Declare @ids  as int
+            set @ids=@@IDENTITY
+            Update tbl_BeneficiaryServiceDet set EnrollmentNo=@MaxEnrollmentNo+Convert(varchar,@ids) where intBenid like @ids
+            set @ReturnVal = @ids
+
+        end
+
+    return @ReturnVal
+
+end
+go
+
+
+
+-- 19-09-2024
+
 -- 08-09-2024
 
 update LK_GBVStatus set StatusName='Resolved' where StatusID=5;
