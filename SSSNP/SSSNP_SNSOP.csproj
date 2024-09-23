@@ -809,6 +809,7 @@
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
     <Compile Include="Asynch\SendGrmNotificationAsynch.cs" />
+    <Compile Include="Component_2\HouseholdGroupView\HouseholdGroup.cs" />
     <Compile Include="Entity\AlternateNewCardInfo.cs" />
     <Compile Include="Entity\IdCard\IdCardInfoV1.cs" />
     <Compile Include="Entity\NewIdCardInfo.cs" />
@@ -5046,7 +5047,6 @@
     <Folder Include="Alternatetwo\74569\" />
     <Folder Include="Alternatetwo\74637\" />
     <Folder Include="Alternatetwo\74649\" />
-    <Folder Include="Component_2\HouseholdGridView\" />
     <Folder Include="Excel_Folder_Path\" />
     <Folder Include="GBVExcelImportingTemp\" />
     <Folder Include="Invoice\" />
