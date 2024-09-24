@@ -809,7 +809,11 @@
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
     <Compile Include="Asynch\SendGrmNotificationAsynch.cs" />
-    <Compile Include="Component_2\HouseholdGroupView\HouseholdGroup.cs" />
+    <Compile Include="Component_2\AuditInformation.cs" />
+    <Compile Include="Component_2\HouseholdGroupView\HouseholdGroupModel.cs" />
+    <Compile Include="Component_2\HouseholdGroupView\HouseholdGroupRepository.cs" />
+    <Compile Include="Component_2\HouseholdGroupView\HouseholdGroupService.cs" />
+    <Compile Include="Component_2\ResponseModel.cs" />
     <Compile Include="Entity\AlternateNewCardInfo.cs" />
     <Compile Include="Entity\IdCard\IdCardInfoV1.cs" />
     <Compile Include="Entity\NewIdCardInfo.cs" />
