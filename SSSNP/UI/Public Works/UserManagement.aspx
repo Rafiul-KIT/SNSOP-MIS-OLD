@@ -73,24 +73,25 @@
                                                         <div style="display: flex; align-items: center;">
                                                         <asp:DropDownList ID="ddlUserType" runat="server" CssClass="form-control" Width="180px">
                                                             <asp:ListItem Text="--Select--" Value="" />
-                                                            <asp:ListItem Text="Cordinator" Value="Cordinator" />
-                                                            <asp:ListItem Text="Manager" Value="Manager" />
-                                                            <asp:ListItem Text="IP" Value="IP" />
-                                                            <asp:ListItem Text="QualEng" Value="QualEng" />
-                                                            <asp:ListItem Text="TST" Value="TST" />
-                                                            <asp:ListItem Text="ManagerGRM" Value="ManagerGRM" />
-                                                            <asp:ListItem Text="Adm" Value="Adm" />
-                                                            <asp:ListItem Text="Specialist" Value="Specialist" />
-                                                            <asp:ListItem Text="WB" Value="WB" />
-                                                            <asp:ListItem Text="EnvSpec" Value="EnvSpec" />
-                                                            <asp:ListItem Text="GenderSpec" Value="GenderSpec" />
-                                                            <asp:ListItem Text="SocDevSpec" Value="SocDevSpec" />
-                                                            <asp:ListItem Text="PcuSpec" Value="PcuSpec" />
-                                                            <asp:ListItem Text="FSP" Value="FSP" />
+                                                            <asp:ListItem Text="Implementing Partner" Value="IP" />
+                                                            <asp:ListItem Text="Initial Reviewer" Value="Cordinator" />
+                                                            <asp:ListItem Text="Final Payment Authorizer" Value="Manager" />
+                                                            <asp:ListItem Text="Quality Engineer" Value="QualEng" />
+                                                            <asp:ListItem Text="Technical Support Team" Value="TST" />
+                                                            <asp:ListItem Text="GRM Manager" Value="ManagerGRM" />
+                                                            <asp:ListItem Text="Admin" Value="Adm" />
+                                                            <asp:ListItem Text="Financial Approver" Value="Specialist" />
+                                                            <asp:ListItem Text="World Bank" Value="WB" />
+                                                            <asp:ListItem Text="Environment Specialist" Value="EnvSpec" />
+                                                            <asp:ListItem Text="Gender Specialist" Value="GenderSpec" />
+                                                            <asp:ListItem Text="Social Development Specialist" Value="SocDevSpec" />
+                                                            <asp:ListItem Text="PCU Specialist" Value="PcuSpec" />
+                                                            <asp:ListItem Text="Financial Service Provider" Value="FSP" />
                                                             <asp:ListItem Text="Report" Value="Report" />
                                                             <asp:ListItem Text="MIS" Value="MIS" />
-                                                            <asp:ListItem Text="EntryGRM" Value="EntryGRM" />
-                                                            <asp:ListItem Text="WBGBVMgr" Value="WBGBVMgr" />
+                                                            <asp:ListItem Text="GRM Entry Operator" Value="EntryGRM" />
+                                                            <asp:ListItem Text="World Bank GRM Manager" Value="WBGBVMgr" />
+                                                            <asp:ListItem Text="Super Admin" Value="Superadm" />
                                                         </asp:DropDownList>
                                                             <asp:RequiredFieldValidator ID="rfvUserType" runat="server" ControlToValidate="ddlUserType"
                                                             InitialValue="" ErrorMessage="Please select User Type" CssClass="text-danger" Display="Dynamic">
