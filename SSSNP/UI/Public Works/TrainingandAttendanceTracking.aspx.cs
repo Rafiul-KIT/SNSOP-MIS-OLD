@@ -222,6 +222,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     {
                         conn.Open();
                         sda.Fill(dt);
+                        conn.Close();
                     }
                 }
             }

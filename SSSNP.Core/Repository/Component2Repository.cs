@@ -120,6 +120,7 @@ namespace SSSNP_SNSOP.Core.Repository
         public ResponseModel SaveHouseholdGroup(HouseholdGroupModel model)
         {
             var response = new ResponseModel();
+            int insertCount = 0;  // Counter for successfully inserted records
             try
             {
                 lock (_locker)
@@ -155,9 +156,18 @@ namespace SSSNP_SNSOP.Core.Repository
                     else
                     {
                         _dbOperation.InsertData("tbl_com2_Household_Group_View", data);
+                        insertCount++; // Increment the counter for successful insertion
                     }
 
-                    response.Message = "Household Group data saved successfully.";
+                    // Include insert count in the success message if insertions were made
+                    if (insertCount > 0)
+                    {
+                        response.Message = $"Household Group data saved successfully. {insertCount} new records were inserted.";
+                    }
+                    else
+                    {
+                        response.Message = "Household Group data updated successfully.";
+                    }
                     return response;
                 }
             }
@@ -168,7 +178,8 @@ namespace SSSNP_SNSOP.Core.Repository
                 return response;
             }
         }
-        
+
+
 
         public bool IsRecordExist_GroupName(string groupName)
         {
