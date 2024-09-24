@@ -20,6 +20,103 @@ public partial class CCMaster : System.Web.UI.MasterPage
         return Session["username"].ToString();
     }
 
+    private void setAllMenuPermission(bool value)
+    {
+        LiIp1.Visible = value;
+        IPDashboard.Visible = value;
+        IPInvoiceDashboard.Visible = value;
+        APIDashboard.Visible = value;
+
+        LiIp2.Visible = value;
+
+        LiIp3.Visible = value;
+        workProposalMenu.Visible = value;
+        beneficiaryRegistrationMenu.Visible = value;
+        jobCardMenu.Visible = value;
+        printIdCardMenu.Visible = value;
+        workProgressMenu.Visible = value;
+        lipwExportMenu.Visible = value;
+
+        LiIp4.Visible = value;
+
+        LiIp5.Visible = value;
+
+        LiPaymentCycleDocument.Visible = value;
+        liUploadPaymentCycleDoc.Visible = value;
+        liViewPaymentCycleDoc.Visible = value;
+
+        LiComponent2.Visible = value;
+        BeneficiaryRandomizationandEnrollment.Visible = value;
+        HouseholdGroupView.Visible = value;
+        TrainingandAttendanceTracking.Visible = value;
+        BusinessPlanDevelopment.Visible = value;
+        LivelihoodGrantDisbursement.Visible = value;
+        FinancialServicesLinkageTracking.Visible = value;
+        CoachingSessionTracking.Visible = value;
+
+        LiPayroll.Visible = value;
+
+        LiMNE.Visible = value;
+
+        LiUM.Visible = value;
+
+        LiIp6.Visible = value;
+        nongbvMenu.Visible = value;
+        nongbvDashboardMenu.Visible = value;
+        gbvNewMenu.Visible = value;
+        gbvNewMenuDashboard.Visible = value;
+        grmReport.Visible = value;
+        grmImporting.Visible = value;
+
+        LiIp7.Visible = value;
+
+        LiIp8.Visible = value;
+
+        LiIp11.Visible = value;
+
+        LiIp9.Visible = value;
+
+        LiTST1.Visible = value;
+        TSTDashboard.Visible = value;
+
+        LiTST2.Visible = value;
+        LiTST3.Visible = value;
+        LiTST4.Visible = value;
+        LiTST5.Visible = value;
+        LiTST6.Visible = value;
+        LiTST7.Visible = value;
+        LiTST8.Visible = value;
+
+        LiCO1.Visible = value;
+        LiCO2.Visible = value;
+        LiSpeccialist1.Visible = value;
+        LiSpeccialist2.Visible = value;
+        LiManger1.Visible = value;
+        LiManger2.Visible = value;
+        LiReviewVerify.Visible = value;
+
+        LiPA1.Visible = value;
+        LiPA2.Visible = value;
+        LiPA8.Visible = value;
+        LiPA3.Visible = value;
+
+        LiWB4.Visible = value;
+        LiWB2.Visible = value;
+        LiWB1.Visible = value;
+        LiWB3.Visible = value;
+
+        PayConnect2.Visible = value;
+        PayConnect1.Visible = value;
+        LiAlpha1.Visible = value;
+        LiAlpha2.Visible = value;
+
+        liFrim.Visible = value;
+        BDC.Visible = value;
+        PDC.Visible = value;
+        liEnvSpec.Visible = value;
+        Li1.Visible = value;
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session.Count <= 0)
@@ -92,6 +189,11 @@ public partial class CCMaster : System.Web.UI.MasterPage
         {
             lblwecome.Text = Session["username"].ToString();
             liEnvSpec.Visible = false;
+
+            if (Session["user_type"].ToString() == "Superadm")
+            {
+                setAllMenuPermission(true);
+            }
 
             if (CUser.Current.IsEntryGRMRole)
             {

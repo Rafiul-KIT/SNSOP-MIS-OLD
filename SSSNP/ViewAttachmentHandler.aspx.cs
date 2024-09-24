@@ -47,7 +47,8 @@ namespace SSSNP_SNSOP
             PDF_PAYROLL_DATA = 13,
             CASH_TRANSFER_Pdf_Download = 14,
             CASH_TRANSFER_Exl_Download = 15,
-            HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE = 16
+            HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE = 16,
+            TRAINING_ATTENDANCE_TRACKING_TEMPLATE = 17
 
         }
 
@@ -113,6 +114,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE:
                     HouseholdTemplateExlTemplate();
+                    return "OK";
+                case HandlerAttachment.TRAINING_ATTENDANCE_TRACKING_TEMPLATE:
+                    TrainingAttendanceTrackingTemplate();
                     return "OK";
                     //break;
 
@@ -1079,7 +1083,7 @@ namespace SSSNP_SNSOP
 
         // Cash Transfer Download ended
 
-        //Household group view excel template
+        //Household group view excel template Started
         private void HouseholdTemplateExlTemplate()
         {
             try
@@ -1123,7 +1127,53 @@ namespace SSSNP_SNSOP
         }
 
 
-        //Household group view excel template
+        //Household group view excel template Ended
+
+
+        //Training and Attendance Tracking Template Start
+        private void TrainingAttendanceTrackingTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Training Attendance Tracking Template");
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Course Code";
+                    worksheet.Cells[1, 3].Value = "Course Duration";
+                    worksheet.Cells[1, 4].Value = "Course Attended";
+                    worksheet.Cells[1, 5].Value = "Course Held";
+                    worksheet.Cells[1, 6].Value = "Classes Missed";
+                    worksheet.Cells[1, 7].Value = "Why Missed";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 7; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=TrainingAndAttendanceTrackingTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+        //Training and Attendance Tracking Template End
 
         private void LogError(string v, Exception ex)
         {

@@ -809,11 +809,19 @@
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
     <Compile Include="Asynch\SendGrmNotificationAsynch.cs" />
+<<<<<<< HEAD
     <Compile Include="Component_2\AuditInformation.cs" />
     <Compile Include="Component_2\HouseholdGroupView\HouseholdGroupModel.cs" />
     <Compile Include="Component_2\HouseholdGroupView\HouseholdGroupRepository.cs" />
     <Compile Include="Component_2\HouseholdGroupView\HouseholdGroupService.cs" />
     <Compile Include="Component_2\ResponseModel.cs" />
+=======
+<<<<<<< HEAD
+    <Compile Include="Component_2\AttendanceTrackingGridView\TrainingAndAttendanceTracking.cs" />
+=======
+    <Compile Include="Component_2\HouseholdGroupView\HouseholdGroup.cs" />
+>>>>>>> origin/obaydur
+>>>>>>> origin/Rafiul
     <Compile Include="Entity\AlternateNewCardInfo.cs" />
     <Compile Include="Entity\IdCard\IdCardInfoV1.cs" />
     <Compile Include="Entity\NewIdCardInfo.cs" />
@@ -832,6 +840,7 @@
     <Compile Include="Entity\Payroll_Download\PDPayrollAlternateDto.cs" />
     <Compile Include="Entity\Payroll_Download\PDPayrollDataDto.cs" />
     <Compile Include="Network\NetworkService.cs" />
+    <Compile Include="Service\Component2Service.cs" />
     <Compile Include="Service\LookupManagerService.cs" />
     <Compile Include="Service\WageRequestApiManager.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />

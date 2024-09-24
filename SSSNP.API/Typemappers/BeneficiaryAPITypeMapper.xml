@@ -101,6 +101,7 @@
     <property name="isReadWrite"></property>
     <property name="nomineeOccupation"></property>
     <property name="otherOccupation"></property>
+    <property name="afisNomineeId"></property>
     
 	</properties>
 
