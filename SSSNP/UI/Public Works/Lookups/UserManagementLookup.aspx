@@ -1,4 +1,4 @@
-﻿<%@ Page Title="User Management Lookup" Language="C#" MasterPageFile="~/UI/Public Works/Lookups/CCLookupsMaster.master" AutoEventWireup="true" CodeBehind="UserManagementLookup.aspx.cs" Inherits="SSSNP.UI.Public_Works.Lookups.UserManagementLookup" %>
+﻿<%@ Page Title="User Management Lookup" Language="C#" MasterPageFile="~/UI/Public Works/Lookups/CCLookupsMaster.master" AutoEventWireup="true" CodeBehind="UserManagementLookup.aspx.cs" Inherits="SSSNP_SNSOP.UI.Public_Works.Lookups.UserManagementLookup" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">

@@ -35,6 +35,7 @@ namespace SSSNP.Service
             }
         }
 
+
         private bool IsValidData(TrainingAndAttendanceModel obj)
         {
             if(string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
@@ -47,6 +48,41 @@ namespace SSSNP.Service
             }
             // TODO: add more validation if needed
             return true;
+        }
+
+
+        public ResponseModel SaveHouseholdGroups(List<HouseholdGroupModel> groups)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                foreach (var group in groups)
+                {
+                    if (!IsValidData(group)) continue; // Only process valid data
+                    response = _component2Repository.SaveHouseholdGroup(group);
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error saving Household Group data: " + ex.Message);
+            }
+        }
+
+        // Validate household group data
+        private bool IsValidData(HouseholdGroupModel group)
+        {
+            if (string.IsNullOrWhiteSpace(group?.GroupName?.Trim()))
+            {
+                return false; // GroupName is mandatory
+            }
+            // Add more validation if necessary
+            return true;
+        }
+
+        public Dictionary<string, int> GetExistingGroupNames()
+        {
+            return _component2Repository.GetExistingGroupNames();
         }
     }
 }

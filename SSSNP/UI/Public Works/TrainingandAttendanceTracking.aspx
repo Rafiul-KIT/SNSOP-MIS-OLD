@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Training and Attendance Tracking" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="TrainingandAttendanceTracking.aspx.cs" Inherits="SSSNP.UI.Public_Works.TrainingandAttendanceTracking" %>
+﻿<%@ Page Title=":: :: SSSNP : : Training and Attendance Tracking" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="TrainingandAttendanceTracking.aspx.cs" Inherits="SSSNP_SNSOP.UI.Public_Works.TrainingandAttendanceTracking" %>
 
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
@@ -43,7 +43,7 @@
                                 </div>
 
                                 <!-- CSS for styling -->
-                                <style>
+                                <style type="text/css">
                                     .custom-file-upload {
                                         position: relative;
                                         display: inline-block;

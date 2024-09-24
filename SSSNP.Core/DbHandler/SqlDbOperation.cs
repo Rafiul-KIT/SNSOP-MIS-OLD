@@ -10,6 +10,8 @@ namespace SSSNP_SNSOP.Core.DbHandler
         //private readonly string connectionStr = "Server=167.86.68.15; Database=PBW_SNSOP; User Id=snsop;Password=Win@2019!@#$;Connect Timeout=12000;"; // get from config
         private string connectionStr = "";
 
+        public string ConnectionString => throw new NotImplementedException();
+
         public SqlDbOperation(string connStr)
         {
             connectionStr = connStr;

@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Household Group View" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="HouseholdGroupView.aspx.cs" Inherits="SSSNP.UI.Public_Works.HouseholdGroupView" %>
+﻿<%@ Page Title=":: :: SSSNP : : Household Group View" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="HouseholdGroupView.aspx.cs" Inherits="SSSNP_SNSOP.UI.Public_Works.HouseholdGroupView" %>
 
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 

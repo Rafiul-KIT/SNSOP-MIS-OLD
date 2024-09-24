@@ -1,4 +1,5 @@
-﻿using SSSNP.Component_2.HouseholdGroupView;
+﻿using SSSNP.Service;
+using SSSNP_SNSOP.Core.Model.Component2;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,9 +11,9 @@ using System.Web;
 using System.Web.UI;
 using Telerik.Web.UI;
 
-namespace SSSNP.UI.Public_Works
+namespace SSSNP_SNSOP.UI.Public_Works
 {
-    public partial class HouseholdGroupView : System.Web.UI.Page
+    public partial class HouseholdGroupView : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -27,7 +28,7 @@ namespace SSSNP.UI.Public_Works
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
         {
             // Redirect to the ViewAttachmentHandler to download the Excel file
-            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=16"; // Ensure AttachmentType is set correctly
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=16";
             Response.Redirect(redirectUrl, false);
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
@@ -100,7 +101,7 @@ namespace SSSNP.UI.Public_Works
             ClearMessages(); // Clear any previous messages
             try
             {
-                HouseholdGroupService service = new HouseholdGroupService();
+                Component2Service service = new Component2Service();
 
                 // Retrieve the list of household groups from session
                 List<HouseholdGroupModel> householdGroups = Session["HouseholdGroups"] as List<HouseholdGroupModel>;
@@ -159,7 +160,7 @@ namespace SSSNP.UI.Public_Works
             ClearMessages();
             try
             {
-                HouseholdGroupService service = new HouseholdGroupService();
+                Component2Service service = new Component2Service();
                 List<HouseholdGroupModel> householdGroups = Session["HouseholdGroups"] as List<HouseholdGroupModel>;
 
                 if (householdGroups == null || householdGroups.Count == 0)
@@ -222,23 +223,5 @@ namespace SSSNP.UI.Public_Works
             lblMessageError.Text = string.Empty;
         }
 
-        private void LogError(Exception ex)
-        {
-            string logFilePath = Server.MapPath("~/ErrorLogs/");
-
-            if (!Directory.Exists(logFilePath))
-            {
-                Directory.CreateDirectory(logFilePath);
-            }
-
-            string filePath = Path.Combine(logFilePath, "ErrorLog_" + DateTime.Now.ToString("yyyyMMdd") + ".txt");
-            using (StreamWriter sw = new StreamWriter(filePath, true))
-            {
-                sw.WriteLine("Time: " + DateTime.Now.ToString());
-                sw.WriteLine("Message: " + ex.Message);
-                sw.WriteLine("StackTrace: " + ex.StackTrace);
-                sw.WriteLine("---------------------------------------------------------");
-            }
-        }
     }
 }

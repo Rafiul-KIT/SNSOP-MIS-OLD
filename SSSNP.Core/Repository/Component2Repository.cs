@@ -73,24 +73,6 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-        private bool IsRecordExist(string householdNumber)
-        {
-            try
-            {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber", 
-                    CommandType.Text, param);
-                if(dt != null && dt.Rows.Count > 0)
-                {
-                    return true;
-                }
-                return false;
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-        }
 
         private int GetCourseIdByCode(string code)
         {
@@ -112,5 +94,126 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw ex;
             }
         }
+
+
+        private bool IsRecordExist(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber", 
+                    CommandType.Text, param);
+                if(dt != null && dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        public ResponseModel SaveHouseholdGroup(HouseholdGroupModel model)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if the record already exists
+                    var isExist = IsRecordExist_GroupName(model.GroupName?.Trim());
+
+                    // Prepare data to insert/update
+                    Dictionary<string, object> data = new Dictionary<string, object>
+            {
+                { "GroupName", model.GroupName?.Trim() },
+                { "Latitude", model.Latitude },
+                { "Longitude", model.Longitude }
+            };
+
+                    // Add audit information based on whether the record is new or existing
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", model.CreatedBy);
+                        data.Add("CreatedDate", model.CreatedDate);
+                    }
+                    else
+                    {
+                        data.Add("ModifiedBy", model.ModifiedBy);
+                        data.Add("ModifiedDate", model.ModifiedDate);
+                    }
+
+                    // Insert or update the data
+                    if (isExist)
+                    {
+                        _dbOperation.UpdateData("tbl_com2_Household_Group_View", data, "GroupName = '" + model.GroupName?.Trim() + "'");
+                    }
+                    else
+                    {
+                        _dbOperation.InsertData("tbl_com2_Household_Group_View", data);
+                    }
+
+                    response.Message = "Household Group data saved successfully.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error when saving Household Group data: " + ex.Message;
+                return response;
+            }
+        }
+        
+
+        public bool IsRecordExist_GroupName(string groupName)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@groupName", groupName);
+                var dt = _dbOperation.ExecuteDataTable(
+                    "SELECT GroupName FROM tbl_com2_Household_Group_View WHERE GroupName = @groupName",
+                    CommandType.Text, param);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true; // The record exists
+                }
+                return false; // No matching record
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if HouseholdGroup exists: " + ex.Message);
+            }
+        }
+
+        public Dictionary<string, int> GetExistingGroupNames()
+        {
+            Dictionary<string, int> groupNames = new Dictionary<string, int>();
+            try
+            {
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, GroupName FROM tbl_com2_Household_Group_View", CommandType.Text);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string groupName = row["GroupName"].ToString();
+                        int Id = Convert.ToInt32(row["Id"]);
+                        groupNames.Add(groupName, Id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching group names: " + ex.Message);
+            }
+
+            return groupNames;
+        }
+
     }
 }

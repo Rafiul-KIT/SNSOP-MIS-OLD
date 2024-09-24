@@ -10,7 +10,7 @@ using System.Web.UI.WebControls;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 
-namespace SSSNP.UI.Public_Works
+namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class UserManagement : Page
     {

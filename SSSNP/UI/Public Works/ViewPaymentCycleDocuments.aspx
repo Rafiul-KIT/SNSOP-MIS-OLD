@@ -54,7 +54,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlYear" runat="server" AutoPostBack="true" class="form-control txtbox" Height="28px" Width="180px">
+                                                        <asp:DropDownList ID="ddlYear" runat="server" AutoPostBack="true" class="form-control txtbox" Height="33px" Width="180px">
                                                             <asp:ListItem Text="--Select--" Value=""></asp:ListItem>
                                                             <asp:ListItem Text="2024" Value="2024"></asp:ListItem>
                                                             <asp:ListItem Text="2025" Value="2025"></asp:ListItem>
@@ -69,7 +69,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlPaymentCycle" runat="server" class="form-control txtbox" Width="178px">
+                                                        <asp:DropDownList ID="ddlPaymentCycle" runat="server" class="form-control txtbox" Height="33px" Width="180px">
                                                             <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>

@@ -9,6 +9,8 @@ namespace SSSNP_SNSOP.Core.DbHandler
 {
     public interface IDbOperation
     {
+        string ConnectionString { get; }
+
         bool InsertData(string tableName, Dictionary<string, object> data);
         bool UpdateData(string tableName, Dictionary<string, object> data, string wherePart);
         DataTable ExecuteDataTable(string v, CommandType text);

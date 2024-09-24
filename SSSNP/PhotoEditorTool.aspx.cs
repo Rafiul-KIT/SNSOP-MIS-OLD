@@ -7,7 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
-namespace SSSNP
+namespace SSSNP_SNSOP
 {
     public partial class PhotoEditorTool : System.Web.UI.Page
     {
