@@ -29,6 +29,7 @@ namespace SSSNP_SNSOP.Core.Repository
                 lock (_locker)
                 {
                     var isExist = IsRecordExist(obj.HouseholdNumber?.Trim());
+                    var denormalizedData = GetDenormalizedDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
@@ -39,6 +40,16 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("ClassesHeld", obj.ClassesHeld);
                     data.Add("ClassesMissed", obj.ClassesHeld);
                     data.Add("WhyMissed", obj.ClassesMissed);
+                    data.Add("StateID", denormalizedData.StateID);
+                    data.Add("CountyID", denormalizedData.CountyID);
+                    data.Add("PayamID", denormalizedData.PayamID);
+                    data.Add("BomaID", denormalizedData.BomaID);
+                    data.Add("FirstName", denormalizedData.FirstName);
+                    data.Add("MiddleName", denormalizedData.MiddleName);
+                    data.Add("NickName", denormalizedData.NickName);
+                    data.Add("LastName", denormalizedData.LastName);
+                    data.Add("Gender", denormalizedData.Gender);
+                    data.Add("Age", denormalizedData.Age);
                     if (!isExist)
                     {
                         data.Add("CreatedBy", obj.CreatedBy);
@@ -73,7 +84,6 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-
         private int GetCourseIdByCode(string code)
         {
             int courseId = 0;
@@ -88,6 +98,35 @@ namespace SSSNP_SNSOP.Core.Repository
                     return courseId;
                 }
                 return courseId;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public DenormalizedDataModel GetDenormalizedDataByHouseholdNumber(string householdNumber)
+        {
+            DenormalizedDataModel result = new DenormalizedDataModel();
+            try
+            {
+                SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable("SELECT * FROM tbl_com2_Household_Enrollment_Data WHERE HouseholdNumber = @HouseholdNumber",
+                    CommandType.Text, param);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    result.StateID = dt.Rows[0]["StateID"] != null ? Convert.ToInt32(dt.Rows[0]["StateID"].ToString()) : 0;
+                    result.CountyID = dt.Rows[0]["CountyID"] != null ? Convert.ToInt32(dt.Rows[0]["CountyID"].ToString()) : 0;
+                    result.PayamID = dt.Rows[0]["PayamID"] != null ? Convert.ToInt32(dt.Rows[0]["PayamID"].ToString()) : 0;
+                    result.BomaID = dt.Rows[0]["BomaID"] != null ? Convert.ToInt32(dt.Rows[0]["BomaID"].ToString()) : 0;
+                    result.FirstName = dt.Rows[0]["FirstName"] != null ? dt.Rows[0]["FirstName"].ToString() : string.Empty;
+                    result.MiddleName = dt.Rows[0]["MiddleName"] != null ? dt.Rows[0]["MiddleName"].ToString() : string.Empty;
+                    result.LastName = dt.Rows[0]["LastName"] != null ? dt.Rows[0]["LastName"].ToString() : string.Empty;
+                    result.NickName = dt.Rows[0]["NickName"] != null ? dt.Rows[0]["NickName"].ToString() : string.Empty;
+                    result.Gender = dt.Rows[0]["Gender"] != null ? dt.Rows[0]["Gender"].ToString() : string.Empty;
+                    result.Age = dt.Rows[0]["Age"] != null ? Convert.ToInt32(dt.Rows[0]["Age"].ToString()) : 0;
+                }
+                return result;
             }
             catch (Exception ex)
             {

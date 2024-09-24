@@ -35,7 +35,6 @@ namespace SSSNP.Service
             }
         }
 
-
         private bool IsValidData(TrainingAndAttendanceModel obj)
         {
             if(string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
@@ -49,7 +48,6 @@ namespace SSSNP.Service
             // TODO: add more validation if needed
             return true;
         }
-
 
         public ResponseModel SaveHouseholdGroups(List<HouseholdGroupModel> groups)
         {
