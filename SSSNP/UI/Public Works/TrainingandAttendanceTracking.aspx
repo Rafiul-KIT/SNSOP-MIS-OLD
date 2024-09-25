@@ -106,19 +106,26 @@
                                 </div>
 
                                 <!-- Telerik RadGrid for displaying data -->
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10">
-                                    <MasterTableView>
+                                <telerik:RadGrid ID="RadGrid" runat="server" AllowPaging="True" PageSize="10"
+                                    AllowCustomPaging="True" OnNeedDataSource="RadGrid_NeedDataSource" OnPageSizeChanged="RadGrid_PageSizeChanged"
+                                    OnPageIndexChanged="RadGrid_PageIndexChanged" GridLines="None">
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True">
                                         <Columns>
-                                            <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
-                                            <telerik:GridBoundColumn DataField="CourseCode" HeaderText="Course Code" UniqueName="CourseCode" />
-                                            <telerik:GridBoundColumn DataField="CourseDuration" HeaderText="Course Duration" UniqueName="CourseDuration" DataFormatString="{0:N0}" />
-                                            <telerik:GridBoundColumn DataField="ClassesAttended" HeaderText="Classes Attended" UniqueName="ClassesAttended" DataFormatString="{0:N0}" />
-                                            <telerik:GridBoundColumn DataField="ClassesHeld" HeaderText="Classes Held" UniqueName="ClassesHeld" DataFormatString="{0:N0}" />
-                                            <telerik:GridBoundColumn DataField="ClassesMissed" HeaderText="Classes Missed" UniqueName="ClassesMissed" DataFormatString="{0:N0}" />
-                                            <telerik:GridBoundColumn DataField="WhyMissed" HeaderText="Why Missed" UniqueName="WhyMissed" />
+                                            <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
+                                            <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" />
+                                            <telerik:GridBoundColumn DataField="CourseCode" HeaderText="Course Code" />
+                                            <telerik:GridBoundColumn DataField="CourseDuration" HeaderText="Course Duration" />
+                                            <telerik:GridBoundColumn DataField="ClassesAttended" HeaderText="Classes Attended" />
+                                            <telerik:GridBoundColumn DataField="ClassesHeld" HeaderText="Classes Held" />
+                                            <telerik:GridBoundColumn DataField="ClassesMissed" HeaderText="Classes Missed" />
+                                            <telerik:GridBoundColumn DataField="WhyMissed" HeaderText="Why Missed" />
                                         </Columns>
+                                        <PagerStyle PageSizeControlType="RadComboBox">
+                                        </PagerStyle>
                                     </MasterTableView>
+                                    <PagerStyle AlwaysVisible="true" />
                                 </telerik:RadGrid>
+
                             </div>
                         </div>
                     </div>
