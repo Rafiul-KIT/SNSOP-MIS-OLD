@@ -52,7 +52,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("Age", denormalizedData.Age);
                     if (!isExist)
                     {
-                        data.Add("CreatedBy", obj.CreatedBy);
+                        data.Add("CreatedBy", obj.CretedBy);
                         data.Add("CreatedDate", obj.CreatedDate);
                     }
                     if(isExist)
