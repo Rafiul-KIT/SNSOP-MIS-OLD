@@ -31,6 +31,13 @@ namespace SSSNP_SNSOP.Core.Repository
                     var isExist = IsRecordExist(obj.HouseholdNumber?.Trim());
                     var denormalizedData = GetDenormalizedDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
+                    if(denormalizedData == null)
+                    {
+                        response.Message = "No denormalized or beneficiary enrollment data found followed by this household number: " + obj.HouseholdNumber?.Trim();
+                        response.IsSuccess = false;
+                        return response;
+                    }
+
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
                     data.Add("CourseId", GetCourseIdByCode(obj.CourseCode));
@@ -107,14 +114,15 @@ namespace SSSNP_SNSOP.Core.Repository
 
         public DenormalizedDataModel GetDenormalizedDataByHouseholdNumber(string householdNumber)
         {
-            DenormalizedDataModel result = new DenormalizedDataModel();
+            DenormalizedDataModel result = null;
             try
-            {
+            {                
                 SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
                 var dt = _dbOperation.ExecuteDataTable("SELECT * FROM tbl_com2_Household_Enrollment_Data WHERE HouseholdNumber = @HouseholdNumber",
                     CommandType.Text, param);
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    result = new DenormalizedDataModel();
                     result.StateID = dt.Rows[0]["StateID"] != null ? Convert.ToInt32(dt.Rows[0]["StateID"].ToString()) : 0;
                     result.CountyID = dt.Rows[0]["CountyID"] != null ? Convert.ToInt32(dt.Rows[0]["CountyID"].ToString()) : 0;
                     result.PayamID = dt.Rows[0]["PayamID"] != null ? Convert.ToInt32(dt.Rows[0]["PayamID"].ToString()) : 0;
