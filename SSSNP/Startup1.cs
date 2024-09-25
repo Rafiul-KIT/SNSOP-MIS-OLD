@@ -29,27 +29,27 @@ namespace SSSNP
         {
             // Mock :: Training and Attendance Tracking Module
             
-            var list = new List<TrainingAndAttendanceModel>();
-            var req1 = new TrainingAndAttendanceModel()
-            {
-                HouseholdNumber = "h1",
-                ClassesHeld = 15,
-                ClassesAttended = 10,
-                ClassesMissed = 5,
-                CourseCode = "FINLIT"
-            };
-            list.Add(req1);
-            var req2 = new TrainingAndAttendanceModel()
-            {
-                HouseholdNumber = "h3",
-                ClassesHeld = 14,
-                ClassesAttended = 11,
-                ClassesMissed = 3,
-                CourseCode = "LIVETECH"
-            };
-            list.Add(req2);
+            //var list = new List<TrainingAndAttendanceModel>();
+            //var req1 = new TrainingAndAttendanceModel()
+            //{
+            //    HouseholdNumber = "h1",
+            //    ClassesHeld = 15,
+            //    ClassesAttended = 10,
+            //    ClassesMissed = 5,
+            //    CourseCode = "FINLIT"
+            //};
+            //list.Add(req1);
+            //var req2 = new TrainingAndAttendanceModel()
+            //{
+            //    HouseholdNumber = "h3",
+            //    ClassesHeld = 14,
+            //    ClassesAttended = 11,
+            //    ClassesMissed = 3,
+            //    CourseCode = "LIVETECH"
+            //};
+            //list.Add(req2);
 
-            ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
+            //ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
             
             // Mock :: Training and Attendance Tracking Module
 
