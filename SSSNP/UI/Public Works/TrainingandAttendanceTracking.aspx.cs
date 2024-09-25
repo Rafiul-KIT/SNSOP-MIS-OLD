@@ -58,6 +58,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 // Parse the Excel file into a list of TrainingAttendance objects
                 using (var package = new OfficeOpenXml.ExcelPackage(fileUpload.PostedFile.InputStream))
                 {
+                    int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
                     var worksheet = package.Workbook.Worksheets.FirstOrDefault();
                     if (worksheet == null)
                     {
@@ -79,7 +80,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             ClassesAttended = (int)(int.TryParse(worksheet.Cells[row, 4].Text, out int classesAttended) ? classesAttended : (int?)null),
                             ClassesHeld = (int)(int.TryParse(worksheet.Cells[row, 5].Text, out int classesHeld) ? classesHeld : (int?)null),
                             ClassesMissed = (int)(int.TryParse(worksheet.Cells[row, 6].Text, out int classesMissed) ? classesMissed : (int?)null),
-                            WhyMissed = worksheet.Cells[row, 7].Text
+                            WhyMissed = worksheet.Cells[row, 7].Text,
+                            CreatedBy = userId,
+                            ModifiedBy = userId
                         };
 
                         attendanceList.Add(attendance);
