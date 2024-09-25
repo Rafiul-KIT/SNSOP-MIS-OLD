@@ -12,9 +12,12 @@ using Telerik.Web.UI;
 
 namespace SSSNP_SNSOP.UI.Public_Works
 {
+    
     public partial class TrainingandAttendanceTracking : Page
     {
+        private bool isSearchClicked = false;
         private Component2Service _component2Service;
+        private int totalRecords;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -116,6 +119,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 // Create a DataTable to hold the analyzed data (for RadGrid display)
                 DataTable dt = new DataTable();
+                dt.Columns.Add("Id", typeof(int));
                 dt.Columns.Add("HouseholdNumber", typeof(string));
                 dt.Columns.Add("CourseCode", typeof(string));
                 dt.Columns.Add("CourseDuration", typeof(int));
@@ -128,6 +132,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 foreach (var attendance in attendanceList)
                 {
                     DataRow dr = dt.NewRow();
+                    dr["Id"] = attendance.Id;
                     dr["HouseholdNumber"] = attendance.HouseholdNumber;
                     dr["CourseCode"] = attendance.CourseCode;
                     dr["CourseDuration"] = attendance.CourseDuration;
@@ -186,21 +191,26 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            
             ClearMessages(); // Clear any previous messages
+
             try
             {
-                // Fetch data from the database and bind it to RadGrid
-                DataTable dt = GetTrainingAttendanceData();
-                if (dt.Rows.Count > 0)
+                // Call a method to fetch all data without any filters
+                DataTable dt = GetTrainingAttendanceData(true); // Pass true to indicate all records
+
+                // Bind the data to RadGrid
+                RadGrid.DataSource = dt;
+                RadGrid.VirtualItemCount = totalRecords; // Update total record count for pagination
+                RadGrid.Rebind(); // Rebind RadGrid to refresh data
+
+                if (dt.Rows.Count == 0)
                 {
-                    RadGrid.DataSource = dt;
-                    RadGrid.DataBind();
-                    AddSuccessMessage("Search completed successfully.");
+                    AddErrorMessage("No records found.");
                 }
-                else
-                {
-                    AddErrorMessage("No data found.");
-                }
+
+                // Set the flag to true indicating the search was performed
+                isSearchClicked = true;
             }
             catch (Exception ex)
             {
@@ -208,11 +218,57 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
         }
 
-        private DataTable GetTrainingAttendanceData()
+
+
+        // Fetch data from the database and provide for RadGrid
+        protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            // Define the query to fetch data from the database
-            string query = @"SELECT HouseholdNumber, CourseCode, CourseDuration, ClassesAttended, ClassesHeld, ClassesMissed, WhyMissed 
-                             FROM tbl_com2_Training_Attendance";
+            if (isSearchClicked) // Only fetch data if the search button has been clicked
+            {
+                DataTable dt = GetTrainingAttendanceData(true); // Fetch all data
+                RadGrid.VirtualItemCount = totalRecords; // Set total number of records for paging
+                RadGrid.DataSource = dt;
+            }
+        }
+
+
+        // Handle Page Size change
+        protected void RadGrid_PageSizeChanged(object sender, GridPageSizeChangedEventArgs e)
+        {
+            RadGrid.PageSize = e.NewPageSize;
+            RadGrid.Rebind();
+        }
+
+        // Handle Page Index change
+        protected void RadGrid_PageIndexChanged(object sender, GridPageChangedEventArgs e)
+        {
+            RadGrid.CurrentPageIndex = e.NewPageIndex;
+            RadGrid.Rebind();
+        }
+
+        // Fetch paginated data from the database
+        private DataTable GetTrainingAttendanceData(bool fetchAll = false)
+        {
+            string query;
+
+            if (fetchAll)
+            {
+                query = @"SELECT Id, HouseholdNumber, CourseCode, CourseDuration, ClassesAttended, ClassesHeld, ClassesMissed, WhyMissed 
+                  FROM tbl_com2_Training_Attendance
+                  ORDER BY Id;";
+
+                totalRecords = 0; // Reset total records to 0 since we'll fetch all
+            }
+            else
+            {
+                query = @"SELECT Id, HouseholdNumber, CourseCode, CourseDuration, ClassesAttended, ClassesHeld, ClassesMissed, WhyMissed 
+                  FROM tbl_com2_Training_Attendance
+                  ORDER BY Id
+                  OFFSET (@PageIndex - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY;
+
+                  -- Total record count
+                  SELECT COUNT(*) FROM tbl_com2_Training_Attendance;";
+            }
 
             DataTable dt = new DataTable();
             string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -221,16 +277,42 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    // If not fetching all, set parameters for pagination
+                    if (!fetchAll)
                     {
-                        conn.Open();
-                        sda.Fill(dt);
+                        cmd.Parameters.AddWithValue("@PageIndex", RadGrid.CurrentPageIndex + 1); // Page index is 1-based
+                        cmd.Parameters.AddWithValue("@PageSize", RadGrid.PageSize); // Page size
+                    }
+
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Load the data into the DataTable
+                        dt.Load(reader);
+
+                        // If fetching all data, set totalRecords based on the number of rows returned
+                        if (fetchAll)
+                        {
+                            totalRecords = dt.Rows.Count; // Get the total records for all data
+                        }
+                        else
+                        {
+                            // Move to the second result set and get total record count
+                            if (reader.NextResult() && reader.Read())
+                            {
+                                totalRecords = reader.GetInt32(0);
+                            }
+                        }
                     }
                 }
             }
 
+            // Update the virtual item count for pagination
+            RadGrid.VirtualItemCount = totalRecords;
+
             return dt;
         }
+
 
         private void AddSuccessMessage(string message)
         {
