@@ -28,10 +28,7 @@ namespace SSSNP
         public void ConfigureAuth(IAppBuilder app)
         {
             // Mock :: Training and Attendance Tracking Module
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/fahim
+
 
             //var list = new List<TrainingAndAttendanceModel>();
             //var req1 = new TrainingAndAttendanceModel()
@@ -55,10 +52,10 @@ namespace SSSNP
 
             //ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> origin/fahim
+
+
+
+
             
             //var list = new List<TrainingAndAttendanceModel>();
             //var req1 = new TrainingAndAttendanceModel()
@@ -82,10 +79,7 @@ namespace SSSNP
 
             //ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
             
-<<<<<<< HEAD
->>>>>>> origin/master
-=======
->>>>>>> origin/fahim
+
             // Mock :: Training and Attendance Tracking Module
 
 

@@ -28,7 +28,7 @@ namespace SSSNP.UI.Public_Works
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
         {
             // Redirect to the ViewAttachmentHandler to download the Excel file
-            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=16";
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=20";
             Response.Redirect(redirectUrl, false);
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
@@ -189,7 +189,7 @@ namespace SSSNP.UI.Public_Works
                 }
                 else
                 {
-                    AddSuccessMessage("Data imported successfully.");
+                    AddSuccessMessage(response.Message);
                 }
             }
             catch (Exception ex)

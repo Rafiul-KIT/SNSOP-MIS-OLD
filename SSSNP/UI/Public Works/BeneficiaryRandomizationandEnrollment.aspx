@@ -124,13 +124,18 @@
                                 <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" OnItemDataBound="RadGrid_ItemDataBound">
                                     <MasterTableView>
                                         <Columns>
-                                            <telerik:GridBoundColumn DataField="GroupId" HeaderText="Group ID" UniqueName="GroupId" />
-                                            <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" UniqueName="GroupName" />
-                                            <telerik:GridBoundColumn DataField="Latitude" HeaderText="Latitude" UniqueName="Latitude" DataFormatString="{0:N7}" />
-                                            <telerik:GridBoundColumn DataField="Longitude" HeaderText="Longitude" UniqueName="Longitude" DataFormatString="{0:N7}" />
+                                            <telerik:GridBoundColumn DataField="Id" HeaderText="Redundancy Indicator (If Redundant)" UniqueName="Id" />
+                                            <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
+                                            <telerik:GridBoundColumn DataField="InterestedInParticipating" HeaderText="Interested In Participating" UniqueName="InterestedInParticipating" />
+                                            <telerik:GridBoundColumn DataField="SurvivesTargeting" HeaderText="Survives Targeting" UniqueName="SurvivesTargeting" />
+                                            <telerik:GridBoundColumn DataField="TreatmentArm" HeaderText="Treatment Arm" UniqueName="TreatmentArm" />
+                                            <telerik:GridBoundColumn DataField="HHEnrollmentStatus" HeaderText="Enrollment Status" UniqueName="HHEnrollmentStatus" />
+                                            <telerik:GridBoundColumn DataField="GroupID" HeaderText="Group ID" UniqueName="GroupID" />
+                                            <telerik:GridBoundColumn DataField="EnrolledMemberID" HeaderText="Enrolled Member ID" UniqueName="EnrolledMemberID" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
+
 
                             </div>
                         </div>
@@ -138,5 +143,8 @@
                 </div>
             </div>
         </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="btnUpload" />
+        </Triggers>
     </asp:UpdatePanel>
 </asp:Content>

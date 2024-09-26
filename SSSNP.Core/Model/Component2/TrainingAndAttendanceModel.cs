@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SSSNP_SNSOP.Core.Model.Component2
+namespace SSSNP_SNSOP.Core.Model.Component2 
 {
-    public class TrainingAndAttendanceModel
+    public class TrainingAndAttendanceModel : CommonModel
     {
         public int Id { get; set; }
         public string HouseholdNumber { get; set; }
@@ -20,13 +20,13 @@ namespace SSSNP_SNSOP.Core.Model.Component2
 
         // Nested class instances as properties
         public DenormalizedDataModel DenormalizedData { get; set; }
-        public CommonModel CommonData { get; set; }
+        //public CommonModel CommonData { get; set; }
 
         // Constructor to initialize nested class instances
         public TrainingAndAttendanceModel()
         {
             DenormalizedData = new DenormalizedDataModel();
-            CommonData = new CommonModel();
+            //CommonData = new CommonModel();
         }
     }
 }

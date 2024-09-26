@@ -188,11 +188,11 @@
     <Compile Include="DbHandler\IDbOperation.cs" />
     <Compile Include="DbHandler\SqlDbOperation.cs" />
     <Compile Include="Model\CommonModel.cs" />
-<<<<<<< HEAD
+
     <Compile Include="Model\Component2\BeneficiaryRandomizationAndEnrollmentModel.cs" />
-=======
+
     <Compile Include="Model\Component2\BusinessPlanDevelopmentModel.cs" />
->>>>>>> origin/fahim
+    
     <Compile Include="Model\Component2\DenormalizedDataModel.cs" />
     <Compile Include="Model\Component2\HouseholdGroupModel.cs" />
     <Compile Include="Model\Component2\TrainingAndAttendanceModel.cs" />

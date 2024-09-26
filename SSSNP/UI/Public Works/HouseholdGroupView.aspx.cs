@@ -177,7 +177,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 }
                 else
                 {
-                    AddSuccessMessage("Data imported successfully.");
+                    AddSuccessMessage(response.Message);
                 }
             }
             catch (Exception ex)

@@ -52,7 +52,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("Age", denormalizedData.Age);
                     if (!isExist)
                     {
-                        data.Add("CreatedBy", obj.CretedBy);
+                        data.Add("CreatedBy", obj.CreatedBy);
                         data.Add("CreatedDate", obj.CreatedDate);
                     }
                     if(isExist)
@@ -105,6 +105,38 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
+        public Dictionary<string, int> GetExistingHouseholdNumbers()
+        {
+            Dictionary<string, int> householdNumbers = new Dictionary<string, int>();
+
+            try
+            {
+                // Execute the query to get existing household numbers and their IDs
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, HouseholdNumber FROM tbl_com2_Household_Enrollment_Data", CommandType.Text);
+
+                // Check if any rows were returned
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string householdNumber = row["HouseholdNumber"].ToString();
+                        int id = Convert.ToInt32(row["Id"]);
+
+                        // Add the household number and ID to the dictionary
+                        householdNumbers.Add(householdNumber, id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching existing household numbers: " + ex.Message);
+            }
+
+            return householdNumbers;
+        }
+
+
+
         public DenormalizedDataModel GetDenormalizedDataByHouseholdNumber(string householdNumber)
         {
             DenormalizedDataModel result = new DenormalizedDataModel();
@@ -131,6 +163,106 @@ namespace SSSNP_SNSOP.Core.Repository
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public ResponseModel SaveBeneficiary(BeneficiaryRandomizationAndEnrollmentModel model)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0; // Counter for successfully inserted records
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if the record already exists based on HouseholdNumber (unique constraint)
+                    var isExist = IsRecordExist_HouseholdNumber(model.HouseholdNumber?.Trim());
+
+                    // Prepare data to insert/update
+                    Dictionary<string, object> data = new Dictionary<string, object>
+            {
+                { "StateID", model.DenormalizedData.StateID },
+                { "CountyID", model.DenormalizedData.CountyID },
+                { "PayamID", model.DenormalizedData.PayamID },
+                { "BomaID", model.DenormalizedData.BomaID },
+                { "HouseholdNumber", model.HouseholdNumber?.Trim() },
+                { "InterestedInParticipating", model.InterestedInParticipating },
+                { "FirstName", model.DenormalizedData.FirstName?.Trim() },
+                { "MiddleName", model.DenormalizedData.MiddleName?.Trim() },
+                { "LastName", model.DenormalizedData.LastName?.Trim() },
+                { "NickName", model.DenormalizedData.NickName?.Trim() },
+                { "Gender", model.DenormalizedData.Gender?.Trim() },
+                { "Age", model.DenormalizedData.Age },
+                { "SurvivesTargeting", model.SurvivesTargeting },
+                { "TreatmentArm", model.TreatmentArm },
+                { "HHEnrollmentStatus", model.HHEnrollmentStatus },
+                { "GroupID", model.GroupID },
+                { "EnrolledMemberID", model.EnrolledMemberID }
+            };
+
+                    // Add audit information based on whether the record is new or existing
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", model.CommonData.CreatedBy);
+                        data.Add("CreatedDate", model.CommonData.CreatedDate);
+                    }
+                    else
+                    {
+                        data.Add("ModifiedBy", model.CommonData.ModifiedBy);
+                        data.Add("ModifiedDate", model.CommonData.ModifiedDate);
+                    }
+
+                    // Insert or update the data
+                    if (isExist)
+                    {
+                        _dbOperation.UpdateData("tbl_com2_Household_Enrollment_Data", data, "HouseholdNumber = '" + model.HouseholdNumber?.Trim() + "'");
+                    }
+                    else
+                    {
+                        _dbOperation.InsertData("tbl_com2_Household_Enrollment_Data", data);
+                        insertCount++; // Increment the counter for successful insertion
+                    }
+
+                    // Include insert count in the success message if insertions were made
+                    if (insertCount > 0)
+                    {
+                        response.Message = $"Beneficiary data saved successfully. {insertCount} new records were inserted.";
+                    }
+                    else
+                    {
+                        response.Message = "Beneficiary data updated successfully.";
+                    }
+                    response.IsSuccess = true;
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error when saving Beneficiary data: " + ex.Message;
+                return response;
+            }
+        }
+
+
+
+        public bool IsRecordExist_HouseholdNumber(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable(
+                    "SELECT HouseholdNumber FROM tbl_com2_Household_Enrollment_Data WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true; // The record exists
+                }
+                return false; // No matching record
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if HouseholdNumber exists: " + ex.Message);
             }
         }
 
