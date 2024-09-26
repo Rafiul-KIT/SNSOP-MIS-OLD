@@ -91,6 +91,72 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
+        public ResponseModel SaveLivelihoodGrantDisbursement(LivelihoodGrantDisbursementModel obj)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                lock (_locker)
+                {
+                    var isExist = IsRecordExist(obj.HouseholdNumber?.Trim());
+                    var denormalizedData = GetDenormalizedDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
+
+                    if (denormalizedData == null)
+                    {
+                        response.Message = "No denormalized or beneficiary enrollment data found followed by this household number: " + obj.HouseholdNumber?.Trim();
+                        response.IsSuccess = false;
+                        return response;
+                    }
+
+                    Dictionary<string, object> data = new Dictionary<string, object>();
+                    data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
+                    data.Add("PaymentCycle", obj.PaymentCycle);
+                    data.Add("PaymentAmount", obj.PaymentAmount);
+                    data.Add("PaymentDate", obj.PaymentDate);
+                    data.Add("StateID", denormalizedData.StateID);
+                    data.Add("CountyID", denormalizedData.CountyID);
+                    data.Add("PayamID", denormalizedData.PayamID);
+                    data.Add("BomaID", denormalizedData.BomaID);
+                    data.Add("FirstName", denormalizedData.FirstName);
+                    data.Add("MiddleName", denormalizedData.MiddleName);
+                    data.Add("NickName", denormalizedData.NickName);
+                    data.Add("LastName", denormalizedData.LastName);
+                    data.Add("Gender", denormalizedData.Gender);
+                    data.Add("Age", denormalizedData.Age);
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", obj.CreatedBy);
+                        data.Add("CreatedDate", obj.CreatedDate);
+                    }
+                    if (isExist)
+                    {
+                        data.Add("ModifiedBy", obj.ModifiedBy);
+                        data.Add("ModifiedDate", obj.ModifiedDate);
+                    }
+                    if (isExist)
+                    {
+                        var isAdded = _dbOperation.UpdateData("tbl_com2_Livelihood_Grant_Disbursement", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                    }
+                    else
+                    {
+                        var isAdded = _dbOperation.InsertData("tbl_com2_Livelihood_Grant_Disbursement", data);
+                    }
+                    response.Message = "SaveLive lihood Grant Disbursement data saved successfully.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when saving Training and Attendance Tracking data. Error: " + ex.ToString());
+                return new ResponseModel()
+                {
+                    IsSuccess = false,
+                    Message = "Error when saving Training and Attendance Tracking data. Error: " + ex.ToString()
+
+                };
+            }
+        }
+
         private int GetCourseIdByCode(string code)
         {
             int courseId = 0;
