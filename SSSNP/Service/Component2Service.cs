@@ -82,5 +82,40 @@ namespace SSSNP.Service
         {
             return _component2Repository.GetExistingGroupNames();
         }
+
+        public ResponseModel SaveBusinessPlanDevelopment(List<BusinessPlanDevelopmentModel> request)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                foreach (var obj in request)
+                {
+                    if (!IsValidData(obj)) continue;
+                    response = _component2Repository.SaveBusinessPlanDevelopment(obj);
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when saving Business Plan Development data. Error: " + ex.ToString());
+            }
+        }
+
+        private bool IsValidData(BusinessPlanDevelopmentModel obj)
+        {
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
+            {
+                return false;
+            }
+            if (obj?.BusinessPlanStatus == null)
+            {
+                return false;
+            }
+            if (obj?.BusinessType == null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
