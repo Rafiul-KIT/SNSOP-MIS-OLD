@@ -37,11 +37,39 @@ namespace SSSNP.Service
 
         private bool IsValidData(TrainingAndAttendanceModel obj)
         {
-            if(string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return false;
             }
             if (string.IsNullOrWhiteSpace(obj?.CourseCode?.Trim()))
+            {
+                return false;
+            }
+            // TODO: add more validation if needed
+            return true;
+        }
+
+        public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                foreach (var obj in request)
+                {
+                    if (!IsValidData(obj)) continue; // Ensure data validation
+                    response = _component2Repository.SaveLivelihoodGrantDisbursement(obj); // Save each record
+                }
+                return response; // Return the response after all records are processed
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when saving Livelihood Grant Disbursement data. Error: " + ex.ToString());
+            }
+        }
+
+        private bool IsValidData(LivelihoodGrantDisbursementModel obj)
+        {
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return false;
             }
