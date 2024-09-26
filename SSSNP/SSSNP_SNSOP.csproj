@@ -1613,6 +1613,7 @@
     <Compile Include="UI\Public Works\LivelihoodGrantDisbursement.aspx.designer.cs">
       <DependentUpon>LivelihoodGrantDisbursement.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\LivelihoodGrantService.cs" />
     <Compile Include="UI\Public Works\LookupMaster.master.designer.cs">
       <DependentUpon>LookupMaster.master</DependentUpon>
     </Compile>

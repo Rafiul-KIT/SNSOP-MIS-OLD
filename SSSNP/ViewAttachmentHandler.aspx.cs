@@ -49,7 +49,8 @@ namespace SSSNP_SNSOP
             CASH_TRANSFER_Exl_Download = 15,
             HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE = 16,
             TRAINING_ATTENDANCE_TRACKING_TEMPLATE = 17,
-            BUSINESS_PLAN_DEVELOPMENT_TEMPLATE = 18
+            BUSINESS_PLAN_DEVELOPMENT_TEMPLATE = 18,
+            LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE = 19
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -121,6 +122,10 @@ namespace SSSNP_SNSOP
                 //break;
                 case HandlerAttachment.BUSINESS_PLAN_DEVELOPMENT_TEMPLATE:
                     BusinessPlanDevelopmentTemplate();
+                    return "OK";
+
+                case HandlerAttachment.LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE:
+                    LivelihoodGrantDisbursementTemplate();
                     return "OK";
             }
 
@@ -1214,6 +1219,55 @@ namespace SSSNP_SNSOP
         }
 
         //Training and Attendance Tracking Template End
+
+
+        private void LivelihoodGrantDisbursementTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Livelihood Grant Disbursement Template");
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Payment Cycle";
+                    worksheet.Cells[1, 3].Value = "Payment Amount";
+                    worksheet.Cells[1, 4].Value = "Payment Date";  // DateTime field
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 4; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Set the format for "Payment Date" as DateTime
+                    worksheet.Cells[2, 4, ExcelPackage.MaxRows, 4].Style.Numberformat.Format = "mm-dd-yyyy"; // or use any DateTime format you prefer
+
+                    // Auto-fit columns for better appearance
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=LivelihoodGrantDisbursementTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+
+
 
         private void LogError(string v, Exception ex)
         {
