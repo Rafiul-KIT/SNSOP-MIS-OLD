@@ -1199,7 +1199,7 @@ namespace SSSNP_SNSOP
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
-
+                    worksheet.Cells.AutoFitColumns();
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
