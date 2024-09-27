@@ -29,14 +29,7 @@ namespace SSSNP_SNSOP.Core.Repository
                 lock (_locker)
                 {
                     var isExist = IsRecordExist(obj.HouseholdNumber?.Trim());
-                    var denormalizedData = GetDenormalizedDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
-
-                    if(denormalizedData == null)
-                    {
-                        response.Message = "No denormalized or beneficiary enrollment data found followed by this household number: " + obj.HouseholdNumber?.Trim();
-                        response.IsSuccess = false;
-                        return response;
-                    }
+                    var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
@@ -53,7 +46,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("BomaID", denormalizedData.BomaID);
                     data.Add("FirstName", denormalizedData.FirstName);
                     data.Add("MiddleName", denormalizedData.MiddleName);
-                    data.Add("NickName", denormalizedData.NickName);
+                    data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
                     data.Add("LastName", denormalizedData.LastName);
                     data.Add("Gender", denormalizedData.Gender);
                     data.Add("Age", denormalizedData.Age);
@@ -102,14 +95,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     var isExist = IsRecordExistLivelihoodDisbursement(obj.HouseholdNumber?.Trim());
 
                     // Retrieve denormalized data associated with the household number
-                    var denormalizedData = GetDenormalizedDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
-
-                    if (denormalizedData == null)
-                    {
-                        response.Message = "No denormalized or beneficiary enrollment data found for the household number: " + obj.HouseholdNumber?.Trim();
-                        response.IsSuccess = false;
-                        return response;
-                    }
+                    var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
@@ -122,10 +108,11 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("BomaID", denormalizedData.BomaID);
                     data.Add("FirstName", denormalizedData.FirstName);
                     data.Add("MiddleName", denormalizedData.MiddleName);
-                    data.Add("NickName", denormalizedData.NickName);
+                    data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
                     data.Add("LastName", denormalizedData.LastName);
                     data.Add("Gender", denormalizedData.Gender);
                     data.Add("Age", denormalizedData.Age);
+                   
                     if (!isExist)
                     {
                         data.Add("CreatedBy", obj.CreatedBy);

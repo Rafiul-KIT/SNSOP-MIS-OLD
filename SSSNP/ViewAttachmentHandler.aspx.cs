@@ -1243,7 +1243,17 @@ namespace SSSNP_SNSOP
                     }
 
                     // Set the format for "Payment Date" as DateTime
-                    worksheet.Cells[2, 4, ExcelPackage.MaxRows, 4].Style.Numberformat.Format = "mm-dd-yyyy"; // or use any DateTime format you prefer
+                    worksheet.Cells[2, 4, ExcelPackage.MaxRows, 4].Style.Numberformat.Format = "mm-dd-yyyy"; // or any DateTime format
+
+                    // Apply data validation for the "Payment Date" column
+                    var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, ExcelPackage.MaxRows, 4].Address);
+                    dateValidation.ShowErrorMessage = true;
+                    dateValidation.ErrorTitle = "Invalid Date";
+                    dateValidation.Error = "Please enter a valid date in the format mm-dd-yyyy.";
+                    dateValidation.Prompt = "Select a date or enter manually in the format mm-dd-yyyy";
+                    dateValidation.Formula.Value = new DateTime(1900, 1, 1); // Minimum allowed date
+                    dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
+
 
                     // Auto-fit columns for better appearance
                     worksheet.Cells.AutoFitColumns();
@@ -1265,6 +1275,10 @@ namespace SSSNP_SNSOP
                 System.Diagnostics.Debug.WriteLine($"Error: {ex}");
             }
         }
+
+
+
+
 
 
 

@@ -2,6 +2,7 @@
 using SSSNP_SNSOP.Core.Model.Component2;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -14,9 +15,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class LivelihoodGrantDisbursement : Page
     {
-        private bool isSearchClicked = false;
+        
         private Component2Service _component2Service;
-        private int totalRecords;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -28,6 +28,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 // Disable buttons initially
                 btnAnalyze.Enabled = false;
                 btnImport.Enabled = false;
+                RadGrid.Visible = false;
             }
         }
 
@@ -85,9 +86,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             ModifiedBy = userId
                         };
 
-
-
-
                         grantList.Add(grant);
                     }
 
@@ -126,20 +124,26 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 dt.Columns.Add("PaymentDate", typeof(DateTime));
 
                 // Populate DataTable with data from the list
+                int serial = 1;
                 foreach (var grant in grantList)
                 {
                     DataRow dr = dt.NewRow();
-                    dr["Id"] = grant.Id;
+                    dr["Id"] = serial;
                     dr["HouseholdNumber"] = grant.HouseholdNumber;
                     dr["PaymentCycle"] = grant.PaymentCycle;
                     dr["PaymentAmount"] = grant.PaymentAmount;
                     dr["PaymentDate"] = grant.PaymentDate;
                     dt.Rows.Add(dr);
+
+                    serial++;
                 }
 
                 // Bind the data to RadGrid
                 RadGrid.DataSource = dt;
+                RadGrid.Visible = true;
+                RadGrid.CurrentPageIndex = 0;
                 RadGrid.DataBind();
+                RadGrid.VirtualItemCount = dt.Rows.Count;
 
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
                 btnImport.Enabled = true;
@@ -189,21 +193,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             try
             {
-                // Fetch all data without any filters
-                DataTable dt = GetGrantDisbursementData(true);
-
-                // Bind the data to RadGrid
-                RadGrid.DataSource = dt;
-                RadGrid.VirtualItemCount = totalRecords; // Update total record count for pagination
-                RadGrid.Rebind();
-
-                if (dt.Rows.Count == 0)
-                {
-                    AddErrorMessage("No records found.");
-                }
-
-                // Set the flag to true indicating the search was performed
-                isSearchClicked = true;
+                RadGrid.Visible = true;
+                Session["TotalRecordCount"] = GetLivelihoodGrantDisbursementDataCount();
+                RadGrid.CurrentPageIndex = 0;
+                RadGrid.DataBind();
             }
             catch (Exception ex)
             {
@@ -213,46 +206,47 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            if (isSearchClicked)
-            {
-                DataTable dt = GetGrantDisbursementData(true); // Fetch all data
-                RadGrid.VirtualItemCount = totalRecords; // Set total number of records for paging
-                RadGrid.DataSource = dt;
-            }
+            DataTable dt = GetLivelihoodGrantDisbursementData(RadGrid.CurrentPageIndex, RadGrid.PageSize); // Fetch all data
+            RadGrid.DataSource = dt;
+            Session["TotalRecordCount"] = GetLivelihoodGrantDisbursementDataCount();
+            RadGrid.VirtualItemCount = (int)Session["TotalRecordCount"];
         }
 
-        protected void RadGrid_PageSizeChanged(object sender, GridPageSizeChangedEventArgs e)
+
+        private int GetLivelihoodGrantDisbursementDataCount()
         {
-            RadGrid.PageSize = e.NewPageSize;
-            RadGrid.Rebind();
+            int totalRecords = 0;
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open(); // Ensure the connection is opened
+
+                    string query = @"SELECT COUNT(*) FROM tbl_com2_Livelihood_Grant_Disbursement WHERE 1=1;";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        totalRecords = (int)cmd.ExecuteScalar();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw; // Log or handle exception as necessary
+            }
+
+            return totalRecords;
         }
 
-        protected void RadGrid_PageIndexChanged(object sender, GridPageChangedEventArgs e)
+        private DataTable GetLivelihoodGrantDisbursementData(int pageIndex, int pageSize)
         {
-            RadGrid.CurrentPageIndex = e.NewPageIndex;
-            RadGrid.Rebind();
-        }
-
-        private DataTable GetGrantDisbursementData(bool fetchAll = false)
-        {
-            string query;
-            if (fetchAll)
-            {
-                query = @"SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate 
-                          FROM tbl_com2_Livelihood_Grant_Disbursement
-                          ORDER BY Id;";
-                totalRecords = 0; // Reset total records to 0 since we'll fetch all
-            }
-            else
-            {
-                query = @"SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate 
-                          FROM tbl_com2_Livelihood_Grant_Disbursement
-                          ORDER BY Id
-                          OFFSET (@PageIndex - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY;
-
-                          -- Total record count
-                          SELECT COUNT(*) FROM tbl_com2_Livelihood_Grant_Disbursement;";
-            }
+            string query = @"
+        SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate 
+        FROM tbl_com2_Livelihood_Grant_Disbursement 
+        ORDER BY Id 
+        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
             DataTable dt = new DataTable();
             string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -261,33 +255,21 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    if (!fetchAll)
-                    {
-                        cmd.Parameters.AddWithValue("@PageIndex", RadGrid.CurrentPageIndex + 1);
-                        cmd.Parameters.AddWithValue("@PageSize", RadGrid.PageSize);
-                    }
+                    cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
+                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
-                    conn.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        dt.Load(reader);
-
-                        if (fetchAll)
-                        {
-                            totalRecords = dt.Rows.Count;
-                        }
-                        else if (reader.NextResult() && reader.Read())
-                        {
-                            totalRecords = reader.GetInt32(0);
-                        }
-                    }
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
                 }
             }
 
-            RadGrid.VirtualItemCount = totalRecords;
+            // Update the total record count for pagination
+            RadGrid.VirtualItemCount = (int)Session["TotalRecordCount"];
 
             return dt;
         }
+
+
 
         private void AddSuccessMessage(string message)
         {

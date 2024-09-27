@@ -41,10 +41,10 @@ namespace SSSNP.Service
             {
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(obj?.CourseCode?.Trim()))
-            {
-                return false;
-            }
+            //if (string.IsNullOrWhiteSpace(obj?.CourseCode?.Trim()))
+            //{
+            //    return false;
+            //}
             // TODO: add more validation if needed
             return true;
         }
