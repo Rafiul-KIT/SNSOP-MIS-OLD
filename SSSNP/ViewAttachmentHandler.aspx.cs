@@ -1199,7 +1199,20 @@ namespace SSSNP_SNSOP
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
+
+                    // Add dropdown for Course Code in column B (2nd column)
+                    var courseCodes = new List<string> { "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" };
+                    var validation = worksheet.DataValidations.AddListValidation("B2:B100"); // Adjust the range as needed
+                    validation.Formula.Values.Add(courseCodes[0]);
+                    validation.Formula.Values.Add(courseCodes[1]);
+                    validation.Formula.Values.Add(courseCodes[2]);
+                    validation.Formula.Values.Add(courseCodes[3]);
+                    validation.ShowErrorMessage = true;
+                    validation.ErrorTitle = "Invalid Selection";
+                    validation.Error = "Please select a course code from the list.";
+
                     worksheet.Cells.AutoFitColumns();
+
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -1217,6 +1230,8 @@ namespace SSSNP_SNSOP
                 System.Diagnostics.Debug.WriteLine($"Error: {ex}");
             }
         }
+
+
 
         //Training and Attendance Tracking Template End
 
@@ -1275,10 +1290,6 @@ namespace SSSNP_SNSOP
                 System.Diagnostics.Debug.WriteLine($"Error: {ex}");
             }
         }
-
-
-
-
 
 
 

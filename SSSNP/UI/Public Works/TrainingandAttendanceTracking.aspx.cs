@@ -98,15 +98,18 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     btnAnalyze.Enabled = true;
                 }
             }
-            catch (Exception ex)
+            catch /*(Exception ex)*/
             {
-                AddErrorMessage("File upload failed: " + ex.Message);
+                //AddErrorMessage("File upload failed: " + ex.Message);
             }
         }
 
+        // Update the btnAnalyze_Click method to match the new method signature
         protected void btnAnalyze_Click(object sender, EventArgs e)
         {
             ClearMessages(); // Clear any previous messages
+            var _component2Service = new Component2Service();
+
             try
             {
                 // Retrieve the list of TrainingAttendance objects from session
@@ -128,10 +131,26 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 dt.Columns.Add("ClassesMissed", typeof(int));
                 dt.Columns.Add("WhyMissed", typeof(string));
 
-                // Populate DataTable with the data from the list
+                // Store error messages for invalid rows
+                var errorMessages = new List<string>();
                 int serial = 1;
+
+                // Fetch valid household numbers for validation
+                var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
+
+                // Iterate over attendanceList and validate each entry
                 foreach (var attendance in attendanceList)
                 {
+                    var validationResult = _component2Service.IsValidData(attendance, validHouseholdNumbers); // Call validation
+
+                    if (!validationResult.isValid) // If not valid, store the error message
+                    {
+                        errorMessages.Add($"Row {serial}: {validationResult.errorMessage}");
+                        serial++;
+                        continue; // Skip adding this row to the DataTable
+                    }
+
+                    // Populate DataTable with the valid data
                     DataRow dr = dt.NewRow();
                     dr["Id"] = serial;
                     dr["HouseholdNumber"] = attendance.HouseholdNumber;
@@ -146,13 +165,19 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     serial++;
                 }
 
-                // Bind the data to RadGrid for display
+                // If there are validation errors, display them and do not bind the data
+                if (errorMessages.Count > 0)
+                {
+                    AddErrorMessage(string.Join("<br />", errorMessages));
+                    return;
+                }
+
+                // Bind the valid data to RadGrid for display
                 RadGrid.DataSource = dt;
                 RadGrid.Visible = true;
                 RadGrid.CurrentPageIndex = 0;
                 RadGrid.DataBind();
                 RadGrid.VirtualItemCount = dt.Rows.Count;
-
 
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
                 btnImport.Enabled = true;
@@ -162,6 +187,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 AddErrorMessage("File analysis failed: " + ex.Message);
             }
         }
+
+
+
+
+
 
         protected void btnImport_Click(object sender, EventArgs e)
         {

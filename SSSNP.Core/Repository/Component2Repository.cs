@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SSSNP_SNSOP.Core.Repository
-{        
+{
     public class Component2Repository
     {
         private readonly IDbOperation _dbOperation;
@@ -55,7 +55,7 @@ namespace SSSNP_SNSOP.Core.Repository
                         data.Add("CreatedBy", obj.CreatedBy);
                         data.Add("CreatedDate", obj.CreatedDate);
                     }
-                    if(isExist)
+                    if (isExist)
                     {
                         data.Add("ModifiedBy", obj.ModifiedBy);
                         data.Add("ModifiedDate", obj.ModifiedDate);
@@ -71,8 +71,8 @@ namespace SSSNP_SNSOP.Core.Repository
                     response.Message = "Training and Attendance Tracking data saved successfully.";
                     return response;
                 }
-            } 
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Error when saving Training and Attendance Tracking data. Error: " + ex.ToString());
                 return new ResponseModel()
@@ -112,7 +112,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("LastName", denormalizedData.LastName);
                     data.Add("Gender", denormalizedData.Gender);
                     data.Add("Age", denormalizedData.Age);
-                   
+
                     if (!isExist)
                     {
                         data.Add("CreatedBy", obj.CreatedBy);
@@ -198,7 +198,7 @@ namespace SSSNP_SNSOP.Core.Repository
         {
             DenormalizedDataModel result = null;
             try
-            {                
+            {
                 SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
                 var dt = _dbOperation.ExecuteDataTable("SELECT * FROM tbl_com2_Household_Enrollment_Data WHERE HouseholdNumber = @HouseholdNumber",
                     CommandType.Text, param);
@@ -230,15 +230,15 @@ namespace SSSNP_SNSOP.Core.Repository
             try
             {
                 SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber", 
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber",
                     CommandType.Text, param);
-                if(dt != null && dt.Rows.Count > 0)
+                if (dt != null && dt.Rows.Count > 0)
                 {
                     return true;
                 }
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -314,7 +314,7 @@ namespace SSSNP_SNSOP.Core.Repository
                 return response;
             }
         }
-        
+
 
         public bool IsRecordExist_GroupName(string groupName)
         {
@@ -380,7 +380,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     result.CountyID = dt.Rows[0]["intCountieid"] != null ? Convert.ToInt32(dt.Rows[0]["intCountieid"].ToString()) : 0;
                     result.PayamID = dt.Rows[0]["intPayamid"] != null ? Convert.ToInt32(dt.Rows[0]["intPayamid"].ToString()) : 0;
                     result.BomaID = dt.Rows[0]["intBomasid"] != null ? Convert.ToInt32(dt.Rows[0]["intBomasid"].ToString()) : 0;
-                    
+
                     string NameofHousehold = dt.Rows[0]["NameofHousehold"] != null ? dt.Rows[0]["NameofHousehold"].ToString() : string.Empty;
                     if (NameofHousehold != string.Empty)
                     {
@@ -461,5 +461,39 @@ namespace SSSNP_SNSOP.Core.Repository
                 };
             }
         }
+
+        public List<ValidHouseholdNumberModel> GetValidHouseholdNumbers()
+        {
+            try
+            {
+                // Initialize a list to hold valid household numbers
+                var householdNumbers = new List<ValidHouseholdNumberModel>();
+
+                // Execute SQL command to retrieve household numbers
+                var dt = _dbOperation.ExecuteDataTable("SELECT household_number FROM tbl_BeneficiaryServiceDet", CommandType.Text);
+
+                // Check if the DataTable is not null and contains rows
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        // Create a new model instance and add the household number
+                        householdNumbers.Add(new ValidHouseholdNumberModel
+                        {
+                            HouseholdNumber = row["household_number"] != DBNull.Value ? row["household_number"].ToString() : null
+                        });
+                    }
+                }
+
+                return householdNumbers; // Return the list of valid household numbers
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when retrieving valid household numbers. Error: " + ex.ToString());
+                return new List<ValidHouseholdNumberModel>(); // Return an empty list in case of an error
+            }
+        }
+
     }
+
 }

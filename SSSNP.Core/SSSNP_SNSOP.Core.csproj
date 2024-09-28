@@ -194,6 +194,7 @@
     <Compile Include="Model\Component2\LivelihoodGrantDisbursementModel.cs" />
     <Compile Include="Model\Component2\TrainingAndAttendanceModel.cs" />
     <Compile Include="Model\ResponseModel.cs" />
+    <Compile Include="Model\ValidHouseholdNumberModel.cs" />
     <Compile Include="OleDbMapping\CreateGBVImported.cs" />
     <Compile Include="OleDbMapping\CreateNonGBVImported.cs" />
     <Compile Include="OleDbMapping\GBVGenerate.cs" />
