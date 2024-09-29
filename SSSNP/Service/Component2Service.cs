@@ -44,6 +44,8 @@ namespace SSSNP.Service
 
                     // Save the valid record
                     response = _component2Repository.SaveTrainingAndAttendanceTracking(obj);
+                    
+                    if(!response.IsSuccess) errorMessages.Add(response.Message);
                 }
 
                 // If there are any validation errors, return them in the response
