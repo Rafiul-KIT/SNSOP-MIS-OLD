@@ -49,7 +49,8 @@ namespace SSSNP_SNSOP
             CASH_TRANSFER_Exl_Download = 15,
             HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE = 16,
             TRAINING_ATTENDANCE_TRACKING_TEMPLATE = 17,
-            BUSINESS_PLAN_DEVELOPMENT_TEMPLATE = 18
+            BUSINESS_PLAN_DEVELOPMENT_TEMPLATE = 18,
+            FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -122,6 +123,9 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.BUSINESS_PLAN_DEVELOPMENT_TEMPLATE:
                     BusinessPlanDevelopmentTemplate();
                     return "OK";
+                case HandlerAttachment.FINANCIAL_SERVICE_LINKAGE_TEMPLATE:
+                    FinancialServiceLinkageTrackingTemplate();
+                    return "OK";
             }
 
             return "";
@@ -134,6 +138,44 @@ namespace SSSNP_SNSOP
 
             filenameFull = Server.MapPath("~/Template/BusinessPlanDevelopmentModule.xlsx");
             filename = "BusinessPlanDevelopmentModule.xlsx";
+
+            try
+            {
+                byte[] buffer;
+
+                using (FileStream fs = new FileStream(filenameFull, FileMode.Open))
+                {
+
+                    buffer = new byte[(int)fs.Length];
+                    fs.Read(buffer, 0, (int)fs.Length);
+                    fs.Close();
+                }
+
+                Response.ClearHeaders();
+                Response.ContentType = "application/octet-stream";
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
+                Response.AddHeader("Content-Length", buffer.Length.ToString());
+
+
+                Response.BinaryWrite((byte[])buffer);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            Response.Flush();
+            Response.Close();
+
+        }
+
+        private void FinancialServiceLinkageTrackingTemplate()
+        {
+            string filenameFull;
+            string filename;
+
+            filenameFull = Server.MapPath("~/Template/FinancialServicesLinkageTrackingModule.xlsx");
+            filename = "FinancialServicesLinkageTrackingModule.xlsx";
 
             try
             {

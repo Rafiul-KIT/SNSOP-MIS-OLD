@@ -372,5 +372,81 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
+        public ResponseModel SaveFinancialServiceLinkage(FinancialServiceLinkageTrackingModel obj)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                lock (_locker)
+                {
+                    var isExist = IsRecordExistInFinancialServiceLinkage(obj.HouseholdNumber?.Trim());
+                    var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
+
+                    Dictionary<string, object> data = new Dictionary<string, object>();
+                    data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
+                    data.Add("ConnectedFinancialServices", obj.ConnectedFinancialServices);
+                    data.Add("EntityName", obj.EntityName);
+                    data.Add("StateID", denormalizedData.StateID);
+                    data.Add("CountyID", denormalizedData.CountyID);
+                    data.Add("PayamID", denormalizedData.PayamID);
+                    data.Add("BomaID", denormalizedData.BomaID);
+                    data.Add("FirstName", denormalizedData.FirstName);
+                    data.Add("MiddleName", denormalizedData.MiddleName);
+                    data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
+                    data.Add("LastName", denormalizedData.LastName);
+                    data.Add("Gender", denormalizedData.Gender);
+                    data.Add("Age", denormalizedData.Age);
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", obj.CreatedBy);
+                        data.Add("CreatedDate", obj.CreatedDate);
+                    }
+                    if (isExist)
+                    {
+                        data.Add("ModifiedBy", obj.ModifiedBy);
+                        data.Add("ModifiedDate", obj.ModifiedDate);
+                    }
+                    if (isExist)
+                    {
+                        var isAdded = _dbOperation.UpdateData("tbl_com2_Financial_Services_Linkage_Tracking", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                    }
+                    else
+                    {
+                        var isAdded = _dbOperation.InsertData("tbl_com2_Financial_Services_Linkage_Tracking", data);
+                    }
+                    response.Message = "Financial Service Linkage Tracking Data saved successfully.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when saving Financial Service Linkage Tracking data. Error: " + ex.ToString());
+                return new ResponseModel()
+                {
+                    IsSuccess = false,
+                    Message = "Error when saving Financial Service Linkage Tracking. Error: " + ex.ToString()
+
+                };
+            }
+        }
+
+        private bool IsRecordExistInFinancialServiceLinkage(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Financial_Services_Linkage_Tracking WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
