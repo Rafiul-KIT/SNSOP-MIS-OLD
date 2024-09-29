@@ -142,7 +142,7 @@
                                 </div>
 
                                 <!-- Telerik RadGrid for displaying data -->
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10"
+                                <telerik:RadGrid ID="RadGrid" runat="server" OnItemDataBound="RadGrid_ItemDataBound" AutoGenerateColumns="false" AllowPaging="true" PageSize="10"
                                     OnNeedDataSource="RadGrid_NeedDataSource" AllowCustomPaging="True" GridLines="Both">
                                     <PagerStyle Mode="NextPrevAndNumeric" />
                                     <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True">
@@ -155,6 +155,7 @@
                                             <telerik:GridBoundColumn DataField="ClassesHeld" HeaderText="Classes Held" />
                                             <telerik:GridBoundColumn DataField="ClassesMissed" HeaderText="Classes Missed" />
                                             <telerik:GridBoundColumn DataField="WhyMissed" HeaderText="Why Missed" />
+                                            <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>

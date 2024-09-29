@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
 namespace SSSNP_SNSOP.UI.Public_Works
@@ -17,7 +18,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
     {
         
         private Component2Service _component2Service;
-
+        private bool isAnalyzed = false;
         protected void Page_Load(object sender, EventArgs e)
         {
             // Initialize the service
@@ -58,11 +59,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     return;
                 }
 
-                // Parse the Excel file
+                // Parse the Excel file into a list of LivelihoodGrantDisbursementModel objects
                 using (var package = new OfficeOpenXml.ExcelPackage(fileUpload.PostedFile.InputStream))
                 {
-                    int userId = 0;
-                    userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
+                    int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
                     var worksheet = package.Workbook.Worksheets.FirstOrDefault();
                     if (worksheet == null)
                     {
@@ -70,18 +70,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         return;
                     }
 
-                    // Create a list to hold parsed data
+                    // Create a list to hold the parsed data
                     List<LivelihoodGrantDisbursementModel> grantList = new List<LivelihoodGrantDisbursementModel>();
 
-                    // Loop through worksheet rows and populate the list
+                    // Loop through the worksheet rows and populate the list
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
+                        // Handle null or empty values for each column
+                        var paymentAmount = decimal.TryParse(worksheet.Cells[row, 3].Text, out decimal amount) ? amount : 0m; // Default to 0 if null or invalid
+                        var paymentDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime date) ? date : DateTime.MinValue; // Default to DateTime.MinValue if null or invalid
+
                         LivelihoodGrantDisbursementModel grant = new LivelihoodGrantDisbursementModel
                         {
                             HouseholdNumber = worksheet.Cells[row, 1].Text,
-                            PaymentCycle = worksheet.Cells[row, 2].Text, // No conversion needed as it's a string
-                            PaymentAmount = decimal.TryParse(worksheet.Cells[row, 3].Text, out decimal paymentAmount) ? paymentAmount : 0m, // Assign default value (0m) if parsing fails
-                            PaymentDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime paymentDate) ? paymentDate : DateTime.MinValue, // Assign default date (DateTime.MinValue) if parsing fails
+                            PaymentCycle = worksheet.Cells[row, 2].Text, // String type, no conversion needed
+                            PaymentAmount = paymentAmount, // Parsed or default value
+                            PaymentDate = paymentDate, // Parsed or default value
                             CreatedBy = userId,
                             ModifiedBy = userId
                         };
@@ -89,7 +93,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         grantList.Add(grant);
                     }
 
-                    // Store list in session for further processing
+                    // Store the list in session for further processing
                     Session["UploadedGrantData"] = grantList;
 
                     AddSuccessMessage("File uploaded and data parsed successfully. You can now analyze it.");
@@ -102,12 +106,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
         }
 
+
         protected void btnAnalyze_Click(object sender, EventArgs e)
         {
             ClearMessages(); // Clear any previous messages
+            var _component2Service = new Component2Service();
+
             try
             {
-                // Retrieve list of grant objects from session
+                // Retrieve the list of LivelihoodGrantDisbursement objects from session
                 var grantList = Session["UploadedGrantData"] as List<LivelihoodGrantDisbursementModel>;
                 if (grantList == null || grantList.Count == 0)
                 {
@@ -115,35 +122,58 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     return;
                 }
 
-                // Create a DataTable for analyzed data (to display in RadGrid)
+                // Create a DataTable to hold the analyzed data (for RadGrid display)
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));
                 dt.Columns.Add("HouseholdNumber", typeof(string));
                 dt.Columns.Add("PaymentCycle", typeof(string));
-                dt.Columns.Add("PaymentAmount", typeof(decimal));
-                dt.Columns.Add("PaymentDate", typeof(DateTime));
+                dt.Columns.Add("PaymentAmount", typeof(object)); // Change to object to support null values
+                dt.Columns.Add("PaymentDate", typeof(object)); // Change to object to support null values
+                dt.Columns.Add("ValidationStatus", typeof(string)); // For error messages
 
-                // Populate DataTable with data from the list
-                int serial = 1;
-                foreach (var grant in grantList)
+                int serial = 1; // For numbering the entries
+
+                // Fetch valid household numbers for validation
+                var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
+
+                // Filter out garbage values from grantList
+                var validGrantList = grantList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
+
+                // Iterate over valid grantList and validate each entry
+                foreach (var grant in validGrantList)
                 {
+                    var validationResult = _component2Service.IsValidData(grant, validHouseholdNumbers); // Call validation
+
+                    // Populate DataTable with the data
                     DataRow dr = dt.NewRow();
                     dr["Id"] = serial;
                     dr["HouseholdNumber"] = grant.HouseholdNumber;
                     dr["PaymentCycle"] = grant.PaymentCycle;
-                    dr["PaymentAmount"] = grant.PaymentAmount;
-                    dr["PaymentDate"] = grant.PaymentDate;
-                    dt.Rows.Add(dr);
+                    dr["PaymentAmount"] = grant.PaymentAmount ?? (object)DBNull.Value; // Handle null values
+                    dr["PaymentDate"] = grant.PaymentDate ?? (object)DBNull.Value; // Handle null values
 
+                    // Set ValidationStatus based on validation result
+                    if (!validationResult.isValid)
+                    {
+                        dr["ValidationStatus"] = validationResult.errorMessage; // Store error message
+                    }
+                    else
+                    {
+                        dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
+                    }
+
+                    dt.Rows.Add(dr);
                     serial++;
                 }
 
-                // Bind the data to RadGrid
+                // Bind the data to RadGrid for display
                 RadGrid.DataSource = dt;
                 RadGrid.Visible = true;
                 RadGrid.CurrentPageIndex = 0;
-                RadGrid.DataBind();
                 RadGrid.VirtualItemCount = dt.Rows.Count;
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
+                isAnalyzed = true;
+                RadGrid.DataBind();
 
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
                 btnImport.Enabled = true;
@@ -153,6 +183,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 AddErrorMessage("File analysis failed: " + ex.Message);
             }
         }
+
+
+
+
 
         protected void btnImport_Click(object sender, EventArgs e)
         {
@@ -167,12 +201,18 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     return;
                 }
 
+                var validEntries = grantList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
+                if (validEntries.Count == 0)
+                {
+                    AddErrorMessage("No valid data available for import.");
+                    return;
+                }
                 // Save data using service layer
-                var response = _component2Service.SaveLivelihoodGrantDisbursement(grantList);
+                var response = _component2Service.SaveLivelihoodGrantDisbursement(validEntries);
 
                 if (response.IsSuccess)
                 {
-                    AddSuccessMessage("Data imported successfully.");
+                    AddSuccessMessage($"{validEntries.Count} valid entries imported successfully.");
                     btnImport.Enabled = false;
                     btnAnalyze.Enabled = false;
                 }
@@ -193,9 +233,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             try
             {
-                RadGrid.Visible = true;
-                Session["TotalRecordCount"] = GetLivelihoodGrantDisbursementDataCount();
                 RadGrid.CurrentPageIndex = 0;
+                int pageSize = RadGrid.PageSize;
+                
+                Session["TotalRecordCount"] = GetLivelihoodGrantDisbursementDataCount();
+                RadGrid.DataSource = GetLivelihoodGrantDisbursementData(RadGrid.CurrentPageIndex, pageSize);
+                RadGrid.Visible = true;
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
                 RadGrid.DataBind();
             }
             catch (Exception ex)
@@ -208,8 +252,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
         {
             DataTable dt = GetLivelihoodGrantDisbursementData(RadGrid.CurrentPageIndex, RadGrid.PageSize); // Fetch all data
             RadGrid.DataSource = dt;
-            Session["TotalRecordCount"] = GetLivelihoodGrantDisbursementDataCount();
-            RadGrid.VirtualItemCount = (int)Session["TotalRecordCount"];
+            int totalRecordCount = GetLivelihoodGrantDisbursementDataCount();
+            RadGrid.VirtualItemCount = totalRecordCount;
         }
 
 
@@ -223,9 +267,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
                     conn.Open(); // Ensure the connection is opened
-
+                    
                     string query = @"SELECT COUNT(*) FROM tbl_com2_Livelihood_Grant_Disbursement WHERE 1=1;";
-
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         totalRecords = (int)cmd.ExecuteScalar();
@@ -234,7 +277,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
             catch (Exception ex)
             {
-                throw; // Log or handle exception as necessary
+                AddErrorMessage("An error occurred while counting records: " + ex.Message);
             }
 
             return totalRecords;
@@ -242,33 +285,61 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         private DataTable GetLivelihoodGrantDisbursementData(int pageIndex, int pageSize)
         {
-            string query = @"
-        SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate 
-        FROM tbl_com2_Livelihood_Grant_Disbursement 
-        ORDER BY Id 
-        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
-
             DataTable dt = new DataTable();
-            string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                // Construct the query with parameters for pagination
+                string query = @"SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate 
+                        FROM tbl_com2_Livelihood_Grant_Disbursement 
+                        ORDER BY Id 
+                        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+
+                using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
-                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
+                        cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(dt);
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(dt);
+                    }
                 }
-            }
 
-            // Update the total record count for pagination
-            RadGrid.VirtualItemCount = (int)Session["TotalRecordCount"];
+                // Update the total record count for pagination
+                RadGrid.VirtualItemCount = GetLivelihoodGrantDisbursementDataCount(); // Get total records
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (consider using a logging framework)
+                AddErrorMessage("An error occurred while retrieving Livelihood Grant Disbursement data: " + ex.Message);
+            }
 
             return dt;
         }
 
+
+        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            // Check if the item is a data row
+            if (e.Item is GridDataItem dataItem)
+            {
+                // Only change color if the data has been analyzed
+                if (isAnalyzed)
+                {
+                    // Get the validation status from the row
+                    string validationStatus = dataItem["ValidationStatus"].Text;
+
+                    // If the status is not valid, change the background color
+                    if (validationStatus != "Valid")
+                    {
+                        dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
+                    }
+                }
+            }
+        }
 
 
         private void AddSuccessMessage(string message)

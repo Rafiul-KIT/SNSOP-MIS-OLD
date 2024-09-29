@@ -1201,13 +1201,14 @@ namespace SSSNP_SNSOP
                     }
 
                     // Add dropdown for Course Code in column B (2nd column)
-                    var courseCodes = new List<string> { "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" };
+                    var courseCodes = new List<string> { "", "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" }; // Empty string for blank option
                     var validation = worksheet.DataValidations.AddListValidation("B2:B100"); // Adjust the range as needed
-                    validation.Formula.Values.Add(courseCodes[0]);
-                    validation.Formula.Values.Add(courseCodes[1]);
-                    validation.Formula.Values.Add(courseCodes[2]);
-                    validation.Formula.Values.Add(courseCodes[3]);
-                    validation.ShowErrorMessage = true;
+                    foreach (var courseCode in courseCodes)
+                    {
+                        validation.Formula.Values.Add(courseCode); // Adds each course code including the blank option
+                    }
+
+                    validation.ShowErrorMessage = false;
                     validation.ErrorTitle = "Invalid Selection";
                     validation.Error = "Please select a course code from the list.";
 
@@ -1257,18 +1258,29 @@ namespace SSSNP_SNSOP
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
 
-                    // Set the format for "Payment Date" as DateTime
-                    worksheet.Cells[2, 4, ExcelPackage.MaxRows, 4].Style.Numberformat.Format = "mm-dd-yyyy"; // or any DateTime format
+                    // Suppose we know the number of data rows to be inserted
+                    // In this example, assume we are inserting 10 rows of data dynamically
+                    int dataRows = 20; // Replace this with the actual number of data rows to be inserted
 
-                    // Apply data validation for the "Payment Date" column
-                    var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, ExcelPackage.MaxRows, 4].Address);
-                    dateValidation.ShowErrorMessage = true;
+                    // Add a dropdown for "Payment Cycle" (column 2)
+                    var paymentCycleValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 2, dataRows + 1, 2].Address);  // Apply to data rows only
+                    paymentCycleValidation.ShowErrorMessage = false;
+                    paymentCycleValidation.ErrorTitle = "Invalid Payment Cycle";
+                    paymentCycleValidation.Error = "Please select 'Installment One' or 'Installment Two'.";
+                    paymentCycleValidation.Formula.Values.Add("Installment One");
+                    paymentCycleValidation.Formula.Values.Add("Installment Two");
+
+                    // Set the format for "Payment Date" as DateTime for the actual data rows
+                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "mm-dd-yyyy"; // or any DateTime format
+
+                    // Apply data validation for the "Payment Date" column (only to the actual data rows)
+                    var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, dataRows + 1, 4].Address);
+                    dateValidation.ShowErrorMessage = false;
                     dateValidation.ErrorTitle = "Invalid Date";
                     dateValidation.Error = "Please enter a valid date in the format mm-dd-yyyy.";
                     dateValidation.Prompt = "Select a date or enter manually in the format mm-dd-yyyy";
                     dateValidation.Formula.Value = new DateTime(1900, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
-
 
                     // Auto-fit columns for better appearance
                     worksheet.Cells.AutoFitColumns();
@@ -1290,6 +1302,9 @@ namespace SSSNP_SNSOP
                 System.Diagnostics.Debug.WriteLine($"Error: {ex}");
             }
         }
+
+
+
 
 
 

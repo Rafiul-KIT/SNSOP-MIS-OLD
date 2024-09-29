@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
 namespace SSSNP_SNSOP.UI.Public_Works
@@ -17,6 +18,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
     public partial class TrainingandAttendanceTracking : Page
     {
         private Component2Service _component2Service;
+        private bool isAnalyzed = false;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -75,15 +77,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     // Loop through the worksheet rows and populate the list
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
+                        // Handle null or empty values for each column
+                        var courseDuration = string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 3].Text);
+                        var classesAttended = string.IsNullOrWhiteSpace(worksheet.Cells[row, 4].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 4].Text);
+                        var classesHeld = string.IsNullOrWhiteSpace(worksheet.Cells[row, 5].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 5].Text);
+                        var classesMissed = string.IsNullOrWhiteSpace(worksheet.Cells[row, 6].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 6].Text);
+                        var whyMissed = string.IsNullOrWhiteSpace(worksheet.Cells[row, 7].Text) ? null : worksheet.Cells[row, 7].Text;
+
                         TrainingAndAttendanceModel attendance = new TrainingAndAttendanceModel
                         {
                             HouseholdNumber = worksheet.Cells[row, 1].Text,
                             CourseCode = worksheet.Cells[row, 2].Text,
-                            CourseDuration = int.Parse(worksheet.Cells[row, 3].Text),
-                            ClassesAttended = int.Parse(worksheet.Cells[row, 4].Text),
-                            ClassesHeld = int.Parse(worksheet.Cells[row, 5].Text),
-                            ClassesMissed = int.Parse(worksheet.Cells[row, 6].Text),
-                            WhyMissed = worksheet.Cells[row, 7].Text,
+                            CourseDuration = courseDuration ?? 0, // Default to 0 if null
+                            ClassesAttended = classesAttended ?? 0, // Default to 0 if null
+                            ClassesHeld = classesHeld ?? 0, // Default to 0 if null
+                            ClassesMissed = classesMissed ?? 0, // Default to 0 if null
+                            WhyMissed = whyMissed, // Allow null for WhyMissed
                             CreatedBy = userId,
                             ModifiedBy = userId
                         };
@@ -98,11 +107,12 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     btnAnalyze.Enabled = true;
                 }
             }
-            catch /*(Exception ex)*/
+            catch (Exception ex)
             {
-                //AddErrorMessage("File upload failed: " + ex.Message);
+                AddErrorMessage("File upload failed: " + ex.Message);
             }
         }
+
 
         // Update the btnAnalyze_Click method to match the new method signature
         protected void btnAnalyze_Click(object sender, EventArgs e)
@@ -125,15 +135,16 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 dt.Columns.Add("Id", typeof(int));
                 dt.Columns.Add("HouseholdNumber", typeof(string));
                 dt.Columns.Add("CourseCode", typeof(string));
-                dt.Columns.Add("CourseDuration", typeof(int));
-                dt.Columns.Add("ClassesAttended", typeof(int));
-                dt.Columns.Add("ClassesHeld", typeof(int));
-                dt.Columns.Add("ClassesMissed", typeof(int));
+                dt.Columns.Add("CourseDuration", typeof(object)); // Change to object to support null values
+                dt.Columns.Add("ClassesAttended", typeof(object)); // Change to object to support null values
+                dt.Columns.Add("ClassesHeld", typeof(object)); // Change to object to support null values
+                dt.Columns.Add("ClassesMissed", typeof(object)); // Change to object to support null values
                 dt.Columns.Add("WhyMissed", typeof(string));
+                dt.Columns.Add("ValidationStatus", typeof(string)); // For error messages
 
-                // Store error messages for invalid rows
-                var errorMessages = new List<string>();
+                // Store error messages for rows with validation issues
                 int serial = 1;
+                var errorMessages = new List<string>();
 
                 // Fetch valid household numbers for validation
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
@@ -143,42 +154,42 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 {
                     var validationResult = _component2Service.IsValidData(attendance, validHouseholdNumbers); // Call validation
 
-                    if (!validationResult.isValid) // If not valid, store the error message
-                    {
-                        errorMessages.Add($"Row {serial}: {validationResult.errorMessage}");
-                        serial++;
-                        continue; // Skip adding this row to the DataTable
-                    }
-
-                    // Populate DataTable with the valid data
+                    // Populate DataTable with the data
                     DataRow dr = dt.NewRow();
                     dr["Id"] = serial;
                     dr["HouseholdNumber"] = attendance.HouseholdNumber;
                     dr["CourseCode"] = attendance.CourseCode;
-                    dr["CourseDuration"] = attendance.CourseDuration;
-                    dr["ClassesAttended"] = attendance.ClassesAttended;
-                    dr["ClassesHeld"] = attendance.ClassesHeld;
-                    dr["ClassesMissed"] = attendance.ClassesMissed;
+                    dr["CourseDuration"] = attendance.CourseDuration ?? (object)DBNull.Value; // Handle null values
+                    dr["ClassesAttended"] = attendance.ClassesAttended ?? (object)DBNull.Value; // Handle null values
+                    dr["ClassesHeld"] = attendance.ClassesHeld ?? (object)DBNull.Value; // Handle null values
+                    dr["ClassesMissed"] = attendance.ClassesMissed ?? (object)DBNull.Value; // Handle null values
                     dr["WhyMissed"] = attendance.WhyMissed;
-                    dt.Rows.Add(dr);
 
+                    // Collect error messages to display in the ValidationStatus column
+                    if (!validationResult.isValid)
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        dr["ValidationStatus"] = string.Join(", ", errorMessages); // Add all error messages
+                    }
+                    else
+                    {
+                        dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
+                    }
+
+                    dt.Rows.Add(dr);
                     serial++;
                 }
 
-                // If there are validation errors, display them and do not bind the data
-                if (errorMessages.Count > 0)
-                {
-                    AddErrorMessage(string.Join("<br />", errorMessages));
-                    return;
-                }
-
-                // Bind the valid data to RadGrid for display
+                // Bind the data to RadGrid for display
                 RadGrid.DataSource = dt;
                 RadGrid.Visible = true;
                 RadGrid.CurrentPageIndex = 0;
-                RadGrid.DataBind();
                 RadGrid.VirtualItemCount = dt.Rows.Count;
-
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
+                isAnalyzed = true;
+                RadGrid.DataBind();
+               
+                
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
                 btnImport.Enabled = true;
             }
@@ -187,9 +198,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 AddErrorMessage("File analysis failed: " + ex.Message);
             }
         }
-
-
-
 
 
 
@@ -206,12 +214,21 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     return;
                 }
 
-                // Save the data using the service layer
-                var response = _component2Service.SaveTrainingAndAttendanceTracking(attendanceList);
+                // Filter valid entries from the attendance list
+                var validEntries = attendanceList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
+
+                if (validEntries.Count == 0)
+                {
+                    AddErrorMessage("No valid data available for import.");
+                    return;
+                }
+
+                // Save the valid data using the service layer
+                var response = _component2Service.SaveTrainingAndAttendanceTracking(validEntries);
 
                 if (response.IsSuccess)
                 {
-                    AddSuccessMessage("Data imported successfully.");
+                    AddSuccessMessage($"{validEntries.Count} valid entries imported successfully.");
                     btnImport.Enabled = false;
                     btnAnalyze.Enabled = false;
                 }
@@ -226,18 +243,21 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
         }
 
+
+
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            
             ClearMessages(); // Clear any previous messages
 
             try
             {
-                RadGrid.Visible = true;
-                Session["TotalRecordCount"] = GetTrainingAttendanceDataCount();
                 RadGrid.CurrentPageIndex = 0;
+                int pageSize = RadGrid.PageSize;
+                Session["TotalRecordCount"] = GetTrainingAttendanceDataCount();
+                RadGrid.DataSource = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, pageSize);
+                RadGrid.Visible = true;
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
                 RadGrid.DataBind();
-
             }
             catch (Exception ex)
             {
@@ -247,15 +267,17 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
 
 
-        // Fetch data from the database and provide for RadGrid
+
+
         protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            DataTable dt = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, RadGrid.PageSize); // Fetch all data
+            DataTable dt = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, RadGrid.PageSize); // Fetch data
             RadGrid.DataSource = dt;
-            Session["TotalRecordCount"] = GetTrainingAttendanceDataCount();
-            RadGrid.VirtualItemCount = (int)Session["TotalRecordCount"];
-        }
 
+            // Update total record count for pagination
+            int totalRecordCount = GetTrainingAttendanceDataCount();
+            RadGrid.VirtualItemCount = totalRecordCount; // Total records in the database
+        }
 
         // Fetch paginated data from the database
         private int GetTrainingAttendanceDataCount()
@@ -279,42 +301,73 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
             catch (Exception ex)
             {
-                throw; // Log or handle the exception as necessary
+                // Log the exception (consider using a logging framework)
+                AddErrorMessage("An error occurred while counting records: " + ex.Message);
             }
 
             return totalRecords;
         }
 
-
         private DataTable GetTrainingAttendanceData(int pageIndex, int pageSize)
         {
-            string query = @"SELECT Id, HouseholdNumber, CourseCode, CourseDuration, ClassesAttended, ClassesHeld, ClassesMissed, WhyMissed 
-        FROM tbl_com2_Training_Attendance ORDER BY Id 
-        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
-
             DataTable dt = new DataTable();
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
-                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                // Construct the query with parameters for pagination
+                string query = @"SELECT Id, HouseholdNumber, CourseCode, CourseDuration, ClassesAttended, ClassesHeld, ClassesMissed, WhyMissed 
+                         FROM tbl_com2_Training_Attendance 
+                         ORDER BY Id 
+                         OFFSET @Offset ROWS 
+                         FETCH NEXT @PageSize ROWS ONLY;";
 
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(dt);
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
+                        cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(dt);
+                    }
                 }
+
+                // Update the total record count for pagination
+                RadGrid.VirtualItemCount = GetTrainingAttendanceDataCount(); // Get total records
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (consider using a logging framework)
+                AddErrorMessage("An error occurred while retrieving data: " + ex.Message);
             }
 
-            // Update the total record count for pagination
-            RadGrid.VirtualItemCount = (int)Session["TotalRecordCount"];
             return dt;
         }
 
+        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            // Check if the item is a data row
+            if (e.Item is GridDataItem dataItem)
+            {
+                // Only change color if the data has been analyzed
+                if (isAnalyzed)
+                {
+                    // Get the validation status from the row
+                    string validationStatus = dataItem["ValidationStatus"].Text;
+
+                    // If the status is not valid, change the background color
+                    if (validationStatus != "Valid")
+                    {
+                        dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
+                    }
+                }
+            }
+        }
 
 
-        private void AddSuccessMessage(string message)
+            private void AddSuccessMessage(string message)
         {
             DivSuccess.Visible = true;
             lblMessageSuccess.Text = message;
