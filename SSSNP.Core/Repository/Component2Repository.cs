@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -176,45 +177,46 @@ namespace SSSNP_SNSOP.Core.Repository
                 {
                     // Check if the record already exists based on HouseholdNumber (unique constraint)
                     var isExist = IsRecordExist_HouseholdNumber(model.HouseholdNumber?.Trim());
+                    var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(model.HouseholdNumber?.Trim());
 
                     // Prepare data to insert/update
-                    Dictionary<string, object> data = new Dictionary<string, object>
-            {
-                { "StateID", model.DenormalizedData.StateID },
-                { "CountyID", model.DenormalizedData.CountyID },
-                { "PayamID", model.DenormalizedData.PayamID },
-                { "BomaID", model.DenormalizedData.BomaID },
-                { "HouseholdNumber", model.HouseholdNumber?.Trim() },
-                { "InterestedInParticipating", model.InterestedInParticipating },
-                { "FirstName", model.DenormalizedData.FirstName?.Trim() },
-                { "MiddleName", model.DenormalizedData.MiddleName?.Trim() },
-                { "LastName", model.DenormalizedData.LastName?.Trim() },
-                { "NickName", model.DenormalizedData.NickName?.Trim() },
-                { "Gender", model.DenormalizedData.Gender?.Trim() },
-                { "Age", model.DenormalizedData.Age },
-                { "SurvivesTargeting", model.SurvivesTargeting },
-                { "TreatmentArm", model.TreatmentArm },
-                { "HHEnrollmentStatus", model.HHEnrollmentStatus },
-                { "GroupID", model.GroupID },
-                { "EnrolledMemberID", model.EnrolledMemberID }
-            };
+                    Dictionary<string, object> data = new Dictionary<string, object>();
+
+                    data.Add("HouseholdNumber", !string.IsNullOrEmpty(model.HouseholdNumber?.Trim()) ? (object)model.HouseholdNumber.Trim() : DBNull.Value);
+                    data.Add("InterestedInParticipating", model.InterestedInParticipating != null ? (object)model.InterestedInParticipating : DBNull.Value);
+                    data.Add("SurvivesTargeting", model.SurvivesTargeting != null ? (object)model.SurvivesTargeting : DBNull.Value);
+                    data.Add("TreatmentArm", model.TreatmentArm != null ? (object)model.TreatmentArm : DBNull.Value);
+                    data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus != null ? (object)model.HHEnrollmentStatus : DBNull.Value);
+                    data.Add("GroupID", model.GroupID != 0 ? (object)model.GroupID : DBNull.Value); // Assuming 0 is an invalid GroupID
+                    data.Add("EnrolledMemberID", model.EnrolledMemberID != 0 ? (object)model.EnrolledMemberID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("StateID", denormalizedData.StateID != 0 ? (object)denormalizedData.StateID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("CountyID", denormalizedData.CountyID != 0 ? (object)denormalizedData.CountyID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("PayamID", denormalizedData.PayamID != 0 ? (object)denormalizedData.PayamID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("BomaID", denormalizedData.BomaID != 0 ? (object)denormalizedData.BomaID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("FirstName", !string.IsNullOrEmpty(denormalizedData.FirstName) ? (object)denormalizedData.FirstName : DBNull.Value);
+                    data.Add("MiddleName", !string.IsNullOrEmpty(denormalizedData.MiddleName) ? (object)denormalizedData.MiddleName : DBNull.Value);
+                    data.Add("NickName", !string.IsNullOrEmpty(denormalizedData.NickName) ? (object)denormalizedData.NickName : DBNull.Value);
+                    data.Add("LastName", !string.IsNullOrEmpty(denormalizedData.LastName) ? (object)denormalizedData.LastName : DBNull.Value);
+                    data.Add("Gender", !string.IsNullOrEmpty(denormalizedData.Gender) ? (object)denormalizedData.Gender : DBNull.Value);
+                    data.Add("Age", denormalizedData.Age != 0 ? (object)denormalizedData.Age : DBNull.Value); // Assuming 0 is invalid
+
 
                     // Add audit information based on whether the record is new or existing
                     if (!isExist)
                     {
-                        data.Add("CreatedBy", model.CommonData.CreatedBy);
-                        data.Add("CreatedDate", model.CommonData.CreatedDate);
+                        data.Add("CreatedBy", model.CreatedBy);
+                        data.Add("CreatedDate", model.CreatedDate);
                     }
                     else
                     {
-                        data.Add("ModifiedBy", model.CommonData.ModifiedBy);
-                        data.Add("ModifiedDate", model.CommonData.ModifiedDate);
+                        data.Add("ModifiedBy", model.ModifiedBy);
+                        data.Add("ModifiedDate", model.ModifiedDate);
                     }
 
                     // Insert or update the data
                     if (isExist)
                     {
-                        _dbOperation.UpdateData("tbl_com2_Household_Enrollment_Data", data, "HouseholdNumber = '" + model.HouseholdNumber?.Trim() + "'");
+                        _dbOperation.UpdateData("tbl_com2_Household_Enrollment_Data", data, " HouseholdNumber = '" + model.HouseholdNumber?.Trim() + "'");
                     }
                     else
                     {
@@ -231,18 +233,19 @@ namespace SSSNP_SNSOP.Core.Repository
                     {
                         response.Message = "Beneficiary data updated successfully.";
                     }
+
                     response.IsSuccess = true;
                     return response;
                 }
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Error when saving Beneficiary Randomization and Enrollment data. Error: " + ex.ToString());
                 response.IsSuccess = false;
                 response.Message = "Error when saving Beneficiary data: " + ex.Message;
                 return response;
             }
         }
-
 
 
         public bool IsRecordExist_HouseholdNumber(string householdNumber)

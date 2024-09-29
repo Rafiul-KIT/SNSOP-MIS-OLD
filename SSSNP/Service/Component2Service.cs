@@ -4,6 +4,7 @@ using SSSNP_SNSOP.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -205,20 +206,29 @@ namespace SSSNP.Service
 
         private bool IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary)
         {
-            // Check all fields and return false if any of them are invalid
-            if (string.IsNullOrWhiteSpace(beneficiary?.HouseholdNumber) || // HouseholdNumber is mandatory
-                beneficiary.InterestedInParticipating == null ||           // InterestedInParticipating must be a valid boolean
-                beneficiary.SurvivesTargeting == null ||                   // SurvivesTargeting must be a valid boolean
-                beneficiary.TreatmentArm == null ||                        // TreatmentArm must be a valid boolean
-                beneficiary.HHEnrollmentStatus == null ||                  // HHEnrollmentStatus must be a valid boolean
-                beneficiary.GroupID == null || beneficiary.GroupID <= 0 || // GroupID must not be null and must be a positive integer
-                beneficiary.EnrolledMemberID == null || beneficiary.EnrolledMemberID <= 0) // EnrolledMemberID must not be null and must be a positive integer
+            if (string.IsNullOrWhiteSpace(beneficiary?.HouseholdNumber))
             {
-                return false; // If any of these conditions fail, return false
+                Debug.WriteLine($"Validation failed: HouseholdNumber is missing for beneficiary.");
+                return false; // HouseholdNumber is mandatory
             }
 
-            return true; // If all conditions pass, return true
+           /* // Booleans must not be null
+            if (beneficiary.InterestedInParticipating == null ||
+                beneficiary.SurvivesTargeting == null ||
+                beneficiary.TreatmentArm == null ||
+                beneficiary.HHEnrollmentStatus == null)
+            {
+                Debug.WriteLine($"Validation failed: Boolean value is missing for beneficiary with HouseholdNumber {beneficiary.HouseholdNumber}.");
+                return false;
+            }*/
+
+            // Log successful validation
+            Debug.WriteLine($"Validation passed for HouseholdNumber {beneficiary.HouseholdNumber}.");
+
+            return true; // If all mandatory conditions pass, return true
         }
+
+
 
 
     }

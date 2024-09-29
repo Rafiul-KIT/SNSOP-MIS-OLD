@@ -103,6 +103,7 @@
                                 <div class="form-group" align="center">
                                     <asp:Button ID="btnAnalyze" runat="server" CssClass="btn btn-warning" Text="Analyze" Enabled="false" OnClick="btnAnalyze_Click"/>
                                     <asp:Button ID="btnImport" runat="server" CssClass="btn btn-success" Text="Import" Enabled="false" OnClick="btnImport_Click"/>
+                                    <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-success" Text="Search" Enabled="false" OnClick="btnSearch_Click"/>
                                 </div>
 
                                 <!-- Success and Failure Messages -->
@@ -121,10 +122,10 @@
                                 </style>
 
 
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" OnItemDataBound="RadGrid_ItemDataBound">
+                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" AllowCustomPaging="true" PageSize="10" OnItemDataBound="RadGrid_ItemDataBound" OnNeedDataSource="RadGrid_NeedDataSource">
                                     <MasterTableView>
                                         <Columns>
-                                            <telerik:GridBoundColumn DataField="Id" HeaderText="Redundancy Indicator (If Redundant)" UniqueName="Id" />
+                                            <telerik:GridBoundColumn DataField="Id" HeaderText="Id" UniqueName="Id" />
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
                                             <telerik:GridBoundColumn DataField="InterestedInParticipating" HeaderText="Interested In Participating" UniqueName="InterestedInParticipating" />
                                             <telerik:GridBoundColumn DataField="SurvivesTargeting" HeaderText="Survives Targeting" UniqueName="SurvivesTargeting" />

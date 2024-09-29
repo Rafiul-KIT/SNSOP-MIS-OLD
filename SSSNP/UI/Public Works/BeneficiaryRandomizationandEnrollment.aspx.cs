@@ -8,7 +8,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
 using Telerik.Web.UI;
 
 namespace SSSNP.UI.Public_Works
@@ -22,7 +21,10 @@ namespace SSSNP.UI.Public_Works
                 // Disable buttons initially
                 btnAnalyze.Enabled = false;
                 btnImport.Enabled = false;
+                RadGrid.Visible = false;
             }
+
+            btnSearch.Enabled = true;
         }
 
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
@@ -53,6 +55,7 @@ namespace SSSNP.UI.Public_Works
 
                 using (var package = new OfficeOpenXml.ExcelPackage(fileUpload.FileContent))
                 {
+                    int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
                     var worksheet = package.Workbook.Worksheets.FirstOrDefault();
                     if (worksheet == null)
                     {
@@ -67,10 +70,12 @@ namespace SSSNP.UI.Public_Works
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                     {
                         string householdNumber = worksheet.Cells[row, 1].Text;
-                        bool.TryParse(worksheet.Cells[row, 2].Text, out bool interestedInParticipating);
-                        bool.TryParse(worksheet.Cells[row, 3].Text, out bool survivesTargeting);
-                        bool.TryParse(worksheet.Cells[row, 4].Text, out bool treatmentArm);
-                        bool.TryParse(worksheet.Cells[row, 5].Text, out bool hHEnrollmentStatus);
+
+                        // Use ParseBoolean to parse the Yes/No or 1/0 into a boolean value
+                        bool? interestedInParticipating = ParseBoolean(worksheet.Cells[row, 2].Text);
+                        bool? survivesTargeting = ParseBoolean(worksheet.Cells[row, 3].Text);
+                        bool? treatmentArm = ParseBoolean(worksheet.Cells[row, 4].Text);
+                        bool? hHEnrollmentStatus = ParseBoolean(worksheet.Cells[row, 5].Text);
 
                         int.TryParse(worksheet.Cells[row, 6].Text, out int groupID);
                         int.TryParse(worksheet.Cells[row, 7].Text, out int enrolledMemberID);
@@ -84,9 +89,13 @@ namespace SSSNP.UI.Public_Works
                             TreatmentArm = treatmentArm,
                             HHEnrollmentStatus = hHEnrollmentStatus,
                             GroupID = groupID,
-                            EnrolledMemberID = enrolledMemberID
+                            EnrolledMemberID = enrolledMemberID,
+                            CreatedBy = userId,
+                            ModifiedBy = userId
+                            
                         });
                     }
+
 
                     // Store in session for later use
                     Session["Beneficiaries"] = beneficiaries;
@@ -130,16 +139,18 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("EnrolledMemberID", typeof(int));  // Add EnrolledMemberID
 
                 // Loop through the list and dynamically check for redundancy
+                // Loop through the list and dynamically check for redundancy
                 foreach (var beneficiary in beneficiaries)
                 {
                     DataRow dr = dt.NewRow();
-                    dr["HouseholdNumber"] = beneficiary.HouseholdNumber;
-                    dr["InterestedInParticipating"] = beneficiary.InterestedInParticipating;
-                    dr["SurvivesTargeting"] = beneficiary.SurvivesTargeting;
-                    dr["TreatmentArm"] = beneficiary.TreatmentArm;
-                    dr["HHEnrollmentStatus"] = beneficiary.HHEnrollmentStatus;
-                    dr["GroupID"] = beneficiary.GroupID;  // Add GroupID to DataTable
-                    dr["EnrolledMemberID"] = beneficiary.EnrolledMemberID;  // Add EnrolledMemberID to DataTable
+
+                    dr["HouseholdNumber"] = beneficiary.HouseholdNumber ?? (object)DBNull.Value;
+                    dr["InterestedInParticipating"] = beneficiary.InterestedInParticipating.HasValue ? (object)beneficiary.InterestedInParticipating.Value : DBNull.Value;
+                    dr["SurvivesTargeting"] = beneficiary.SurvivesTargeting.HasValue ? (object)beneficiary.SurvivesTargeting.Value : DBNull.Value;
+                    dr["TreatmentArm"] = beneficiary.TreatmentArm.HasValue ? (object)beneficiary.TreatmentArm.Value : DBNull.Value;
+                    dr["HHEnrollmentStatus"] = beneficiary.HHEnrollmentStatus.HasValue ? (object)beneficiary.HHEnrollmentStatus.Value : DBNull.Value;
+                    dr["GroupID"] = beneficiary.GroupID.HasValue ? (object)beneficiary.GroupID.Value : DBNull.Value;
+                    dr["EnrolledMemberID"] = beneficiary.EnrolledMemberID.HasValue ? (object)beneficiary.EnrolledMemberID.Value : DBNull.Value;
 
                     // Check if the household is redundant
                     if (!string.IsNullOrEmpty(beneficiary.HouseholdNumber) && existingHouseholds.ContainsKey(beneficiary.HouseholdNumber))
@@ -153,6 +164,7 @@ namespace SSSNP.UI.Public_Works
 
                     dt.Rows.Add(dr);
                 }
+
 
                 // Bind the DataTable to the RadGrid for display
                 RadGrid.DataSource = dt;
@@ -198,6 +210,88 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            ClearMessages();
+            try
+            {
+                int totalRecordCount = GetBeneficiaryRandomizationandEnrollmentCount();
+                Session["TotalRecordCount"] = totalRecordCount;
+                RadGrid.CurrentPageIndex = 0;
+                RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
+                RadGrid.DataBind();
+                RadGrid.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Search failed: " + ex.Message);
+            }
+        }
+
+        private int GetBeneficiaryRandomizationandEnrollmentCount()
+        {
+            int totalRecords = 0;
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open(); // Ensure the connection is opened
+
+                    string query = @"SELECT COUNT(*) FROM tbl_com2_Household_Enrollment_Data WHERE 1=1;";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        totalRecords = (int)cmd.ExecuteScalar();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Error retrieving total record count: " + ex.Message);
+            }
+
+            return totalRecords;
+        }
+        private DataTable GetBeneficiaryRandomizationandEnrollmentData(int pageIndex, int pageSize)
+        {
+            string query = @"SELECT Id, HouseholdNumber, 
+            InterestedInParticipating, 
+            SurvivesTargeting, 
+            TreatmentArm, 
+            HHEnrollmentStatus, 
+            GroupID, 
+            EnrolledMemberID
+            FROM tbl_com2_Household_Enrollment_Data 
+            ORDER BY Id 
+            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+
+            DataTable dt = new DataTable();
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
+                        cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(dt);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Error retrieving data: " + ex.Message);
+            }
+
+            return dt;
+        }
+
         protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
             if (e.Item is GridDataItem) // Check if the item is a data row
@@ -214,6 +308,49 @@ namespace SSSNP.UI.Public_Works
                 }
             }
         }
+        protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
+        {
+            try
+            {
+                DataTable dt = GetBeneficiaryRandomizationandEnrollmentData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                RadGrid.DataSource = dt;
+
+                if (Session["TotalRecordCount"] != null && int.TryParse(Session["TotalRecordCount"].ToString(), out int totalRecordCount))
+                {
+                    RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
+                }
+                else
+                {
+                    AddErrorMessage("Total record count is invalid or missing.");
+                    RadGrid.VirtualItemCount = 0; // Default to 0 if no valid count is found
+                }
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Data binding failed: " + ex.Message);
+            }
+        }
+
+
+        private bool? ParseBoolean(string value)
+        {
+            if (string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(value, "1", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            else if (string.Equals(value, "No", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(value, "0", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+            else if (bool.TryParse(value, out bool result))
+            {
+                return result;
+            }
+            return null; // Return null if the value cannot be parsed
+        }
+
 
         private void AddSuccessMessage(string message)
         {
