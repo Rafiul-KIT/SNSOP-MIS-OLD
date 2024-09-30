@@ -413,40 +413,46 @@ namespace SSSNP_SNSOP.Core.Repository
                 {
                     var isExist = IsRecordExistInBusinessPlanDevelopment(obj.HouseholdNumber?.Trim());
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
-
-                    Dictionary<string, object> data = new Dictionary<string, object>();
-                    data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
-                    data.Add("BusinessPlanStatus", obj.BusinessPlanStatus);
-                    data.Add("BusinessType", obj.BusinessType);
-                    data.Add("StateID", denormalizedData.StateID);
-                    data.Add("CountyID", denormalizedData.CountyID);
-                    data.Add("PayamID", denormalizedData.PayamID);
-                    data.Add("BomaID", denormalizedData.BomaID);
-                    data.Add("FirstName", denormalizedData.FirstName);
-                    data.Add("MiddleName", denormalizedData.MiddleName);
-                    data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
-                    data.Add("LastName", denormalizedData.LastName);
-                    data.Add("Gender", denormalizedData.Gender);
-                    data.Add("Age", denormalizedData.Age);
-                    if (!isExist)
+                    if (denormalizedData != null)
                     {
-                        data.Add("CreatedBy", obj.CreatedBy);
-                        data.Add("CreatedDate", obj.CreatedDate);
-                    }
-                    if (isExist)
+                        Dictionary<string, object> data = new Dictionary<string, object>();
+                        data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
+                        data.Add("BusinessPlanStatus", obj.BusinessPlanStatus);
+                        data.Add("BusinessType", obj.BusinessType);
+                        data.Add("StateID", denormalizedData.StateID);
+                        data.Add("CountyID", denormalizedData.CountyID);
+                        data.Add("PayamID", denormalizedData.PayamID);
+                        data.Add("BomaID", denormalizedData.BomaID);
+                        data.Add("FirstName", denormalizedData.FirstName);
+                        data.Add("MiddleName", denormalizedData.MiddleName);
+                        data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
+                        data.Add("LastName", denormalizedData.LastName);
+                        data.Add("Gender", denormalizedData.Gender);
+                        data.Add("Age", denormalizedData.Age);
+                        if (!isExist)
+                        {
+                            data.Add("CreatedBy", obj.CreatedBy);
+                            data.Add("CreatedDate", obj.CreatedDate);
+                        }
+                        if (isExist)
+                        {
+                            data.Add("ModifiedBy", obj.ModifiedBy);
+                            data.Add("ModifiedDate", obj.ModifiedDate);
+                        }
+                        if (isExist)
+                        {
+                            var isAdded = _dbOperation.UpdateData("tbl_com2_Business_Plan_Development", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                        }
+                        else
+                        {
+                            var isAdded = _dbOperation.InsertData("tbl_com2_Business_Plan_Development", data);
+                        }
+                        response.Message = "Business Plan Development Data saved successfully.";
+                    } else
                     {
-                        data.Add("ModifiedBy", obj.ModifiedBy);
-                        data.Add("ModifiedDate", obj.ModifiedDate);
+                        response.IsSuccess = false;
+                        response.Message = "Invalid Household Number";
                     }
-                    if (isExist)
-                    {
-                        var isAdded = _dbOperation.UpdateData("tbl_com2_Business_Plan_Development", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
-                    }
-                    else
-                    {
-                        var isAdded = _dbOperation.InsertData("tbl_com2_Business_Plan_Development", data);
-                    }
-                    response.Message = "Business Plan Development Data saved successfully.";
                     return response;
                 }
             }
@@ -457,7 +463,6 @@ namespace SSSNP_SNSOP.Core.Repository
                 {
                     IsSuccess = false,
                     Message = "Error when saving Business Plan Development data. Error: " + ex.ToString()
-
                 };
             }
         }
@@ -471,40 +476,46 @@ namespace SSSNP_SNSOP.Core.Repository
                 {
                     var isExist = IsRecordExistInFinancialServiceLinkage(obj.HouseholdNumber?.Trim());
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
-
-                    Dictionary<string, object> data = new Dictionary<string, object>();
-                    data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
-                    data.Add("ConnectedFinancialServices", obj.ConnectedFinancialServices);
-                    data.Add("EntityName", obj.EntityName);
-                    data.Add("StateID", denormalizedData.StateID);
-                    data.Add("CountyID", denormalizedData.CountyID);
-                    data.Add("PayamID", denormalizedData.PayamID);
-                    data.Add("BomaID", denormalizedData.BomaID);
-                    data.Add("FirstName", denormalizedData.FirstName);
-                    data.Add("MiddleName", denormalizedData.MiddleName);
-                    data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
-                    data.Add("LastName", denormalizedData.LastName);
-                    data.Add("Gender", denormalizedData.Gender);
-                    data.Add("Age", denormalizedData.Age);
-                    if (!isExist)
+                    if (denormalizedData != null)
                     {
-                        data.Add("CreatedBy", obj.CreatedBy);
-                        data.Add("CreatedDate", obj.CreatedDate);
-                    }
-                    if (isExist)
+                        Dictionary<string, object> data = new Dictionary<string, object>();
+                        data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
+                        data.Add("ConnectedFinancialServices", obj.ConnectedFinancialServices);
+                        data.Add("EntityName", obj.EntityName);
+                        data.Add("StateID", denormalizedData.StateID);
+                        data.Add("CountyID", denormalizedData.CountyID);
+                        data.Add("PayamID", denormalizedData.PayamID);
+                        data.Add("BomaID", denormalizedData.BomaID);
+                        data.Add("FirstName", denormalizedData.FirstName);
+                        data.Add("MiddleName", denormalizedData.MiddleName);
+                        data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
+                        data.Add("LastName", denormalizedData.LastName);
+                        data.Add("Gender", denormalizedData.Gender);
+                        data.Add("Age", denormalizedData.Age);
+                        if (!isExist)
+                        {
+                            data.Add("CreatedBy", obj.CreatedBy);
+                            data.Add("CreatedDate", obj.CreatedDate);
+                        }
+                        if (isExist)
+                        {
+                            data.Add("ModifiedBy", obj.ModifiedBy);
+                            data.Add("ModifiedDate", obj.ModifiedDate);
+                        }
+                        if (isExist)
+                        {
+                            var isAdded = _dbOperation.UpdateData("tbl_com2_Financial_Services_Linkage_Tracking", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                        }
+                        else
+                        {
+                            var isAdded = _dbOperation.InsertData("tbl_com2_Financial_Services_Linkage_Tracking", data);
+                        }
+                        response.Message = "Financial Service Linkage Tracking Data saved successfully.";
+                    } else
                     {
-                        data.Add("ModifiedBy", obj.ModifiedBy);
-                        data.Add("ModifiedDate", obj.ModifiedDate);
+                        response.IsSuccess = false;
+                        response.Message = "Invalid Household Number";
                     }
-                    if (isExist)
-                    {
-                        var isAdded = _dbOperation.UpdateData("tbl_com2_Financial_Services_Linkage_Tracking", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
-                    }
-                    else
-                    {
-                        var isAdded = _dbOperation.InsertData("tbl_com2_Financial_Services_Linkage_Tracking", data);
-                    }
-                    response.Message = "Financial Service Linkage Tracking Data saved successfully.";
                     return response;
                 }
             }
@@ -539,6 +550,32 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
+        public List<string> GetValidHouseholdNumberValues()
+        {
+            try
+            {
+                var householdNumbers = new List<string>();
+
+                var dt = _dbOperation.ExecuteDataTable("SELECT b.household_number FROM tbl_BeneficiaryServiceDet b " +
+                    "INNER JOIN tbl_Nominee n on b.household_number=n.application_id", CommandType.Text);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        householdNumbers.Add(row["household_number"] != DBNull.Value ? row["household_number"].ToString() : null);
+                    }
+                }
+
+                return householdNumbers;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when retrieving valid household numbers. Error: " + ex.ToString());
+                return new List<string>();
+            }
+        }
+
         public List<ValidHouseholdNumberModel> GetValidHouseholdNumbers()
         {
             try
@@ -547,7 +584,8 @@ namespace SSSNP_SNSOP.Core.Repository
                 var householdNumbers = new List<ValidHouseholdNumberModel>();
 
                 // Execute SQL command to retrieve household numbers
-                var dt = _dbOperation.ExecuteDataTable("SELECT household_number FROM tbl_BeneficiaryServiceDet", CommandType.Text);
+                var dt = _dbOperation.ExecuteDataTable("SELECT b.household_number FROM tbl_BeneficiaryServiceDet b " +
+                    "INNER JOIN tbl_Nominee n on b.household_number=n.application_id", CommandType.Text);
 
                 // Check if the DataTable is not null and contains rows
                 if (dt != null && dt.Rows.Count > 0)

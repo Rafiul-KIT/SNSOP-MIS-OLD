@@ -110,7 +110,7 @@
 
                                 <!-- Telerik RadGrid for displaying data -->
                                 <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" 
-                                    OnNeedDataSource="RadGrid_NeedDataSource" AllowCustomPaging="True" GridLines="Both" >
+                                    OnNeedDataSource="RadGrid_NeedDataSource" OnItemDataBound="RadGrid_ItemDataBound" AllowCustomPaging="True" GridLines="Both" >
                                     <PagerStyle Mode="NextPrevAndNumeric" />
                                     <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True">
                                         <Columns>
@@ -118,6 +118,7 @@
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
                                             <telerik:GridBoundColumn DataField="BusinessPlanStatus" HeaderText="Business Plan Status" />
                                             <telerik:GridBoundColumn DataField="BusinessType" HeaderText="Business Type" />
+                                            <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>

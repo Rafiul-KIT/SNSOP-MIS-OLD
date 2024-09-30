@@ -16,6 +16,7 @@ namespace SSSNP.UI.Public_Works
     public partial class BusinessPlanDevelopment : Page
     {
         private Component2Service _component2Service;
+        private bool isAnalyzed = false;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -67,39 +68,42 @@ namespace SSSNP.UI.Public_Works
                     }
 
                     // Create a list to hold the parsed data
-                    List<BusinessPlanDevelopmentModel> attendanceList = new List<BusinessPlanDevelopmentModel>();
+                    List<BusinessPlanDevelopmentModel> list = new List<BusinessPlanDevelopmentModel>();
 
                     // Loop through the worksheet rows and populate the list
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
-                        int BusinessTypeVal = 0;
-                        string cell3 = (worksheet.Cells[row, 3] != null) ? worksheet.Cells[row, 3].Text.ToString() : null;
-                        if (cell3 != null)
+                        if (!string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
                         {
-                            if (cell3.ToLower().Equals("farm"))
+                            int BusinessTypeVal = 0;
+                            string cell3 = (worksheet.Cells[row, 3] != null) ? worksheet.Cells[row, 3].Text.ToString() : null;
+                            if (cell3 != null)
                             {
-                                BusinessTypeVal = 1;
-                            } 
-                            else if (cell3.ToLower().Equals("non-farm"))
-                            {
-                                BusinessTypeVal = 2;
+                                if (cell3.ToLower().Equals("farm"))
+                                {
+                                    BusinessTypeVal = 1;
+                                }
+                                else if (cell3.ToLower().Equals("non-farm"))
+                                {
+                                    BusinessTypeVal = 2;
+                                }
                             }
-                        }
-                        BusinessPlanDevelopmentModel attendance = new BusinessPlanDevelopmentModel
-                        {
-                            HouseholdNumber = worksheet.Cells[row, 1].Text,
-                            BusinessPlanStatus = (worksheet.Cells[row, 2].Text != null 
-                            && (worksheet.Cells[row, 2].Text.ToLower().Equals("yes"))) ? true: false,
-                            BusinessType = BusinessTypeVal,
-                            CreatedBy = userId,
-                            ModifiedBy = userId
-                        };
+                            BusinessPlanDevelopmentModel businessPlanObj = new BusinessPlanDevelopmentModel
+                            {
+                                HouseholdNumber = worksheet.Cells[row, 1].Text,
+                                BusinessPlanStatus = (worksheet.Cells[row, 2].Text != null
+                                && (worksheet.Cells[row, 2].Text.ToLower().Equals("yes"))) ? true : false,
+                                BusinessType = BusinessTypeVal,
+                                CreatedBy = userId,
+                                ModifiedBy = userId
+                            };
 
-                        attendanceList.Add(attendance);
+                            list.Add(businessPlanObj);
+                        }
                     }
 
                     // Store the list in session for further processing
-                    Session["UploadedBusinessPlanData"] = attendanceList;
+                    Session["UploadedBusinessPlanData"] = list;
 
                     AddSuccessMessage("File uploaded and data parsed successfully. You can now analyze it.");
                     btnAnalyze.Enabled = true;
@@ -129,30 +133,51 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("HouseholdNumber", typeof(string));
                 dt.Columns.Add("BusinessPlanStatus", typeof(string));
                 dt.Columns.Add("BusinessType", typeof(string));
+                dt.Columns.Add("ValidationStatus", typeof(string));
 
                 // Populate DataTable with the data from the list
                 int serial = 1;
+
+                var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
+
                 foreach (var obj in list)
                 {
-                    DataRow dr = dt.NewRow();
-                    dr["Id"] = serial;
-                    dr["HouseholdNumber"] = obj.HouseholdNumber;
-                    dr["BusinessPlanStatus"] = (obj.BusinessPlanStatus == true) ? "YES" : "NO";
-                    dr["BusinessType"] = (obj.BusinessType == 1) ? "Farm" : "Non-farm";
-                    dt.Rows.Add(dr);
+                    if (!string.IsNullOrEmpty(obj.HouseholdNumber))
+                    {
+                        var validationResult = _component2Service.IsValidData(obj, validHouseholdNumbers);
 
-                    serial++;
+                        DataRow dr = dt.NewRow();
+                        dr["Id"] = serial;
+                        dr["HouseholdNumber"] = obj.HouseholdNumber;
+                        dr["BusinessPlanStatus"] = (obj.BusinessPlanStatus == true) ? "YES" : "NO";
+                        dr["BusinessType"] = (obj.BusinessType == 1) ? "Farm" : "Non-farm";
+                        if (!validationResult.isValid)
+                        {
+                            dr["ValidationStatus"] = validationResult.errorMessage; // Store error message
+                        }
+                        else
+                        {
+                            dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
+                        }
+                        dt.Rows.Add(dr);
+
+                        serial++;
+                    }
                 }
 
                 // Bind the data to RadGrid for display
                 RadGrid.DataSource = dt;
                 RadGrid.Visible = true;
                 RadGrid.CurrentPageIndex = 0;
-                RadGrid.DataBind();
+                RadGrid.PageSize = 1000;
                 RadGrid.VirtualItemCount = dt.Rows.Count;
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
                 btnImport.Enabled = true;
+
+                isAnalyzed = true;
+                RadGrid.DataBind();
             }
             catch (Exception ex)
             {
@@ -172,8 +197,10 @@ namespace SSSNP.UI.Public_Works
                     return;
                 }
 
+                var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
+
                 // Save the data using the service layer
-                var response = _component2Service.SaveBusinessPlanDevelopment(list);
+                var response = _component2Service.SaveBusinessPlanDevelopment(list, validHouseholdNumbers);
 
                 if (response.IsSuccess)
                 {
@@ -200,11 +227,33 @@ namespace SSSNP.UI.Public_Works
                 RadGrid.Visible = true;
                 Session["TotalRecordCount"] = GetBusinessPlanDevelopmentDataCount();
                 RadGrid.CurrentPageIndex = 0;
+                RadGrid.PageSize = 10;
+                int pageSize = RadGrid.PageSize;
+                RadGrid.DataSource = GetBusinessPlanDevelopmentData(RadGrid.CurrentPageIndex, pageSize);
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
+                RadGrid.DataSource = GetBusinessPlanDevelopmentData(RadGrid.CurrentPageIndex, pageSize);
+
                 RadGrid.DataBind();             
             }
             catch (Exception ex)
             {
                 AddErrorMessage("Search failed: " + ex.Message);
+            }
+        }
+
+        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem dataItem)
+            {
+                if (isAnalyzed)
+                {
+                    string validationStatus = dataItem["ValidationStatus"].Text;
+
+                    if (validationStatus != "Valid")
+                    {
+                        dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
+                    }
+                }
             }
         }
 

@@ -12,15 +12,23 @@ namespace SSSNP.Service
     public class Component2Service
     {
         private Component2Repository _component2Repository;
+
         public Component2Service()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
             _component2Repository = new Component2Repository(connectionString);
         }
+
         public List<ValidHouseholdNumberModel> GetValidHouseholdNumbers()
         {
             return _component2Repository.GetValidHouseholdNumbers();
         }
+
+        public List<string> GetValidHouseholdNumberValues()
+        {
+            return _component2Repository.GetValidHouseholdNumberValues();
+        }
+
         public ResponseModel SaveTrainingAndAttendanceTracking(List<TrainingAndAttendanceModel> request)
         {
             var response = new ResponseModel();
@@ -107,11 +115,6 @@ namespace SSSNP.Service
             // Add more validation as needed
             return (true, string.Empty);
         }
-
-
-
-
-
 
         public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)
         {
@@ -228,16 +231,34 @@ namespace SSSNP.Service
             return _component2Repository.GetExistingGroupNames();
         }
 
-        public ResponseModel SaveBusinessPlanDevelopment(List<BusinessPlanDevelopmentModel> request)
+        public ResponseModel SaveBusinessPlanDevelopment(List<BusinessPlanDevelopmentModel> request, List<string> validList)
         {
             var response = new ResponseModel();
+            var errorMessages = new List<string>();
             try
             {
                 foreach (var obj in request)
                 {
-                    if (!IsValidData(obj)) continue;
+                    var validationResult = (IsValidData(obj, validList));
+                    if (!validationResult.isValid)
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        continue;
+                    }
                     response = _component2Repository.SaveBusinessPlanDevelopment(obj);
                 }
+
+                if (errorMessages.Count > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = string.Join("\n", errorMessages);
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "All records saved successfully.";
+                }
+
                 return response;
             }
             catch (Exception ex)
@@ -246,32 +267,53 @@ namespace SSSNP.Service
             }
         }
 
-        private bool IsValidData(BusinessPlanDevelopmentModel obj)
+        public (bool isValid, string errorMessage) IsValidData(BusinessPlanDevelopmentModel obj, List<string> validList)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
-                return false;
+                return (false, "Household Number is required");
+            }
+            if (!validList.Any(hh => hh.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
+            {
+                return (false, "Household Number is not valid");
             }
             if (obj?.BusinessPlanStatus == null)
             {
-                return false;
+                return (false, "Business Plan Status is required");
             }
             if (obj?.BusinessType == null)
             {
-                return false;
+                return (false, "Business Type is required");
             }
-            return true;
+            return (true, null);
         }
 
-        public ResponseModel SaveFinancialServiceLinkage(List<FinancialServiceLinkageTrackingModel> request)
+        public ResponseModel SaveFinancialServiceLinkage(List<FinancialServiceLinkageTrackingModel> request, List<string> validList)
         {
             var response = new ResponseModel();
+            var errorMessages = new List<string>();
             try
             {
                 foreach (var obj in request)
                 {
-                    if (!IsValidData(obj)) continue;
+                    var validationResult = (IsValidData(obj, validList));
+                    if (!validationResult.isValid)
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        continue;
+                    }
                     response = _component2Repository.SaveFinancialServiceLinkage(obj);
+                }
+
+                if (errorMessages.Count > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = string.Join("\n", errorMessages);
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "All records saved successfully.";
                 }
                 return response;
             }
@@ -281,17 +323,21 @@ namespace SSSNP.Service
             }
         }
 
-        private bool IsValidData(FinancialServiceLinkageTrackingModel obj)
+        public (bool isValid, string errorMessage) IsValidData(FinancialServiceLinkageTrackingModel obj, List<string> validList)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
-                return false;
+                return (false, "Household Number is required");
+            }
+            if (!validList.Any(hh => hh.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
+            {
+                return (false, "Household Number is not valid");
             }
             if (obj?.ConnectedFinancialServices == null)
             {
-                return false;
+                return (false, "Connected Financial Service is required");
             }
-            return true;
+            return (true, null);
         }
     }
 }
