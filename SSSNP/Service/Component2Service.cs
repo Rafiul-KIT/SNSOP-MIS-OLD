@@ -17,16 +17,47 @@ namespace SSSNP.Service
             string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
             _component2Repository = new Component2Repository(connectionString);
         }
+        public List<ValidHouseholdNumberModel> GetValidHouseholdNumbers()
+        {
+            return _component2Repository.GetValidHouseholdNumbers();
+        }
         public ResponseModel SaveTrainingAndAttendanceTracking(List<TrainingAndAttendanceModel> request)
         {
             var response = new ResponseModel();
+            var errorMessages = new List<string>(); // To store validation error messages
+
             try
             {
+                // Fetch valid household numbers from the repository
+                var validHouseholdNumbers = _component2Repository.GetValidHouseholdNumbers();
+
                 foreach (var obj in request)
                 {
-                    if (!IsValidData(obj)) continue;
+                    // Pass valid household numbers to IsValidData
+                    var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
+
+                    if (!validationResult.isValid) // If not valid, store the error message and skip saving
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        continue;
+                    }
+
+                    // Save the valid record
                     response = _component2Repository.SaveTrainingAndAttendanceTracking(obj);
                 }
+
+                // If there are any validation errors, return them in the response
+                if (errorMessages.Count > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = string.Join("; ", errorMessages); // Join error messages as a single string
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "All records saved successfully.";
+                }
+
                 return response;
             }
             catch (Exception ex)
@@ -35,19 +66,133 @@ namespace SSSNP.Service
             }
         }
 
-        private bool IsValidData(TrainingAndAttendanceModel obj)
+
+        public (bool isValid, string errorMessage) IsValidData(TrainingAndAttendanceModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
         {
-            if(string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
+            // Predefined valid course codes
+            var validCourseCodes = new List<string> { "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" };
+
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
-                return false;
+                return (false, "Household Number is required.");
             }
+
+            // Check if the household number is valid
+            if (!validHouseholdNumbers.Any(hh => hh.HouseholdNumber.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
+            {
+                return (false, "Household Number is not valid.");
+            }
+
             if (string.IsNullOrWhiteSpace(obj?.CourseCode?.Trim()))
             {
-                return false;
+                return (false, "Course Code is required.");
             }
-            // TODO: add more validation if needed
-            return true;
+
+            // Validate CourseCode
+            if (!validCourseCodes.Contains(obj.CourseCode.Trim().ToUpper()))
+            {
+                return (false, $"Course Code '{obj.CourseCode}' is not valid. Valid values are: {string.Join(", ", validCourseCodes)}.");
+            }
+
+            if (obj?.CourseDuration <= 0)
+            {
+                return (false, "Course Duration must be a positive integer.");
+            }
+
+            if (obj?.ClassesAttended > obj?.ClassesHeld)
+            {
+                return (false, "Classes Attended cannot exceed Classes Held.");
+            }
+
+            // Add more validation as needed
+            return (true, string.Empty);
         }
+
+
+
+
+
+
+        public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)
+        {
+            var response = new ResponseModel();
+            var errorMessages = new List<string>(); // To store validation error messages
+
+            try
+            {
+                // Fetch valid household numbers from the repository
+                var validHouseholdNumbers = _component2Repository.GetValidHouseholdNumbers();
+
+                foreach (var obj in request)
+                {
+                    // Pass valid household numbers to IsValidData
+                    var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
+
+                    if (!validationResult.isValid) // If not valid, store the error message and skip saving
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        continue;
+                    }
+
+                    // Save the valid record
+                    response = _component2Repository.SaveLivelihoodGrantDisbursement(obj);
+                }
+
+                // If there are any validation errors, return them in the response
+                if (errorMessages.Count > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = string.Join("; ", errorMessages); // Join error messages as a single string
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "All records saved successfully.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when saving Livelihood Grant Disbursement data. Error: " + ex.ToString());
+            }
+        }
+
+        public (bool isValid, string errorMessage) IsValidData(LivelihoodGrantDisbursementModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
+        {
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
+            {
+                return (false, "Household Number is required.");
+            }
+
+            // Check if the household number is valid
+            if (!validHouseholdNumbers.Any(hh => hh.HouseholdNumber.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
+            {
+                return (false, "Household Number is not valid.");
+            }
+
+            // Check for negative PaymentAmount
+            if (obj.PaymentAmount < 0)
+            {
+                return (false, "Payment Amount cannot be negative.");
+            }
+
+            if (string.IsNullOrWhiteSpace(obj.PaymentCycle))
+            {
+                return (false, "Payment Cycle is required.");
+            }
+
+            // Validate the PaymentCycle (for example, if you want to ensure valid cycles)
+            var validPaymentCycles = new List<string> { "Installment One", "Installment Two" };
+            if (!validPaymentCycles.Contains(obj.PaymentCycle.Trim()))
+            {
+                return (false, $"Payment Cycle '{obj.PaymentCycle}' is not valid. Valid values are: {string.Join(", ", validPaymentCycles)}.");
+            }
+
+            // Add more validation if needed
+            return (true, string.Empty);
+        }
+
 
         public ResponseModel SaveHouseholdGroups(List<HouseholdGroupModel> groups)
         {
