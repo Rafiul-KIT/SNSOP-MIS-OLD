@@ -12,6 +12,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
+
 namespace SSSNP_SNSOP.UI.Public_Works
 {
     
@@ -271,13 +272,23 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            DataTable dt = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, RadGrid.PageSize); // Fetch data
-            RadGrid.DataSource = dt;
+            try
+            {
+                // Fetch data for the grid
+                DataTable dt = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                RadGrid.DataSource = dt;
 
-            // Update total record count for pagination
-            int totalRecordCount = GetTrainingAttendanceDataCount();
-            RadGrid.VirtualItemCount = totalRecordCount; // Total records in the database
+                // Update total record count for pagination
+                int totalRecordCount = GetTrainingAttendanceDataCount();
+                RadGrid.VirtualItemCount = totalRecordCount; // Total records in the database
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Error in RadGrid_NeedDataSource: " + ex.Message);
+                throw;
+            }
         }
+
 
         // Fetch paginated data from the database
         private int GetTrainingAttendanceDataCount()
@@ -382,9 +393,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
             DivFailure.Visible = true;
             lblMessageError.Text = message;
 
-            // Hide the error message after 5 seconds
+            // Hide the error message after 10 seconds
             ScriptManager.RegisterStartupScript(this, GetType(), "HideError",
-                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 5000);", true);
+                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 10000);", true);
         }
 
         protected void ClearMessages()

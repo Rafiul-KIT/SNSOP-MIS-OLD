@@ -150,7 +150,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     dr["HouseholdNumber"] = grant.HouseholdNumber;
                     dr["PaymentCycle"] = grant.PaymentCycle;
                     dr["PaymentAmount"] = grant.PaymentAmount ?? (object)DBNull.Value; // Handle null values
-                    dr["PaymentDate"] = grant.PaymentDate ?? (object)DBNull.Value; // Handle null values
+                                                                                       // Handle null or invalid PaymentDate
+                    dr["PaymentDate"] = grant.PaymentDate.HasValue && grant.PaymentDate.Value != DateTime.MinValue
+                                        ? grant.PaymentDate.Value.ToString("MM-dd-yyyy")
+                                        : "N/A";
 
                     // Set ValidationStatus based on validation result
                     if (!validationResult.isValid)
@@ -290,11 +293,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             try
             {
-                // Construct the query with parameters for pagination
                 string query = @"SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate 
-                        FROM tbl_com2_Livelihood_Grant_Disbursement 
-                        ORDER BY Id 
-                        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+                         FROM tbl_com2_Livelihood_Grant_Disbursement 
+                         ORDER BY Id 
+                         OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
@@ -308,18 +310,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     }
                 }
 
-                // Update the total record count for pagination
-                RadGrid.VirtualItemCount = GetLivelihoodGrantDisbursementDataCount(); // Get total records
+                RadGrid.VirtualItemCount = GetLivelihoodGrantDisbursementDataCount();
             }
             catch (Exception ex)
             {
-                // Log the exception (consider using a logging framework)
                 AddErrorMessage("An error occurred while retrieving Livelihood Grant Disbursement data: " + ex.Message);
             }
 
             return dt;
         }
-
 
         protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
@@ -357,9 +356,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
             DivFailure.Visible = true;
             lblMessageError.Text = message;
 
-            // Hide the error message after 5 seconds
+            // Hide the error message after 10 seconds
             ScriptManager.RegisterStartupScript(this, GetType(), "HideError",
-                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 5000);", true);
+                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 10000);", true);
         }
 
         protected void ClearMessages()

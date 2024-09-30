@@ -174,9 +174,9 @@ namespace SSSNP.Service
             }
 
             // Check for negative PaymentAmount
-            if (obj.PaymentAmount < 0)
+            if (obj.PaymentAmount <= 0)
             {
-                return (false, "Payment Amount cannot be negative.");
+                return (false, "Payment Amount cannot be zero or negative.");
             }
 
             if (string.IsNullOrWhiteSpace(obj.PaymentCycle))
@@ -189,6 +189,20 @@ namespace SSSNP.Service
             if (!validPaymentCycles.Contains(obj.PaymentCycle.Trim()))
             {
                 return (false, $"Payment Cycle '{obj.PaymentCycle}' is not valid. Valid values are: {string.Join(", ", validPaymentCycles)}.");
+            }
+
+            if (!obj.PaymentDate.HasValue)
+            {
+                return (false, "Payment Date is required.");
+            }
+
+            // Ensure the date is not in the future and within a reasonable range (for example, between 1900 and today)
+            var minDate = new DateTime(1900, 1, 1);
+            var maxDate = DateTime.Today;
+
+            if (obj.PaymentDate.Value < minDate || obj.PaymentDate.Value > maxDate)
+            {
+                return (false, $"Payment Date must be between {minDate.ToString("MM-dd-yyyy")} and {maxDate.ToString("MM-dd-yyyy")}.");
             }
 
             // Add more validation if needed
