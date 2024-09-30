@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SSSNP_SNSOP.Core.Repository
-{        
+{
     public class Component2Repository
     {
         private readonly IDbOperation _dbOperation;
@@ -30,7 +30,14 @@ namespace SSSNP_SNSOP.Core.Repository
                 lock (_locker)
                 {
                     var isExist = IsRecordExist(obj.HouseholdNumber?.Trim());
-                    var denormalizedData = GetDenormalizedDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
+                    var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
+
+                    if(denormalizedData == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Nominee info not found for this household number: " + obj.HouseholdNumber?.Trim();
+                        return response;
+                    }
 
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
@@ -45,18 +52,18 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
                     data.Add("BomaID", denormalizedData.BomaID);
-                    data.Add("FirstName", denormalizedData.FirstName);
-                    data.Add("MiddleName", denormalizedData.MiddleName);
-                    data.Add("NickName", denormalizedData.NickName);
-                    data.Add("LastName", denormalizedData.LastName);
-                    data.Add("Gender", denormalizedData.Gender);
+                    data.Add("FirstName", denormalizedData.FirstName ?? (object)DBNull.Value);
+                    data.Add("MiddleName", denormalizedData.MiddleName ?? (object)DBNull.Value);
+                    data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
+                    data.Add("LastName", denormalizedData.LastName ?? (object)DBNull.Value);
+                    data.Add("Gender", denormalizedData.Gender ?? (object)DBNull.Value);
                     data.Add("Age", denormalizedData.Age);
                     if (!isExist)
                     {
                         data.Add("CreatedBy", obj.CreatedBy);
                         data.Add("CreatedDate", obj.CreatedDate);
                     }
-                    if(isExist)
+                    if (isExist)
                     {
                         data.Add("ModifiedBy", obj.ModifiedBy);
                         data.Add("ModifiedDate", obj.ModifiedDate);
@@ -72,16 +79,110 @@ namespace SSSNP_SNSOP.Core.Repository
                     response.Message = "Training and Attendance Tracking data saved successfully.";
                     return response;
                 }
-            } 
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Error when saving Training and Attendance Tracking data. Error: " + ex.ToString());
                 return new ResponseModel()
                 {
                     IsSuccess = false,
-                    Message = "Error when saving Training and Attendance Tracking data. Error: " + ex.ToString()
-
+                    Message = "Error when saving Training and Attendance Tracking data for this household number: " + obj.HouseholdNumber?.Trim()
                 };
+            }
+        }
+
+        public ResponseModel SaveLivelihoodGrantDisbursement(LivelihoodGrantDisbursementModel obj)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if the record already exists
+                    var isExist = IsRecordExistLivelihoodDisbursement(obj.HouseholdNumber?.Trim());
+
+                    // Retrieve denormalized data associated with the household number
+                    var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
+                    if (denormalizedData == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Nominee info not found for this beneficiary.";
+                        return response;
+                    }
+
+                    Dictionary<string, object> data = new Dictionary<string, object>();
+                    data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
+                    data.Add("PaymentCycle", obj.PaymentCycle);
+                    data.Add("PaymentAmount", obj.PaymentAmount);
+                    data.Add("PaymentDate", obj.PaymentDate);
+                    data.Add("StateID", denormalizedData.StateID);
+                    data.Add("CountyID", denormalizedData.CountyID);
+                    data.Add("PayamID", denormalizedData.PayamID);
+                    data.Add("BomaID", denormalizedData.BomaID);
+                    data.Add("FirstName", denormalizedData.FirstName ?? (object)DBNull.Value);
+                    data.Add("MiddleName", denormalizedData.MiddleName ?? (object)DBNull.Value);
+                    data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
+                    data.Add("LastName", denormalizedData.LastName ?? (object)DBNull.Value);
+                    data.Add("Gender", denormalizedData.Gender ?? (object)DBNull.Value);
+                    data.Add("Age", denormalizedData.Age);
+
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", obj.CreatedBy);
+                        data.Add("CreatedDate", obj.CreatedDate);
+                    }
+
+                    // Add ModifiedBy and ModifiedDate if it's an existing record
+                    if (isExist)
+                    {
+                        data.Add("ModifiedBy", obj.ModifiedBy);
+                        data.Add("ModifiedDate", obj.ModifiedDate);
+                    }
+
+                    // Perform Insert or Update based on whether the record already exists
+                    bool isAdded;
+                    if (isExist)
+                    {
+                        isAdded = _dbOperation.UpdateData("tbl_com2_Livelihood_Grant_Disbursement", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                    }
+                    else
+                    {
+                        isAdded = _dbOperation.InsertData("tbl_com2_Livelihood_Grant_Disbursement", data);
+                    }
+
+                    // Set the success message in response
+                    response.Message = "Livelihood Grant Disbursement data saved successfully.";
+                    response.IsSuccess = isAdded;
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return failure response
+                Console.WriteLine("Error when saving Livelihood Grant Disbursement data. Error: " + ex.ToString());
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Error when saving Livelihood Grant Disbursement data. Error: " + ex.ToString()
+                };
+            }
+        }
+        private bool IsRecordExistLivelihoodDisbursement(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Livelihood_Grant_Disbursement WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -140,7 +241,7 @@ namespace SSSNP_SNSOP.Core.Repository
 
         public DenormalizedDataModel GetDenormalizedDataByHouseholdNumber(string householdNumber)
         {
-            DenormalizedDataModel result = new DenormalizedDataModel();
+            DenormalizedDataModel result = null;
             try
             {
                 SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
@@ -148,6 +249,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     CommandType.Text, param);
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    result = new DenormalizedDataModel();
                     result.StateID = dt.Rows[0]["StateID"] != null ? Convert.ToInt32(dt.Rows[0]["StateID"].ToString()) : 0;
                     result.CountyID = dt.Rows[0]["CountyID"] != null ? Convert.ToInt32(dt.Rows[0]["CountyID"].ToString()) : 0;
                     result.PayamID = dt.Rows[0]["PayamID"] != null ? Convert.ToInt32(dt.Rows[0]["PayamID"].ToString()) : 0;
@@ -282,15 +384,15 @@ namespace SSSNP_SNSOP.Core.Repository
             try
             {
                 SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber", 
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber",
                     CommandType.Text, param);
-                if(dt != null && dt.Rows.Count > 0)
+                if (dt != null && dt.Rows.Count > 0)
                 {
                     return true;
                 }
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -328,11 +430,11 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     // Prepare data to insert/update
                     Dictionary<string, object> data = new Dictionary<string, object>
-            {
-                { "GroupName", model.GroupName?.Trim() },
-                { "Latitude", model.Latitude },
-                { "Longitude", model.Longitude }
-            };
+                    {
+                        { "GroupName", model.GroupName?.Trim() },
+                        { "Latitude", model.Latitude },
+                        { "Longitude", model.Longitude }
+                    };
 
                     // Add audit information based on whether the record is new or existing
                     if (!isExist)
@@ -445,7 +547,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     result.CountyID = dt.Rows[0]["intCountieid"] != null ? Convert.ToInt32(dt.Rows[0]["intCountieid"].ToString()) : 0;
                     result.PayamID = dt.Rows[0]["intPayamid"] != null ? Convert.ToInt32(dt.Rows[0]["intPayamid"].ToString()) : 0;
                     result.BomaID = dt.Rows[0]["intBomasid"] != null ? Convert.ToInt32(dt.Rows[0]["intBomasid"].ToString()) : 0;
-                    
+
                     string NameofHousehold = dt.Rows[0]["NameofHousehold"] != null ? dt.Rows[0]["NameofHousehold"].ToString() : string.Empty;
                     if (NameofHousehold != string.Empty)
                     {
@@ -603,5 +705,38 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw ex;
             }
         }
+        public List<ValidHouseholdNumberModel> GetValidHouseholdNumbers()
+        {
+            try
+            {
+                // Initialize a list to hold valid household numbers
+                var householdNumbers = new List<ValidHouseholdNumberModel>();
+
+                // Execute SQL command to retrieve household numbers
+                var dt = _dbOperation.ExecuteDataTable("SELECT household_number FROM tbl_BeneficiaryServiceDet", CommandType.Text);
+
+                // Check if the DataTable is not null and contains rows
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        // Create a new model instance and add the household number
+                        householdNumbers.Add(new ValidHouseholdNumberModel
+                        {
+                            HouseholdNumber = row["household_number"] != DBNull.Value ? row["household_number"].ToString() : null
+                        });
+                    }
+                }
+
+                return householdNumbers; // Return the list of valid household numbers
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when retrieving valid household numbers. Error: " + ex.ToString());
+                return new List<ValidHouseholdNumberModel>(); // Return an empty list in case of an error
+            }
+        }
+
     }
+
 }

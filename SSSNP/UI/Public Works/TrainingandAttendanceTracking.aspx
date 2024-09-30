@@ -3,23 +3,28 @@
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 20px; font-size: 16px;">
+        <div align="left" style="vertical-align: top">
+            <ol class="breadcrumb">
+                <li>You are here&nbsp;!&nbsp; &nbsp; &nbsp;</li>
+                <li>
+                    <i class="fa fa-dashboard"></i><a href="Home.aspx">Dashboard</a>
+                </li>
+                <li class="">
+                    <i class="fa fa-fw fa-desktop"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-edit"></i><a href="#">Training and Attendance Tracking</a>
+                </li>
+            </ol>
+        </div>
+        <br />
+        <!-- Link for Downloading Excel Template -->
+       <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click" style="background-color: limegreen; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: normal;">&emsp;Import Training and Attendance Template</asp:LinkButton>
+
+    </div>
     <asp:UpdatePanel ID="upd1" runat="server">
         <ContentTemplate>
-            <div align="left" style="vertical-align: top">
-                <ol class="breadcrumb">
-                    <li>You are here&nbsp;!&nbsp; &nbsp; &nbsp;</li>
-                    <li>
-                        <i class="fa fa-dashboard"></i><a href="Home.aspx">Dashboard</a>
-                    </li>
-                    <li class="">
-                        <i class="fa fa-fw fa-desktop"></i>
-                    </li>
-                    <li class="active">
-                        <i class="fa fa-edit"></i><a href="#">Training and Attendance Tracking</a>
-                    </li>
-                </ol>
-            </div>
-
             <div align="center">
                 <div class="row" align="left" style="width: 98%">
                     <div class="col-lg-11" style="padding-left: 0px">
@@ -35,7 +40,7 @@
                                     <!-- Custom file upload button -->
                                     <div class="custom-file-upload">
                                         <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
-                                        
+
                                         <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
                                         <span id="fileInfo" class="file-info">No file chosen</span>
                                         <!-- File name and size display -->
@@ -66,6 +71,38 @@
                                         border: 1px solid #ccc; /* Add border around the "No file chosen" field */
                                         border-radius: 4px;
                                     }
+
+                                    .download-link {
+                                        display: inline-block;
+                                        color: #ffffff;
+                                        background-color: #007bff;
+                                        padding: 10px 20px;
+                                        text-decoration: none;
+                                        border-radius: 5px;
+                                        transition: background-color 0.3s ease;
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                    }
+
+                                        .download-link:hover {
+                                            background-color: #0056b3;
+                                            color: #fff;
+                                            text-decoration: none;
+                                        }
+
+                                        .download-link i {
+                                            margin-right: 5px;
+                                        }
+
+                                    .enhanced-link {
+                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                        transition: all 0.2s ease-in-out;
+                                    }
+
+                                        .enhanced-link:hover {
+                                            transform: translateY(-2px);
+                                            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+                                        }
                                 </style>
 
 
@@ -86,8 +123,7 @@
                                     <br />
                                     <br />
 
-                                    <!-- Link for Downloading Excel Template -->
-                                    <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click">Import Training and Attendance Template File</asp:LinkButton>
+
                                 </div>
 
                                 <!-- Action Buttons -->
@@ -106,16 +142,20 @@
                                 </div>
 
                                 <!-- Telerik RadGrid for displaying data -->
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10">
-                                    <MasterTableView>
+                                <telerik:RadGrid ID="RadGrid" runat="server" OnItemDataBound="RadGrid_ItemDataBound" AutoGenerateColumns="false" AllowPaging="true" PageSize="10"
+                                    OnNeedDataSource="RadGrid_NeedDataSource" AllowCustomPaging="True" GridLines="Both">
+                                    <PagerStyle Mode="NextPrevAndNumeric" />
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True">
                                         <Columns>
-                                            <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
-                                            <telerik:GridBoundColumn DataField="CourseCode" HeaderText="Course Code" UniqueName="CourseCode" />
-                                            <telerik:GridBoundColumn DataField="CourseDuration" HeaderText="Course Duration" UniqueName="CourseDuration" DataFormatString="{0:N0}" />
-                                            <telerik:GridBoundColumn DataField="ClassesAttended" HeaderText="Classes Attended" UniqueName="ClassesAttended" DataFormatString="{0:N0}" />
-                                            <telerik:GridBoundColumn DataField="ClassesHeld" HeaderText="Classes Held" UniqueName="ClassesHeld" DataFormatString="{0:N0}" />
-                                            <telerik:GridBoundColumn DataField="ClassesMissed" HeaderText="Classes Missed" UniqueName="ClassesMissed" DataFormatString="{0:N0}" />
-                                            <telerik:GridBoundColumn DataField="WhyMissed" HeaderText="Why Missed" UniqueName="WhyMissed" />
+                                            <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
+                                            <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" />
+                                            <telerik:GridBoundColumn DataField="CourseCode" HeaderText="Course Code" />
+                                            <telerik:GridBoundColumn DataField="CourseDuration" HeaderText="Course Duration" />
+                                            <telerik:GridBoundColumn DataField="ClassesAttended" HeaderText="Classes Attended" />
+                                            <telerik:GridBoundColumn DataField="ClassesHeld" HeaderText="Classes Held" />
+                                            <telerik:GridBoundColumn DataField="ClassesMissed" HeaderText="Classes Missed" />
+                                            <telerik:GridBoundColumn DataField="WhyMissed" HeaderText="Why Missed" />
+                                            <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
@@ -129,4 +169,13 @@
             <asp:PostBackTrigger ControlID="btnUpload" />
         </Triggers>
     </asp:UpdatePanel>
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>
