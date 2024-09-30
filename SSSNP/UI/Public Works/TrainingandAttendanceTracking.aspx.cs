@@ -295,9 +295,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        conn.Open();
-                        sda.Fill(dt);
-                        conn.Close();
                         totalRecords = (int)cmd.ExecuteScalar();
                     }
                 }

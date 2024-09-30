@@ -341,6 +341,17 @@ namespace SSSNP.Service
                     response.Message += $" {skipCount} records were skipped due to incomplete or invalid data.";
                 }
 
+                return response;  // Return the response model
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error saving Beneficiary data: " + ex.Message;
+                return response;  // Return the error response
+            }
+        }
+
+
         public ResponseModel SaveFinancialServiceLinkage(List<FinancialServiceLinkageTrackingModel> request)
         {
             var response = new ResponseModel();
@@ -369,7 +380,7 @@ namespace SSSNP.Service
                 return false; // HouseholdNumber is mandatory
             }
 
-           /* // Booleans must not be null
+            // Booleans must not be null
             if (beneficiary.InterestedInParticipating == null ||
                 beneficiary.SurvivesTargeting == null ||
                 beneficiary.TreatmentArm == null ||
@@ -377,7 +388,7 @@ namespace SSSNP.Service
             {
                 Debug.WriteLine($"Validation failed: Boolean value is missing for beneficiary with HouseholdNumber {beneficiary.HouseholdNumber}.");
                 return false;
-            }*/
+            }
 
             // Log successful validation
             Debug.WriteLine($"Validation passed for HouseholdNumber {beneficiary.HouseholdNumber}.");
@@ -386,11 +397,6 @@ namespace SSSNP.Service
         }
 
 
-
-
-                throw new Exception("Error when saving Financial Service Linkage Tracking data. Error: " + ex.ToString());
-            }
-        }
 
         private bool IsValidData(FinancialServiceLinkageTrackingModel obj)
         {

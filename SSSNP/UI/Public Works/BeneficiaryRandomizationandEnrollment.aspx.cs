@@ -112,6 +112,7 @@ namespace SSSNP.UI.Public_Works
         protected void btnAnalyze_Click(object sender, EventArgs e)
         {
             ClearMessages(); // Clear any previous messages
+            Session["IsAnalyzing"] = true;
             try
             {
                 Component2Service service = new Component2Service();
@@ -139,7 +140,6 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("EnrolledMemberID", typeof(int));  // Add EnrolledMemberID
 
                 // Loop through the list and dynamically check for redundancy
-                // Loop through the list and dynamically check for redundancy
                 foreach (var beneficiary in beneficiaries)
                 {
                     DataRow dr = dt.NewRow();
@@ -166,9 +166,22 @@ namespace SSSNP.UI.Public_Works
                 }
 
 
+               // Store the DataTable in session for pagination
+                Session["AnalyzedData"] = dt;
+
+                // Set total record count for analysis
+                int totalRecordCount = dt.Rows.Count;
+                Session["TotalRecordCount"] = totalRecordCount;
+
+                // Trigger pagination setup for analysis results
+                RadGrid.VirtualItemCount = totalRecordCount;
+                RadGrid.CurrentPageIndex = 0;
+
                 // Bind the DataTable to the RadGrid for display
+                RadGrid.DataSource = null;
                 RadGrid.DataSource = dt;
                 RadGrid.DataBind();
+                RadGrid.Visible = true;
 
                 AddSuccessMessage("Data analyzed successfully.");
                 btnImport.Enabled = true;
@@ -213,14 +226,17 @@ namespace SSSNP.UI.Public_Works
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             ClearMessages();
+            Session["IsAnalyzing"] = false;
             try
             {
                 int totalRecordCount = GetBeneficiaryRandomizationandEnrollmentCount();
                 Session["TotalRecordCount"] = totalRecordCount;
                 RadGrid.CurrentPageIndex = 0;
                 RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
-                RadGrid.DataBind();
+                RadGrid.DataSource = null;
+                RadGrid.Rebind();
                 RadGrid.Visible = true;
+
             }
             catch (Exception ex)
             {
@@ -256,16 +272,10 @@ namespace SSSNP.UI.Public_Works
         }
         private DataTable GetBeneficiaryRandomizationandEnrollmentData(int pageIndex, int pageSize)
         {
-            string query = @"SELECT Id, HouseholdNumber, 
-            InterestedInParticipating, 
-            SurvivesTargeting, 
-            TreatmentArm, 
-            HHEnrollmentStatus, 
-            GroupID, 
-            EnrolledMemberID
-            FROM tbl_com2_Household_Enrollment_Data 
-            ORDER BY Id 
-            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+            string query = @"SELECT Id, HouseholdNumber, InterestedInParticipating, SurvivesTargeting, TreatmentArm, HHEnrollmentStatus, GroupID, EnrolledMemberID
+                     FROM tbl_com2_Household_Enrollment_Data 
+                     ORDER BY Id 
+                     OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
             DataTable dt = new DataTable();
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -276,6 +286,7 @@ namespace SSSNP.UI.Public_Works
                 {
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
+                        // Set OFFSET and PageSize for pagination
                         cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
                         cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
@@ -292,36 +303,53 @@ namespace SSSNP.UI.Public_Works
             return dt;
         }
 
+
         protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
-            if (e.Item is GridDataItem) // Check if the item is a data row
+            // Check if the current operation is analyzing (based on the flag)
+            if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
             {
-                GridDataItem dataItem = (GridDataItem)e.Item;
-
-                // Get the value of the "HouseholdId" field directly
-                string householdIdText = dataItem["Id"].Text;
-
-                // If the householdId is not empty or null, mark the row as redundant
-                if (!string.IsNullOrEmpty(householdIdText) && householdIdText != "&nbsp;") // Check if householdId is valid
+                // Only apply the redundancy check and row highlighting if analyzing
+                if (e.Item is GridDataItem) // Check if the item is a data row
                 {
-                    dataItem.CssClass = "redundant-row"; // Apply the CSS class for redundant rows
+                    GridDataItem dataItem = (GridDataItem)e.Item;
+                    string householdIdText = dataItem["Id"].Text;  // Get the value of the "HouseholdId" field
+
+                    // If the householdId is not empty or null, mark the row as redundant
+                    if (!string.IsNullOrEmpty(householdIdText) && householdIdText != "&nbsp;")
+                    {
+                        dataItem.CssClass = "redundant-row"; // Apply the CSS class for redundant rows
+                    }
                 }
             }
         }
-        protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
+
+        protected void RadGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
             try
             {
-                DataTable dt = GetBeneficiaryRandomizationandEnrollmentData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                DataTable dt;
+
+                if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
+                {
+                    // Fetch analyzed data from session
+                    dt = Session["AnalyzedData"] as DataTable;
+                }
+                else
+                {
+                    // Fetch the data for search result
+                    dt = GetBeneficiaryRandomizationandEnrollmentData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                }
+
                 RadGrid.DataSource = dt;
 
                 if (Session["TotalRecordCount"] != null && int.TryParse(Session["TotalRecordCount"].ToString(), out int totalRecordCount))
                 {
-                    RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
+                    // Set total item count for pagination
+                    RadGrid.VirtualItemCount = totalRecordCount;
                 }
                 else
                 {
-                    AddErrorMessage("Total record count is invalid or missing.");
                     RadGrid.VirtualItemCount = 0; // Default to 0 if no valid count is found
                 }
             }
@@ -330,6 +358,8 @@ namespace SSSNP.UI.Public_Works
                 AddErrorMessage("Data binding failed: " + ex.Message);
             }
         }
+
+
 
 
         private bool? ParseBoolean(string value)

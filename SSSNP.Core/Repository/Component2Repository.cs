@@ -283,6 +283,7 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     if (denormalizedData == null)
                     {
+                        Debug.WriteLine("Denormalized data is null for HouseholdNumber: " + model.HouseholdNumber);
                         response.IsSuccess = false;
                         response.Message = "Nominee info not found for this household number: " + model.HouseholdNumber?.Trim();
                         return response;
