@@ -274,13 +274,13 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LivelihoodGrantDisbursement;
 
     /// <summary>
-    /// FinancialServicesLinkageTracking control.
+    /// FinancialServiceLinkageTracking control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl FinancialServicesLinkageTracking;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl FinancialServiceLinkageTracking;
 
     /// <summary>
     /// CoachingSessionTracking control.

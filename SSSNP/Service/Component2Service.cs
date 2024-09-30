@@ -194,6 +194,16 @@ namespace SSSNP.Service
                     response.Message += $" {skipCount} records were skipped due to incomplete or invalid data.";
                 }
 
+        public ResponseModel SaveFinancialServiceLinkage(List<FinancialServiceLinkageTrackingModel> request)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                foreach (var obj in request)
+                {
+                    if (!IsValidData(obj)) continue;
+                    response = _component2Repository.SaveFinancialServiceLinkage(obj);
+                }
                 return response;
             }
             catch (Exception ex)
@@ -231,5 +241,21 @@ namespace SSSNP.Service
 
 
 
+                throw new Exception("Error when saving Financial Service Linkage Tracking data. Error: " + ex.ToString());
+            }
+        }
+
+        private bool IsValidData(FinancialServiceLinkageTrackingModel obj)
+        {
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
+            {
+                return false;
+            }
+            if (obj?.ConnectedFinancialServices == null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

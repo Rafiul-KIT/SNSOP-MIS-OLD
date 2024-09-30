@@ -380,10 +380,10 @@
     <Content Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrint.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx" />
+    <Content Include="UI\Public Works\FinancialServiceLinkageTracking.aspx" />
     <Content Include="UI\Public Works\BusinessPlanDevelopment.aspx" />
     <Content Include="UI\Public Works\CashTransferSummaryMNE.aspx" />
     <Content Include="UI\Public Works\CoachingSessionTracking.aspx" />
-    <Content Include="UI\Public Works\FinancialServicesLinkageTracking.aspx" />
     <Content Include="UI\Public Works\frmBenInvoice_LOC.aspx" />
     <Content Include="UI\Public Works\GBVDashboard.aspx" />
     <Content Include="UI\Public Works\GBVDetailManagement.aspx" />
@@ -952,6 +952,13 @@
     <Compile Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx.designer.cs">
       <DependentUpon>BulkInvoicePrintAutoRec.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\FinancialServiceLinkageTracking.aspx.cs">
+      <DependentUpon>FinancialServiceLinkageTracking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\FinancialServiceLinkageTracking.aspx.designer.cs">
+      <DependentUpon>FinancialServiceLinkageTracking.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\BusinessPlanDevelopment.aspx.cs">
       <DependentUpon>BusinessPlanDevelopment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -972,13 +979,6 @@
     </Compile>
     <Compile Include="UI\Public Works\CoachingSessionTracking.aspx.designer.cs">
       <DependentUpon>CoachingSessionTracking.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Public Works\FinancialServicesLinkageTracking.aspx.cs">
-      <DependentUpon>FinancialServicesLinkageTracking.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Public Works\FinancialServicesLinkageTracking.aspx.designer.cs">
-      <DependentUpon>FinancialServicesLinkageTracking.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\frmBenInvoice_LOC.aspx.cs">
       <DependentUpon>frmBenInvoice_LOC.aspx</DependentUpon>
