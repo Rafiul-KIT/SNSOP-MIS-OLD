@@ -179,26 +179,33 @@ namespace SSSNP_SNSOP.Core.Repository
                     var isExist = IsRecordExist_HouseholdNumber(model.HouseholdNumber?.Trim());
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(model.HouseholdNumber?.Trim());
 
+                    if (denormalizedData == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Nominee info not found for this household number: " + model.HouseholdNumber?.Trim();
+                        return response;
+                    }
+
+
                     // Prepare data to insert/update
                     Dictionary<string, object> data = new Dictionary<string, object>();
 
-                    data.Add("HouseholdNumber", !string.IsNullOrEmpty(model.HouseholdNumber?.Trim()) ? (object)model.HouseholdNumber.Trim() : DBNull.Value);
-                    data.Add("InterestedInParticipating", model.InterestedInParticipating != null ? (object)model.InterestedInParticipating : DBNull.Value);
-                    data.Add("SurvivesTargeting", model.SurvivesTargeting != null ? (object)model.SurvivesTargeting : DBNull.Value);
-                    data.Add("TreatmentArm", model.TreatmentArm != null ? (object)model.TreatmentArm : DBNull.Value);
-                    data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus != null ? (object)model.HHEnrollmentStatus : DBNull.Value);
-                    data.Add("GroupID", model.GroupID != 0 ? (object)model.GroupID : DBNull.Value); // Assuming 0 is an invalid GroupID
-                    data.Add("EnrolledMemberID", model.EnrolledMemberID != 0 ? (object)model.EnrolledMemberID : DBNull.Value); // Assuming 0 is invalid
-                    data.Add("StateID", denormalizedData.StateID != 0 ? (object)denormalizedData.StateID : DBNull.Value); // Assuming 0 is invalid
-                    data.Add("CountyID", denormalizedData.CountyID != 0 ? (object)denormalizedData.CountyID : DBNull.Value); // Assuming 0 is invalid
-                    data.Add("PayamID", denormalizedData.PayamID != 0 ? (object)denormalizedData.PayamID : DBNull.Value); // Assuming 0 is invalid
-                    data.Add("BomaID", denormalizedData.BomaID != 0 ? (object)denormalizedData.BomaID : DBNull.Value); // Assuming 0 is invalid
-                    data.Add("FirstName", !string.IsNullOrEmpty(denormalizedData.FirstName) ? (object)denormalizedData.FirstName : DBNull.Value);
-                    data.Add("MiddleName", !string.IsNullOrEmpty(denormalizedData.MiddleName) ? (object)denormalizedData.MiddleName : DBNull.Value);
-                    data.Add("NickName", !string.IsNullOrEmpty(denormalizedData.NickName) ? (object)denormalizedData.NickName : DBNull.Value);
-                    data.Add("LastName", !string.IsNullOrEmpty(denormalizedData.LastName) ? (object)denormalizedData.LastName : DBNull.Value);
-                    data.Add("Gender", !string.IsNullOrEmpty(denormalizedData.Gender) ? (object)denormalizedData.Gender : DBNull.Value);
-                    data.Add("Age", denormalizedData.Age != 0 ? (object)denormalizedData.Age : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("HouseholdNumber", model.HouseholdNumber?.Trim());
+                    data.Add("InterestedInParticipating", model.InterestedInParticipating);
+                    data.Add("SurvivesTargeting", model.SurvivesTargeting);
+                    data.Add("TreatmentArm", model.TreatmentArm);
+                    data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus);
+                    data.Add("GroupID", model.GroupID); // Assuming 0 is an invalid GroupID
+                    data.Add("EnrolledMemberID", model.EnrolledMemberID); // Assuming 0 is invalid
+                    data.Add("CountyID", denormalizedData.CountyID);
+                    data.Add("PayamID", denormalizedData.PayamID);
+                    data.Add("BomaID", denormalizedData.BomaID);
+                    data.Add("FirstName", denormalizedData.FirstName ?? (object)DBNull.Value);
+                    data.Add("MiddleName", denormalizedData.MiddleName ?? (object)DBNull.Value);
+                    data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
+                    data.Add("LastName", denormalizedData.LastName ?? (object)DBNull.Value);
+                    data.Add("Gender", denormalizedData.Gender ?? (object)DBNull.Value);
+                    data.Add("Age", denormalizedData.Age);
 
 
                     // Add audit information based on whether the record is new or existing
@@ -419,7 +426,7 @@ namespace SSSNP_SNSOP.Core.Repository
 
         public DenormalizedDataModel GetDenormalizedBeneficiaryDataByHouseholdNumber(string householdNumber)
         {
-            DenormalizedDataModel result = new DenormalizedDataModel();
+            DenormalizedDataModel result = null;
             try
             {
                 SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
@@ -432,6 +439,8 @@ namespace SSSNP_SNSOP.Core.Repository
                     CommandType.Text, param);
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    result = new DenormalizedDataModel();
+
                     result.StateID = dt.Rows[0]["intStateid"] != null ? Convert.ToInt32(dt.Rows[0]["intStateid"].ToString()) : 0;
                     result.CountyID = dt.Rows[0]["intCountieid"] != null ? Convert.ToInt32(dt.Rows[0]["intCountieid"].ToString()) : 0;
                     result.PayamID = dt.Rows[0]["intPayamid"] != null ? Convert.ToInt32(dt.Rows[0]["intPayamid"].ToString()) : 0;
