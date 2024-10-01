@@ -70,11 +70,18 @@ namespace SSSNP.UI.Public_Works
                     // Create a list to hold the parsed data
                     List<BusinessPlanDevelopmentModel> list = new List<BusinessPlanDevelopmentModel>();
 
+                    HashSet<string> uniqueHHNumber = new HashSet<string>();
+
                     // Loop through the worksheet rows and populate the list
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
                         if (!string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
                         {
+                            if (uniqueHHNumber.Contains(worksheet.Cells[row, 1].Text))
+                            {
+                                continue;
+                            }
+                            uniqueHHNumber.Add(worksheet.Cells[row, 1].Text);
                             int BusinessTypeVal = 0;
                             string cell3 = (worksheet.Cells[row, 3] != null) ? worksheet.Cells[row, 3].Text.ToString() : null;
                             if (cell3 != null)
@@ -105,7 +112,7 @@ namespace SSSNP.UI.Public_Works
                     // Store the list in session for further processing
                     Session["UploadedBusinessPlanData"] = list;
 
-                    AddSuccessMessage("File uploaded and data parsed successfully. You can now analyze it.");
+                    AddSuccessMessage("File uploaded and data parsed successfully. You can now analyze it.", false);
                     btnAnalyze.Enabled = true;
                 }
             }
@@ -140,6 +147,8 @@ namespace SSSNP.UI.Public_Works
 
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
 
+                var validList = new List<BusinessPlanDevelopmentModel>();
+
                 foreach (var obj in list)
                 {
                     if (!string.IsNullOrEmpty(obj.HouseholdNumber))
@@ -158,12 +167,15 @@ namespace SSSNP.UI.Public_Works
                         else
                         {
                             dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
+                            validList.Add(obj);
                         }
                         dt.Rows.Add(dr);
 
                         serial++;
                     }
                 }
+
+                Session["UploadedBusinessPlanData"] = validList;
 
                 // Bind the data to RadGrid for display
                 RadGrid.DataSource = dt;
@@ -173,7 +185,7 @@ namespace SSSNP.UI.Public_Works
                 RadGrid.VirtualItemCount = dt.Rows.Count;
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
-                AddSuccessMessage("File analyzed successfully. You can now import it.");
+                AddSuccessMessage("File analyzed successfully. You can now import it.", false);
                 btnImport.Enabled = true;
 
                 isAnalyzed = true;
@@ -204,13 +216,13 @@ namespace SSSNP.UI.Public_Works
 
                 if (response.IsSuccess)
                 {
-                    AddSuccessMessage("Data imported successfully.");
-                    btnImport.Enabled = false;
-                    btnAnalyze.Enabled = false;
+                    AddSuccessMessage(list.Count+" records imported successfully");
+                    RadGrid.DataSource = null;
+                    RadGrid.DataBind();
                 }
                 else
                 {
-                    AddErrorMessage("Import failed: " + response.Message);
+                    AddErrorMessage("Import failed: "+response.Message);
                 }
             }
             catch (Exception ex)
@@ -320,14 +332,17 @@ namespace SSSNP.UI.Public_Works
             return dt;
         }
 
-        private void AddSuccessMessage(string message)
+        private void AddSuccessMessage(string message, bool removeAfterTimeout = true)
         {
             DivSuccess.Visible = true;
             lblMessageSuccess.Text = message;
 
             // Hide the success message after 5 seconds
-            ScriptManager.RegisterStartupScript(this, GetType(), "HideSuccess",
-                "setTimeout(function() { document.getElementById('" + DivSuccess.ClientID + "').style.display = 'none'; }, 5000);", true);
+            if (removeAfterTimeout)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "HideSuccess",
+                    "setTimeout(function() { document.getElementById('" + DivSuccess.ClientID + "').style.display = 'none'; }, 5000);", true);
+            }
         }
 
         private void AddErrorMessage(string message)
@@ -336,8 +351,8 @@ namespace SSSNP.UI.Public_Works
             lblMessageError.Text = message;
 
             // Hide the error message after 5 seconds
-            ScriptManager.RegisterStartupScript(this, GetType(), "HideError",
-                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 5000);", true);
+            //ScriptManager.RegisterStartupScript(this, GetType(), "HideError",
+            //    "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 5000);", true);
         }
 
         protected void ClearMessages()
