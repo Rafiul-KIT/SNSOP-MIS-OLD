@@ -72,8 +72,7 @@ namespace SSSNP.Service
         public (bool isValid, string errorMessage) IsValidData(TrainingAndAttendanceModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
         {
             // Predefined valid course codes
-            var validCourseCodes = new List<string> { "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" };
-
+            
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return (false, "Household Number is required.");
@@ -89,6 +88,7 @@ namespace SSSNP.Service
             {
                 return (false, "Course Code is required.");
             }
+            var validCourseCodes = new List<string> { "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" };
 
             // Validate CourseCode
             if (!validCourseCodes.Contains(obj.CourseCode.Trim().ToUpper()))

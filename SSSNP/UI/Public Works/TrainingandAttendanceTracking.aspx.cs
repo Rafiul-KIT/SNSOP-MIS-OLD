@@ -8,9 +8,9 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
+using System.Web.UI;
 
 
 namespace SSSNP_SNSOP.UI.Public_Works
@@ -19,7 +19,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
     public partial class TrainingandAttendanceTracking : Page
     {
         private Component2Service _component2Service;
-        private bool isAnalyzed = false;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -146,13 +145,12 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 // Store error messages for rows with validation issues
                 int serial = 1;
-                var errorMessages = new List<string>();
 
                 // Fetch valid household numbers for validation
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
-
+                var validAttendanceList = attendanceList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
                 // Iterate over attendanceList and validate each entry
-                foreach (var attendance in attendanceList)
+                foreach (var attendance in validAttendanceList)
                 {
                     var validationResult = _component2Service.IsValidData(attendance, validHouseholdNumbers); // Call validation
 
@@ -184,16 +182,16 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 // Bind the data to RadGrid for display
                 Session["AnalyzedData"] = dt;
-                RadGrid.Visible = true;
                 int totalRecordCount = dt.Rows.Count;
                 Session["TotalRecordCount"] = totalRecordCount;
-                RadGrid.CurrentPageIndex = 0;
                 RadGrid.VirtualItemCount = totalRecordCount;
-                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
+                RadGrid.CurrentPageIndex = 0;
                 RadGrid.DataSource = null;
                 RadGrid.DataSource = dt;
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
                 RadGrid.DataBind();
                 RadGrid.Visible = true;
+
 
 
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
@@ -263,6 +261,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 RadGrid.CurrentPageIndex = 0;
                 RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
                 RadGrid.DataSource = null;
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
                 RadGrid.Rebind();
                 RadGrid.Visible = true;
             }
@@ -370,9 +369,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         da.Fill(dt);
                     }
                 }
-
-                // Update the total record count for pagination
-                RadGrid.VirtualItemCount = GetTrainingAttendanceDataCount(); // Get total records
             }
             catch (Exception ex)
             {
@@ -387,11 +383,12 @@ namespace SSSNP_SNSOP.UI.Public_Works
         {
             if (e.Item is GridDataItem dataItem)
             {
+                DataTable analyzedData = Session["AnalyzedData"] as DataTable;
                 // Check if the analysis has been performed
                 if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
                 {
                     // Get the analyzed data from the session
-                    DataTable analyzedData = Session["AnalyzedData"] as DataTable;
+                    
                     if (analyzedData != null)
                     {
                         // Get the current row's HouseholdNumber or any identifier
