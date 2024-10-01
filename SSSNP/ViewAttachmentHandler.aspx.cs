@@ -1302,17 +1302,6 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 7].Value = "Enrolled Member ID";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 7; col++)
-
-                    
-
-                    // Add headers to the worksheet (reflecting your table schema)
-                    worksheet.Cells[1, 1].Value = "Household Number";
-                    worksheet.Cells[1, 2].Value = "Payment Cycle";
-                    worksheet.Cells[1, 3].Value = "Payment Amount";
-                    worksheet.Cells[1, 4].Value = "Payment Date";  // DateTime field
-
-                    // Set headers to be bold
                     for (int col = 1; col <= 4; col++)
 
                     {
@@ -1341,8 +1330,21 @@ namespace SSSNP_SNSOP
             {
                 using (ExcelPackage package = new ExcelPackage())
                 {
-
+                    // Create a new worksheet
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Livelihood Grant Disbursement Template");
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Payment Cycle";
+                    worksheet.Cells[1, 3].Value = "Payment Amount";
+                    worksheet.Cells[1, 4].Value = "Payment Date";  // DateTime field
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 4; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
                     // Suppose we know the number of data rows to be inserted
                     // In this example, assume we are inserting 10 rows of data dynamically
                     int dataRows = 20; // Replace this with the actual number of data rows to be inserted
@@ -1375,13 +1377,12 @@ namespace SSSNP_SNSOP
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("Content-Disposition", "attachment; filename=LivelihoodGrantDisbursementTemplate.xlsx");
 
-
                     // Write the file to the response stream
                     Response.BinaryWrite(package.GetAsByteArray());
                     Response.Flush();
                     Response.Close();
-                    }
                 }
+            }
             catch (Exception ex)
             {
                 // Log the error if needed

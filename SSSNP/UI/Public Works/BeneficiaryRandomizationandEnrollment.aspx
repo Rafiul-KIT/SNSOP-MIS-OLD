@@ -126,6 +126,7 @@
         </ContentTemplate>
         <Triggers>
             <asp:PostBackTrigger ControlID="btnUpload" />
+            <asp:PostBackTrigger ControlID="lnkDownloadTemplate" />
         </Triggers>
     </asp:UpdatePanel>
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
