@@ -112,7 +112,7 @@
                                 <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" 
                                     OnNeedDataSource="RadGrid_NeedDataSource" OnItemDataBound="RadGrid_ItemDataBound" AllowCustomPaging="True" GridLines="Both" >
                                     <PagerStyle Mode="NextPrevAndNumeric" />
-                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True">
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" PagerStyle-AlwaysVisible="True" AllowPaging="True" AllowCustomPaging="True">
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />

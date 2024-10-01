@@ -1197,7 +1197,7 @@ namespace SSSNP_SNSOP
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
-
+                    worksheet.Cells.AutoFitColumns();
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -1300,12 +1300,12 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 7].Value = "Enrolled Member ID";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 4; col++)
+                    for (int col = 1; col <= 7; col++)
 
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
-
+                    worksheet.Cells.AutoFitColumns();
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
