@@ -1,5 +1,6 @@
 ﻿<%@ Page Title=":: :: SSSNP : : Beneficiary Randomization and Enrollment" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="BeneficiaryRandomizationandEnrollment.aspx.cs" Inherits="SSSNP.UI.Public_Works.BeneficiaryRandomizationandEnrollment" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -25,41 +26,10 @@
                     <div class="col-lg-11" style="padding-left: 0px">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Household Group View</h3>
+                                <h3 class="panel-title">Beneficiary Randomization and Enrollment</h3>
                             </div>
 
                             <div class="panel-body">
-                                <!-- File Upload for Excel -->
-                                <%--<div class="form-group">
-                                    <label for="fileUpload" class="control-label">Attachment:</label>
-                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Enabled="true" Style="width: 400px;" />
-                                </div>
-
-                                <script type="text/javascript">
-                                    document.addEventListener("DOMContentLoaded", function () {
-                                        var fileInput = document.getElementById('<%= fileUpload.ClientID %>');
-
-                                        // Function to adjust the width based on the file name or default "No file chosen"
-                                        function adjustWidth() {
-                                            var fileName = fileInput.value.split('\\').pop(); // Get the file name
-                                            var defaultText = "No file chosen"; // Default text
-                                            var length = fileName.length || defaultText.length; // Use default text length if no file is selected
-
-                                            // Set the width dynamically based on the file name or default text
-                                            var newWidth = Math.max(110, length * 10); // Adjust multiplier for control over the width
-
-                                            // Apply the new calculated width
-                                            fileInput.style.width = newWidth + 'px';
-                                        }
-
-                                        // Set width when the page loads
-                                        adjustWidth();
-
-                                        // Add event listeners for when the input changes
-                                        fileInput.addEventListener('change', adjustWidth); // When a file is selected
-                                        fileInput.addEventListener('input', adjustWidth);  // To handle any other changes
-                                    });
-                                </script>--%>
                                 <div class="form-group">
                                     <label for="fileUpload" class="control-label">Attachment:</label>
                                     <div style="display: flex;">
@@ -96,7 +66,7 @@
                                     <br />
 
                                     <!-- Link for Downloading Excel Template -->
-                                    <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click">Import Household Group Template File</asp:LinkButton>
+                                    <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click">Import Beneficiary Randomization and Enrollment Template File</asp:LinkButton>
                                 </div>
 
                                 <!-- Action Buttons -->
@@ -114,16 +84,25 @@
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
 
-                                <style type="text/css">
+                                <%--<style type="text/css">
                                     .redundant-row {
                                         background-color: #f8d7da; /* Light red background */
                                         color: #721c24; /* Dark red text */
                                     }
-                                </style>
+                                </style>--%>
 
 
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" AllowCustomPaging="true" PageSize="10" OnItemDataBound="RadGrid_ItemDataBound" OnNeedDataSource="RadGrid_NeedDataSource">
-                                    <MasterTableView>
+                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" AllowSorting="true" AllowCustomPaging="true" PageSize="10" OnNeedDataSource="RadGrid_NeedDataSource">
+                                    <PagerStyle Mode="NextPrevAndNumeric" />
+                                    <HeaderStyle CssClass="MyGridHeader" />
+                                    <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                    <ClientSettings Selecting-AllowRowSelect="true">
+                                        <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
+                                        <Selecting AllowRowSelect="True" />
+                                    </ClientSettings>
+                                    <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
+                                        <HeaderStyle CssClass="MyGridHeader" />
+                                        <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="Id" UniqueName="Id" />
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
@@ -133,6 +112,7 @@
                                             <telerik:GridBoundColumn DataField="HHEnrollmentStatus" HeaderText="Enrollment Status" UniqueName="HHEnrollmentStatus" />
                                             <telerik:GridBoundColumn DataField="GroupID" HeaderText="Group ID" UniqueName="GroupID" />
                                             <telerik:GridBoundColumn DataField="EnrolledMemberID" HeaderText="Enrolled Member ID" UniqueName="EnrolledMemberID" />
+                                            <telerik:GridBoundColumn DataField="ValidationError" HeaderText="Validation Error" UniqueName="ValidationError" Display="false" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
@@ -146,6 +126,16 @@
         </ContentTemplate>
         <Triggers>
             <asp:PostBackTrigger ControlID="btnUpload" />
+            <asp:PostBackTrigger ControlID="lnkDownloadTemplate" />
         </Triggers>
     </asp:UpdatePanel>
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>

@@ -53,8 +53,8 @@ namespace SSSNP.Service
 
                     // Save the valid record
                     response = _component2Repository.SaveTrainingAndAttendanceTracking(obj);
-                    
-                    if(!response.IsSuccess) errorMessages.Add(response.Message);
+
+                    if (!response.IsSuccess) errorMessages.Add(response.Message);
                 }
 
                 // If there are any validation errors, return them in the response
@@ -77,11 +77,10 @@ namespace SSSNP.Service
             }
         }
 
-
         public (bool isValid, string errorMessage) IsValidData(TrainingAndAttendanceModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
         {
             // Predefined valid course codes
-            
+
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return (false, "Household Number is required.");
@@ -213,34 +212,32 @@ namespace SSSNP.Service
             return (true, string.Empty);
         }
 
-
         public ResponseModel SaveHouseholdGroups(List<HouseholdGroupModel> groups)
         {
             var response = new ResponseModel();
-            int insertCount = 0;  // Counter for successfully inserted records
-            int skipCount = 0;    // Counter for skipped records due to invalid data
+            int insertCount = 0;
+            int skipCount = 0;
 
             try
             {
                 foreach (var group in groups)
                 {
-                    // Validate data before processing
-                    if (!IsValidData(group))
+
+                    bool isValid = IsValidData(group).isValid;
+                    if (!isValid)
                     {
-                        skipCount++;  // Increment the skip counter
-                        continue;     // Skip this record and continue with the next one
+                        skipCount++;
+                        continue;
                     }
 
-                    // Process the valid record
                     response = _component2Repository.SaveHouseholdGroup(group);
 
                     if (response.IsSuccess)
                     {
-                        insertCount++;  // Increment the insert counter for successful insertions
+                        insertCount++;
                     }
                 }
 
-                // Prepare the response message
                 response.Message = $"{insertCount} records inserted/updated successfully.";
                 if (skipCount > 0)
                 {
@@ -258,18 +255,28 @@ namespace SSSNP.Service
         }
 
         // Validate household group data
-        private bool IsValidData(HouseholdGroupModel group)
+        public (bool isValid, string errorMessage) IsValidData(HouseholdGroupModel group)
         {
+            // Check for missing or invalid Group Name
             if (string.IsNullOrWhiteSpace(group?.GroupName?.Trim()))
             {
-                return false; // GroupName is mandatory
+                return (false, "Group Name is not valid.");
             }
-            if (group.Latitude == null || group.Longitude == null)
+
+            // Check for missing Latitude
+            if (group.Latitude == null)
             {
-                return false; // Latitude and Longitude must not be null
+                return (false, "Latitude is missing.");
             }
-            // Add more validation rules as needed
-            return true;
+
+            // Check for missing Longitude
+            if (group.Longitude == null)
+            {
+                return (false, "Longitude is missing.");
+            }
+
+            // If all validations pass
+            return (true, "Valid");
         }
 
         public Dictionary<string, int> GetExistingGroupNames()
@@ -401,30 +408,31 @@ namespace SSSNP.Service
         public ResponseModel SaveBeneficiaries(List<BeneficiaryRandomizationAndEnrollmentModel> beneficiaries)
         {
             var response = new ResponseModel();
-            int insertCount = 0;  // Counter for successfully inserted records
-            int skipCount = 0;    // Counter for skipped records due to invalid data
+            int insertCount = 0;
+            int skipCount = 0;
 
             try
             {
                 foreach (var beneficiary in beneficiaries)
                 {
-                    // Validate data before processing
-                    if (!IsValidData(beneficiary))
+
+                    bool isValid = IsValidData(beneficiary).isValid;
+                    if (!isValid)
                     {
-                        skipCount++;  // Increment the skip counter
-                        continue;     // Skip this record and continue with the next one
+                        skipCount++;
+                        continue;
                     }
 
-                    // Process the valid record
+
                     var saveResponse = _component2Repository.SaveBeneficiary(beneficiary);
 
                     if (saveResponse.IsSuccess)
                     {
-                        insertCount++;  // Increment the insert counter for successful insertions
+                        insertCount++;
                     }
                 }
 
-                // Prepare the response message
+
                 response.IsSuccess = true;
                 response.Message = $"{insertCount} records inserted/updated successfully.";
                 if (skipCount > 0)
@@ -442,32 +450,40 @@ namespace SSSNP.Service
             }
         }
 
-        private bool IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary)
+        public (bool isValid, string errorMessage) IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary)
         {
+            // Check for missing Household Number
             if (string.IsNullOrWhiteSpace(beneficiary?.HouseholdNumber))
             {
-                Debug.WriteLine($"Validation failed: HouseholdNumber is missing for beneficiary.");
-                return false; // HouseholdNumber is mandatory
+                return (false, "Household Number is not valid");
             }
 
-           /* // Booleans must not be null
-            if (beneficiary.InterestedInParticipating == null ||
-                beneficiary.SurvivesTargeting == null ||
-                beneficiary.TreatmentArm == null ||
-                beneficiary.HHEnrollmentStatus == null)
+            // Check for missing InterestedInParticipating value
+            if (beneficiary.InterestedInParticipating == null)
             {
-                Debug.WriteLine($"Validation failed: Boolean value is missing for beneficiary with HouseholdNumber {beneficiary.HouseholdNumber}.");
-                return false;
-            }*/
+                return (false, "Interested In Participating is not valid");
+            }
 
-            // Log successful validation
-            Debug.WriteLine($"Validation passed for HouseholdNumber {beneficiary.HouseholdNumber}.");
+            // Check for missing SurvivesTargeting value
+            if (beneficiary.SurvivesTargeting == null)
+            {
+                return (false, "Survives Targeting is not valid");
+            }
 
-            return true; // If all mandatory conditions pass, return true
+            // Check for missing TreatmentArm value
+            if (beneficiary.TreatmentArm == null)
+            {
+                return (false, "Treatment Arm is not valid");
+            }
+
+            // Check for missing HHEnrollmentStatus value
+            if (beneficiary.HHEnrollmentStatus == null)
+            {
+                return (false, "Enrollment Status is not valid");
+            }
+
+            // All validations passed
+            return (true, "Valid");
         }
-
-
-
-
     }
 }

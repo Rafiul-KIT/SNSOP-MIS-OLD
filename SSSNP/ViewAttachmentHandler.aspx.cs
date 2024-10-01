@@ -125,14 +125,14 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.BUSINESS_PLAN_DEVELOPMENT_TEMPLATE:
                     BusinessPlanDevelopmentTemplate();
                     return "OK";
+                case HandlerAttachment.BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE:
+                    BeneficiaryRandomizationEnrollmentTemplate();
+                    return "OK";
                 case HandlerAttachment.FINANCIAL_SERVICE_LINKAGE_TEMPLATE:
                     FinancialServiceLinkageTrackingTemplate();
                     return "OK";
                 case HandlerAttachment.LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE:
                     LivelihoodGrantDisbursementTemplate();
-                    return "OK";
-                case HandlerAttachment.BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE:
-                    BeneficiaryRandomizationEnrollmentTemplate();
                     return "OK";
             }
 
@@ -1276,6 +1276,8 @@ namespace SSSNP_SNSOP
                 System.Diagnostics.Debug.WriteLine($"Error: {ex}");
             }
         }
+
+        //Training and Attendance Tracking Template End
 
         //BeneficiaryRandomizationEnrollmentTemplate start
         private void BeneficiaryRandomizationEnrollmentTemplate()
