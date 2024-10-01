@@ -33,6 +33,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 btnImport.Enabled = false;
                 RadGrid.Visible = false;
             }
+            btnSearch.Enabled = true;
         }
 
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
@@ -120,7 +121,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
         {
             ClearMessages(); // Clear any previous messages
             var _component2Service = new Component2Service();
-
+            Session["IsAnalyzing"] = true;
             try
             {
                 // Retrieve the list of TrainingAttendance objects from session
@@ -169,8 +170,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     // Collect error messages to display in the ValidationStatus column
                     if (!validationResult.isValid)
                     {
-                        errorMessages.Add(validationResult.errorMessage);
-                        dr["ValidationStatus"] = string.Join(", ", errorMessages); // Add all error messages
+
+                        dr["ValidationStatus"] = validationResult.errorMessage;
                     }
                     else
                     {
@@ -182,15 +183,19 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 }
 
                 // Bind the data to RadGrid for display
-                RadGrid.DataSource = dt;
+                Session["AnalyzedData"] = dt;
                 RadGrid.Visible = true;
+                int totalRecordCount = dt.Rows.Count;
+                Session["TotalRecordCount"] = totalRecordCount;
                 RadGrid.CurrentPageIndex = 0;
-                RadGrid.VirtualItemCount = dt.Rows.Count;
+                RadGrid.VirtualItemCount = totalRecordCount;
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
-                isAnalyzed = true;
+                RadGrid.DataSource = null;
+                RadGrid.DataSource = dt;
                 RadGrid.DataBind();
-               
-                
+                RadGrid.Visible = true;
+
+
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
                 btnImport.Enabled = true;
             }
@@ -248,17 +253,18 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            ClearMessages(); // Clear any previous messages
+            ClearMessages();
+            Session["IsAnalyzing"] = false;
 
             try
             {
+                int totalRecordCount = GetTrainingAttendanceDataCount();
+                Session["TotalRecordCount"] = totalRecordCount;
                 RadGrid.CurrentPageIndex = 0;
-                int pageSize = RadGrid.PageSize;
-                Session["TotalRecordCount"] = GetTrainingAttendanceDataCount();
-                RadGrid.DataSource = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, pageSize);
+                RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
+                RadGrid.DataSource = null;
+                RadGrid.Rebind();
                 RadGrid.Visible = true;
-                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
-                RadGrid.DataBind();
             }
             catch (Exception ex)
             {
@@ -274,20 +280,40 @@ namespace SSSNP_SNSOP.UI.Public_Works
         {
             try
             {
-                // Fetch data for the grid
-                DataTable dt = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                DataTable dt;
+
+                if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
+                {
+                    // Fetch analyzed data from session
+                    dt = Session["AnalyzedData"] as DataTable;
+                }
+                else
+                {
+                    // Fetch the data for the search result
+                    dt = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                }
+
+                // Bind the fetched data to the RadGrid
                 RadGrid.DataSource = dt;
 
-                // Update total record count for pagination
-                int totalRecordCount = GetTrainingAttendanceDataCount();
-                RadGrid.VirtualItemCount = totalRecordCount; // Total records in the database
+                if (Session["TotalRecordCount"] != null && int.TryParse(Session["TotalRecordCount"].ToString(), out int totalRecordCount))
+                {
+                    // Set total item count for pagination
+                    RadGrid.VirtualItemCount = totalRecordCount;
+                }
+                else
+                {
+                    // If no total record count in session, set default to 0
+                    RadGrid.VirtualItemCount = 0;
+                }
             }
             catch (Exception ex)
             {
-                AddErrorMessage("Error in RadGrid_NeedDataSource: " + ex.Message);
-                throw;
+                // Handle any errors that occur during data binding
+                AddErrorMessage("Data binding failed: " + ex.Message);
             }
         }
+
 
 
         // Fetch paginated data from the database
@@ -359,26 +385,35 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
-            // Check if the item is a data row
             if (e.Item is GridDataItem dataItem)
             {
-                // Only change color if the data has been analyzed
-                if (isAnalyzed)
+                // Check if the analysis has been performed
+                if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
                 {
-                    // Get the validation status from the row
-                    string validationStatus = dataItem["ValidationStatus"].Text;
-
-                    // If the status is not valid, change the background color
-                    if (validationStatus != "Valid")
+                    // Get the analyzed data from the session
+                    DataTable analyzedData = Session["AnalyzedData"] as DataTable;
+                    if (analyzedData != null)
                     {
-                        dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
+                        // Get the current row's HouseholdNumber or any identifier
+                        string householdNumber = dataItem["HouseholdNumber"].Text;
+
+                        // Find the row in the analyzedData DataTable that matches the current row
+                        var rows = analyzedData.AsEnumerable()
+                                               .Where(r => r.Field<string>("HouseholdNumber") == householdNumber);
+
+                        // Check if there's an invalid entry
+                        if (rows.Any(r => r.Field<string>("ValidationStatus") != "Valid"))
+                        {
+                            dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4"); // Highlight invalid
+                        }
                     }
                 }
             }
         }
 
 
-            private void AddSuccessMessage(string message)
+
+        private void AddSuccessMessage(string message)
         {
             DivSuccess.Visible = true;
             lblMessageSuccess.Text = message;
