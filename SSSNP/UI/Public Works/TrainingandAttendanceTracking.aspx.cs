@@ -188,8 +188,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
                 isAnalyzed = true;
                 RadGrid.DataBind();
-               
-                
+
+
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
                 btnImport.Enabled = true;
             }
@@ -367,7 +367,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
         }
 
 
-            private void AddSuccessMessage(string message)
+        private void AddSuccessMessage(string message)
         {
             DivSuccess.Visible = true;
             lblMessageSuccess.Text = message;

@@ -29,6 +29,7 @@ namespace SSSNP
         {
             // Mock :: Training and Attendance Tracking Module
 
+
             //var list = new List<TrainingAndAttendanceModel>();
             //var req1 = new TrainingAndAttendanceModel()
             //{
@@ -50,6 +51,10 @@ namespace SSSNP
             //list.Add(req2);
 
             //ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
+
+
+
+
 
             
             //var list = new List<TrainingAndAttendanceModel>();
@@ -74,6 +79,7 @@ namespace SSSNP
 
             //ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
             
+
             // Mock :: Training and Attendance Tracking Module
 
 

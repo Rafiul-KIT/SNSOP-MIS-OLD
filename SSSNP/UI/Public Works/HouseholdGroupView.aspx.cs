@@ -53,6 +53,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 using (var package = new OfficeOpenXml.ExcelPackage(fileUpload.FileContent))
                 {
+                    int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
                     var worksheet = package.Workbook.Worksheets.FirstOrDefault();
                     if (worksheet == null)
                     {
@@ -81,8 +82,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         {
                             GroupName = groupName,
                             Latitude = latitude,
-                            Longitude = longitude
-                        });
+                            Longitude = longitude,
+                            CreatedBy = userId,
+                            ModifiedBy = userId
+                        }) ;
                     }
 
                     Session["HouseholdGroups"] = householdGroups;
@@ -177,7 +180,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 }
                 else
                 {
-                    AddSuccessMessage("Data imported successfully.");
+                    AddSuccessMessage(response.Message);
                 }
             }
             catch (Exception ex)

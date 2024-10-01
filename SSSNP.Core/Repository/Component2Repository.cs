@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -194,6 +195,38 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
+        public Dictionary<string, int> GetExistingHouseholdNumbers()
+        {
+            Dictionary<string, int> householdNumbers = new Dictionary<string, int>();
+
+            try
+            {
+                // Execute the query to get existing household numbers and their IDs
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, HouseholdNumber FROM tbl_com2_Household_Enrollment_Data", CommandType.Text);
+
+                // Check if any rows were returned
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string householdNumber = row["HouseholdNumber"].ToString();
+                        int id = Convert.ToInt32(row["Id"]);
+
+                        // Add the household number and ID to the dictionary
+                        householdNumbers.Add(householdNumber, id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching existing household numbers: " + ex.Message);
+            }
+
+            return householdNumbers;
+        }
+
+
+
         public DenormalizedDataModel GetDenormalizedDataByHouseholdNumber(string householdNumber)
         {
             DenormalizedDataModel result = null;
@@ -221,6 +254,108 @@ namespace SSSNP_SNSOP.Core.Repository
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public ResponseModel SaveBeneficiary(BeneficiaryRandomizationAndEnrollmentModel model)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0; // Counter for successfully inserted records
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if the record already exists based on HouseholdNumber (unique constraint)
+                    var isExist = IsRecordExist_HouseholdNumber(model.HouseholdNumber?.Trim());
+                    var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(model.HouseholdNumber?.Trim());
+
+                    // Prepare data to insert/update
+                    Dictionary<string, object> data = new Dictionary<string, object>();
+
+                    data.Add("HouseholdNumber", !string.IsNullOrEmpty(model.HouseholdNumber?.Trim()) ? (object)model.HouseholdNumber.Trim() : DBNull.Value);
+                    data.Add("InterestedInParticipating", model.InterestedInParticipating != null ? (object)model.InterestedInParticipating : DBNull.Value);
+                    data.Add("SurvivesTargeting", model.SurvivesTargeting != null ? (object)model.SurvivesTargeting : DBNull.Value);
+                    data.Add("TreatmentArm", model.TreatmentArm != null ? (object)model.TreatmentArm : DBNull.Value);
+                    data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus != null ? (object)model.HHEnrollmentStatus : DBNull.Value);
+                    data.Add("GroupID", model.GroupID != 0 ? (object)model.GroupID : DBNull.Value); // Assuming 0 is an invalid GroupID
+                    data.Add("EnrolledMemberID", model.EnrolledMemberID != 0 ? (object)model.EnrolledMemberID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("StateID", denormalizedData.StateID != 0 ? (object)denormalizedData.StateID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("CountyID", denormalizedData.CountyID != 0 ? (object)denormalizedData.CountyID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("PayamID", denormalizedData.PayamID != 0 ? (object)denormalizedData.PayamID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("BomaID", denormalizedData.BomaID != 0 ? (object)denormalizedData.BomaID : DBNull.Value); // Assuming 0 is invalid
+                    data.Add("FirstName", !string.IsNullOrEmpty(denormalizedData.FirstName) ? (object)denormalizedData.FirstName : DBNull.Value);
+                    data.Add("MiddleName", !string.IsNullOrEmpty(denormalizedData.MiddleName) ? (object)denormalizedData.MiddleName : DBNull.Value);
+                    data.Add("NickName", !string.IsNullOrEmpty(denormalizedData.NickName) ? (object)denormalizedData.NickName : DBNull.Value);
+                    data.Add("LastName", !string.IsNullOrEmpty(denormalizedData.LastName) ? (object)denormalizedData.LastName : DBNull.Value);
+                    data.Add("Gender", !string.IsNullOrEmpty(denormalizedData.Gender) ? (object)denormalizedData.Gender : DBNull.Value);
+                    data.Add("Age", denormalizedData.Age != 0 ? (object)denormalizedData.Age : DBNull.Value); // Assuming 0 is invalid
+
+
+                    // Add audit information based on whether the record is new or existing
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", model.CreatedBy);
+                        data.Add("CreatedDate", model.CreatedDate);
+                    }
+                    else
+                    {
+                        data.Add("ModifiedBy", model.ModifiedBy);
+                        data.Add("ModifiedDate", model.ModifiedDate);
+                    }
+
+                    // Insert or update the data
+                    if (isExist)
+                    {
+                        _dbOperation.UpdateData("tbl_com2_Household_Enrollment_Data", data, " HouseholdNumber = '" + model.HouseholdNumber?.Trim() + "'");
+                    }
+                    else
+                    {
+                        _dbOperation.InsertData("tbl_com2_Household_Enrollment_Data", data);
+                        insertCount++; // Increment the counter for successful insertion
+                    }
+
+                    // Include insert count in the success message if insertions were made
+                    if (insertCount > 0)
+                    {
+                        response.Message = $"Beneficiary data saved successfully. {insertCount} new records were inserted.";
+                    }
+                    else
+                    {
+                        response.Message = "Beneficiary data updated successfully.";
+                    }
+
+                    response.IsSuccess = true;
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error when saving Beneficiary Randomization and Enrollment data. Error: " + ex.ToString());
+                response.IsSuccess = false;
+                response.Message = "Error when saving Beneficiary data: " + ex.Message;
+                return response;
+            }
+        }
+
+
+        public bool IsRecordExist_HouseholdNumber(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable(
+                    "SELECT HouseholdNumber FROM tbl_com2_Household_Enrollment_Data WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true; // The record exists
+                }
+                return false; // No matching record
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if HouseholdNumber exists: " + ex.Message);
             }
         }
 
@@ -266,6 +401,7 @@ namespace SSSNP_SNSOP.Core.Repository
         public ResponseModel SaveHouseholdGroup(HouseholdGroupModel model)
         {
             var response = new ResponseModel();
+            int insertCount = 0;  // Counter for successfully inserted records
             try
             {
                 lock (_locker)
@@ -301,9 +437,18 @@ namespace SSSNP_SNSOP.Core.Repository
                     else
                     {
                         _dbOperation.InsertData("tbl_com2_Household_Group_View", data);
+                        insertCount++; // Increment the counter for successful insertion
                     }
 
-                    response.Message = "Household Group data saved successfully.";
+                    // Include insert count in the success message if insertions were made
+                    if (insertCount > 0)
+                    {
+                        response.Message = $"Household Group data saved successfully. {insertCount} new records were inserted.";
+                    }
+                    else
+                    {
+                        response.Message = "Household Group data updated successfully.";
+                    }
                     return response;
                 }
             }
@@ -314,7 +459,6 @@ namespace SSSNP_SNSOP.Core.Repository
                 return response;
             }
         }
-
 
         public bool IsRecordExist_GroupName(string groupName)
         {
