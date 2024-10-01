@@ -53,6 +53,8 @@ namespace SSSNP.Service
 
                     // Save the valid record
                     response = _component2Repository.SaveTrainingAndAttendanceTracking(obj);
+                    
+                    if(!response.IsSuccess) errorMessages.Add(response.Message);
                 }
 
                 // If there are any validation errors, return them in the response
@@ -79,8 +81,7 @@ namespace SSSNP.Service
         public (bool isValid, string errorMessage) IsValidData(TrainingAndAttendanceModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
         {
             // Predefined valid course codes
-            var validCourseCodes = new List<string> { "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" };
-
+            
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return (false, "Household Number is required.");
@@ -96,6 +97,7 @@ namespace SSSNP.Service
             {
                 return (false, "Course Code is required.");
             }
+            var validCourseCodes = new List<string> { "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" };
 
             // Validate CourseCode
             if (!validCourseCodes.Contains(obj.CourseCode.Trim().ToUpper()))
@@ -176,9 +178,9 @@ namespace SSSNP.Service
             }
 
             // Check for negative PaymentAmount
-            if (obj.PaymentAmount < 0)
+            if (obj.PaymentAmount <= 0)
             {
-                return (false, "Payment Amount cannot be negative.");
+                return (false, "Payment Amount cannot be zero or negative.");
             }
 
             if (string.IsNullOrWhiteSpace(obj.PaymentCycle))
@@ -191,6 +193,20 @@ namespace SSSNP.Service
             if (!validPaymentCycles.Contains(obj.PaymentCycle.Trim()))
             {
                 return (false, $"Payment Cycle '{obj.PaymentCycle}' is not valid. Valid values are: {string.Join(", ", validPaymentCycles)}.");
+            }
+
+            if (!obj.PaymentDate.HasValue)
+            {
+                return (false, "Payment Date is required.");
+            }
+
+            // Ensure the date is not in the future and within a reasonable range (for example, between 1900 and today)
+            var minDate = new DateTime(1900, 1, 1);
+            var maxDate = DateTime.Today;
+
+            if (obj.PaymentDate.Value < minDate || obj.PaymentDate.Value > maxDate)
+            {
+                return (false, $"Payment Date must be between {minDate.ToString("MM-dd-yyyy")} and {maxDate.ToString("MM-dd-yyyy")}.");
             }
 
             // Add more validation if needed

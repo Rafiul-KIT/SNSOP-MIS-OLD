@@ -145,13 +145,13 @@
                                 <telerik:RadGrid ID="RadGrid" runat="server" OnItemDataBound="RadGrid_ItemDataBound" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" 
                                     OnNeedDataSource="RadGrid_NeedDataSource" AllowCustomPaging="True" GridLines="Both" >
                                     <PagerStyle Mode="NextPrevAndNumeric" />
-                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True">
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" />
                                             <telerik:GridBoundColumn DataField="PaymentCycle" HeaderText="Payment Cycle" />
                                             <telerik:GridBoundColumn DataField="PaymentAmount" HeaderText="Payment Amount" />
-                                            <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" />
+                                            <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" UniqueName="PaymentDate" DataFormatString="{0:MM-dd-yyyy}" HtmlEncode="false" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>

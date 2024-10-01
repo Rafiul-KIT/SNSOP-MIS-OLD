@@ -16,26 +16,23 @@ namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class LivelihoodGrantDisbursement : Page
     {
-        
+
         private Component2Service _component2Service;
-        private bool isAnalyzed = false;
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Initialize the service
             _component2Service = new Component2Service();
-
+            
             if (!IsPostBack)
             {
-                // Disable buttons initially
                 btnAnalyze.Enabled = false;
                 btnImport.Enabled = false;
                 RadGrid.Visible = false;
             }
+            btnSearch.Enabled = true;
         }
 
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
         {
-            // Redirect to download Excel template
             string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=19";
             Response.Redirect(redirectUrl, false);
             HttpContext.Current.ApplicationInstance.CompleteRequest();
@@ -43,7 +40,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void btnUpload_Click(object sender, EventArgs e)
         {
-            ClearMessages(); // Clear any previous messages
+            ClearMessages();
             try
             {
                 if (!fileUpload.HasFile)
@@ -59,7 +56,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     return;
                 }
 
-                // Parse the Excel file into a list of LivelihoodGrantDisbursementModel objects
                 using (var package = new OfficeOpenXml.ExcelPackage(fileUpload.PostedFile.InputStream))
                 {
                     int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
@@ -70,22 +66,19 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         return;
                     }
 
-                    // Create a list to hold the parsed data
                     List<LivelihoodGrantDisbursementModel> grantList = new List<LivelihoodGrantDisbursementModel>();
 
-                    // Loop through the worksheet rows and populate the list
-                    for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
+                    for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                     {
-                        // Handle null or empty values for each column
                         var paymentAmount = decimal.TryParse(worksheet.Cells[row, 3].Text, out decimal amount) ? amount : 0m; // Default to 0 if null or invalid
                         var paymentDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime date) ? date : DateTime.MinValue; // Default to DateTime.MinValue if null or invalid
 
                         LivelihoodGrantDisbursementModel grant = new LivelihoodGrantDisbursementModel
                         {
                             HouseholdNumber = worksheet.Cells[row, 1].Text,
-                            PaymentCycle = worksheet.Cells[row, 2].Text, // String type, no conversion needed
-                            PaymentAmount = paymentAmount, // Parsed or default value
-                            PaymentDate = paymentDate, // Parsed or default value
+                            PaymentCycle = worksheet.Cells[row, 2].Text,
+                            PaymentAmount = paymentAmount,
+                            PaymentDate = paymentDate,
                             CreatedBy = userId,
                             ModifiedBy = userId
                         };
@@ -93,7 +86,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         grantList.Add(grant);
                     }
 
-                    // Store the list in session for further processing
                     Session["UploadedGrantData"] = grantList;
 
                     AddSuccessMessage("File uploaded and data parsed successfully. You can now analyze it.");
@@ -109,12 +101,12 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void btnAnalyze_Click(object sender, EventArgs e)
         {
-            ClearMessages(); // Clear any previous messages
+            ClearMessages();
             var _component2Service = new Component2Service();
+            Session["IsAnalyzing"] = true;
 
             try
             {
-                // Retrieve the list of LivelihoodGrantDisbursement objects from session
                 var grantList = Session["UploadedGrantData"] as List<LivelihoodGrantDisbursementModel>;
                 if (grantList == null || grantList.Count == 0)
                 {
@@ -122,58 +114,57 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     return;
                 }
 
-                // Create a DataTable to hold the analyzed data (for RadGrid display)
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));
                 dt.Columns.Add("HouseholdNumber", typeof(string));
                 dt.Columns.Add("PaymentCycle", typeof(string));
-                dt.Columns.Add("PaymentAmount", typeof(object)); // Change to object to support null values
-                dt.Columns.Add("PaymentDate", typeof(object)); // Change to object to support null values
-                dt.Columns.Add("ValidationStatus", typeof(string)); // For error messages
+                dt.Columns.Add("PaymentAmount", typeof(object));
+                dt.Columns.Add("PaymentDate", typeof(object));
+                dt.Columns.Add("ValidationStatus", typeof(string));
 
-                int serial = 1; // For numbering the entries
+                int serial = 1;
 
-                // Fetch valid household numbers for validation
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
 
-                // Filter out garbage values from grantList
                 var validGrantList = grantList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
 
-                // Iterate over valid grantList and validate each entry
                 foreach (var grant in validGrantList)
                 {
-                    var validationResult = _component2Service.IsValidData(grant, validHouseholdNumbers); // Call validation
+                    var validationResult = _component2Service.IsValidData(grant, validHouseholdNumbers);
 
-                    // Populate DataTable with the data
                     DataRow dr = dt.NewRow();
                     dr["Id"] = serial;
                     dr["HouseholdNumber"] = grant.HouseholdNumber;
                     dr["PaymentCycle"] = grant.PaymentCycle;
-                    dr["PaymentAmount"] = grant.PaymentAmount ?? (object)DBNull.Value; // Handle null values
-                    dr["PaymentDate"] = grant.PaymentDate ?? (object)DBNull.Value; // Handle null values
+                    dr["PaymentAmount"] = grant.PaymentAmount ?? (object)DBNull.Value;
+                    dr["PaymentDate"] = grant.PaymentDate.HasValue && grant.PaymentDate.Value != DateTime.MinValue
+                                        ? grant.PaymentDate.Value.ToString("MM-dd-yyyy")
+                                        : "N/A";
 
-                    // Set ValidationStatus based on validation result
                     if (!validationResult.isValid)
                     {
-                        dr["ValidationStatus"] = validationResult.errorMessage; // Store error message
+                        dr["ValidationStatus"] = validationResult.errorMessage;
                     }
                     else
                     {
-                        dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
+                        dr["ValidationStatus"] = "Valid";
                     }
 
                     dt.Rows.Add(dr);
                     serial++;
                 }
 
-                // Bind the data to RadGrid for display
-                RadGrid.DataSource = dt;
-                RadGrid.Visible = true;
+                Session["AnalyzedData"] = dt;
+                int totalRecordCount = dt.Rows.Count;
+                Session["TotalRecordCount"] = totalRecordCount;
+                RadGrid.VirtualItemCount = totalRecordCount;
                 RadGrid.CurrentPageIndex = 0;
-                RadGrid.VirtualItemCount = dt.Rows.Count;
+                RadGrid.DataSource = null;
+                RadGrid.DataSource = dt;
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
-                isAnalyzed = true;
                 RadGrid.DataBind();
+                RadGrid.Visible = true;
+                
 
                 AddSuccessMessage("File analyzed successfully. You can now import it.");
                 btnImport.Enabled = true;
@@ -190,10 +181,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void btnImport_Click(object sender, EventArgs e)
         {
-            ClearMessages(); // Clear any previous messages
+            ClearMessages();
             try
             {
-                // Retrieve list of grant objects from session
                 var grantList = Session["UploadedGrantData"] as List<LivelihoodGrantDisbursementModel>;
                 if (grantList == null || grantList.Count == 0)
                 {
@@ -207,7 +197,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     AddErrorMessage("No valid data available for import.");
                     return;
                 }
-                // Save data using service layer
                 var response = _component2Service.SaveLivelihoodGrantDisbursement(validEntries);
 
                 if (response.IsSuccess)
@@ -226,21 +215,21 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 AddErrorMessage("Data import failed: " + ex.Message);
             }
         }
-
+        
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            ClearMessages(); // Clear any previous messages
-
+            ClearMessages();
+            Session["IsAnalyzing"] = false;
             try
             {
+                int totalRecordCount = GetLivelihoodGrantDisbursementDataCount();
+                Session["TotalRecordCount"] = totalRecordCount;
                 RadGrid.CurrentPageIndex = 0;
-                int pageSize = RadGrid.PageSize;
-                
-                Session["TotalRecordCount"] = GetLivelihoodGrantDisbursementDataCount();
-                RadGrid.DataSource = GetLivelihoodGrantDisbursementData(RadGrid.CurrentPageIndex, pageSize);
-                RadGrid.Visible = true;
+                RadGrid.VirtualItemCount = totalRecordCount;
+                RadGrid.DataSource = null;
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
-                RadGrid.DataBind();
+                RadGrid.Rebind();
+                RadGrid.Visible = true;
             }
             catch (Exception ex)
             {
@@ -248,13 +237,65 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
         }
 
+        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem dataItem)
+            {
+                DataTable analyzedData = Session["AnalyzedData"] as DataTable;
+                if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
+                {
+                    
+                    if (analyzedData != null)
+                    {
+                        string householdNumber = dataItem["HouseholdNumber"].Text;
+
+                        var currentHouseholdNumber = householdNumber;
+
+                        var rows = analyzedData.AsEnumerable()
+                                               .Where(r => r.Field<string>("HouseholdNumber") == currentHouseholdNumber);
+
+                        if (rows.Any(r => r.Field<string>("ValidationStatus") != "Valid"))
+                        {
+                            dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
+                        }
+                    }
+                }
+            }
+        }
+
+
+
         protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            DataTable dt = GetLivelihoodGrantDisbursementData(RadGrid.CurrentPageIndex, RadGrid.PageSize); // Fetch all data
-            RadGrid.DataSource = dt;
-            int totalRecordCount = GetLivelihoodGrantDisbursementDataCount();
-            RadGrid.VirtualItemCount = totalRecordCount;
+            try
+            {
+                DataTable dt;
+
+                if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
+                {
+                    dt = Session["AnalyzedData"] as DataTable;
+                }
+                else
+                {
+                    dt = GetLivelihoodGrantDisbursementData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                }
+                RadGrid.DataSource = dt;
+
+                if (Session["TotalRecordCount"] != null && int.TryParse(Session["TotalRecordCount"].ToString(), out int totalRecordCount))
+                {
+                    RadGrid.VirtualItemCount = totalRecordCount;
+                }
+                else
+                {
+                    RadGrid.VirtualItemCount = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Data binding failed: " + ex.Message);
+            }
         }
+
 
 
         private int GetLivelihoodGrantDisbursementDataCount()
@@ -266,8 +307,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    conn.Open(); // Ensure the connection is opened
-                    
+                    conn.Open();
+
                     string query = @"SELECT COUNT(*) FROM tbl_com2_Livelihood_Grant_Disbursement WHERE 1=1;";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -290,11 +331,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             try
             {
-                // Construct the query with parameters for pagination
                 string query = @"SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate 
-                        FROM tbl_com2_Livelihood_Grant_Disbursement 
-                        ORDER BY Id 
-                        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+                         FROM tbl_com2_Livelihood_Grant_Disbursement 
+                         ORDER BY Id 
+                         OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
@@ -308,37 +348,14 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     }
                 }
 
-                // Update the total record count for pagination
-                RadGrid.VirtualItemCount = GetLivelihoodGrantDisbursementDataCount(); // Get total records
+                //RadGrid.VirtualItemCount = GetLivelihoodGrantDisbursementDataCount();
             }
             catch (Exception ex)
             {
-                // Log the exception (consider using a logging framework)
                 AddErrorMessage("An error occurred while retrieving Livelihood Grant Disbursement data: " + ex.Message);
             }
 
             return dt;
-        }
-
-
-        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
-        {
-            // Check if the item is a data row
-            if (e.Item is GridDataItem dataItem)
-            {
-                // Only change color if the data has been analyzed
-                if (isAnalyzed)
-                {
-                    // Get the validation status from the row
-                    string validationStatus = dataItem["ValidationStatus"].Text;
-
-                    // If the status is not valid, change the background color
-                    if (validationStatus != "Valid")
-                    {
-                        dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
-                    }
-                }
-            }
         }
 
 
@@ -347,7 +364,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
             DivSuccess.Visible = true;
             lblMessageSuccess.Text = message;
 
-            // Hide the success message after 5 seconds
             ScriptManager.RegisterStartupScript(this, GetType(), "HideSuccess",
                 "setTimeout(function() { document.getElementById('" + DivSuccess.ClientID + "').style.display = 'none'; }, 5000);", true);
         }
@@ -357,9 +373,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             DivFailure.Visible = true;
             lblMessageError.Text = message;
 
-            // Hide the error message after 5 seconds
             ScriptManager.RegisterStartupScript(this, GetType(), "HideError",
-                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 5000);", true);
+                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 10000);", true);
         }
 
         protected void ClearMessages()

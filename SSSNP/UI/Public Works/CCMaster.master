@@ -331,7 +331,7 @@
                                                       <li id="HouseholdGroupView" runat="server"><a href="HouseholdGroupView.aspx">Household Group View</a></li>
                                                      <li id="TrainingandAttendanceTracking" runat="server"><a href="TrainingandAttendanceTracking.aspx">Training and Attendance Tracking</a></li>
                                                      <li id="BusinessPlanDevelopment" runat="server"><a href="BusinessPlanDevelopment.aspx">Business Plan Development</a></li>
-                                                     <li id="LivelihoodGrantDisbursement" runat="server"><a href="LivelihoodGrantDisbursement.aspx">LivelihoodGrantDisbursement</a></li>
+                                                     <li id="LivelihoodGrantDisbursement" runat="server"><a href="LivelihoodGrantDisbursement.aspx">Livelihood Grant Disbursement</a></li>
                                                      <li id="FinancialServiceLinkageTracking" runat="server"><a href="FinancialServiceLinkageTracking.aspx">Financial Service Linkage Tracking</a></li>
                                                      <li id="CoachingSessionTracking" runat="server"><a href="CoachingSessionTracking.aspx">Coaching Session Tracking</a></li>
                                                  </ul>

@@ -32,6 +32,13 @@ namespace SSSNP_SNSOP.Core.Repository
                     var isExist = IsRecordExist(obj.HouseholdNumber?.Trim());
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
+                    if(denormalizedData == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Nominee info not found for this household number: " + obj.HouseholdNumber?.Trim();
+                        return response;
+                    }
+
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
                     data.Add("CourseId", GetCourseIdByCode(obj.CourseCode));
@@ -45,11 +52,11 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
                     data.Add("BomaID", denormalizedData.BomaID);
-                    data.Add("FirstName", denormalizedData.FirstName);
-                    data.Add("MiddleName", denormalizedData.MiddleName);
+                    data.Add("FirstName", denormalizedData.FirstName ?? (object)DBNull.Value);
+                    data.Add("MiddleName", denormalizedData.MiddleName ?? (object)DBNull.Value);
                     data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
-                    data.Add("LastName", denormalizedData.LastName);
-                    data.Add("Gender", denormalizedData.Gender);
+                    data.Add("LastName", denormalizedData.LastName ?? (object)DBNull.Value);
+                    data.Add("Gender", denormalizedData.Gender ?? (object)DBNull.Value);
                     data.Add("Age", denormalizedData.Age);
                     if (!isExist)
                     {
@@ -79,8 +86,7 @@ namespace SSSNP_SNSOP.Core.Repository
                 return new ResponseModel()
                 {
                     IsSuccess = false,
-                    Message = "Error when saving Training and Attendance Tracking data. Error: " + ex.ToString()
-
+                    Message = "Error when saving Training and Attendance Tracking data for this household number: " + obj.HouseholdNumber?.Trim()
                 };
             }
         }
@@ -97,6 +103,12 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     // Retrieve denormalized data associated with the household number
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
+                    if (denormalizedData == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Nominee info not found for this beneficiary.";
+                        return response;
+                    }
 
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
@@ -107,11 +119,11 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
                     data.Add("BomaID", denormalizedData.BomaID);
-                    data.Add("FirstName", denormalizedData.FirstName);
-                    data.Add("MiddleName", denormalizedData.MiddleName);
+                    data.Add("FirstName", denormalizedData.FirstName ?? (object)DBNull.Value);
+                    data.Add("MiddleName", denormalizedData.MiddleName ?? (object)DBNull.Value);
                     data.Add("NickName", denormalizedData.NickName ?? (object)DBNull.Value);
-                    data.Add("LastName", denormalizedData.LastName);
-                    data.Add("Gender", denormalizedData.Gender);
+                    data.Add("LastName", denormalizedData.LastName ?? (object)DBNull.Value);
+                    data.Add("Gender", denormalizedData.Gender ?? (object)DBNull.Value);
                     data.Add("Age", denormalizedData.Age);
 
                     if (!isExist)
@@ -411,11 +423,11 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     // Prepare data to insert/update
                     Dictionary<string, object> data = new Dictionary<string, object>
-            {
-                { "GroupName", model.GroupName?.Trim() },
-                { "Latitude", model.Latitude },
-                { "Longitude", model.Longitude }
-            };
+                    {
+                        { "GroupName", model.GroupName?.Trim() },
+                        { "Latitude", model.Latitude },
+                        { "Longitude", model.Longitude }
+                    };
 
                     // Add audit information based on whether the record is new or existing
                     if (!isExist)
@@ -507,7 +519,7 @@ namespace SSSNP_SNSOP.Core.Repository
 
         public DenormalizedDataModel GetDenormalizedBeneficiaryDataByHouseholdNumber(string householdNumber)
         {
-            DenormalizedDataModel result = new DenormalizedDataModel();
+            DenormalizedDataModel result = null;
             try
             {
                 SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
@@ -520,6 +532,8 @@ namespace SSSNP_SNSOP.Core.Repository
                     CommandType.Text, param);
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    result = new DenormalizedDataModel();
+
                     result.StateID = dt.Rows[0]["intStateid"] != null ? Convert.ToInt32(dt.Rows[0]["intStateid"].ToString()) : 0;
                     result.CountyID = dt.Rows[0]["intCountieid"] != null ? Convert.ToInt32(dt.Rows[0]["intCountieid"].ToString()) : 0;
                     result.PayamID = dt.Rows[0]["intPayamid"] != null ? Convert.ToInt32(dt.Rows[0]["intPayamid"].ToString()) : 0;

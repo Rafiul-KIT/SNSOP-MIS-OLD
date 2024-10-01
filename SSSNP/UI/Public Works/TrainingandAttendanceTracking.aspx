@@ -20,7 +20,7 @@
         </div>
         <br />
         <!-- Link for Downloading Excel Template -->
-       <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click" style="background-color: limegreen; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: normal;">&emsp;Import Training and Attendance Template</asp:LinkButton>
+        <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click" Style="background-color: limegreen; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: normal;">&emsp;Import Training and Attendance Template</asp:LinkButton>
 
     </div>
     <asp:UpdatePanel ID="upd1" runat="server">
@@ -142,10 +142,10 @@
                                 </div>
 
                                 <!-- Telerik RadGrid for displaying data -->
-                                <telerik:RadGrid ID="RadGrid" runat="server" OnItemDataBound="RadGrid_ItemDataBound" AutoGenerateColumns="false" AllowPaging="true" PageSize="10"
-                                    OnNeedDataSource="RadGrid_NeedDataSource" AllowCustomPaging="True" GridLines="Both">
+                               <telerik:RadGrid ID="RadGrid" runat="server" OnItemDataBound="RadGrid_ItemDataBound" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" 
+                                    OnNeedDataSource="RadGrid_NeedDataSource" AllowCustomPaging="True" GridLines="Both" >
                                     <PagerStyle Mode="NextPrevAndNumeric" />
-                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True">
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" />
