@@ -138,6 +138,7 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("HHEnrollmentStatus", typeof(bool));
                 dt.Columns.Add("GroupID", typeof(int));  // Add GroupID
                 dt.Columns.Add("EnrolledMemberID", typeof(int));  // Add EnrolledMemberID
+                dt.Columns.Add("ValidationError", typeof(string));
 
                 // Loop through the list and dynamically check for redundancy
                 foreach (var beneficiary in beneficiaries)
@@ -162,12 +163,28 @@ namespace SSSNP.UI.Public_Works
                         dr["Id"] = DBNull.Value; // Not redundant, no HouseholdId
                     }
 
+                    var validationResult = service.IsValidData(beneficiary);
+
+
+                    if (!validationResult.isValid)
+                    {
+                        dr["ValidationError"] = validationResult.errorMessage; // Store the error message
+                    }
+                    else
+                    {
+                        dr["ValidationError"] = validationResult.errorMessage; // No error
+                    }
+
+
                     dt.Rows.Add(dr);
                 }
 
 
                // Store the DataTable in session for pagination
                 Session["AnalyzedData"] = dt;
+
+                GridColumn validationErrorColumn = RadGrid.MasterTableView.GetColumn("ValidationError");
+                validationErrorColumn.Display = true;
 
                 // Set total record count for analysis
                 int totalRecordCount = dt.Rows.Count;
@@ -216,6 +233,10 @@ namespace SSSNP.UI.Public_Works
                 {
                     AddSuccessMessage(response.Message);
                 }
+
+                btnImport.Enabled = false;
+                btnAnalyze.Enabled = false;
+
             }
             catch (Exception ex)
             {
@@ -227,6 +248,8 @@ namespace SSSNP.UI.Public_Works
         {
             ClearMessages();
             Session["IsAnalyzing"] = false;
+            GridColumn validationErrorColumn = RadGrid.MasterTableView.GetColumn("ValidationError");
+            validationErrorColumn.Display = false;
             try
             {
                 int totalRecordCount = GetBeneficiaryRandomizationandEnrollmentCount();
@@ -301,27 +324,6 @@ namespace SSSNP.UI.Public_Works
             }
 
             return dt;
-        }
-
-
-        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
-        {
-            // Check if the current operation is analyzing (based on the flag)
-            if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
-            {
-                // Only apply the redundancy check and row highlighting if analyzing
-                if (e.Item is GridDataItem) // Check if the item is a data row
-                {
-                    GridDataItem dataItem = (GridDataItem)e.Item;
-                    string householdIdText = dataItem["Id"].Text;  // Get the value of the "HouseholdId" field
-
-                    // If the householdId is not empty or null, mark the row as redundant
-                    if (!string.IsNullOrEmpty(householdIdText) && householdIdText != "&nbsp;")
-                    {
-                        dataItem.CssClass = "redundant-row"; // Apply the CSS class for redundant rows
-                    }
-                }
-            }
         }
 
         protected void RadGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)

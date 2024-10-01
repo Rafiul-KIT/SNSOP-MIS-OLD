@@ -22,7 +22,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 // Disable buttons initially
                 btnAnalyze.Enabled = false;
                 btnImport.Enabled = false;
+                RadGrid.Visible = false;
             }
+            btnSearch.Enabled = true;
         }
 
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
@@ -102,6 +104,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected void btnAnalyze_Click(object sender, EventArgs e)
         {
             ClearMessages(); // Clear any previous messages
+            Session["IsAnalyzing"] = true;
             try
             {
                 Component2Service service = new Component2Service();
@@ -119,35 +122,63 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 // Create a DataTable to hold the data for display in the grid
                 DataTable dt = new DataTable();
-                dt.Columns.Add("GroupId", typeof(int));  // GroupId from database (if redundant)
+                dt.Columns.Add("Id", typeof(int));  // GroupId from database (if redundant)
                 dt.Columns.Add("GroupName", typeof(string));
                 dt.Columns.Add("Latitude", typeof(decimal));
                 dt.Columns.Add("Longitude", typeof(decimal));
+                dt.Columns.Add("ValidationError", typeof(string));
 
                 // Loop through the list and dynamically check for redundancy
                 foreach (var group in householdGroups)
                 {
                     DataRow dr = dt.NewRow();
-                    dr["GroupName"] = group.GroupName;
+                    dr["GroupName"] = group.GroupName ?? (object)DBNull.Value;
                     dr["Latitude"] = group.Latitude ?? (object)DBNull.Value; // Handle null values
                     dr["Longitude"] = group.Longitude ?? (object)DBNull.Value; // Handle null values
 
                     // Check if the group is redundant
                     if (!string.IsNullOrEmpty(group.GroupName) && existingGroupNames.ContainsKey(group.GroupName))
                     {
-                        dr["GroupId"] = existingGroupNames[group.GroupName]; // Set the GroupId for redundant groups
+                        dr["Id"] = existingGroupNames[group.GroupName]; // Set the GroupId for redundant groups
                     }
                     else
                     {
-                        dr["GroupId"] = DBNull.Value; // Not redundant, no GroupId
+                        dr["Id"] = DBNull.Value; // Not redundant, no GroupId
+                    }
+
+                    var validationResult = service.IsValidData(group);
+
+
+                    if (!validationResult.isValid)
+                    {
+                        dr["ValidationError"] = validationResult.errorMessage; // Store the error message
+                    }
+                    else
+                    {
+                        dr["ValidationError"] = validationResult.errorMessage; // No error
                     }
 
                     dt.Rows.Add(dr);
                 }
 
                 // Bind the DataTable to the RadGrid for display
+                Session["AnalyzedData"] = dt;
+
+                GridColumn validationErrorColumn = RadGrid.MasterTableView.GetColumn("ValidationError");
+                validationErrorColumn.Display = true;
+
+                int totalRecordCount = dt.Rows.Count;
+                Session["TotalRecordCount"] = totalRecordCount;
+
+                // Trigger pagination setup for analysis results
+                RadGrid.VirtualItemCount = totalRecordCount;
+                RadGrid.CurrentPageIndex = 0;
+
+                // Bind the DataTable to the RadGrid for display
+                RadGrid.DataSource = null;
                 RadGrid.DataSource = dt;
                 RadGrid.DataBind();
+                RadGrid.Visible = true;
 
                 AddSuccessMessage("Data analyzed successfully.");
                 btnImport.Enabled = true;
@@ -182,6 +213,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 {
                     AddSuccessMessage(response.Message);
                 }
+                btnImport.Enabled = false;
+                btnAnalyze.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -189,20 +222,120 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
         }
 
-        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        protected void btnSearch_Click(object sender, EventArgs e)
         {
-            if (e.Item is GridDataItem) // Check if the item is a data row
+            ClearMessages();
+            Session["IsAnalyzing"] = false;
+            GridColumn validationErrorColumn = RadGrid.MasterTableView.GetColumn("ValidationError");
+            validationErrorColumn.Display = false;
+            try
             {
-                GridDataItem dataItem = (GridDataItem)e.Item;
+                int totalRecordCount = GetHouseholdGroupCount();
+                Session["TotalRecordCount"] = totalRecordCount;
+                RadGrid.CurrentPageIndex = 0;
+                RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
+                RadGrid.DataSource = null;
+                RadGrid.Rebind();
+                RadGrid.Visible = true;
 
-                // Get the value of the "GroupId" field directly
-                string groupIdText = dataItem["GroupId"].Text;
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Search failed: " + ex.Message);
+            }
+        }
 
-                // If the groupId is not empty or null, mark the row as redundant
-                if (!string.IsNullOrEmpty(groupIdText) && groupIdText != "&nbsp;") // Check if groupId is valid
+        private int GetHouseholdGroupCount()
+        {
+            int totalRecords = 0;
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    dataItem.CssClass = "redundant-row"; // Apply the CSS class for redundant rows
+                    conn.Open(); // Ensure the connection is opened
+
+                    string query = @"SELECT COUNT(*) FROM tbl_com2_Household_Group_View WHERE 1=1;";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        totalRecords = (int)cmd.ExecuteScalar();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Error retrieving total record count: " + ex.Message);
+            }
+
+            return totalRecords;
+        }
+        private DataTable GetHouseholGroupData(int pageIndex, int pageSize)
+        {
+            string query = @"SELECT Id, GroupName, Latitude, Longitude
+                     FROM tbl_com2_Household_Group_View 
+                     ORDER BY Id 
+                     OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+
+            DataTable dt = new DataTable();
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        // Set OFFSET and PageSize for pagination
+                        cmd.Parameters.AddWithValue("@Offset", pageIndex * pageSize);
+                        cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(dt);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Error retrieving data: " + ex.Message);
+            }
+
+            return dt;
+        }
+
+        protected void RadGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
+        {
+            try
+            {
+                DataTable dt;
+
+                if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
+                {
+                    // Fetch analyzed data from session
+                    dt = Session["AnalyzedData"] as DataTable;
+                }
+                else
+                {
+                    // Fetch the data for search result
+                    dt = GetHouseholGroupData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                }
+
+                RadGrid.DataSource = dt;
+
+                if (Session["TotalRecordCount"] != null && int.TryParse(Session["TotalRecordCount"].ToString(), out int totalRecordCount))
+                {
+                    // Set total item count for pagination
+                    RadGrid.VirtualItemCount = totalRecordCount;
+                }
+                else
+                {
+                    RadGrid.VirtualItemCount = 0; // Default to 0 if no valid count is found
+                }
+            }
+            catch (Exception ex)
+            {
+                AddErrorMessage("Data binding failed: " + ex.Message);
             }
         }
 

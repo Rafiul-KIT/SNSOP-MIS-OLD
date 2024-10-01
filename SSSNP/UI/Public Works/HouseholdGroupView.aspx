@@ -105,6 +105,7 @@
                                 <div class="form-group" align="center">
                                     <asp:Button ID="btnAnalyze" runat="server" CssClass="btn btn-warning" Text="Analyze" Enabled="false" OnClick="btnAnalyze_Click"/>
                                     <asp:Button ID="btnImport" runat="server" CssClass="btn btn-success" Text="Import" Enabled="false" OnClick="btnImport_Click"/>
+                                    <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-success" Text="Search" Enabled="false" OnClick="btnSearch_Click"/>
                                 </div>
 
                                 <!-- Success and Failure Messages -->
@@ -115,21 +116,24 @@
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
 
-                                <style type="text/css">
-                                    .redundant-row {
-                                        background-color: #f8d7da; /* Light red background */
-                                        color: #721c24; /* Dark red text */
-                                    }
-                                </style>
 
-
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" OnItemDataBound="RadGrid_ItemDataBound">
-                                    <MasterTableView>
+                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" AllowSorting="true" AllowCustomPaging="true" PageSize="10" OnNeedDataSource="RadGrid_NeedDataSource">
+                                    <PagerStyle Mode="NextPrevAndNumeric" />
+                                    <HeaderStyle CssClass="MyGridHeader" />
+                                    <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                    <ClientSettings Selecting-AllowRowSelect="true">
+                                        <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
+                                        <Selecting AllowRowSelect="True" />
+                                    </ClientSettings>
+                                    <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
+                                        <HeaderStyle CssClass="MyGridHeader" />
+                                        <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
                                         <Columns>
-                                            <telerik:GridBoundColumn DataField="GroupId" HeaderText="Group ID" UniqueName="GroupId" />
+                                            <telerik:GridBoundColumn DataField="Id" HeaderText="ID" UniqueName="Id" />
                                             <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" UniqueName="GroupName" />
                                             <telerik:GridBoundColumn DataField="Latitude" HeaderText="Latitude" UniqueName="Latitude" DataFormatString="{0:N7}" />
                                             <telerik:GridBoundColumn DataField="Longitude" HeaderText="Longitude" UniqueName="Longitude" DataFormatString="{0:N7}" />
+                                            <telerik:GridBoundColumn DataField="ValidationError" HeaderText="Validation Error" UniqueName="ValidationError" Display="false" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
@@ -144,4 +148,13 @@
             <asp:PostBackTrigger ControlID="btnUpload" />
         </Triggers>
     </asp:UpdatePanel>
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>

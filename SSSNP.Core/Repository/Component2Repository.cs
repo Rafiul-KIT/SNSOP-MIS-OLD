@@ -283,7 +283,6 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     if (denormalizedData == null)
                     {
-                        Debug.WriteLine("Denormalized data is null for HouseholdNumber: " + model.HouseholdNumber);
                         response.IsSuccess = false;
                         response.Message = "Nominee info not found for this household number: " + model.HouseholdNumber?.Trim();
                         return response;
@@ -350,7 +349,6 @@ namespace SSSNP_SNSOP.Core.Repository
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error when saving Beneficiary Randomization and Enrollment data. Error: " + ex.ToString());
                 response.IsSuccess = false;
                 response.Message = "Error when saving Beneficiary data: " + ex.Message;
                 return response;

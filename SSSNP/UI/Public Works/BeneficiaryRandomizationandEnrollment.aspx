@@ -30,37 +30,6 @@
                             </div>
 
                             <div class="panel-body">
-                                <!-- File Upload for Excel -->
-                                <%--<div class="form-group">
-                                    <label for="fileUpload" class="control-label">Attachment:</label>
-                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Enabled="true" Style="width: 400px;" />
-                                </div>
-
-                                <script type="text/javascript">
-                                    document.addEventListener("DOMContentLoaded", function () {
-                                        var fileInput = document.getElementById('<%= fileUpload.ClientID %>');
-
-                                        // Function to adjust the width based on the file name or default "No file chosen"
-                                        function adjustWidth() {
-                                            var fileName = fileInput.value.split('\\').pop(); // Get the file name
-                                            var defaultText = "No file chosen"; // Default text
-                                            var length = fileName.length || defaultText.length; // Use default text length if no file is selected
-
-                                            // Set the width dynamically based on the file name or default text
-                                            var newWidth = Math.max(110, length * 10); // Adjust multiplier for control over the width
-
-                                            // Apply the new calculated width
-                                            fileInput.style.width = newWidth + 'px';
-                                        }
-
-                                        // Set width when the page loads
-                                        adjustWidth();
-
-                                        // Add event listeners for when the input changes
-                                        fileInput.addEventListener('change', adjustWidth); // When a file is selected
-                                        fileInput.addEventListener('input', adjustWidth);  // To handle any other changes
-                                    });
-                                </script>--%>
                                 <div class="form-group">
                                     <label for="fileUpload" class="control-label">Attachment:</label>
                                     <div style="display: flex;">
@@ -123,7 +92,7 @@
                                 </style>--%>
 
 
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" AllowSorting="true" AllowCustomPaging="true" PageSize="10" OnItemDataBound="RadGrid_ItemDataBound" OnNeedDataSource="RadGrid_NeedDataSource">
+                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" AllowSorting="true" AllowCustomPaging="true" PageSize="10" OnNeedDataSource="RadGrid_NeedDataSource">
                                     <PagerStyle Mode="NextPrevAndNumeric" />
                                     <HeaderStyle CssClass="MyGridHeader" />
                                     <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
@@ -143,6 +112,7 @@
                                             <telerik:GridBoundColumn DataField="HHEnrollmentStatus" HeaderText="Enrollment Status" UniqueName="HHEnrollmentStatus" />
                                             <telerik:GridBoundColumn DataField="GroupID" HeaderText="Group ID" UniqueName="GroupID" />
                                             <telerik:GridBoundColumn DataField="EnrolledMemberID" HeaderText="Enrolled Member ID" UniqueName="EnrolledMemberID" />
+                                            <telerik:GridBoundColumn DataField="ValidationError" HeaderText="Validation Error" UniqueName="ValidationError" Display="false" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
@@ -158,4 +128,13 @@
             <asp:PostBackTrigger ControlID="btnUpload" />
         </Triggers>
     </asp:UpdatePanel>
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>
