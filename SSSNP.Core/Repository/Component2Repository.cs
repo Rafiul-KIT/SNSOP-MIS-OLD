@@ -46,8 +46,8 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("CourseDuration", obj.CourseDuration);
                     data.Add("ClassesAttended", obj.ClassesAttended);
                     data.Add("ClassesHeld", obj.ClassesHeld);
-                    data.Add("ClassesMissed", obj.ClassesHeld);
-                    data.Add("WhyMissed", obj.ClassesMissed);
+                    data.Add("ClassesMissed", obj.ClassesMissed);
+                    data.Add("WhyMissed", obj.WhyMissed);
                     data.Add("StateID", denormalizedData.StateID);
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
