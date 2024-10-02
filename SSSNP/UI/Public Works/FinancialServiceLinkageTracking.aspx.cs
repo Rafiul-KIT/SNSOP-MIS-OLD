@@ -164,7 +164,7 @@ namespace SSSNP.UI.Public_Works
                     }
                 }
 
-                Session["UploadedBusinessPlanData"] = validList;
+                Session["UploadedFinancialServiceLinkageTrackingData"] = validList;
 
                 // Bind the data to RadGrid for display
                 RadGrid.DataSource = dt;
