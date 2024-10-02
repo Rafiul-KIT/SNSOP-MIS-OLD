@@ -25,7 +25,7 @@ namespace SSSNP.Service
             return _component2Repository.GetValidHouseholdNumbers();
         }
 
-        public List<string> GetValidHouseholdNumberValues()
+        public HashSet<string> GetValidHouseholdNumberValues()
         {
             return _component2Repository.GetValidHouseholdNumberValues();
         }
@@ -284,7 +284,7 @@ namespace SSSNP.Service
             return _component2Repository.GetExistingGroupNames();
         }
 
-        public ResponseModel SaveBusinessPlanDevelopment(List<BusinessPlanDevelopmentModel> request, List<string> validList)
+        public ResponseModel SaveBusinessPlanDevelopment(List<BusinessPlanDevelopmentModel> request, HashSet<string> validList)
         {
             var response = new ResponseModel();
             var errorMessages = new List<string>();
@@ -320,13 +320,13 @@ namespace SSSNP.Service
             }
         }
 
-        public (bool isValid, string errorMessage) IsValidData(BusinessPlanDevelopmentModel obj, List<string> validList)
+        public (bool isValid, string errorMessage) IsValidData(BusinessPlanDevelopmentModel obj, HashSet<string> validList)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return (false, "Household Number is required");
             }
-            if (!validList.Any(hh => hh.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
+            if (!validList.Contains(obj.HouseholdNumber))
             {
                 return (false, "Household Number is not valid");
             }
@@ -341,7 +341,7 @@ namespace SSSNP.Service
             return (true, null);
         }
 
-        public ResponseModel SaveFinancialServiceLinkage(List<FinancialServiceLinkageTrackingModel> request, List<string> validList)
+        public ResponseModel SaveFinancialServiceLinkage(List<FinancialServiceLinkageTrackingModel> request, HashSet<string> validList)
         {
             var response = new ResponseModel();
             var errorMessages = new List<string>();
@@ -376,13 +376,13 @@ namespace SSSNP.Service
             }
         }
 
-        public (bool isValid, string errorMessage) IsValidData(FinancialServiceLinkageTrackingModel obj, List<string> validList)
+        public (bool isValid, string errorMessage) IsValidData(FinancialServiceLinkageTrackingModel obj, HashSet<string> validList)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return (false, "Household Number is required");
             }
-            if (!validList.Any(hh => hh.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
+            if (!validList.Contains(obj.HouseholdNumber?.Trim()))
             {
                 return (false, "Household Number is not valid");
             }

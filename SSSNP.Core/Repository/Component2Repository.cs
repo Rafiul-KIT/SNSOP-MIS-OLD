@@ -716,14 +716,15 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-        public List<string> GetValidHouseholdNumberValues()
+        public HashSet<string> GetValidHouseholdNumberValues()
         {
             try
             {
-                var householdNumbers = new List<string>();
+                var householdNumbers = new HashSet<string>();
 
                 var dt = _dbOperation.ExecuteDataTable("SELECT b.household_number FROM tbl_BeneficiaryServiceDet b " +
-                    "INNER JOIN tbl_Nominee n on b.household_number=n.application_id", CommandType.Text);
+                    "INNER JOIN tbl_Nominee n on b.household_number=n.application_id " +
+                    "GROUP BY b.household_number", CommandType.Text);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -738,7 +739,7 @@ namespace SSSNP_SNSOP.Core.Repository
             catch (Exception ex)
             {
                 Console.WriteLine("Error when retrieving valid household numbers. Error: " + ex.ToString());
-                return new List<string>();
+                return new HashSet<string>();
             }
         }
 
