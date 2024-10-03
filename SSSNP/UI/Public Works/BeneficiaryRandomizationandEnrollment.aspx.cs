@@ -14,6 +14,9 @@ namespace SSSNP.UI.Public_Works
 {
     public partial class BeneficiaryRandomizationandEnrollment : System.Web.UI.Page
     {
+        private Component2Service _component2Service = new Component2Service();
+        private bool isAnalyzed = false;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -138,7 +141,12 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("HHEnrollmentStatus", typeof(bool));
                 dt.Columns.Add("GroupID", typeof(int));  // Add GroupID
                 dt.Columns.Add("EnrolledMemberID", typeof(int));  // Add EnrolledMemberID
-                dt.Columns.Add("ValidationError", typeof(string));
+                dt.Columns.Add("ValidationStatus", typeof(string));
+
+                var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
+                var validGroupId = _component2Service.GetValidGroupId();
+
+                var validBeneficiary = new List<BeneficiaryRandomizationAndEnrollmentModel>();
 
                 // Loop through the list and dynamically check for redundancy
                 foreach (var beneficiary in beneficiaries)
@@ -163,16 +171,17 @@ namespace SSSNP.UI.Public_Works
                         dr["Id"] = DBNull.Value; // Not redundant, no HouseholdId
                     }
 
-                    var validationResult = service.IsValidData(beneficiary);
+                    var validationResult = service.IsValidData(beneficiary, validHouseholdNumbers,validGroupId);
 
 
                     if (!validationResult.isValid)
                     {
-                        dr["ValidationError"] = validationResult.errorMessage; // Store the error message
+                        dr["ValidationStatus"] = validationResult.errorMessage; // Store the error message
                     }
                     else
                     {
-                        dr["ValidationError"] = validationResult.errorMessage; // No error
+                        dr["ValidationStatus"] = "Valid"; // No error
+                        validBeneficiary.Add(beneficiary);
                     }
 
 
@@ -181,10 +190,9 @@ namespace SSSNP.UI.Public_Works
 
 
                // Store the DataTable in session for pagination
-                Session["AnalyzedData"] = dt;
+                Session["AnalyzedData"] = validBeneficiary;
 
-                GridColumn validationErrorColumn = RadGrid.MasterTableView.GetColumn("ValidationError");
-                validationErrorColumn.Display = true;
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
                 // Set total record count for analysis
                 int totalRecordCount = dt.Rows.Count;
@@ -197,11 +205,13 @@ namespace SSSNP.UI.Public_Works
                 // Bind the DataTable to the RadGrid for display
                 RadGrid.DataSource = null;
                 RadGrid.DataSource = dt;
-                RadGrid.DataBind();
+                
                 RadGrid.Visible = true;
 
                 AddSuccessMessage("Data analyzed successfully.");
                 btnImport.Enabled = true;
+                isAnalyzed = true;
+                RadGrid.DataBind();
             }
             catch (Exception ex)
             {
@@ -215,11 +225,13 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 Component2Service service = new Component2Service();
-                List<BeneficiaryRandomizationAndEnrollmentModel> beneficiaries = Session["Beneficiaries"] as List<BeneficiaryRandomizationAndEnrollmentModel>;
+                List<BeneficiaryRandomizationAndEnrollmentModel> beneficiaries = Session["AnalyzedData"] as List<BeneficiaryRandomizationAndEnrollmentModel>;
 
                 if (beneficiaries == null || beneficiaries.Count == 0)
                 {
                     AddErrorMessage("No data available for import.");
+                    btnImport.Enabled = false;
+                    btnAnalyze.Enabled = false;
                     return;
                 }
 
@@ -248,8 +260,7 @@ namespace SSSNP.UI.Public_Works
         {
             ClearMessages();
             Session["IsAnalyzing"] = false;
-            GridColumn validationErrorColumn = RadGrid.MasterTableView.GetColumn("ValidationError");
-            validationErrorColumn.Display = false;
+            RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
             try
             {
                 int totalRecordCount = GetBeneficiaryRandomizationandEnrollmentCount();
@@ -335,7 +346,7 @@ namespace SSSNP.UI.Public_Works
                 if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
                 {
                     // Fetch analyzed data from session
-                    dt = Session["AnalyzedData"] as DataTable;
+                    dt = Session["Beneficiaries"] as DataTable;
                 }
                 else
                 {
@@ -361,7 +372,38 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        {
 
+            if (e.Item is GridDataItem dataItem)
+            {
+                // InterestedInParticipating column
+                string interestedInParticipating = dataItem["InterestedInParticipating"].Text;
+                dataItem["InterestedInParticipating"].Text = interestedInParticipating == "True" ? "Yes" : "No";
+
+                // SurvivesTargeting column
+                string survivesTargeting = dataItem["SurvivesTargeting"].Text;
+                dataItem["SurvivesTargeting"].Text = survivesTargeting == "True" ? "Yes" : "No";
+
+                // TreatmentArm column
+                string treatmentArm = dataItem["TreatmentArm"].Text;
+                dataItem["TreatmentArm"].Text = treatmentArm == "True" ? "Yes" : "No";
+
+                // HHEnrollmentStatus column
+                string hHEnrollmentStatus = dataItem["HHEnrollmentStatus"].Text;
+                dataItem["HHEnrollmentStatus"].Text = hHEnrollmentStatus == "True" ? "Yes" : "No";
+
+                if (isAnalyzed)
+                {
+                    string validationStatus = dataItem["ValidationStatus"].Text;
+
+                    if (validationStatus != "Valid")
+                    {
+                        dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
+                    }
+                }
+            }
+        }
 
 
         private bool? ParseBoolean(string value)
