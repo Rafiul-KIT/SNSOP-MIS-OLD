@@ -16,6 +16,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
     public partial class HouseholdGroupView : Page
     {
         private bool isAnalyzed = false;
+        public int skipCount = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -64,21 +65,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         return;
                     }
 
-                    HashSet<string> uniqueGroupNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
                     List<HouseholdGroupModel> householdGroups = new List<HouseholdGroupModel>();
 
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                     {
                         string groupName = worksheet.Cells[row, 1].Text;
-                        if (uniqueGroupNames.Contains(groupName))
-                        {
-                            continue;
-                        }
-                        else
-                        {                           
-                            uniqueGroupNames.Add(groupName);
-                        }
                         decimal? latitude = null;
                         decimal? longitude = null;
 
@@ -98,7 +89,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             Longitude = longitude,
                             CreatedBy = userId,
                             ModifiedBy = userId
-                        }) ;
+                        });
                     }
 
                     Session["HouseholdGroups"] = householdGroups;
@@ -131,6 +122,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 // Fetch existing GroupNames from the service to check for redundancy
                 Dictionary<string, int> existingGroupNames = service.GetExistingGroupNames();
 
+                HashSet<string> uniqueGroupNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var validGroup = new List<HouseholdGroupModel> ();
+
                 // Create a DataTable to hold the data for display in the grid
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));  // GroupId from database (if redundant)
@@ -139,6 +133,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 dt.Columns.Add("Longitude", typeof(decimal));
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
+                int skipCount = 0;
                 // Loop through the list and dynamically check for redundancy
                 foreach (var group in householdGroups)
                 {
@@ -170,11 +165,27 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     }
 
                     dt.Rows.Add(dr);
+
+                    if (uniqueGroupNames.Contains(group.GroupName))
+                    {
+                        // Skip this group because it's a duplicate in the uploaded Excel file
+                        skipCount++;
+                        continue;
+                    }
+                    else
+                    {
+                        // Add the groupName to the HashSet to track it as already added
+                        uniqueGroupNames.Add(group.GroupName);
+                        validGroup.Add(group);
+                    }
+
+                   // dt.Rows.Add(dr);
                 }
 
                 // Bind the DataTable to the RadGrid for display
                 Session["AnalyzedData"] = dt;
-
+                Session["ValidGroup"] = validGroup;
+                Session["skipCount"] = skipCount;
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
                 int totalRecordCount = dt.Rows.Count;
@@ -207,13 +218,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
             try
             {
                 Component2Service service = new Component2Service();
-                List<HouseholdGroupModel> householdGroups = Session["HouseholdGroups"] as List<HouseholdGroupModel>;
+                List<HouseholdGroupModel> householdGroups = Session["ValidGroup"] as List<HouseholdGroupModel>;
 
                 if (householdGroups == null || householdGroups.Count == 0)
                 {
                     AddErrorMessage("No data available for import.");
                     return;
                 }
+
+                int skipCount = Session["skipCount"] != null ? (int)Session["skipCount"] : 0;
 
                 // Pass the entire list to the service for processing
                 var response = service.SaveHouseholdGroups(householdGroups);
@@ -223,7 +236,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 }
                 else
                 {
-                    AddSuccessMessage(response.Message);
+                    AddSuccessMessage(response.Message + $" {skipCount} records were skipped due to redundant data.");
                 }
                 btnImport.Enabled = false;
                 btnAnalyze.Enabled = false;

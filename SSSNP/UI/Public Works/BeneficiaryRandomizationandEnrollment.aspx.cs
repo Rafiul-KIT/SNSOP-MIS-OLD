@@ -371,8 +371,25 @@ namespace SSSNP.UI.Public_Works
 
         protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
+
             if (e.Item is GridDataItem dataItem)
             {
+                // InterestedInParticipating column
+                string interestedInParticipating = dataItem["InterestedInParticipating"].Text;
+                dataItem["InterestedInParticipating"].Text = interestedInParticipating == "True" ? "Yes" : "No";
+
+                // SurvivesTargeting column
+                string survivesTargeting = dataItem["SurvivesTargeting"].Text;
+                dataItem["SurvivesTargeting"].Text = survivesTargeting == "True" ? "Yes" : "No";
+
+                // TreatmentArm column
+                string treatmentArm = dataItem["TreatmentArm"].Text;
+                dataItem["TreatmentArm"].Text = treatmentArm == "True" ? "Yes" : "No";
+
+                // HHEnrollmentStatus column
+                string hHEnrollmentStatus = dataItem["HHEnrollmentStatus"].Text;
+                dataItem["HHEnrollmentStatus"].Text = hHEnrollmentStatus == "True" ? "Yes" : "No";
+
                 if (isAnalyzed)
                 {
                     string validationStatus = dataItem["ValidationStatus"].Text;
