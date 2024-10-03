@@ -84,25 +84,11 @@
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
 
-                                <%--<style type="text/css">
-                                    .redundant-row {
-                                        background-color: #f8d7da; /* Light red background */
-                                        color: #721c24; /* Dark red text */
-                                    }
-                                </style>--%>
 
-
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" AllowSorting="true" AllowCustomPaging="true" PageSize="10" OnNeedDataSource="RadGrid_NeedDataSource">
+                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" 
+                                    OnNeedDataSource="RadGrid_NeedDataSource" OnItemDataBound="RadGrid_ItemDataBound" AllowCustomPaging="True" GridLines="Both" >
                                     <PagerStyle Mode="NextPrevAndNumeric" />
-                                    <HeaderStyle CssClass="MyGridHeader" />
-                                    <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
-                                    <ClientSettings Selecting-AllowRowSelect="true">
-                                        <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
-                                        <Selecting AllowRowSelect="True" />
-                                    </ClientSettings>
-                                    <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
-                                        <HeaderStyle CssClass="MyGridHeader" />
-                                        <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" PagerStyle-AlwaysVisible="True" AllowPaging="True" AllowCustomPaging="True">
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="Id" UniqueName="Id" />
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
@@ -112,7 +98,7 @@
                                             <telerik:GridBoundColumn DataField="HHEnrollmentStatus" HeaderText="Enrollment Status" UniqueName="HHEnrollmentStatus" />
                                             <telerik:GridBoundColumn DataField="GroupID" HeaderText="Group ID" UniqueName="GroupID" />
                                             <telerik:GridBoundColumn DataField="EnrolledMemberID" HeaderText="Enrolled Member ID" UniqueName="EnrolledMemberID" />
-                                            <telerik:GridBoundColumn DataField="ValidationError" HeaderText="Validation Error" UniqueName="ValidationError" Display="false" />
+                                            <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>

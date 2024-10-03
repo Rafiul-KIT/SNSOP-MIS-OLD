@@ -411,18 +411,20 @@ namespace SSSNP.Service
             int insertCount = 0;
             int skipCount = 0;
 
+            // Fetch valid household numbers as a HashSet for faster lookup
+            var validHouseholdNumbers = _component2Repository.GetValidHouseholdNumberValues(); // Assuming it returns HashSet<string>
+
             try
             {
                 foreach (var beneficiary in beneficiaries)
                 {
-
-                    bool isValid = IsValidData(beneficiary).isValid;
-                    if (!isValid)
+                    // Pass valid household numbers to IsValidData
+                    var validationResult = IsValidData(beneficiary, validHouseholdNumbers); // Pass HashSet to validation
+                    if (!validationResult.isValid)
                     {
                         skipCount++;
                         continue;
                     }
-
 
                     var saveResponse = _component2Repository.SaveBeneficiary(beneficiary);
 
@@ -431,7 +433,6 @@ namespace SSSNP.Service
                         insertCount++;
                     }
                 }
-
 
                 response.IsSuccess = true;
                 response.Message = $"{insertCount} records inserted/updated successfully.";
@@ -450,40 +451,48 @@ namespace SSSNP.Service
             }
         }
 
-        public (bool isValid, string errorMessage) IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary)
+
+        public (bool isValid, string errorMessage) IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary, HashSet<string> validHouseholdNumbers)
         {
             // Check for missing Household Number
             if (string.IsNullOrWhiteSpace(beneficiary?.HouseholdNumber))
             {
-                return (false, "Household Number is not valid");
+                return (false, "Household Number is required.");
+            }
+
+            // Check if the household number is valid using the HashSet for faster lookup
+            if (!validHouseholdNumbers.Contains(beneficiary.HouseholdNumber?.Trim()))
+            {
+                return (false, "Household Number is not valid.");
             }
 
             // Check for missing InterestedInParticipating value
             if (beneficiary.InterestedInParticipating == null)
             {
-                return (false, "Interested In Participating is not valid");
+                return (false, "Interested In Participating is required.");
             }
 
             // Check for missing SurvivesTargeting value
             if (beneficiary.SurvivesTargeting == null)
             {
-                return (false, "Survives Targeting is not valid");
+                return (false, "Survives Targeting is required.");
             }
 
             // Check for missing TreatmentArm value
             if (beneficiary.TreatmentArm == null)
             {
-                return (false, "Treatment Arm is not valid");
+                return (false, "Treatment Arm is required.");
             }
 
             // Check for missing HHEnrollmentStatus value
             if (beneficiary.HHEnrollmentStatus == null)
             {
-                return (false, "Enrollment Status is not valid");
+                return (false, "Enrollment Status is required.");
             }
 
             // All validations passed
             return (true, "Valid");
         }
+
     }
 }

@@ -15,6 +15,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class HouseholdGroupView : Page
     {
+        private bool isAnalyzed = false;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -63,11 +64,21 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         return;
                     }
 
+                    HashSet<string> uniqueGroupNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
                     List<HouseholdGroupModel> householdGroups = new List<HouseholdGroupModel>();
 
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                     {
                         string groupName = worksheet.Cells[row, 1].Text;
+                        if (uniqueGroupNames.Contains(groupName))
+                        {
+                            continue;
+                        }
+                        else
+                        {                           
+                            uniqueGroupNames.Add(groupName);
+                        }
                         decimal? latitude = null;
                         decimal? longitude = null;
 
@@ -126,7 +137,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 dt.Columns.Add("GroupName", typeof(string));
                 dt.Columns.Add("Latitude", typeof(decimal));
                 dt.Columns.Add("Longitude", typeof(decimal));
-                dt.Columns.Add("ValidationError", typeof(string));
+                dt.Columns.Add("ValidationStatus", typeof(string));
 
                 // Loop through the list and dynamically check for redundancy
                 foreach (var group in householdGroups)
@@ -151,11 +162,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                     if (!validationResult.isValid)
                     {
-                        dr["ValidationError"] = validationResult.errorMessage; // Store the error message
+                        dr["ValidationStatus"] = validationResult.errorMessage; // Store the error message
                     }
                     else
                     {
-                        dr["ValidationError"] = validationResult.errorMessage; // No error
+                        dr["ValidationStatus"] = validationResult.errorMessage; // No error
                     }
 
                     dt.Rows.Add(dr);
@@ -164,8 +175,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 // Bind the DataTable to the RadGrid for display
                 Session["AnalyzedData"] = dt;
 
-                GridColumn validationErrorColumn = RadGrid.MasterTableView.GetColumn("ValidationError");
-                validationErrorColumn.Display = true;
+                RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
                 int totalRecordCount = dt.Rows.Count;
                 Session["TotalRecordCount"] = totalRecordCount;
@@ -177,11 +187,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 // Bind the DataTable to the RadGrid for display
                 RadGrid.DataSource = null;
                 RadGrid.DataSource = dt;
-                RadGrid.DataBind();
+                
                 RadGrid.Visible = true;
+                isAnalyzed = true;
 
                 AddSuccessMessage("Data analyzed successfully.");
                 btnImport.Enabled = true;
+                RadGrid.DataBind();
             }
             catch (Exception ex)
             {
@@ -226,8 +238,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
         {
             ClearMessages();
             Session["IsAnalyzing"] = false;
-            GridColumn validationErrorColumn = RadGrid.MasterTableView.GetColumn("ValidationError");
-            validationErrorColumn.Display = false;
+            RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
             try
             {
                 int totalRecordCount = GetHouseholdGroupCount();
@@ -336,6 +347,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
             catch (Exception ex)
             {
                 AddErrorMessage("Data binding failed: " + ex.Message);
+            }
+        }
+
+        protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem dataItem)
+            {
+                if (isAnalyzed)
+                {
+                    string validationStatus = dataItem["ValidationStatus"].Text;
+
+                    if (validationStatus != "Valid")
+                    {
+                        dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
+                    }
+                }
             }
         }
 
