@@ -30,6 +30,11 @@ namespace SSSNP.Service
             return _component2Repository.GetValidHouseholdNumberValues();
         }
 
+        public HashSet<int> GetValidGroupId()
+        {
+            return _component2Repository.GetValidGroupId();
+        }
+
         public ResponseModel SaveTrainingAndAttendanceTracking(List<TrainingAndAttendanceModel> request)
         {
             var response = new ResponseModel();
@@ -413,13 +418,14 @@ namespace SSSNP.Service
 
             // Fetch valid household numbers as a HashSet for faster lookup
             var validHouseholdNumbers = _component2Repository.GetValidHouseholdNumberValues(); // Assuming it returns HashSet<string>
+            var validGroupId = _component2Repository.GetValidGroupId();
 
             try
             {
                 foreach (var beneficiary in beneficiaries)
                 {
                     // Pass valid household numbers to IsValidData
-                    var validationResult = IsValidData(beneficiary, validHouseholdNumbers); // Pass HashSet to validation
+                    var validationResult = IsValidData(beneficiary, validHouseholdNumbers,validGroupId); // Pass HashSet to validation
                     if (!validationResult.isValid)
                     {
                         skipCount++;
@@ -452,7 +458,7 @@ namespace SSSNP.Service
         }
 
 
-        public (bool isValid, string errorMessage) IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary, HashSet<string> validHouseholdNumbers)
+        public (bool isValid, string errorMessage) IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary, HashSet<string> validHouseholdNumbers, HashSet<int> validGroupId)
         {
             // Check for missing Household Number
             if (string.IsNullOrWhiteSpace(beneficiary?.HouseholdNumber))
@@ -489,6 +495,22 @@ namespace SSSNP.Service
             {
                 return (false, "Enrollment Status is required.");
             }
+
+            if (beneficiary.GroupID == null)
+            {
+                return (false, "GroupID is required.");
+            }
+
+            if (!validGroupId.Contains(beneficiary.GroupID.Value))
+            {
+                return (false, "GroupID is not valid.");
+            }
+
+            if (beneficiary.EnrolledMemberID == null)
+            {
+                return (false, "EnrolledMemberID is required.");
+            }
+
 
             // All validations passed
             return (true, "Valid");

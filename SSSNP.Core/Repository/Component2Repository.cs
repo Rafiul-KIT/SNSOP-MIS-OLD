@@ -775,6 +775,44 @@ namespace SSSNP_SNSOP.Core.Repository
                 return new List<ValidHouseholdNumberModel>(); // Return an empty list in case of an error
             }
         }
+
+        public HashSet<int> GetValidGroupId()
+        {
+            try
+            {
+                var groupIds = new HashSet<int>();
+
+                // SQL Query: Retrieve unique Group IDs from the tbl_Household_Group_View table
+                string query = @"
+            SELECT Id
+            FROM tbl_com2_Household_Group_View
+            GROUP BY Id";
+
+                var dt = _dbOperation.ExecuteDataTable(query, CommandType.Text);
+
+                // Check if the query returned results
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    // Loop through the rows and add to the HashSet
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["Id"] != DBNull.Value && int.TryParse(row["Id"].ToString(), out int groupId))
+                        {
+                            groupIds.Add(groupId);
+                        }
+                    }
+                }
+
+                return groupIds;
+            }
+            catch (Exception ex)
+            {
+                // Log the error for debugging purposes
+                Console.WriteLine("Error when retrieving valid Group IDs. Error: " + ex.ToString());
+                return new HashSet<int>();
+            }
+        }
+
     }
 
 }

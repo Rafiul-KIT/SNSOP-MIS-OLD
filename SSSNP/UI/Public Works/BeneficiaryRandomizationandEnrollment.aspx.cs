@@ -144,6 +144,7 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
+                var validGroupId = _component2Service.GetValidGroupId();
 
                 var validBeneficiary = new List<BeneficiaryRandomizationAndEnrollmentModel>();
 
@@ -170,7 +171,7 @@ namespace SSSNP.UI.Public_Works
                         dr["Id"] = DBNull.Value; // Not redundant, no HouseholdId
                     }
 
-                    var validationResult = service.IsValidData(beneficiary, validHouseholdNumbers);
+                    var validationResult = service.IsValidData(beneficiary, validHouseholdNumbers,validGroupId);
 
 
                     if (!validationResult.isValid)
@@ -229,6 +230,8 @@ namespace SSSNP.UI.Public_Works
                 if (beneficiaries == null || beneficiaries.Count == 0)
                 {
                     AddErrorMessage("No data available for import.");
+                    btnImport.Enabled = false;
+                    btnAnalyze.Enabled = false;
                     return;
                 }
 
