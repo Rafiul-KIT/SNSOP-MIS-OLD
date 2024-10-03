@@ -150,7 +150,7 @@ function AlphaNumericOnly()
                                                                        <a href="#" class="list-group-item">
                                                                         <span class="badge">
                                                                             <asp:Label ID="lblNameOfIP" runat="server"></asp:Label></span>
-                                                                        <i class="fa fa-fw fa-calendar"></i>Name of Implementing Partners
+                                                                           <i class="fa fa-fw fa-truck"></i>User Role
                                                                     </a>
                                                                     <a href='#'  class="list-group-item">
                                                                         <span class="badge" style="background-color: #d9534f;">

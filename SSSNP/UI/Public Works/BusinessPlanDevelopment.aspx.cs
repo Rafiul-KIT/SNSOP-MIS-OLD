@@ -214,6 +214,8 @@ namespace SSSNP.UI.Public_Works
                 // Save the data using the service layer
                 var response = _component2Service.SaveBusinessPlanDevelopment(list, validHouseholdNumbers);
 
+                Session["UploadedBusinessPlanData"] = null;
+
                 if (response.IsSuccess)
                 {
                     AddSuccessMessage(list.Count+" records imported successfully");

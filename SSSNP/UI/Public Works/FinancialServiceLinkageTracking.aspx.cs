@@ -203,6 +203,8 @@ namespace SSSNP.UI.Public_Works
                 // Save the data using the service layer
                 var response = _component2Service.SaveFinancialServiceLinkage(list, validHouseholdNumbers);
 
+                Session["UploadedFinancialServiceLinkageTrackingData"] = null;
+
                 if (response.IsSuccess)
                 {
                     AddSuccessMessage(list.Count + " records imported successfully");
