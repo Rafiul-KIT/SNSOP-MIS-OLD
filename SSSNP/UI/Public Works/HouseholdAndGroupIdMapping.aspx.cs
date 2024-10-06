@@ -1,120 +1,153 @@
 ﻿using System;
 using System.Data;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using SSSNP_SNSOP.Core.Model.Component2; // Model namespace
+using SSSNP_SNSOP.Core.DbHandler; // Repository namespace
 using Telerik.Web.UI;
+using SSSNP_SNSOP.Core.Repository;
+using System.Collections.Generic;
 
-namespace SSSNP.UI.Public_Works
+namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class HouseholdAndGroupIdMapping : System.Web.UI.Page
     {
+        // Assuming LookupManagerService is your geo-location lookup service
+        private readonly LookupManagerService _lookupService;
+        private readonly Component2Repository _component2Repository;
+
+        public HouseholdAndGroupIdMapping()
+        {
+            // Initialize services with connection string (modify with actual connection string source)
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+            _lookupService = new LookupManagerService(connectionString);
+            _component2Repository = new Component2Repository(connectionString); // Adjust with your actual repository initialization
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Populate dropdowns on initial load
                 LoadStateDropdown();
-                LoadCountyDropdown();
-                LoadPayamDropdown();
-                LoadBomaDropdown();
             }
         }
 
-        // Sample method for populating State dropdown
         private void LoadStateDropdown()
         {
-            // Add code to fetch data from the database
-            ddlState.Items.Clear();
-            ddlState.Items.Add(new ListItem("--Select--", ""));
-            // Example: ddlState.Items.Add(new ListItem("State1", "1"));
-            // Add actual data from your data source here
+            DataTable dtStates = _lookupService.GetStateList();
+            ddlState.DataSource = dtStates;
+            ddlState.DataTextField = "StateName";
+            ddlState.DataValueField = "intStateid";
+            ddlState.DataBind();
+            ddlState.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
         }
 
-        private void LoadCountyDropdown()
-        {
-            ddlCounty.Items.Clear();
-            ddlCounty.Items.Add(new ListItem("--Select--", ""));
-            // Add actual data from your data source here
-        }
-
-        private void LoadPayamDropdown()
-        {
-            ddlPayam.Items.Clear();
-            ddlPayam.Items.Add(new ListItem("--Select--", ""));
-            // Add actual data from your data source here
-        }
-
-        private void LoadBomaDropdown()
-        {
-            ddlBoma.Items.Clear();
-            ddlBoma.Items.Add(new ListItem("--Select--", ""));
-            // Add actual data from your data source here
-        }
-
-        // Event when State dropdown changes
         protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Handle state selection change
-            // Optionally load dependent data like County
-            LoadCountyDropdown();
+            if (!string.IsNullOrEmpty(ddlState.SelectedValue))
+            {
+                int stateId = int.Parse(ddlState.SelectedValue);
+                LoadCountyDropdown(stateId);
+            }
         }
 
-        // Event when County dropdown changes
+        private void LoadCountyDropdown(int stateId)
+        {
+            DataTable dtCounties = _lookupService.GetCountyListByStateId(stateId);
+            ddlCounty.DataSource = dtCounties;
+            ddlCounty.DataTextField = "CountieName";
+            ddlCounty.DataValueField = "intCountieid";
+            ddlCounty.DataBind();
+            ddlCounty.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
+        }
+
         protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Handle county selection change
-            LoadPayamDropdown();
+            if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
+            {
+                int countyId = int.Parse(ddlCounty.SelectedValue);
+                LoadPayamDropdown(countyId);
+            }
         }
 
-        // Event when Payam dropdown changes
+        private void LoadPayamDropdown(int countyId)
+        {
+            DataTable dtPayams = _lookupService.GetPayamListByCountyId(countyId);
+            ddlPayam.DataSource = dtPayams;
+            ddlPayam.DataTextField = "PayamName";
+            ddlPayam.DataValueField = "intPayamid";
+            ddlPayam.DataBind();
+            ddlPayam.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
+        }
+
         protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Handle Payam selection change
-            LoadBomaDropdown();
+            if (!string.IsNullOrEmpty(ddlPayam.SelectedValue))
+            {
+                int payamId = int.Parse(ddlPayam.SelectedValue);
+                LoadBomaDropdown(payamId);
+            }
         }
 
-        // Search button click event
+        private void LoadBomaDropdown(int payamId)
+        {
+            DataTable dtBomas = _lookupService.GetBomaListByPayamId(payamId);
+            ddlBoma.DataSource = dtBomas;
+            ddlBoma.DataTextField = "BomaName";
+            ddlBoma.DataValueField = "intBomasid";
+            ddlBoma.DataBind();
+            ddlBoma.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
+        }
+
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
-            // Trigger grid data binding when search is clicked
-            rgResults.Rebind();
+            if (IsValidInput())
+            {
+                LoadHouseholdGroupData();
+            }
         }
 
-        // Telerik RadGrid DataSource event handler
+        private bool IsValidInput()
+        {
+            // Add validation if necessary
+            return ddlState.SelectedIndex > 0 && ddlCounty.SelectedIndex > 0 && ddlPayam.SelectedIndex > 0 && ddlBoma.SelectedIndex > 0;
+        }
+
+        private void LoadHouseholdGroupData()
+        {
+            // Create the model for HouseholdGroupLinkage
+            HouseholdGroupLinkageModel linkageModel = new HouseholdGroupLinkageModel
+            {
+                HouseholdNumber = "", // Modify as per your requirement
+                GroupId = int.Parse(ddlBoma.SelectedValue), // Assuming GroupId is BomaId here
+                HouseholdNumbers = new List<string> { /* Load household numbers from request or UI */ }
+            };
+
+            // Fetch data using repository method (adjust with actual method)
+            var response = _component2Repository.SaveHouseholdGroupLinkage(linkageModel);
+
+            if (response.IsSuccess)
+            {
+                // Bind data to grid
+                rgResults.DataSource = response; // Set the correct data source from response
+                rgResults.DataBind();
+            }
+            else
+            {
+                // Handle error or show message
+                // Example: Show error message in a label
+                // lblMessage.Text = response.Message;
+            }
+        }
+
+        // Grid data binding on demand
         protected void rgResults_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            // Fetch data from database based on selected state, county, etc.
-            DataTable dt = GetHouseholdGroupData();
-            rgResults.DataSource = dt;
+            LoadHouseholdGroupData();
         }
 
-        // Method to fetch data based on selected dropdowns
-        private DataTable GetHouseholdGroupData()
-        {
-            DataTable dt = new DataTable();
-
-            // Create sample columns (replace with actual data)
-            dt.Columns.Add("HouseholdNumber");
-            dt.Columns.Add("GroupID");
-
-            // Add sample data (replace with actual query result)
-            dt.Rows.Add("Household 1", "Group 1");
-            dt.Rows.Add("Household 2", "Group 2");
-
-            return dt;
-        }
-
-        // Telerik RadGrid ItemDataBound event handler for customizing row data display
+        // Grid item data bound (custom logic if needed)
         protected void rgResults_ItemDataBound(object sender, GridItemEventArgs e)
         {
-            if (e.Item is GridDataItem)
-            {
-                // Example: Customize the row appearance or modify data
-                GridDataItem item = e.Item as GridDataItem;
-                string householdNumber = item["HouseholdNumber"].Text;
-                string groupId = item["GroupID"].Text;
-                // Add custom logic if needed
-            }
+            // Handle item data bound logic if needed
         }
     }
 }

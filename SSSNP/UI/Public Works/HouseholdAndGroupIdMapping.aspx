@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="HouseholdAndGroupIdMapping.aspx.cs" Inherits="SSSNP.UI.Public_Works.HouseholdAndGroupIdMapping" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="HouseholdAndGroupIdMapping.aspx.cs" Inherits="SSSNP_SNSOP.UI.Public_Works.HouseholdAndGroupIdMapping" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
@@ -66,6 +66,12 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                            </table>
+                                        </td>
+
+                                        <td style="width: 27px">&nbsp;</td>
+                                        <td valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
@@ -81,11 +87,6 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
-                                            </table>
-                                        </td>
-                                        <td style="width: 27px">&nbsp;</td>
-                                        <td valign="top">
-                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name</asp:Label>
@@ -104,7 +105,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
+                                        <td colspan="3" style="padding: 5px; margin: 10px" valign="top" align="center">
                                             <asp:Button ID="BtnSearch" runat="server" CssClass="btn btn-primary" Height="32px" OnClick="BtnSearch_Click" TabIndex="10" Text="Search" ValidationGroup="group" Width="110px" />
                                         </td>
                                     </tr>
@@ -147,14 +148,6 @@
                 </div>
             </div>
         </ContentTemplate>
-
-
-        <Triggers>
-            <asp:PostBackTrigger ControlID="BtnDownload" />
-            <asp:PostBackTrigger ControlID="BtnDownloadPdf" />
-        </Triggers>
-
-
     </asp:UpdatePanel>
 
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">

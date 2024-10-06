@@ -89,44 +89,7 @@ namespace SSSNP_SNSOP.Core.Repository
                 };
             }
         }
-        public ResponseModel SaveHouseholdGroupLinkage(HouseholdGroupLinkageModel obj)
-        {
-            var response = new ResponseModel();
-            try
-            {
-                lock (_locker)
-                {
-                    var isExist = IsRecordExistInHouseholdGroupLinkage(obj.HouseholdNumber?.Trim());
-
-                    Dictionary<string, object> data = new Dictionary<string, object>();
-                    data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
-                    data.Add("GroupId", obj.GroupId);
-                    if (!isExist)
-                    {
-                        data.Add("CreatedBy", obj.CreatedBy);
-                        data.Add("CreatedDate", obj.CreatedDate);
-                        var isAdded = _dbOperation.InsertData("tbl_com2_Household_Group_Linkage", data);
-                    }
-                    if (isExist)
-                    {
-                        data.Add("ModifiedBy", obj.ModifiedBy);
-                        data.Add("ModifiedDate", obj.ModifiedDate);
-                        var isAdded = _dbOperation.UpdateData("tbl_com2_Household_Group_Linkage", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
-                    }
-                    response.Message = "Household Group linkage is saved successfully.";
-                    return response;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error when saving Household Group linkage. Error: " + ex.ToString());
-                return new ResponseModel()
-                {
-                    IsSuccess = false,
-                    Message = "Error when saving Household Group linkage. Error: " + ex.ToString()
-                };
-            }
-        }
+        
         private bool IsRecordExistInTrainingAndAttendence(string householdNumber)
         {
             try
@@ -291,37 +254,6 @@ namespace SSSNP_SNSOP.Core.Repository
         }
 
 
-
-        public DenormalizedDataModel GetDenormalizedDataByHouseholdNumber(string householdNumber)
-        {
-            DenormalizedDataModel result = null;
-            try
-            {
-                SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT * FROM tbl_com2_Household_Enrollment_Data WHERE HouseholdNumber = @HouseholdNumber",
-                    CommandType.Text, param);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    result = new DenormalizedDataModel();
-                    result.StateID = dt.Rows[0]["StateID"] != null ? Convert.ToInt32(dt.Rows[0]["StateID"].ToString()) : 0;
-                    result.CountyID = dt.Rows[0]["CountyID"] != null ? Convert.ToInt32(dt.Rows[0]["CountyID"].ToString()) : 0;
-                    result.PayamID = dt.Rows[0]["PayamID"] != null ? Convert.ToInt32(dt.Rows[0]["PayamID"].ToString()) : 0;
-                    result.BomaID = dt.Rows[0]["BomaID"] != null ? Convert.ToInt32(dt.Rows[0]["BomaID"].ToString()) : 0;
-                    result.FirstName = dt.Rows[0]["FirstName"] != null ? dt.Rows[0]["FirstName"].ToString() : string.Empty;
-                    result.MiddleName = dt.Rows[0]["MiddleName"] != null ? dt.Rows[0]["MiddleName"].ToString() : string.Empty;
-                    result.LastName = dt.Rows[0]["LastName"] != null ? dt.Rows[0]["LastName"].ToString() : string.Empty;
-                    result.NickName = dt.Rows[0]["NickName"] != null ? dt.Rows[0]["NickName"].ToString() : string.Empty;
-                    result.Gender = dt.Rows[0]["Gender"] != null ? dt.Rows[0]["Gender"].ToString() : string.Empty;
-                    result.Age = dt.Rows[0]["Age"] != null ? Convert.ToInt32(dt.Rows[0]["Age"].ToString()) : 0;
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public ResponseModel SaveBeneficiary(BeneficiaryRandomizationAndEnrollmentModel model)
         {
             var response = new ResponseModel();
@@ -430,25 +362,6 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-
-        private bool IsRecordExist(string householdNumber)
-        {
-            try
-            {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Household_Group_Linkage WHERE HouseholdNumber = @householdNumber",
-                    CommandType.Text, param);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
         private bool IsRecordExistInBusinessPlanDevelopment(string householdNumber)
         {
             try
@@ -743,8 +656,112 @@ namespace SSSNP_SNSOP.Core.Repository
                 };
             }
         }
-        
-        
+
+        private bool IsRecordExistInFinancialServiceLinkage(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Financial_Services_Linkage_Tracking WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public ResponseModel SaveHouseholdGroupLinkage(HouseholdGroupLinkageModel obj)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                lock (_locker)
+                {
+                    var isExist = IsRecordExistInHouseholdGroupLinkage(obj.HouseholdNumber?.Trim());
+
+                    Dictionary<string, object> data = new Dictionary<string, object>();
+                    data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
+                    data.Add("GroupId", obj.GroupId);
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", obj.CreatedBy);
+                        data.Add("CreatedDate", obj.CreatedDate);
+                        var isAdded = _dbOperation.InsertData("tbl_com2_Household_Group_Linkage", data);
+                    }
+                    if (isExist)
+                    {
+                        data.Add("ModifiedBy", obj.ModifiedBy);
+                        data.Add("ModifiedDate", obj.ModifiedDate);
+                        var isAdded = _dbOperation.UpdateData("tbl_com2_Household_Group_Linkage", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                    }
+                    response.Message = "Household Group linkage is saved successfully.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when saving Household Group linkage. Error: " + ex.ToString());
+                return new ResponseModel()
+                {
+                    IsSuccess = false,
+                    Message = "Error when saving Household Group linkage. Error: " + ex.ToString()
+                };
+            }
+        }
+
+
+        private bool IsRecordExistInHouseholdGroupLinkage(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Household_Group_Linkage WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public HashSet<string> GetValidHouseholdNumberValues()
+        {
+            try
+            {
+                var householdNumbers = new HashSet<string>();
+
+                var dt = _dbOperation.ExecuteDataTable("SELECT b.household_number FROM tbl_BeneficiaryServiceDet b " +
+                    "INNER JOIN tbl_Nominee n on b.household_number=n.application_id " +
+                    "GROUP BY b.household_number", CommandType.Text);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        householdNumbers.Add(row["household_number"] != DBNull.Value ? row["household_number"].ToString() : null);
+                    }
+                }
+
+                return householdNumbers;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when retrieving valid household numbers. Error: " + ex.ToString());
+                return new HashSet<string>();
+            }
+        }
+
         public List<ValidHouseholdNumberModel> GetValidHouseholdNumbers()
         {
             try
