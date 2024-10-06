@@ -391,6 +391,7 @@
     <Content Include="UI\Public Works\GBVLanding.aspx" />
     <Content Include="UI\Public Works\GBVManagement.aspx" />
     <Content Include="UI\Public Works\GrievancesDashboard.aspx" />
+    <Content Include="UI\Public Works\HouseholdAndGroupIdMapping.aspx" />
     <Content Include="UI\Public Works\HouseholdGroupView.aspx" />
     <Content Include="UI\Public Works\ImportFromServiceBenfAlternateDetLatestwithValidation_Thread.aspx" />
     <Content Include="UI\Public Works\AddAreaofWork.aspx" />
@@ -1028,6 +1029,13 @@
     </Compile>
     <Compile Include="UI\Public Works\GrievancesDashboard.aspx.designer.cs">
       <DependentUpon>GrievancesDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\HouseholdAndGroupIdMapping.aspx.cs">
+      <DependentUpon>HouseholdAndGroupIdMapping.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\HouseholdAndGroupIdMapping.aspx.designer.cs">
+      <DependentUpon>HouseholdAndGroupIdMapping.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\HouseholdGroupView.aspx.cs">
       <DependentUpon>HouseholdGroupView.aspx</DependentUpon>
