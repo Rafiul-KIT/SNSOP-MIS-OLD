@@ -418,8 +418,12 @@
     <Content Include="UI\Public Works\AutoMaticAlertProjectMonthlyFundsDisbursementReport.aspx" />
     <Content Include="UI\Public Works\AutoMaticAlertWorksMonthlyFundsDisbursementReport.aspx" />
     <Content Include="UI\Public Works\BDCMobilizationReg.aspx" />
-    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll" />
-    <Content Include="UI\Public Works\bin\itextsharp.dll" />
+    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Public Works\bin\itextsharp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UI\Public Works\BomaPaidInvoiceCyclewise.aspx" />
     <Content Include="UI\Public Works\BomaWiseReportNew.aspx" />
     <Content Include="UI\Public Works\BomaWiseReportNewLatest.aspx" />
@@ -3999,7 +4003,9 @@
     <Content Include="template\templateupdate.xlsx" />
     <Content Include="template\WagePaymentPA.xls" />
     <Content Include="UI\Public Works\AlertMaster.master" />
-    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll.refresh" />
+    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll.refresh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UI\Public Works\CCMaster.master" />
     <Content Include="UI\Public Works\CCMaster1.master" />
     <Content Include="Poppins\Poppins-Black.ttf" />
