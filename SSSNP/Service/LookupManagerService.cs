@@ -1,4 +1,5 @@
 ﻿using SSSNP_SNSOP.Core.DbHandler;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -32,5 +33,10 @@ public class LookupManagerService
     {
         SqlParameter param = new SqlParameter("@payamId", payamId);
         return _dbOperation.ExecuteDataTable("SELECT intBomasid, BomaName FROM tm_Bomas WHERE intPayamid = @payamId", CommandType.Text, param);
+    }
+
+    internal DataTable GetHouseholdNumbers(string state, string county, string payam, string boma)
+    {
+        throw new NotImplementedException();
     }
 }

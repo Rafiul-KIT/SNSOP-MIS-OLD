@@ -541,6 +541,7 @@
     <Content Include="UI\Public Works\ImportFromServiceBenfWagesUpdateMatchedFP.aspx" />
     <Content Include="UI\Public Works\ImportFromServicePaymentsByBoma.aspx" />
     <Content Include="UI\Public Works\ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx" />
+    <Content Include="UI\Public Works\Component2TemplateImporting.aspx" />
     <Content Include="UI\Public Works\ImportUpdateFingerPrint.aspx" />
     <Content Include="UI\Public Works\ImportUpdateHouseHoldName.aspx" />
     <Content Include="UI\Public Works\ImportUpdatePhoto.aspx" />
@@ -1499,6 +1500,13 @@
     </Compile>
     <Compile Include="UI\Public Works\ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx.designer.cs">
       <DependentUpon>ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\Component2TemplateImporting.aspx.cs">
+      <DependentUpon>Component2TemplateImporting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\Component2TemplateImporting.aspx.designer.cs">
+      <DependentUpon>Component2TemplateImporting.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\ImportmasterPageLogin.master.designer.cs">
       <DependentUpon>ImportmasterPageLogin.master</DependentUpon>
