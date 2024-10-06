@@ -27,6 +27,20 @@ namespace SSSNP
 
         public void ConfigureAuth(IAppBuilder app)
         {
+            // Mock :: Household Group Linkage Module
+            var request = new HouseholdGroupLinkageModel();
+            var someHouseholdNumbers = new List<string>();
+            someHouseholdNumbers.Add("HH1");
+            someHouseholdNumbers.Add("HH2");
+            someHouseholdNumbers.Add("HH3");
+            request.HouseholdNumbers = someHouseholdNumbers;
+            request.GroupId = 1;
+
+            var response = new Component2Service().SaveHouseholdGroupLinkage(request);
+            Console.WriteLine(response.IsSuccess + "\n" +response.Message);
+            // Mock :: Household Group Linkage Module
+
+
             // Mock :: Training and Attendance Tracking Module
 
             //var list = new List<TrainingAndAttendanceModel>();
@@ -51,7 +65,7 @@ namespace SSSNP
 
             //ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
 
-            
+
             //var list = new List<TrainingAndAttendanceModel>();
             //var req1 = new TrainingAndAttendanceModel()
             //{
@@ -73,7 +87,7 @@ namespace SSSNP
             //list.Add(req2);
 
             //ResponseModel response = new Component2Service().SaveTrainingAndAttendanceTracking(list);
-            
+
             // Mock :: Training and Attendance Tracking Module
 
 

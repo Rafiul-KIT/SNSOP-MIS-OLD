@@ -44,6 +44,7 @@ namespace SSSNP.Service
 
                     // Save the valid record
                     response = _component2Repository.SaveTrainingAndAttendanceTracking(obj);
+                    if (!response.IsSuccess) errorMessages.Add(response.Message);
                 }
 
                 // If there are any validation errors, return them in the response
@@ -65,8 +66,48 @@ namespace SSSNP.Service
                 throw new Exception("Error when saving Training and Attendance Tracking data. Error: " + ex.ToString());
             }
         }
+        public ResponseModel SaveHouseholdGroupLinkage(HouseholdGroupLinkageModel request)
+        {
+            var response = new ResponseModel();
+            var errorMessages = new List<string>(); // To store validation error messages
 
+            try
+            {
+                foreach (var householdNumber in request?.HouseholdNumbers)
+                {
+                    request.HouseholdNumber = householdNumber;
+                    var validationResult = IsValidData(request);
 
+                    if (!validationResult.isValid) // If not valid, store the error message and skip saving
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        continue;
+                    }
+
+                    // Save the valid record
+                    response = _component2Repository.SaveHouseholdGroupLinkage(request);
+                    if(!response.IsSuccess) errorMessages.Add(response.Message);
+                }
+
+                // If there are any validation errors, return them in the response
+                if (errorMessages.Count > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = string.Join("; ", errorMessages); // Join error messages as a single string
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "All records saved successfully.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when saving Household Group linkage. Error: " + ex.ToString());
+            }
+        }
         public (bool isValid, string errorMessage) IsValidData(TrainingAndAttendanceModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
         {
             // Predefined valid course codes
@@ -107,12 +148,6 @@ namespace SSSNP.Service
             // Add more validation as needed
             return (true, string.Empty);
         }
-
-
-
-
-
-
         public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)
         {
             var response = new ResponseModel();
@@ -136,6 +171,7 @@ namespace SSSNP.Service
 
                     // Save the valid record
                     response = _component2Repository.SaveLivelihoodGrantDisbursement(obj);
+                    if (!response.IsSuccess) errorMessages.Add(response.Message);
                 }
 
                 // If there are any validation errors, return them in the response
@@ -157,7 +193,6 @@ namespace SSSNP.Service
                 throw new Exception("Error when saving Livelihood Grant Disbursement data. Error: " + ex.ToString());
             }
         }
-
         public (bool isValid, string errorMessage) IsValidData(LivelihoodGrantDisbursementModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
@@ -192,8 +227,6 @@ namespace SSSNP.Service
             // Add more validation if needed
             return (true, string.Empty);
         }
-
-
         public ResponseModel SaveHouseholdGroups(List<HouseholdGroupModel> groups)
         {
             var response = new ResponseModel();
@@ -211,8 +244,6 @@ namespace SSSNP.Service
                 throw new Exception("Error saving Household Group data: " + ex.Message);
             }
         }
-
-        // Validate household group data
         private bool IsValidData(HouseholdGroupModel group)
         {
             if (string.IsNullOrWhiteSpace(group?.GroupName?.Trim()))
@@ -222,12 +253,10 @@ namespace SSSNP.Service
             // Add more validation if necessary
             return true;
         }
-
         public Dictionary<string, int> GetExistingGroupNames()
         {
             return _component2Repository.GetExistingGroupNames();
         }
-
         public ResponseModel SaveBusinessPlanDevelopment(List<BusinessPlanDevelopmentModel> request)
         {
             var response = new ResponseModel();
@@ -245,7 +274,6 @@ namespace SSSNP.Service
                 throw new Exception("Error when saving Business Plan Development data. Error: " + ex.ToString());
             }
         }
-
         private bool IsValidData(BusinessPlanDevelopmentModel obj)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
@@ -261,6 +289,18 @@ namespace SSSNP.Service
                 return false;
             }
             return true;
+        }
+        public (bool isValid, string errorMessage) IsValidData(HouseholdGroupLinkageModel obj)
+        {
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber))
+            {
+                return (false, "Household Number is missing.");
+            }
+            if (obj?.GroupId <= 0)
+            {
+                return (false, "Group Id is missing.");
+            }
+            return (true, string.Empty);
         }
     }
 }
