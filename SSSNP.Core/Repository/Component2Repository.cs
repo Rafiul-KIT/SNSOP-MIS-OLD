@@ -842,12 +842,18 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 // SQL query with parameterized conditions
                 string query = @"
-            SELECT household_number, NameofHousehold, Sex, Age, GroupId
-            FROM tbl_BeneficiaryServiceDet
-            WHERE (@StateId = 0 OR intStateid = @StateId)
-            AND (@CountyId = 0 OR intCountieid = @CountyId)
-            AND (@PayamId = 0 OR intPayamid = @PayamId)
-            AND (@BomaId = 0 OR intBomasid = @BomaId)";
+                            SELECT b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id as GroupId, g.GroupName
+                            FROM tbl_BeneficiaryServiceDet b
+                            INNER JOIN tbl_Nominee n 
+                            ON b.household_number = n.application_id
+                            LEFT JOIN tbl_com2_Household_Group_Linkage l
+                            ON l.HouseholdNumber = b.household_number
+                            LEFT JOIN tbl_com2_Household_Group_View g
+                            ON g.Id = l.GroupId
+                            WHERE (@StateId = 0 OR b.intStateid = @StateId)
+                            AND (@CountyId = 0 OR b.intCountieid = @CountyId)
+                            AND (@PayamId = 0 OR b.intPayamid = @PayamId)
+                            AND (@BomaId = 0 OR b.intBomasid = @BomaId)";
 
                 // Create and assign the SQL parameters
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -870,11 +876,12 @@ namespace SSSNP_SNSOP.Core.Repository
                                 // Map data to HouseholdDataModel object
                                 HouseholdDataModel household = new HouseholdDataModel
                                 {
-                                    HouseholdNumber = reader["household_number"].ToString(),
-                                    HouseholdName = reader["NameofHousehold"].ToString(),
-                                    Gender = reader["Sex"].ToString(),
+                                    HouseholdNumber = reader["household_number"] != DBNull.Value ? reader["household_number"].ToString() : string.Empty,
+                                    HouseholdName = reader["NameofHousehold"] != DBNull.Value ? reader["NameofHousehold"].ToString() : string.Empty,
+                                    Gender = reader["Sex"] != DBNull.Value ? reader["Sex"].ToString() : string.Empty,
                                     Age = reader["Age"] != DBNull.Value ? Convert.ToInt32(reader["Age"]) : (int?)null,
-                                    GroupId = reader["GroupId"] != DBNull.Value ? Convert.ToInt32(reader["GroupId"]) : (int?)null
+                                    GroupId = reader["GroupId"] != DBNull.Value ? Convert.ToInt32(reader["GroupId"]) : (int?)null,
+                                    GroupName = reader["GroupName"] != DBNull.Value ? reader["GroupName"].ToString() : string.Empty,
                                 };
                                 households.Add(household);
                             }
@@ -897,9 +904,6 @@ namespace SSSNP_SNSOP.Core.Repository
 
             return households;
         }
-
-
-
     }
 
 }

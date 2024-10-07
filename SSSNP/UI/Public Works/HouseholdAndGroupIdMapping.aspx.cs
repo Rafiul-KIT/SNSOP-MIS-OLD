@@ -193,7 +193,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
         // Grid data binding on demand
         protected void rgResults_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            LoadHouseholdGroupData();
+            //LoadHouseholdGroupData();
         }
 
         // Grid item data bound (custom logic if needed)

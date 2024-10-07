@@ -13,5 +13,6 @@ namespace SSSNP_SNSOP.Core.Model
         public string Gender { get; set; }
         public int? Age { get; set; }
         public int? GroupId { get; set; }
+        public string GroupName { get; set; }
     }
 }
