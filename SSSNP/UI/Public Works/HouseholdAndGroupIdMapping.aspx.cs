@@ -5,21 +5,20 @@ using SSSNP_SNSOP.Core.DbHandler; // Repository namespace
 using Telerik.Web.UI;
 using SSSNP_SNSOP.Core.Repository;
 using System.Collections.Generic;
+using System.Web.UI.WebControls;
 
 namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class HouseholdAndGroupIdMapping : System.Web.UI.Page
     {
-        // Assuming LookupManagerService is your geo-location lookup service
         private readonly LookupManagerService _lookupService;
         private readonly Component2Repository _component2Repository;
 
         public HouseholdAndGroupIdMapping()
         {
-            // Initialize services with connection string (modify with actual connection string source)
             string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
             _lookupService = new LookupManagerService(connectionString);
-            _component2Repository = new Component2Repository(connectionString); // Adjust with your actual repository initialization
+            _component2Repository = new Component2Repository(connectionString);
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -27,6 +26,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             if (!IsPostBack)
             {
                 LoadStateDropdown();
+                DisableDependentDropdowns(); // Initially disable all dependent dropdowns
             }
         }
 
@@ -46,6 +46,14 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 int stateId = int.Parse(ddlState.SelectedValue);
                 LoadCountyDropdown(stateId);
+                ddlCounty.Enabled = true;  // Enable County dropdown
+                ddlPayam.Enabled = false;  // Disable Payam dropdown
+                ddlBoma.Enabled = false;   // Disable Boma dropdown
+                ClearDropDowns(ddlPayam, ddlBoma);  // Clear dependent dropdowns
+            }
+            else
+            {
+                DisableDependentDropdowns(); // If no state is selected, disable all dropdowns
             }
         }
 
@@ -65,6 +73,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 int countyId = int.Parse(ddlCounty.SelectedValue);
                 LoadPayamDropdown(countyId);
+                ddlPayam.Enabled = true; // Enable Payam dropdown
+                ddlBoma.Enabled = false; // Disable Boma dropdown
+                ClearDropDowns(ddlBoma); // Clear dependent Boma dropdown
+            }
+            else
+            {
+                ddlPayam.Enabled = false;
+                ddlBoma.Enabled = false;
+                ClearDropDowns(ddlPayam, ddlBoma);
             }
         }
 
@@ -84,6 +101,12 @@ namespace SSSNP_SNSOP.UI.Public_Works
             {
                 int payamId = int.Parse(ddlPayam.SelectedValue);
                 LoadBomaDropdown(payamId);
+                ddlBoma.Enabled = true; // Enable Boma dropdown
+            }
+            else
+            {
+                ddlBoma.Enabled = false;
+                ClearDropDowns(ddlBoma);
             }
         }
 
@@ -97,44 +120,73 @@ namespace SSSNP_SNSOP.UI.Public_Works
             ddlBoma.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
         }
 
+        private void DisableDependentDropdowns()
+        {
+            ddlCounty.Enabled = false;
+            ddlPayam.Enabled = false;
+            ddlBoma.Enabled = false;
+            ClearDropDowns(ddlCounty, ddlPayam, ddlBoma);
+        }
+
+        private void ClearDropDowns(params System.Web.UI.WebControls.DropDownList[] dropdowns)
+        {
+            foreach (var ddl in dropdowns)
+            {
+                ddl.Items.Clear();
+                ddl.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
+            }
+        }
+
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
-            if (IsValidInput())
-            {
-                LoadHouseholdGroupData();
-            }
+            LoadHouseholdGroupData();
         }
 
         private bool IsValidInput()
         {
-            // Add validation if necessary
             return ddlState.SelectedIndex > 0 && ddlCounty.SelectedIndex > 0 && ddlPayam.SelectedIndex > 0 && ddlBoma.SelectedIndex > 0;
         }
 
         private void LoadHouseholdGroupData()
         {
-            // Create the model for HouseholdGroupLinkage
-            HouseholdGroupLinkageModel linkageModel = new HouseholdGroupLinkageModel
+            try
             {
-                HouseholdNumber = "", // Modify as per your requirement
-                GroupId = int.Parse(ddlBoma.SelectedValue), // Assuming GroupId is BomaId here
-                HouseholdNumbers = new List<string> { /* Load household numbers from request or UI */ }
-            };
+                // Fetch search criteria
+                int stateId = string.IsNullOrEmpty(ddlState.SelectedValue) ? 0 : int.Parse(ddlState.SelectedValue);
+                int countyId = string.IsNullOrEmpty(ddlCounty.SelectedValue) ? 0 : int.Parse(ddlCounty.SelectedValue);
+                int payamId = string.IsNullOrEmpty(ddlPayam.SelectedValue) ? 0 : int.Parse(ddlPayam.SelectedValue);
+                int bomaId = string.IsNullOrEmpty(ddlBoma.SelectedValue) ? 0 : int.Parse(ddlBoma.SelectedValue);
 
-            // Fetch data using repository method (adjust with actual method)
-            var response = _component2Repository.SaveHouseholdGroupLinkage(linkageModel);
+                // Call your repository method to get the data
+                var households = _component2Repository.GetHouseholdDataByLocation(stateId, countyId, payamId, bomaId);
 
-            if (response.IsSuccess)
-            {
-                // Bind data to grid
-                rgResults.DataSource = response; // Set the correct data source from response
-                rgResults.DataBind();
+                if (households != null && households.Count > 0)
+                {
+                    rgResults.DataSource = households;
+                }
+                else
+                {
+                    rgResults.DataSource = null;
+                }
+                rgResults.Rebind();
             }
-            else
+            catch (Exception ex)
             {
-                // Handle error or show message
-                // Example: Show error message in a label
-                // lblMessage.Text = response.Message;
+                Console.WriteLine("Error: " + ex.Message);
+                // Handle the error
+            }
+        }
+
+        protected void SelectAll_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chkSelectAll = (CheckBox)sender;
+            foreach (GridDataItem item in rgResults.MasterTableView.Items)
+            {
+                CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
+                if (chkSelect != null)
+                {
+                    chkSelect.Checked = chkSelectAll.Checked;  // Select or deselect all checkboxes
+                }
             }
         }
 

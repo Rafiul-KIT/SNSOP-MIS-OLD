@@ -16,7 +16,8 @@ namespace SSSNP_SNSOP.Core.Repository
     {
         private readonly IDbOperation _dbOperation;
         private static readonly object _locker = new object();
-
+        
+        string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
         public Component2Repository(string connectionString)
         {
             _dbOperation = new SqlDbOperation(connectionString);
@@ -831,6 +832,73 @@ namespace SSSNP_SNSOP.Core.Repository
                 return new HashSet<int>();
             }
         }
+
+
+        public List<HouseholdDataModel> GetHouseholdDataByLocation(int stateId, int countyId, int payamId, int bomaId)
+        {
+            List<HouseholdDataModel> households = new List<HouseholdDataModel>();
+
+            try
+            {
+                // SQL query with parameterized conditions
+                string query = @"
+            SELECT household_number, NameofHousehold, Sex, Age, GroupId
+            FROM tbl_BeneficiaryServiceDet
+            WHERE (@StateId = 0 OR intStateid = @StateId)
+            AND (@CountyId = 0 OR intCountieid = @CountyId)
+            AND (@PayamId = 0 OR intPayamid = @PayamId)
+            AND (@BomaId = 0 OR intBomasid = @BomaId)";
+
+                // Create and assign the SQL parameters
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@StateId", stateId));
+                        cmd.Parameters.Add(new SqlParameter("@CountyId", countyId));
+                        cmd.Parameters.Add(new SqlParameter("@PayamId", payamId));
+                        cmd.Parameters.Add(new SqlParameter("@BomaId", bomaId));
+
+                        // Open the database connection
+                        conn.Open();
+
+                        // Execute the SQL command and get the data
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                // Map data to HouseholdDataModel object
+                                HouseholdDataModel household = new HouseholdDataModel
+                                {
+                                    HouseholdNumber = reader["household_number"].ToString(),
+                                    HouseholdName = reader["NameofHousehold"].ToString(),
+                                    Gender = reader["Sex"].ToString(),
+                                    Age = reader["Age"] != DBNull.Value ? Convert.ToInt32(reader["Age"]) : (int?)null,
+                                    GroupId = reader["GroupId"] != DBNull.Value ? Convert.ToInt32(reader["GroupId"]) : (int?)null
+                                };
+                                households.Add(household);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Log the SQL exception details
+                Console.WriteLine("SQL Error: " + ex.Message);
+                throw; // Rethrow after logging
+            }
+            catch (Exception ex)
+            {
+                // Log the general exception details
+                Console.WriteLine("Error: " + ex.Message);
+                throw; // Rethrow after logging
+            }
+
+            return households;
+        }
+
+
 
     }
 

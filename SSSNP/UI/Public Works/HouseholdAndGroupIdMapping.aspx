@@ -121,19 +121,24 @@
                                                 <td>
                                                     <telerik:RadGrid ID="rgResults" PageSize="10" AllowPaging="True" AutoGenerateColumns="false" runat="server" AllowSorting="true" GridLines="Both"
                                                         OnNeedDataSource="rgResults_NeedDataSource" OnItemDataBound="rgResults_ItemDataBound" AllowCustomPaging="True">
-                                                        <PagerStyle Mode="NextPrevAndNumeric" />
-                                                        <HeaderStyle CssClass="MyGridHeader" />
-                                                        <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
-                                                        <ClientSettings Selecting-AllowRowSelect="true">
-                                                            <Resizing AllowColumnResize="true" ResizeGridOnColumnResize="false" AllowResizeToFit="true" />
-                                                            <Selecting AllowRowSelect="True" />
-                                                        </ClientSettings>
-                                                        <MasterTableView TableLayout="Fixed" HeaderStyle-CssClass="MyGridHeader" DataKeyNames="intWagePaymentReqid" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
-                                                            <NoRecordsTemplate>&nbsp;&nbsp;&nbsp;No results found</NoRecordsTemplate>
-                                                            <HeaderStyle CssClass="MyGridHeader" />
-                                                            <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                                        <MasterTableView DataKeyNames="HouseholdNumber" AllowPaging="True" PagerStyle-AlwaysVisible="True">
                                                             <Columns>
-                                                                
+                                                                <telerik:GridTemplateColumn HeaderText="Select">
+                                                                    <HeaderStyle Width="50px" />
+                                                                    <HeaderTemplate>
+                                                                        
+                                                                        <asp:CheckBox ID="chkSelectAll" runat="server" AutoPostBack="true" OnCheckedChanged="SelectAll_CheckedChanged" />
+                                                                    </HeaderTemplate>
+                                                                    <ItemTemplate>
+                                                                        
+                                                                        <asp:CheckBox ID="chkSelect" runat="server" />
+                                                                    </ItemTemplate>
+                                                                </telerik:GridTemplateColumn>
+                                                                <telerik:GridBoundColumn DataField="household_number" HeaderText="Household Number" />
+                                                                <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Household Name" />
+                                                                <telerik:GridBoundColumn DataField="Sex" HeaderText="Gender" />
+                                                                <telerik:GridBoundColumn DataField="Age" HeaderText="Age" />
+                                                                <telerik:GridBoundColumn DataField="GroupId" HeaderText="Group ID" />
                                                             </Columns>
                                                         </MasterTableView>
                                                     </telerik:RadGrid>
