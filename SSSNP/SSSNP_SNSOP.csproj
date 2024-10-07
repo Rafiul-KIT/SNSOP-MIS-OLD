@@ -4038,6 +4038,7 @@
     <None Include="Properties\PublishProfiles\DEV.pubxml" />
     <Content Include="template\GBVTemplateFile.xlsx" />
     <Content Include="template\NonGBVTemplateFile.xlsx" />
+    <Content Include="template\BeneficiaryRandomizationEnrollmentTemplate.xlsx" />
     <None Include="UI\Public Works\Dataset\dsReport.xsd" />
     <Content Include="UI\Public Works\Dataset\dsReport.xss">
       <DependentUpon>dsReport.xsd</DependentUpon>

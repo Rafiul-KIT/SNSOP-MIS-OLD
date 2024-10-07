@@ -1,4 +1,5 @@
-﻿using SSSNP.Service;
+﻿using OfficeOpenXml;
+using SSSNP.Service;
 using SSSNP_SNSOP.Core.Model.Component2;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,10 @@ namespace SSSNP.UI.Public_Works
                     // Loop through the rows and map the data
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                     {
+                        if (!HasUnderlyingData(worksheet, row))
+                        {
+                            continue; // Skip the row if there is no underlying data
+                        }
                         string householdNumber = worksheet.Cells[row, 1].Text;
 
                         // Use ParseBoolean to parse the Yes/No or 1/0 into a boolean value
@@ -204,14 +209,13 @@ namespace SSSNP.UI.Public_Works
 
                 // Bind the DataTable to the RadGrid for display
                 RadGrid.DataSource = null;
-                RadGrid.DataSource = dt;
-                
-                RadGrid.Visible = true;
+                RadGrid.DataSource = dt;                
 
                 AddSuccessMessage("Data analyzed successfully.");
                 btnImport.Enabled = true;
                 isAnalyzed = true;
                 RadGrid.DataBind();
+                RadGrid.Visible = true;
             }
             catch (Exception ex)
             {
@@ -365,6 +369,8 @@ namespace SSSNP.UI.Public_Works
                 {
                     RadGrid.VirtualItemCount = 0; // Default to 0 if no valid count is found
                 }
+
+                
             }
             catch (Exception ex)
             {
@@ -387,7 +393,7 @@ namespace SSSNP.UI.Public_Works
 
                 // TreatmentArm column
                 string treatmentArm = dataItem["TreatmentArm"].Text;
-                dataItem["TreatmentArm"].Text = treatmentArm == "True" ? "Yes" : "No";
+                dataItem["TreatmentArm"].Text = treatmentArm == "True" ? "Treatment" : "Control";
 
                 // HHEnrollmentStatus column
                 string hHEnrollmentStatus = dataItem["HHEnrollmentStatus"].Text;
@@ -405,16 +411,17 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-
         private bool? ParseBoolean(string value)
         {
             if (string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(value, "1", StringComparison.OrdinalIgnoreCase))
+                string.Equals(value, "1", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(value, "Treatment", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
             else if (string.Equals(value, "No", StringComparison.OrdinalIgnoreCase) ||
-                     string.Equals(value, "0", StringComparison.OrdinalIgnoreCase))
+                     string.Equals(value, "0", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(value, "Control", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -423,6 +430,30 @@ namespace SSSNP.UI.Public_Works
                 return result;
             }
             return null; // Return null if the value cannot be parsed
+        }
+
+        private bool HasUnderlyingData(ExcelWorksheet worksheet, int row)
+        {
+            for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+            {
+                var cell = worksheet.Cells[row, col];
+
+                // Check if the cell has a value or formula
+                if (!string.IsNullOrWhiteSpace(cell.Text) || !string.IsNullOrWhiteSpace(cell.Formula))
+                {
+                    return true; // Cell has a value or formula
+                }
+
+                // Check for data validation (dropdowns, etc.)
+                var validation = worksheet.DataValidations
+    .FirstOrDefault(v => v.Address.Address == worksheet.Cells[row, col].FullAddress);
+
+                if (validation != null)
+                {
+                    return true; // Cell has data validation (e.g., a dropdown)
+                }
+            }
+            return false; // No underlying data or formatting found
         }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
+using System.Web;
 using System.Web.UI.WebControls;
 using SSSNP.Service;
 
@@ -172,27 +173,17 @@ namespace SSSNP.UI.Public_Works
 
         // Download button functionality commented out for now
         protected void BtnDownload_Click(object sender, EventArgs e)
-        {
-            // Check if a template is selected
+        {         
             if (ddlTemplate.SelectedValue == "--Select--" || string.IsNullOrEmpty(ddlTemplate.SelectedValue))
-            {
-                // Display warning if no template is selected
+            {                
                 LblWarning.Visible = true;
-                return; // Stop further execution
-            }
-
-            // If a template is selected, proceed with the download logic
-            LblWarning.Visible = false;
-            // Commented out the actual download functionality
-            // string selectedTemplate = ddlTemplate.SelectedValue;
-            // string state = ddlState.SelectedValue;
-            // string county = ddlCounty.SelectedValue;
-            // string payam = ddlPayam.SelectedValue;
-            // string boma = ddlBoma.SelectedValue;
-            // string redirectUrl = string.Format("~/ViewAttachmentHandler.ashx?templateId={0}&state={1}&county={2}&payam={3}&boma={4}",
-            //                                    selectedTemplate, state, county, payam, boma);
-            // Response.Redirect(redirectUrl, false);
-            // HttpContext.Current.ApplicationInstance.CompleteRequest();
+                return; 
+            }            
+            LblWarning.Visible = false;            
+            string selectedTemplate = ddlTemplate.SelectedValue;            
+            string redirectUrl = string.Format("~/ViewAttachmentHandler.aspx?AttachmentType={0}", selectedTemplate);
+            Response.Redirect(redirectUrl, false);
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
     }
 }
