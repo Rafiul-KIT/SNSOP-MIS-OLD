@@ -112,45 +112,68 @@
                                 </table>
                             </div>
                         </div>
-                        <table cellpadding="4" cellspacing="5" style="width: 100%">
-                            <tr>
-                                <td colspan="3" style="padding: 5px; margin: 5px; height: 117px;" valign="top">
-                                    <asp:Panel ID="pnlResults" runat="server">
-                                        <table runat="server" id="tblResults" visible="false" style="padding: 5px">
-                                            <tr>
-                                                <td>
-                                                    <telerik:RadGrid ID="rgResults" PageSize="10" AllowPaging="True" AutoGenerateColumns="false" runat="server" AllowSorting="true" GridLines="Both"
-                                                        OnNeedDataSource="rgResults_NeedDataSource" OnItemDataBound="rgResults_ItemDataBound" AllowCustomPaging="True">
-                                                        <MasterTableView DataKeyNames="HouseholdNumber" AllowPaging="True" PagerStyle-AlwaysVisible="True">
-                                                            <Columns>
-                                                                <telerik:GridTemplateColumn HeaderText="Select">
-                                                                    <HeaderStyle Width="50px" />
-                                                                    <HeaderTemplate>
-                                                                        
-                                                                        <asp:CheckBox ID="chkSelectAll" runat="server" AutoPostBack="true" OnCheckedChanged="SelectAll_CheckedChanged" />
-                                                                    </HeaderTemplate>
-                                                                    <ItemTemplate>
-                                                                        
-                                                                        <asp:CheckBox ID="chkSelect" runat="server" />
-                                                                    </ItemTemplate>
-                                                                </telerik:GridTemplateColumn>
-                                                                <telerik:GridBoundColumn DataField="household_number" HeaderText="Household Number" />
-                                                                <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Household Name" />
-                                                                <telerik:GridBoundColumn DataField="Sex" HeaderText="Gender" />
-                                                                <telerik:GridBoundColumn DataField="Age" HeaderText="Age" />
-                                                                <telerik:GridBoundColumn DataField="GroupId" HeaderText="Group ID" />
-                                                            </Columns>
-                                                        </MasterTableView>
-                                                    </telerik:RadGrid>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </asp:Panel>
-                                </td>
-                            </tr>
-                        </table>
+                        <div>
+                            <asp:Label ID="lblErrorMessage" runat="server" CssClass="errorMessage" ForeColor="Red" Visible="false" />
+                        </div>
+                        <script type="text/javascript">
+                            function toggleSelectAll(source) {
+                                // Use querySelectorAll to select all checkboxes that end with 'chkSelect' in their id
+                                var checkboxes = document.querySelectorAll('input[id$="chkSelect"]');
+                                for (var i = 0; i < checkboxes.length; i++) {
+                                    checkboxes[i].checked = source.checked;  // Set the checked state based on the header checkbox
+                                }
+                            }
+                        </script>
+
+
+                        <div id="gridContainer" style="padding: 5px; margin: 10px;">
+                            <telerik:RadGrid ID="rgResults" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10"
+                                AllowSorting="true" GridLines="Both" EnableViewState="true" OnNeedDataSource="rgResults_NeedDataSource">
+                                <MasterTableView DataKeyNames="household_number" NoMasterRecordsText="No records available." AllowPaging="true">
+                                    <Columns>
+
+
+                                        <telerik:GridTemplateColumn HeaderText="Select">
+                                            <HeaderTemplate>
+                                                <input type="checkbox" id="chkSelectAll" onclick="toggleSelectAll(this);" />
+                                            </HeaderTemplate>
+                                            <ItemTemplate>
+                                                <asp:CheckBox ID="chkSelect" runat="server" />
+                                            </ItemTemplate>
+                                        </telerik:GridTemplateColumn>
+
+
+                                        <telerik:GridBoundColumn DataField="household_number" HeaderText="Household Number" />
+                                        <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Household Name" />
+                                        <telerik:GridBoundColumn DataField="Sex" HeaderText="Gender" />
+                                        <telerik:GridBoundColumn DataField="Age" HeaderText="Age" />
+                                        <telerik:GridBoundColumn DataField="GroupId" HeaderText="Group ID" />
+                                        <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" />
+
+                                        
+                                        <telerik:GridTemplateColumn HeaderText="Assign Group ID">
+                                            <HeaderTemplate>
+                                                <asp:DropDownList ID="ddlGroupID" runat="server" AutoPostBack="false">
+                                                    <asp:ListItem Text="--Select Group ID--" Value="0"></asp:ListItem>
+                                                    
+                                                    <asp:ListItem Text="Group 1" Value="1"></asp:ListItem>
+                                                    <asp:ListItem Text="Group 2" Value="2"></asp:ListItem>
+                                                    
+                                                </asp:DropDownList>
+                                            </HeaderTemplate>
+                                        </telerik:GridTemplateColumn>
+
+                                    </Columns>
+                                </MasterTableView>
+                            </telerik:RadGrid>
+
+                            
+                            <asp:Button ID="btnAssignGroup" runat="server" Text="Assign Group ID" OnClick="btnAssignGroup_Click" CssClass="btn btn-primary" />
+
+                        </div>
                     </div>
                 </div>
+
             </div>
         </ContentTemplate>
     </asp:UpdatePanel>
@@ -166,4 +189,3 @@
     </asp:UpdateProgress>
 
 </asp:Content>
-

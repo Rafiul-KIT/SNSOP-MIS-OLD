@@ -834,76 +834,85 @@ namespace SSSNP_SNSOP.Core.Repository
         }
 
 
-        public List<HouseholdDataModel> GetHouseholdDataByLocation(int stateId, int countyId, int payamId, int bomaId)
+        public DataTable GetHouseholdDataByLocation(SqlParameter stateParam, SqlParameter countyParam, SqlParameter payamParam, SqlParameter bomaParam)
         {
-            List<HouseholdDataModel> households = new List<HouseholdDataModel>();
+            DataTable householdsTable = new DataTable();
 
             try
             {
-                // SQL query with parameterized conditions
                 string query = @"
-                            SELECT b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id as GroupId, g.GroupName
-                            FROM tbl_BeneficiaryServiceDet b
-                            INNER JOIN tbl_Nominee n 
-                            ON b.household_number = n.application_id
-                            LEFT JOIN tbl_com2_Household_Group_Linkage l
-                            ON l.HouseholdNumber = b.household_number
-                            LEFT JOIN tbl_com2_Household_Group_View g
-                            ON g.Id = l.GroupId
-                            WHERE (@StateId = 0 OR b.intStateid = @StateId)
-                            AND (@CountyId = 0 OR b.intCountieid = @CountyId)
-                            AND (@PayamId = 0 OR b.intPayamid = @PayamId)
-                            AND (@BomaId = 0 OR b.intBomasid = @BomaId)";
+            SELECT b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id as GroupId, g.GroupName
+            FROM tbl_BeneficiaryServiceDet b
+            INNER JOIN tbl_Nominee n 
+            ON b.household_number = n.application_id
+            LEFT JOIN tbl_com2_Household_Group_Linkage l
+            ON l.HouseholdNumber = b.household_number
+            LEFT JOIN tbl_com2_Household_Group_View g
+            ON g.Id = l.GroupId 
+            WHERE (@StateId IS NULL OR b.intStateid = @StateId)
+            AND (@CountyId IS NULL OR b.intCountieid = @CountyId)
+            AND (@PayamId IS NULL OR b.intPayamid = @PayamId)
+            AND (@BomaId IS NULL OR b.intBomasid = @BomaId)";
 
-                // Create and assign the SQL parameters
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.Add(new SqlParameter("@StateId", stateId));
-                        cmd.Parameters.Add(new SqlParameter("@CountyId", countyId));
-                        cmd.Parameters.Add(new SqlParameter("@PayamId", payamId));
-                        cmd.Parameters.Add(new SqlParameter("@BomaId", bomaId));
+                        cmd.Parameters.Add(stateParam);
+                        cmd.Parameters.Add(countyParam);
+                        cmd.Parameters.Add(payamParam);
+                        cmd.Parameters.Add(bomaParam);
 
-                        // Open the database connection
-                        conn.Open();
-
-                        // Execute the SQL command and get the data
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                         {
-                            while (reader.Read())
-                            {
-                                // Map data to HouseholdDataModel object
-                                HouseholdDataModel household = new HouseholdDataModel
-                                {
-                                    HouseholdNumber = reader["household_number"] != DBNull.Value ? reader["household_number"].ToString() : string.Empty,
-                                    HouseholdName = reader["NameofHousehold"] != DBNull.Value ? reader["NameofHousehold"].ToString() : string.Empty,
-                                    Gender = reader["Sex"] != DBNull.Value ? reader["Sex"].ToString() : string.Empty,
-                                    Age = reader["Age"] != DBNull.Value ? Convert.ToInt32(reader["Age"]) : (int?)null,
-                                    GroupId = reader["GroupId"] != DBNull.Value ? Convert.ToInt32(reader["GroupId"]) : (int?)null,
-                                    GroupName = reader["GroupName"] != DBNull.Value ? reader["GroupName"].ToString() : string.Empty,
-                                };
-                                households.Add(household);
-                            }
+                            da.Fill(householdsTable); // Fill the DataTable with the query result
                         }
                     }
                 }
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                // Log the SQL exception details
-                Console.WriteLine("SQL Error: " + ex.Message);
-                throw; // Rethrow after logging
+                Debug.WriteLine("Error in GetHouseholdDataByLocation: " + ex.Message);
+                throw;
+            }
+
+            return householdsTable;
+        }
+
+        public void InsertHouseholdGroupLinkage(string householdNumber, int groupId)
+        {
+            try
+            {
+                string query = @"
+            INSERT INTO tbl_com2_Household_Group_Linkage (HouseholdNumber, GroupId)
+            VALUES (@HouseholdNumber, @GroupId)
+            WHERE NOT EXISTS (
+                SELECT 1 FROM tbl_com2_Household_Group_Linkage 
+                WHERE HouseholdNumber = @HouseholdNumber AND GroupId = @GroupId
+            );";
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@HouseholdNumber", householdNumber);
+                        cmd.Parameters.AddWithValue("@GroupId", groupId);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
             catch (Exception ex)
             {
-                // Log the general exception details
-                Console.WriteLine("Error: " + ex.Message);
-                throw; // Rethrow after logging
+                Debug.WriteLine("Error inserting household group linkage: " + ex.Message);
+                throw;
             }
-
-            return households;
         }
+
+
+
+
     }
 
 }
