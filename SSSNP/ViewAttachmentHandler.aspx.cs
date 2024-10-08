@@ -1281,36 +1281,81 @@ namespace SSSNP_SNSOP
 
         //BeneficiaryRandomizationEnrollmentTemplate start
         private void BeneficiaryRandomizationEnrollmentTemplate()
-        {            
-            string directoryPath = Server.MapPath("~/Template/");            
-            string expectedFileName = "BeneficiaryRandomizationEnrollmentTemplate.xlsx";
+        {
             try
-            {                
-                string[] files = Directory.GetFiles(directoryPath);               
-                string filePath = files.FirstOrDefault(f => string.Equals(Path.GetFileName(f), expectedFileName, StringComparison.OrdinalIgnoreCase));
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Beneficiary Enrollment Template");
 
-                if (filePath != null && File.Exists(filePath))
-                {                    
-                    byte[] fileBytes = File.ReadAllBytes(filePath);
-                    
+                    // Add headers to the worksheet reflecting the provided data columns
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Interested In Participating";
+                    worksheet.Cells[1, 3].Value = "Survives Targeting";
+                    worksheet.Cells[1, 4].Value = "Treatment Arm";
+                    worksheet.Cells[1, 5].Value = "HH Enrollment Status";
+                    worksheet.Cells[1, 6].Value = "Group ID";
+                    worksheet.Cells[1, 7].Value = "Enrolled Member ID";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 7; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Define the Yes/No options for the drop-down
+                    string[] yesNoOptions = { "Yes", "No" };
+                    string[] treatmentarm = { "Treatment", "Control" };
+
+                    // Add drop-down for the InterestedInParticipating field (Column 2)
+                    var validation1 = worksheet.DataValidations.AddListValidation("B2:B1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        validation1.Formula.Values.Add(option);
+                    }
+
+                    // Add drop-down for the SurvivesTargeting field (Column 3)
+                    var validation2 = worksheet.DataValidations.AddListValidation("C2:C1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        validation2.Formula.Values.Add(option);
+                    }
+
+                    // Add drop-down for the TreatmentArm field (Column 4)
+                    var validation3 = worksheet.DataValidations.AddListValidation("D2:D1000");
+                    foreach (string option in treatmentarm)
+                    {
+                        validation3.Formula.Values.Add(option);
+                    }
+
+                    // Add drop-down for the HHEnrollmentStatus field (Column 5)
+                    var validation4 = worksheet.DataValidations.AddListValidation("E2:E1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        validation4.Formula.Values.Add(option);
+                    }
+
+                    // Auto-fit columns to adjust the size
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
                     Response.ClearHeaders();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("Content-Disposition", "attachment; filename=BeneficiaryRandomizationEnrollmentTemplate.xlsx");
-                    Response.AddHeader("Content-Length", fileBytes.Length.ToString());
-                   
-                    Response.BinaryWrite(fileBytes);
+                    Response.AddHeader("Content-Disposition", "attachment; filename=BeneficiaryEnrollmentTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
                     Response.Flush();
                     Response.Close();
                 }
-                else
-                {                   
-                    throw new FileNotFoundException("Template file not found: " + expectedFileName);
-                }
             }
             catch (Exception ex)
-            {               
-                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
             }
+
         }
 
 

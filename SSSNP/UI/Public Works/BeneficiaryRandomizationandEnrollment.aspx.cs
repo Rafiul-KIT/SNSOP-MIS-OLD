@@ -73,10 +73,10 @@ namespace SSSNP.UI.Public_Works
                     // Loop through the rows and map the data
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                     {
-                        if (!HasUnderlyingData(worksheet, row))
+                        /*if (!HasUnderlyingData(worksheet, row))
                         {
                             continue; // Skip the row if there is no underlying data
-                        }
+                        }*/
                         string householdNumber = worksheet.Cells[row, 1].Text;
 
                         // Use ParseBoolean to parse the Yes/No or 1/0 into a boolean value
@@ -194,8 +194,9 @@ namespace SSSNP.UI.Public_Works
                 }
 
 
-               // Store the DataTable in session for pagination
-                Session["AnalyzedData"] = validBeneficiary;
+                // Store the DataTable in session for pagination
+                Session["AnalyzedData"] = dt;
+                Session["ValidBenediciary"] = validBeneficiary;
 
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
@@ -229,7 +230,7 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 Component2Service service = new Component2Service();
-                List<BeneficiaryRandomizationAndEnrollmentModel> beneficiaries = Session["AnalyzedData"] as List<BeneficiaryRandomizationAndEnrollmentModel>;
+                List<BeneficiaryRandomizationAndEnrollmentModel> beneficiaries = Session["ValidBenediciary"] as List<BeneficiaryRandomizationAndEnrollmentModel>;
 
                 if (beneficiaries == null || beneficiaries.Count == 0)
                 {
@@ -350,7 +351,7 @@ namespace SSSNP.UI.Public_Works
                 if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
                 {
                     // Fetch analyzed data from session
-                    dt = Session["Beneficiaries"] as DataTable;
+                    dt = Session["AnalyzedData"] as DataTable;
                 }
                 else
                 {
@@ -429,8 +430,10 @@ namespace SSSNP.UI.Public_Works
             {
                 return result;
             }
-            return null; // Return null if the value cannot be parsed
+
+            return null;
         }
+
 
         private bool HasUnderlyingData(ExcelWorksheet worksheet, int row)
         {
