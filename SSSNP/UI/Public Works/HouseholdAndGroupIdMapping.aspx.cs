@@ -6,6 +6,10 @@ using System.Web.UI.WebControls;
 using System.Configuration;
 using System.Diagnostics;
 using System.Data.SqlClient;
+using System.Collections.Generic;
+using SSSNP_SNSOP.Core.Model.Component2;
+using SSSNP.Service;
+using System.Linq;
 
 namespace SSSNP_SNSOP.UI.Public_Works
 {
@@ -13,6 +17,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
     {
         private LookupManagerService _lookupService;
         private Component2Repository _component2Repository;
+        private Component2Service _component2Service;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -32,6 +37,52 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 throw;
             }
         }
+
+        // Method to populate Group IDs in the dropdown
+        protected void rgResults_ItemCreated(object sender, GridItemEventArgs e)
+        {
+            if (e.Item is GridHeaderItem)
+            {
+                GridHeaderItem headerItem = e.Item as GridHeaderItem;
+
+                if (headerItem != null)
+                {
+                    DropDownList ddlGroupIDHeader = (DropDownList)headerItem.FindControl("ddlGroupIDHeader");
+
+                    if (ddlGroupIDHeader != null)
+                    {
+                        LoadGroupIDs(ddlGroupIDHeader); // Pass the dropdown to the method to load group IDs
+                    }
+                }
+            }
+        }
+
+        // Modified LoadGroupIDs to accept a dropdown list parameter
+        private void LoadGroupIDs(DropDownList ddlGroupIDHeader)
+        {
+            try
+            {
+                // Get group data from the database (e.g., from repository or service)
+                DataTable groupData = _lookupService.GetGroupIds(); // Replace with your actual method to fetch groups
+
+                if (groupData != null && groupData.Rows.Count > 0)
+                {
+                    // Bind the group data to the dropdown
+                    ddlGroupIDHeader.DataSource = groupData;
+                    ddlGroupIDHeader.DataTextField = "GroupName";  // Make sure you have this column in your DataTable
+                    ddlGroupIDHeader.DataValueField = "Id";   // Column that holds the group ID
+                    ddlGroupIDHeader.DataBind();
+
+                    // Optionally add a default item
+                    ddlGroupIDHeader.Items.Insert(0, new ListItem("--Select Group ID--", "0"));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("Error loading Group IDs: " + ex.Message, ex);
+            }
+        }
+
 
 
         private void InitializeServices()
@@ -306,54 +357,100 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
         }
 
+        protected void rgResults_ItemCommand(object sender, GridCommandEventArgs e)
+        {
+            if (e.CommandName == "AssignGroup")
+            {
+                // Find the current row where the command was triggered
+                GridDataItem dataItem = (GridDataItem)e.Item;
+
+                // Get the household number for this row
+                string householdNumber = dataItem.GetDataKeyValue("household_number").ToString();
+
+                // Find the DropDownList in this row and get the selected GroupId
+                DropDownList ddlGroupID = (DropDownList)dataItem.FindControl("ddlGroupID");
+                if (ddlGroupID != null)
+                {
+                    int groupId;
+                    if (int.TryParse(ddlGroupID.SelectedValue, out groupId))
+                    {
+                        // Now you can use the groupId and householdNumber to update the group linkage
+                        _component2Repository.InsertHouseholdGroupLinkage(householdNumber, groupId);
+
+                        // Optionally, provide feedback to the user (e.g., show a success message)
+                        lblErrorMessage.Text = "Group ID successfully assigned!";
+                    }
+                    else
+                    {
+                        // Handle invalid GroupId
+                        lblErrorMessage.Text = "Please select a valid Group ID.";
+                    }
+                }
+            }
+        }
+
+
+
         protected void btnAssignGroup_Click(object sender, EventArgs e)
         {
             try
             {
-                // Fetch the selected Group ID from the dropdown in the header
-                DropDownList ddlGroupID = rgResults.MasterTableView.GetItems(GridItemType.Header)[0].FindControl("ddlGroupID") as DropDownList;
-                if (ddlGroupID == null || ddlGroupID.SelectedValue == "0")
+                // Ensure the grid has a header item
+                var headerItem = rgResults.MasterTableView.GetItems(GridItemType.CommandItem).FirstOrDefault() as GridCommandItem;
+                if (headerItem == null)
                 {
-                    lblErrorMessage.Text = "Please select a valid Group ID.";
-                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "No header item found in the grid.";
                     return;
                 }
 
-                int selectedGroupId = int.Parse(ddlGroupID.SelectedValue);
+                // Find the Group ID dropdown in the header
+                DropDownList ddlGroupID = (DropDownList)headerItem.FindControl("ddlGroupIDHeader");
+                if (ddlGroupID == null || ddlGroupID.SelectedValue == "0")
+                {
+                    lblErrorMessage.Text = "Please select a valid Group ID.";
+                    return;
+                }
 
-                // Iterate through the grid to find selected rows (households)
+                // Continue with group ID assignment logic
+                int selectedGroupId = int.Parse(ddlGroupID.SelectedValue);
+                List<string> selectedHouseholdNumbers = new List<string>();
+
+                // Loop through the grid items to find selected households
                 foreach (GridDataItem item in rgResults.MasterTableView.Items)
                 {
-                    CheckBox chkSelect = item.FindControl("chkSelect") as CheckBox;
+                    CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
                     if (chkSelect != null && chkSelect.Checked)
                     {
-                        // Get the household number (or any key field) for the selected row
                         string householdNumber = item.GetDataKeyValue("household_number").ToString();
-
-                        // Assign the selected group ID to the household (you can add your database update logic here)
-                        UpdateHouseholdGroup(householdNumber, selectedGroupId);
+                        selectedHouseholdNumbers.Add(householdNumber);
                     }
                 }
 
-                // Provide feedback after the update
-                lblErrorMessage.Text = "Selected households have been assigned the group ID.";
-                lblErrorMessage.Visible = true;
+                if (selectedHouseholdNumbers.Count > 0)
+                {
+                    var householdGroupLinkageModel = new HouseholdGroupLinkageModel
+                    {
+                        HouseholdNumbers = selectedHouseholdNumbers,
+                        GroupId = selectedGroupId,
+                    };
+
+                    // Save the household group linkage using the service method
+                    var response = _component2Service.SaveHouseholdGroupLinkage(householdGroupLinkageModel);
+
+                    // Show success or error messages
+                    lblErrorMessage.Text = response.IsSuccess ? "Group ID assigned successfully." : $"Error: {response.Message}";
+                }
+                else
+                {
+                    lblErrorMessage.Text = "No households were selected.";
+                }
             }
             catch (Exception ex)
             {
-                lblErrorMessage.Text = "An error occurred while assigning group ID.";
-                lblErrorMessage.Visible = true;
-                LogError("Error in btnAssignGroup_Click: " + ex.Message, ex);
+                lblErrorMessage.Text = "An error occurred while assigning group ID: " + ex.Message;
             }
         }
 
-        // Method to update household group (you can modify this to update your database)
-        private void UpdateHouseholdGroup(string householdNumber, int groupId)
-        {
-            // Example: You could perform an update to the database here
-            // using a repository or directly through SQL queries
-            _component2Repository.UpdateHouseholdGroup(householdNumber, groupId);
-        }
 
 
 

@@ -883,23 +883,30 @@ namespace SSSNP_SNSOP.Core.Repository
         {
             try
             {
-                string query = @"
-            INSERT INTO tbl_com2_Household_Group_Linkage (HouseholdNumber, GroupId)
-            VALUES (@HouseholdNumber, @GroupId)
-            WHERE NOT EXISTS (
-                SELECT 1 FROM tbl_com2_Household_Group_Linkage 
-                WHERE HouseholdNumber = @HouseholdNumber AND GroupId = @GroupId
-            );";
+                string checkQuery = "SELECT COUNT(1) FROM tbl_com2_Household_Group_Linkage WHERE HouseholdNumber = @HouseholdNumber AND GroupId = @GroupId";
+                string insertQuery = "INSERT INTO tbl_com2_Household_Group_Linkage (HouseholdNumber, GroupId) VALUES (@HouseholdNumber, @GroupId)";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@HouseholdNumber", householdNumber);
-                        cmd.Parameters.AddWithValue("@GroupId", groupId);
+                    conn.Open();
 
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
+                    // Check if the record already exists
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@HouseholdNumber", householdNumber);
+                        checkCmd.Parameters.AddWithValue("@GroupId", groupId);
+                        int exists = (int)checkCmd.ExecuteScalar();
+
+                        // If the record doesn't exist, insert it
+                        if (exists == 0)
+                        {
+                            using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                            {
+                                insertCmd.Parameters.AddWithValue("@HouseholdNumber", householdNumber);
+                                insertCmd.Parameters.AddWithValue("@GroupId", groupId);
+                                insertCmd.ExecuteNonQuery();
+                            }
+                        }
                     }
                 }
             }
@@ -909,10 +916,6 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw;
             }
         }
-
-
-
-
     }
 
 }

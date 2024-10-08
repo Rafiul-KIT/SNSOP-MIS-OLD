@@ -8,8 +8,10 @@ namespace SSSNP_SNSOP.Core.Model.Component2
 {
     public class HouseholdGroupLinkageModel : CommonModel
     {
-        public List<string> HouseholdNumbers { get; set; }
-        public string HouseholdNumber { get; set; }
-        public int GroupId { get; set; }
+        
+            public List<string> HouseholdNumbers { get; set; } // List of household numbers
+            public string HouseholdNumber { get; set; } // Single household number for individual use
+            public int GroupId { get; set; }
+      
     }
 }
