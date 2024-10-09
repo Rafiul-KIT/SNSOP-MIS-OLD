@@ -173,15 +173,52 @@ namespace SSSNP.UI.Public_Works
 
         // Download button functionality commented out for now
         protected void BtnDownload_Click(object sender, EventArgs e)
-        {         
+        {
             if (ddlTemplate.SelectedValue == "--Select--" || string.IsNullOrEmpty(ddlTemplate.SelectedValue))
-            {                
+            {
                 LblWarning.Visible = true;
-                return; 
-            }            
-            LblWarning.Visible = false;            
-            string selectedTemplate = ddlTemplate.SelectedValue;            
-            string redirectUrl = string.Format("~/ViewAttachmentHandler.aspx?AttachmentType={0}", selectedTemplate);
+                return;
+            }
+
+            LblWarning.Visible = false;
+
+            int? selectedStateId = null;
+            int? selectedCountyId = null;
+            int? selectedPayamId = null;
+            int? selectedBomaId = null;
+
+            if (int.TryParse(ddlState.SelectedValue, out int stateIdValue))
+            {
+                selectedStateId = stateIdValue;
+            }
+
+            if (int.TryParse(ddlCounty.SelectedValue, out int countyIdValue))
+            {
+                selectedCountyId = countyIdValue;
+            }
+
+            if (int.TryParse(ddlPayam.SelectedValue, out int payamIdValue))
+            {
+                selectedPayamId = payamIdValue;
+            }
+
+            if (int.TryParse(ddlBoma.SelectedValue, out int bomaIdValue))
+            {
+                selectedBomaId = bomaIdValue;
+            }
+
+            // Store the parsed integer values in session
+            Session["SelectedStateId"] = selectedStateId;
+            Session["SelectedCountyId"] = selectedCountyId;
+            Session["SelectedPayamId"] = selectedPayamId;
+            Session["SelectedBomaId"] = selectedBomaId;
+
+
+
+            // Prepare redirect URL with parameters
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=20";
+
+            // Redirect with query parameters
             Response.Redirect(redirectUrl, false);
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }

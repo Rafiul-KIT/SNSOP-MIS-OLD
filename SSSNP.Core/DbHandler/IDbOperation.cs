@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,5 +16,7 @@ namespace SSSNP_SNSOP.Core.DbHandler
         DataTable ExecuteDataTable(string v, CommandType text, System.Data.SqlClient.SqlParameter param);
         DataTable GetDataTable(string sql);
         DataSet ExecuteCmdForSp(List<CmdParamModel> cmdParams, string spName);
+        DataTable ExecuteDataTable(string query, CommandType commandType, List<SqlParameter> parameters);
+
     }
 }

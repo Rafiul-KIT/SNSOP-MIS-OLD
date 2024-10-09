@@ -4,6 +4,7 @@ using SSSNP_SNSOP.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -514,6 +515,21 @@ namespace SSSNP.Service
 
             // All validations passed
             return (true, "Valid");
+        }
+
+        public HashSet<string> GetValidHouseholdNumberValues(int? stateId, int? countyId, int? payamId, int? bomaId)
+        {
+            try
+            {
+                // Call the repository method with the passed parameters
+                return _component2Repository.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+            }
+            catch (Exception ex)
+            {
+                // Handle any potential errors here (e.g., logging, throwing)
+                Debug.WriteLine($"Error in service method GetValidHouseholdNumberValues: {ex.Message}");
+                return new HashSet<string>();
+            }
         }
 
     }

@@ -3,6 +3,7 @@ using SSSNP_SNSOP.Core.Model;
 using SSSNP_SNSOP.Core.Model.Component2;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -812,6 +813,45 @@ namespace SSSNP_SNSOP.Core.Repository
                 return new HashSet<int>();
             }
         }
+
+        public HashSet<string> GetValidHouseholdNumberValues(int? stateId, int? countyId, int? payamId, int? bomaId)
+        {
+            var householdNumbers = new HashSet<string>();
+
+            // Prepare query
+            string query = @"
+        SELECT b.household_number 
+        FROM tbl_BeneficiaryServiceDet b
+        INNER JOIN tbl_Nominee n ON b.household_number = n.application_id 
+        WHERE (@StateId IS NULL OR b.intStateid = @StateId)
+        AND (@CountyId IS NULL OR b.intCountieid = @CountyId)
+        AND (@PayamId IS NULL OR b.intPayamid = @PayamId)
+        AND (@BomaId IS NULL OR b.intBomasid = @BomaId)
+        GROUP BY b.household_number";
+
+            List<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@StateId", stateId.HasValue ? (object)stateId.Value : DBNull.Value),
+                new SqlParameter("@CountyId", countyId.HasValue ? (object)countyId.Value : DBNull.Value),
+                new SqlParameter("@PayamId", payamId.HasValue ? (object)payamId.Value : DBNull.Value),
+                new SqlParameter("@BomaId", bomaId.HasValue ? (object)bomaId.Value : DBNull.Value)
+            };
+            // Execute the query and get the result as a DataTable
+            DataTable dt = _dbOperation.ExecuteDataTable(query, CommandType.Text, parameters);
+
+            // Extract household numbers from DataTable
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    householdNumbers.Add(row["household_number"].ToString());
+                }
+            }
+
+            return householdNumbers;
+        }
+
+
 
     }
 

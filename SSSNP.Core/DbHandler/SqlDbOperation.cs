@@ -276,5 +276,48 @@ namespace SSSNP_SNSOP.Core.DbHandler
             }
             return dataTable;
         }
+
+        public DataTable ExecuteDataTable(string query, CommandType commandType, List<SqlParameter> parameters)
+        {
+            var sqlConnection = new SqlConnection(connectionStr);
+            var dataTable = new DataTable();
+            try
+            {
+                using (var sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlCommand.CommandType = commandType;
+
+                    // Add the list of parameters to the command if any
+                    if (parameters != null && parameters.Count > 0)
+                    {
+                        sqlCommand.Parameters.AddRange(parameters.ToArray());
+                    }
+
+                    // Open the connection
+                    sqlConnection.Open();
+
+                    // Execute the query and fill the DataTable
+                    using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+                    {
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle or log exceptions
+                throw new Exception($"Error executing SQL query: {ex.Message}", ex);
+            }
+            finally
+            {
+                // Ensure the connection is closed
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+            return dataTable;
+        }
+
     }
 }

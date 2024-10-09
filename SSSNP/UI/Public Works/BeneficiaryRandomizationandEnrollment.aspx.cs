@@ -73,10 +73,6 @@ namespace SSSNP.UI.Public_Works
                     // Loop through the rows and map the data
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                     {
-                        /*if (!HasUnderlyingData(worksheet, row))
-                        {
-                            continue; // Skip the row if there is no underlying data
-                        }*/
                         string householdNumber = worksheet.Cells[row, 1].Text;
 
                         // Use ParseBoolean to parse the Yes/No or 1/0 into a boolean value
@@ -85,8 +81,28 @@ namespace SSSNP.UI.Public_Works
                         bool? treatmentArm = ParseBoolean(worksheet.Cells[row, 4].Text);
                         bool? hHEnrollmentStatus = ParseBoolean(worksheet.Cells[row, 5].Text);
 
-                        int.TryParse(worksheet.Cells[row, 6].Text, out int groupID);
-                        int.TryParse(worksheet.Cells[row, 7].Text, out int enrolledMemberID);
+                        int? groupID = null;
+                        int? enrolledMemberID = null;
+
+                        if (int.TryParse(worksheet.Cells[row, 6].Text, out int parsedGroupID))
+                        {
+                            groupID = parsedGroupID;
+                        }
+
+                        if (int.TryParse(worksheet.Cells[row, 7].Text, out int parsedEnrolledMemberID))
+                        {
+                            enrolledMemberID = parsedEnrolledMemberID;
+                        }
+
+                        if (interestedInParticipating == null &&
+                            survivesTargeting == null &&
+                            treatmentArm == null &&
+                            hHEnrollmentStatus == null &&
+                            groupID == null &&
+                            enrolledMemberID == null)
+                        {
+                            continue; // Skip row with no data
+                        } 
 
                         // Add to the list
                         beneficiaries.Add(new BeneficiaryRandomizationAndEnrollmentModel
@@ -381,24 +397,23 @@ namespace SSSNP.UI.Public_Works
 
         protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
-
             if (e.Item is GridDataItem dataItem)
             {
                 // InterestedInParticipating column
                 string interestedInParticipating = dataItem["InterestedInParticipating"].Text;
-                dataItem["InterestedInParticipating"].Text = interestedInParticipating == "True" ? "Yes" : "No";
+                dataItem["InterestedInParticipating"].Text = interestedInParticipating == "True" ? "Yes" : (interestedInParticipating == "False" ? "No" : "");
 
                 // SurvivesTargeting column
                 string survivesTargeting = dataItem["SurvivesTargeting"].Text;
-                dataItem["SurvivesTargeting"].Text = survivesTargeting == "True" ? "Yes" : "No";
+                dataItem["SurvivesTargeting"].Text = survivesTargeting == "True" ? "Yes" : (survivesTargeting == "False" ? "No" : "");
 
                 // TreatmentArm column
                 string treatmentArm = dataItem["TreatmentArm"].Text;
-                dataItem["TreatmentArm"].Text = treatmentArm == "True" ? "Treatment" : "Control";
+                dataItem["TreatmentArm"].Text = treatmentArm == "True" ? "Treatment" : (treatmentArm == "False" ? "Control" : "");
 
                 // HHEnrollmentStatus column
                 string hHEnrollmentStatus = dataItem["HHEnrollmentStatus"].Text;
-                dataItem["HHEnrollmentStatus"].Text = hHEnrollmentStatus == "True" ? "Yes" : "No";
+                dataItem["HHEnrollmentStatus"].Text = hHEnrollmentStatus == "True" ? "Yes" : (hHEnrollmentStatus == "False" ? "No" : "");
 
                 if (isAnalyzed)
                 {
@@ -412,8 +427,14 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+
         private bool? ParseBoolean(string value)
         {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null; 
+            }
+
             if (string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(value, "1", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(value, "Treatment", StringComparison.OrdinalIgnoreCase))
@@ -432,31 +453,6 @@ namespace SSSNP.UI.Public_Works
             }
 
             return null;
-        }
-
-
-        private bool HasUnderlyingData(ExcelWorksheet worksheet, int row)
-        {
-            for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
-            {
-                var cell = worksheet.Cells[row, col];
-
-                // Check if the cell has a value or formula
-                if (!string.IsNullOrWhiteSpace(cell.Text) || !string.IsNullOrWhiteSpace(cell.Formula))
-                {
-                    return true; // Cell has a value or formula
-                }
-
-                // Check for data validation (dropdowns, etc.)
-                var validation = worksheet.DataValidations
-    .FirstOrDefault(v => v.Address.Address == worksheet.Cells[row, col].FullAddress);
-
-                if (validation != null)
-                {
-                    return true; // Cell has data validation (e.g., a dropdown)
-                }
-            }
-            return false; // No underlying data or formatting found
         }
 
 

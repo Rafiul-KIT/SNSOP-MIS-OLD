@@ -19,6 +19,9 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using OfficeOpenXml;
 using Image = iTextSharp.text.Image;
+using SSSNP.Service;
+using System.Diagnostics;
+using System.Data.SqlClient;
 
 namespace SSSNP_SNSOP
 {
@@ -1284,12 +1287,22 @@ namespace SSSNP_SNSOP
         {
             try
             {
+                int? stateId = Session["SelectedStateId"] as int?;
+                int? countyId = Session["SelectedCountyId"] as int?;
+                int? payamId = Session["SelectedPayamId"] as int?;
+                int? bomaId = Session["SelectedBomaId"] as int?;
+
+
+                // Step 1: Fetch household numbers directly from the service
+                Component2Service service = new Component2Service();
+                //HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues();
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+                HashSet<int> validGroupIds = service.GetValidGroupId();
                 using (ExcelPackage package = new ExcelPackage())
                 {
-                    // Create a new worksheet
+                    
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Beneficiary Enrollment Template");
 
-                    // Add headers to the worksheet reflecting the provided data columns
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Interested In Participating";
                     worksheet.Cells[1, 3].Value = "Survives Targeting";
@@ -1304,9 +1317,23 @@ namespace SSSNP_SNSOP
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
 
-                    // Define the Yes/No options for the drop-down
+                    // Pre-fill the Household Number column with the fetched household numbers
+                    var householdNumberList = householdNumbers.ToList(); // Convert HashSet to List
+                    Debug.WriteLine(householdNumberList);
+                    if (householdNumberList.Count > 0)  // Check if there are any items in the list
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;  // Ensure valid range
+                    }
+
+                    // Define the Yes/No options for the drop-downs
                     string[] yesNoOptions = { "Yes", "No" };
-                    string[] treatmentarm = { "Treatment", "Control" };
+                    string[] treatmentArm = { "Treatment", "Control" };
 
                     // Add drop-down for the InterestedInParticipating field (Column 2)
                     var validation1 = worksheet.DataValidations.AddListValidation("B2:B1000");
@@ -1324,7 +1351,7 @@ namespace SSSNP_SNSOP
 
                     // Add drop-down for the TreatmentArm field (Column 4)
                     var validation3 = worksheet.DataValidations.AddListValidation("D2:D1000");
-                    foreach (string option in treatmentarm)
+                    foreach (string option in treatmentArm)
                     {
                         validation3.Formula.Values.Add(option);
                     }
@@ -1335,6 +1362,19 @@ namespace SSSNP_SNSOP
                     {
                         validation4.Formula.Values.Add(option);
                     }
+
+                    var groupIdValidation = worksheet.DataValidations.AddListValidation("F2:F1000");
+                    foreach (int groupId in validGroupIds)
+                    {
+                        groupIdValidation.Formula.Values.Add(groupId.ToString());
+                    }
+
+                    // Protect the worksheet so that locked cells (Household Number) are read-only
+                    worksheet.Protection.IsProtected = true;
+                    //worksheet.Protection.SetPassword("yourpassword"); // Optional
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:G1000"].Style.Locked = false;
 
                     // Auto-fit columns to adjust the size
                     worksheet.Cells.AutoFitColumns();
@@ -1353,10 +1393,10 @@ namespace SSSNP_SNSOP
             catch (Exception ex)
             {
                 // Log the error if needed
-                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+                Debug.WriteLine($"Error: {ex}");
             }
-
         }
+
 
 
 
