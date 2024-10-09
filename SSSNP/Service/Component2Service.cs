@@ -560,6 +560,8 @@ namespace SSSNP.Service
                 throw new Exception("Error when saving Household Group linkage. Error: " + ex.ToString());
             }
         }
+
+
         public (bool isValid, string errorMessage) IsValidData(HouseholdGroupLinkageModel obj)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber))
@@ -572,7 +574,6 @@ namespace SSSNP.Service
             }
             return (true, string.Empty);
         }
-
 
     }
 }

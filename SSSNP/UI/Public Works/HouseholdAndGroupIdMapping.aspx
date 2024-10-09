@@ -109,12 +109,19 @@
                                             <asp:Button ID="BtnSearch" runat="server" CssClass="btn btn-primary" Height="32px" OnClick="BtnSearch_Click" TabIndex="10" Text="Search" ValidationGroup="group" Width="110px" />
                                         </td>
                                     </tr>
+
                                 </table>
+                                <div style="padding: 5px; margin: 10px" valign="top" align="center">
+                                    <asp:Label ID="lblSuccessMessage" runat="server" CssClass="successMessage" ForeColor="Green" Visible="false" />
+                                    <asp:Label ID="lblErrorMessage" runat="server" CssClass="errorMessage" ForeColor="Red" Visible="false" />
+                                </div>
+
+
                             </div>
                         </div>
-                        <div>
-                            <asp:Label ID="lblErrorMessage" runat="server" CssClass="errorMessage" ForeColor="Red" Visible="false" />
-                        </div>
+
+
+
                         <script type="text/javascript">
                             function toggleSelectAll(source) {
                                 var checkboxes = document.querySelectorAll('input[id$="chkSelect"]');
@@ -122,13 +129,23 @@
                                     checkboxes[i].checked = source.checked;
                                 }
                             }
+                            function hideLabelAfterDelay(labelId, delay) {
+                                setTimeout(function () {
+                                    var label = document.getElementById(labelId);
+                                    if (label) {
+                                        label.style.display = "none";
+                                    }
+                                }, delay);
+                            }
                         </script>
 
 
 
                         <div id="gridContainer" style="padding: 5px; margin: 10px;">
                             <telerik:RadGrid ID="rgResults" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10"
-                                AllowSorting="true" GridLines="Both" EnableViewState="true" OnNeedDataSource="rgResults_NeedDataSource">
+                                AllowSorting="false" GridLines="Both" EnableViewState="true" OnNeedDataSource="rgResults_NeedDataSource"
+                                OnItemCreated="rgResults_ItemCreated" OnItemDataBound="rgResults_ItemDataBound"
+                                OnPageSizeChanged="rgResults_PageSizeChanged" OnPageIndexChanged="rgResults_PageIndexChanged">
                                 <MasterTableView DataKeyNames="household_number" NoMasterRecordsText="No records available." AllowPaging="true">
                                     <Columns>
 
@@ -137,7 +154,7 @@
                                                 <input type="checkbox" id="chkSelectAll" onclick="toggleSelectAll(this);" />
                                             </HeaderTemplate>
                                             <ItemTemplate>
-                                                <asp:CheckBox ID="chkSelect" runat="server" />
+                                                <asp:CheckBox ID="chkSelect" runat="server" AutoPostBack="true" OnCheckedChanged="chkSelect_CheckedChanged" />
                                             </ItemTemplate>
                                         </telerik:GridTemplateColumn>
 
@@ -148,24 +165,25 @@
                                         <telerik:GridBoundColumn DataField="GroupId" HeaderText="Group ID" />
                                         <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" />
 
-                                        
-                                        <telerik:GridTemplateColumn HeaderText="Assign Group ID">
-                                            <HeaderTemplate>
-                                                <asp:DropDownList ID="ddlGroupIDHeader" runat="server"></asp:DropDownList>
-                                            </HeaderTemplate>
-                                        </telerik:GridTemplateColumn>
-
                                     </Columns>
                                 </MasterTableView>
                             </telerik:RadGrid>
-                            <asp:Button ID="btnAssignGroup" runat="server" Text="Assign Group ID" OnClick="btnAssignGroup_Click" CssClass="btn btn-primary" />
+
+                            
+                            <div style="text-align: center; padding-top: 10px;">
+                                <asp:Label ID="lblGroupID" runat="server" Text="Select Group ID:" Visible="false"></asp:Label>
+                                <asp:DropDownList ID="ddlGroupIDOutside" runat="server" Visible="false"></asp:DropDownList>
+                                <asp:Button ID="btnAssignGroup" runat="server" Text="Assign Group ID" OnClick="btnAssignGroup_Click" CssClass="btn btn-primary" Visible="false" />
+                            </div>
                         </div>
 
                     </div>
-                </div>
 
-            </div>
+                </div>
         </ContentTemplate>
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="BtnSearch" EventName="Click" />
+        </Triggers>
     </asp:UpdatePanel>
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
         <ProgressTemplate>

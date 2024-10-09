@@ -10,14 +10,18 @@ using System.Collections.Generic;
 using SSSNP_SNSOP.Core.Model.Component2;
 using SSSNP.Service;
 using System.Linq;
+using System.Web;
+using System.Web.UI;
 
 namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class HouseholdAndGroupIdMapping : System.Web.UI.Page
     {
+        
         private LookupManagerService _lookupService;
-        private Component2Repository _component2Repository;
         private Component2Service _component2Service;
+        private Component2Repository _component2Repository;
+        
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -27,6 +31,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 if (!IsPostBack)
                 {
                     LoadStateDropdown();
+                    LoadGroupIDs();
                     DisableDependentDropdowns(); // Initially disable all dependent dropdowns
                     rgResults.Visible = false; // Initially hide the grid
                 }
@@ -37,53 +42,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 throw;
             }
         }
-
-        // Method to populate Group IDs in the dropdown
-        protected void rgResults_ItemCreated(object sender, GridItemEventArgs e)
-        {
-            if (e.Item is GridHeaderItem)
-            {
-                GridHeaderItem headerItem = e.Item as GridHeaderItem;
-
-                if (headerItem != null)
-                {
-                    DropDownList ddlGroupIDHeader = (DropDownList)headerItem.FindControl("ddlGroupIDHeader");
-
-                    if (ddlGroupIDHeader != null)
-                    {
-                        LoadGroupIDs(ddlGroupIDHeader); // Pass the dropdown to the method to load group IDs
-                    }
-                }
-            }
-        }
-
-        // Modified LoadGroupIDs to accept a dropdown list parameter
-        private void LoadGroupIDs(DropDownList ddlGroupIDHeader)
-        {
-            try
-            {
-                // Get group data from the database (e.g., from repository or service)
-                DataTable groupData = _lookupService.GetGroupIds(); // Replace with your actual method to fetch groups
-
-                if (groupData != null && groupData.Rows.Count > 0)
-                {
-                    // Bind the group data to the dropdown
-                    ddlGroupIDHeader.DataSource = groupData;
-                    ddlGroupIDHeader.DataTextField = "GroupName";  // Make sure you have this column in your DataTable
-                    ddlGroupIDHeader.DataValueField = "Id";   // Column that holds the group ID
-                    ddlGroupIDHeader.DataBind();
-
-                    // Optionally add a default item
-                    ddlGroupIDHeader.Items.Insert(0, new ListItem("--Select Group ID--", "0"));
-                }
-            }
-            catch (Exception ex)
-            {
-                LogError("Error loading Group IDs: " + ex.Message, ex);
-            }
-        }
-
-
 
         private void InitializeServices()
         {
@@ -99,6 +57,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 // Initialize services
                 _lookupService = new LookupManagerService(connectionString);
                 _component2Repository = new Component2Repository(connectionString);
+                _component2Service = new Component2Service();
             }
             catch (Exception ex)
             {
@@ -106,15 +65,89 @@ namespace SSSNP_SNSOP.UI.Public_Works
             }
         }
 
-        private void LogError(string message, Exception ex)
+        // Method to populate Group IDs in the dropdown
+        protected void rgResults_ItemCreated(object sender, GridItemEventArgs e)
         {
-            // Implement your logging mechanism here (e.g., writing to a log file or database)
-            Console.WriteLine(message);
-            if (ex != null)
+            if (e.Item is GridHeaderItem)
             {
-                Console.WriteLine("Stack Trace: " + ex.StackTrace);
+                GridHeaderItem headerItem = e.Item as GridHeaderItem;
+
+                if (headerItem != null)
+                {
+                    DropDownList ddlGroupIDOutside  = (DropDownList)headerItem.FindControl("ddlGroupIDOutside ");
+
+                    if (ddlGroupIDOutside  != null)
+                    {
+                        LoadGroupIDs(); // Ensure this method loads the correct Group IDs
+                    }
+                }
             }
         }
+
+        // Modified LoadGroupIDs to accept a dropdown list parameter
+        private void LoadGroupIDs()
+        {
+            try
+            {
+                // Check if the _lookupService is properly initialized
+                //if (_lookupService == null)
+                //{
+                //    LogError("lookupService is null. Ensure it's initialized correctly.", null);
+                //    return; // Exit if _lookupService is null to prevent further errors
+                //}
+
+                // Get group data from the database (or your repository)
+                DataTable groupData = _lookupService.GetGroupIds(); // Fetching GroupId and GroupName
+
+                if (groupData != null && groupData.Rows.Count > 0)
+                {
+                    // Clear existing items
+                    ddlGroupIDOutside.Items.Clear();
+
+                    // Iterate over the rows and combine GroupId and GroupName for display
+                    foreach (DataRow row in groupData.Rows)
+                    {
+                        string displayText = $"{row["Id"]} - {row["GroupName"]}";
+                        string value = row["Id"].ToString(); // Using GroupId as the value
+
+                        // Add item to the dropdown
+                        ddlGroupIDOutside.Items.Add(new ListItem(displayText, value));
+                    }
+
+                    // Optionally add a default item
+                    ddlGroupIDOutside .Items.Insert(0, new ListItem("--Select Group ID--", "0"));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("Error loading Group IDs: " + ex.Message, ex);
+            }
+        }
+
+
+
+
+
+
+        private void LogError(string message, Exception ex)
+        {
+            // Set the label to display the error message
+            lblErrorMessage.Text = message;
+
+            // Optionally add more details from the exception
+            if (ex != null)
+            {
+                lblErrorMessage.Text += " Stack Trace: " + ex.StackTrace;
+            }
+
+            // Make sure the label is visible
+            lblErrorMessage.Visible = true;
+
+            
+            ScriptManager.RegisterStartupScript(this, GetType(), "hideLabel", "hideLabelAfterDelay('" + lblErrorMessage.ClientID + "', 10000);", true);
+        }
+
+
 
         private void LoadStateDropdown()
         {
@@ -278,8 +311,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
+            
             try
             {
+                SelectedHouseholds.Clear();
+                Session["HouseholdData"] = null;
                 // Clear any previous error messages
                 lblErrorMessage.Visible = false;
                 rgResults.Visible = true;
@@ -303,18 +339,26 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 if (householdsTable.Rows.Count > 0)
                 {
+                    btnAssignGroup.Visible = true;
+                    ddlGroupIDOutside.Visible = true;
+                    lblGroupID.Visible = true;
                     // Store the data in session to persist between postbacks
                     Session["HouseholdData"] = householdsTable;
                     rgResults.Rebind(); // Trigger re-binding of the grid
-                    
+
                 }
                 else
                 {
                     // Handle empty data case and rebind
                     Session["HouseholdData"] = new DataTable();
                     rgResults.Rebind();
-                    
+                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "No records found.";
+                    btnAssignGroup.Visible = false;
+                    ddlGroupIDOutside.Visible = false;
+                    lblGroupID.Visible = false;
                 }
+                HideLabelsAfterDelay();
             }
             catch (FormatException fex)
             {
@@ -330,6 +374,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 lblErrorMessage.Text = "An error occurred while loading data.";
                 lblErrorMessage.Visible = true;
             }
+            HideLabelsAfterDelay();
         }
 
 
@@ -343,7 +388,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 if (householdsTable != null)
                 {
                     rgResults.DataSource = householdsTable;
-                    
                 }
                 else
                 {
@@ -356,6 +400,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 LogError("Error in NeedDataSource: " + ex.Message, ex);
             }
         }
+
 
         protected void rgResults_ItemCommand(object sender, GridCommandEventArgs e)
         {
@@ -378,13 +423,16 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         _component2Repository.InsertHouseholdGroupLinkage(householdNumber, groupId);
 
                         // Optionally, provide feedback to the user (e.g., show a success message)
-                        lblErrorMessage.Text = "Group ID successfully assigned!";
+                        lblSuccessMessage.Visible = true;
+                        lblSuccessMessage.Text = "Group ID successfully assigned!";
                     }
                     else
                     {
                         // Handle invalid GroupId
+                        lblErrorMessage.Visible = true;
                         lblErrorMessage.Text = "Please select a valid Group ID.";
                     }
+
                 }
             }
         }
@@ -395,27 +443,20 @@ namespace SSSNP_SNSOP.UI.Public_Works
         {
             try
             {
-                // Ensure the grid has a header item
-                var headerItem = rgResults.MasterTableView.GetItems(GridItemType.CommandItem).FirstOrDefault() as GridCommandItem;
-                if (headerItem == null)
+                // Check if the dropdown outside the grid is available and selected
+                if (ddlGroupIDOutside == null || ddlGroupIDOutside.SelectedValue == "0")
                 {
-                    lblErrorMessage.Text = "No header item found in the grid.";
-                    return;
-                }
-
-                // Find the Group ID dropdown in the header
-                DropDownList ddlGroupID = (DropDownList)headerItem.FindControl("ddlGroupIDHeader");
-                if (ddlGroupID == null || ddlGroupID.SelectedValue == "0")
-                {
+                    lblErrorMessage.Visible = true;
                     lblErrorMessage.Text = "Please select a valid Group ID.";
                     return;
                 }
 
-                // Continue with group ID assignment logic
-                int selectedGroupId = int.Parse(ddlGroupID.SelectedValue);
+                int selectedGroupId = int.Parse(ddlGroupIDOutside.SelectedValue);
+
+                // Create a list to store selected household numbers
                 List<string> selectedHouseholdNumbers = new List<string>();
 
-                // Loop through the grid items to find selected households
+                // Loop through the grid items to find the selected households
                 foreach (GridDataItem item in rgResults.MasterTableView.Items)
                 {
                     CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
@@ -426,33 +467,152 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     }
                 }
 
-                if (selectedHouseholdNumbers.Count > 0)
+                // Check if any households were selected
+                if (selectedHouseholdNumbers.Count == 0)
                 {
-                    var householdGroupLinkageModel = new HouseholdGroupLinkageModel
+                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "No households were selected.";
+                    return;
+                }
+
+                // Ensure Session["UserId"] is available
+                if (Session["uid"] == null)
+                {
+                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "User session has expired. Please log in again.";
+                    return;
+                }
+
+                // Create an instance of the HouseholdGroupLinkageModel
+                var householdGroupLinkageModel = new HouseholdGroupLinkageModel
+                {
+                    HouseholdNumbers = selectedHouseholdNumbers,
+                    GroupId = selectedGroupId,
+                    CreatedBy = HttpContext.Current.Session["uid"] != null ? Convert.ToInt32(HttpContext.Current.Session["uid"]) : 0, // Set the creator based on session or any relevant user ID
+                    CreatedDate = DateTime.Now, // Current date and time for record creation
+                    ModifiedBy = HttpContext.Current.Session["uid"] != null ? Convert.ToInt32(HttpContext.Current.Session["uid"]) : 0,
+                    ModifiedDate = DateTime.Now
+                };
+
+                // Call the service method to save the household group linkage
+                var response = _component2Service.SaveHouseholdGroupLinkage(householdGroupLinkageModel);
+
+                // Display a success or error message based on the response
+                if (response.IsSuccess)
+                {
+                    lblSuccessMessage.Visible = true;
+                    lblSuccessMessage.Text = "Group ID assigned successfully to selected households.";
+
+                    // Uncheck the checkboxes and clear selected households
+                    foreach (GridDataItem item in rgResults.MasterTableView.Items)
                     {
-                        HouseholdNumbers = selectedHouseholdNumbers,
-                        GroupId = selectedGroupId,
-                    };
-
-                    // Save the household group linkage using the service method
-                    var response = _component2Service.SaveHouseholdGroupLinkage(householdGroupLinkageModel);
-
-                    // Show success or error messages
-                    lblErrorMessage.Text = response.IsSuccess ? "Group ID assigned successfully." : $"Error: {response.Message}";
+                        CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
+                        if (chkSelect != null)
+                        {
+                            chkSelect.Checked = false; // Uncheck the checkbox
+                        }
+                    }
+                    SelectedHouseholds.Clear();
+                    rgResults.Rebind();
                 }
                 else
                 {
-                    lblErrorMessage.Text = "No households were selected.";
+                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "Error: " + response.Message;
                 }
             }
             catch (Exception ex)
             {
+                lblErrorMessage.Visible = true;
                 lblErrorMessage.Text = "An error occurred while assigning group ID: " + ex.Message;
             }
+
+            // Set the visibility of the labels for a limited time
+            lblSuccessMessage.Visible = true;
+            lblErrorMessage.Visible = true;
+            HideLabelsAfterDelay();  // Call a function to hide the labels after a delay
+        }
+
+        // Function to hide success and error labels after a delay
+        private void HideLabelsAfterDelay()
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "hideLabels",
+                "setTimeout(function() { " +
+                "document.getElementById('" + lblSuccessMessage.ClientID + "').style.display='none';" +
+                "document.getElementById('" + lblErrorMessage.ClientID + "').style.display='none';" +
+                "}, 10000);", true);
         }
 
 
 
+        private List<string> SelectedHouseholds
+        {
+            get
+            {
+                if (Session["SelectedHouseholds"] == null)
+                {
+                    Session["SelectedHouseholds"] = new List<string>();
+                }
+                return (List<string>)Session["SelectedHouseholds"];
+            }
+            set
+            {
+                Session["SelectedHouseholds"] = value.Distinct().ToList();
+            }
+        }
 
+        protected void chkSelect_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chkSelect = (CheckBox)sender;
+            GridDataItem item = (GridDataItem)chkSelect.NamingContainer;
+            string householdNumber = item.GetDataKeyValue("household_number").ToString();
+
+            if (chkSelect.Checked)
+            {
+                // Add to selected list if checked
+                if (!SelectedHouseholds.Contains(householdNumber))
+                {
+                    SelectedHouseholds.Add(householdNumber);
+                }
+            }
+            else
+            {
+                // Remove from selected list if unchecked
+                if (SelectedHouseholds.Contains(householdNumber))
+                {
+                    SelectedHouseholds.Remove(householdNumber);
+                }
+            }
+        }
+
+        protected void rgResults_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem)
+            {
+                GridDataItem item = (GridDataItem)e.Item;
+                CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
+                string householdNumber = item.GetDataKeyValue("household_number").ToString();
+                
+                chkSelect.Checked = false;
+                // If the household number is in the selected list, check the checkbox
+                if (SelectedHouseholds.Contains(householdNumber))
+                {
+                    chkSelect.Checked = true;
+                }
+                
+            }
+        }
+
+        protected void rgResults_PageIndexChanged(object sender, GridPageChangedEventArgs e)
+        {
+            rgResults.Rebind(); // This forces a rebind of the data when the page index is changed
+        }
+
+        protected void rgResults_PageSizeChanged(object sender, GridPageSizeChangedEventArgs e)
+        {
+            rgResults.Rebind(); // This forces a rebind of the data when the page size is changed
+        }
+
+        
     }
 }

@@ -684,30 +684,33 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 lock (_locker)
                 {
+
                     var isExist = IsRecordExistInHouseholdGroupLinkage(obj.HouseholdNumber?.Trim());
 
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
                     data.Add("GroupId", obj.GroupId);
+
                     if (!isExist)
                     {
                         data.Add("CreatedBy", obj.CreatedBy);
                         data.Add("CreatedDate", obj.CreatedDate);
                         var isAdded = _dbOperation.InsertData("tbl_com2_Household_Group_Linkage", data);
                     }
-                    if (isExist)
+                    else
                     {
                         data.Add("ModifiedBy", obj.ModifiedBy);
                         data.Add("ModifiedDate", obj.ModifiedDate);
                         var isAdded = _dbOperation.UpdateData("tbl_com2_Household_Group_Linkage", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
                     }
+
                     response.Message = "Household Group linkage is saved successfully.";
+                    response.IsSuccess = true; // Add this to signify success
                     return response;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error when saving Household Group linkage. Error: " + ex.ToString());
                 return new ResponseModel()
                 {
                     IsSuccess = false,
@@ -715,6 +718,8 @@ namespace SSSNP_SNSOP.Core.Repository
                 };
             }
         }
+
+
 
 
         private bool IsRecordExistInHouseholdGroupLinkage(string householdNumber)
@@ -872,7 +877,6 @@ namespace SSSNP_SNSOP.Core.Repository
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error in GetHouseholdDataByLocation: " + ex.Message);
                 throw;
             }
 
@@ -912,7 +916,6 @@ namespace SSSNP_SNSOP.Core.Repository
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error inserting household group linkage: " + ex.Message);
                 throw;
             }
         }

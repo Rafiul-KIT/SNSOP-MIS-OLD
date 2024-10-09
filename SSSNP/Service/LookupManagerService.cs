@@ -7,7 +7,7 @@ using System.Diagnostics;
 public class LookupManagerService
 {
     private readonly IDbOperation _dbOperation;
-    string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+    public string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
     public LookupManagerService(string connectionString)
     {
         _dbOperation = new SqlDbOperation(connectionString);
@@ -63,4 +63,5 @@ public class LookupManagerService
 
         return groupIdsTable;
     }
+
 }
