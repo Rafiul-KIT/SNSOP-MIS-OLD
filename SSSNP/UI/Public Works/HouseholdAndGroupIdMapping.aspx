@@ -129,11 +129,15 @@
                                     checkboxes[i].checked = source.checked;
                                 }
                             }
-                            function hideLabelAfterDelay(labelId, delay) {
+                            function hideLabelsAfterDelay(successLabelId, errorLabelId, delay) {
                                 setTimeout(function () {
-                                    var label = document.getElementById(labelId);
-                                    if (label) {
-                                        label.style.display = "none";
+                                    var successLabel = document.getElementById(successLabelId);
+                                    if (successLabel) {
+                                        successLabel.style.display = "none";  // Hide success label
+                                    }
+                                    var errorLabel = document.getElementById(errorLabelId);
+                                    if (errorLabel) {
+                                        errorLabel.style.display = "none";  // Hide error label
                                     }
                                 }, delay);
                             }
@@ -182,8 +186,9 @@
                 </div>
         </ContentTemplate>
         <Triggers>
-            <asp:AsyncPostBackTrigger ControlID="BtnSearch" EventName="Click" />
-        </Triggers>
+        <asp:AsyncPostBackTrigger ControlID="BtnSearch" EventName="Click" />
+        <asp:AsyncPostBackTrigger ControlID="btnAssignGroup" EventName="Click" />
+    </Triggers>
     </asp:UpdatePanel>
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
         <ProgressTemplate>

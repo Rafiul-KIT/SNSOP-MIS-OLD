@@ -17,11 +17,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class HouseholdAndGroupIdMapping : System.Web.UI.Page
     {
-        
+
         private LookupManagerService _lookupService;
         private Component2Service _component2Service;
         private Component2Repository _component2Repository;
-        
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -74,9 +74,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 if (headerItem != null)
                 {
-                    DropDownList ddlGroupIDOutside  = (DropDownList)headerItem.FindControl("ddlGroupIDOutside ");
+                    DropDownList ddlGroupIDOutside = (DropDownList)headerItem.FindControl("ddlGroupIDOutside ");
 
-                    if (ddlGroupIDOutside  != null)
+                    if (ddlGroupIDOutside != null)
                     {
                         LoadGroupIDs(); // Ensure this method loads the correct Group IDs
                     }
@@ -115,7 +115,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     }
 
                     // Optionally add a default item
-                    ddlGroupIDOutside .Items.Insert(0, new ListItem("--Select Group ID--", "0"));
+                    ddlGroupIDOutside.Items.Insert(0, new ListItem("--Select Group ID--", "0"));
                 }
             }
             catch (Exception ex)
@@ -143,7 +143,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             // Make sure the label is visible
             lblErrorMessage.Visible = true;
 
-            
+
             ScriptManager.RegisterStartupScript(this, GetType(), "hideLabel", "hideLabelAfterDelay('" + lblErrorMessage.ClientID + "', 10000);", true);
         }
 
@@ -311,7 +311,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
-            
+
             try
             {
                 SelectedHouseholds.Clear();
@@ -334,8 +334,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     throw new Exception("DataTable is null.");
                 }
 
-                
-                
+
+
 
                 if (householdsTable.Rows.Count > 0)
                 {
@@ -592,14 +592,14 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 GridDataItem item = (GridDataItem)e.Item;
                 CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
                 string householdNumber = item.GetDataKeyValue("household_number").ToString();
-                
+
                 chkSelect.Checked = false;
                 // If the household number is in the selected list, check the checkbox
                 if (SelectedHouseholds.Contains(householdNumber))
                 {
                     chkSelect.Checked = true;
                 }
-                
+
             }
         }
 
@@ -613,6 +613,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
             rgResults.Rebind(); // This forces a rebind of the data when the page size is changed
         }
 
-        
+
     }
 }

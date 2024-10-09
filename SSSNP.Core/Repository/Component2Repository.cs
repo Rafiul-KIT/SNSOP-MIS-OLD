@@ -857,7 +857,7 @@ namespace SSSNP_SNSOP.Core.Repository
             WHERE (@StateId IS NULL OR b.intStateid = @StateId)
             AND (@CountyId IS NULL OR b.intCountieid = @CountyId)
             AND (@PayamId IS NULL OR b.intPayamid = @PayamId)
-            AND (@BomaId IS NULL OR b.intBomasid = @BomaId)";
+            AND (@BomaId IS NULL OR b.intBomasid = @BomaId) group by b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id, g.GroupName";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
