@@ -135,6 +135,8 @@ namespace SSSNP.UI.Public_Works
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
 
                 var validList = new List<FinancialServiceLinkageTrackingModel>();
+                var uploadedDataList = new List<FinancialServiceLinkageAuditModel>();
+                int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
 
                 foreach (var obj in list)
                 {
@@ -143,20 +145,32 @@ namespace SSSNP.UI.Public_Works
                         var validationResult = _component2Service.IsValidData(obj, validHouseholdNumbers);
 
                         DataRow dr = dt.NewRow();
+                        FinancialServiceLinkageAuditModel auditEntityObj = new FinancialServiceLinkageAuditModel();
+
                         dr["Id"] = serial;
                         dr["HouseholdNumber"] = obj.HouseholdNumber;
                         dr["ConnectedFinancialServices"] = (obj.ConnectedFinancialServices == true) ? "YES" : "NO";
                         dr["EntityName"] = obj.EntityName;
 
+                        auditEntityObj.HouseholdNumber = obj.HouseholdNumber;
+                        auditEntityObj.ConnectedFinancialServices = obj.ConnectedFinancialServices;
+                        auditEntityObj.EntityName = obj.EntityName;
+
                         if (!validationResult.isValid)
                         {
+                            auditEntityObj.Validity = false;
+                            auditEntityObj.InvalidReason = validationResult.errorMessage;
                             dr["ValidationStatus"] = validationResult.errorMessage; // Store error message
                         }
                         else
                         {
+                            auditEntityObj.Validity = true;
                             dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
                             validList.Add(obj);
                         }
+
+                        auditEntityObj.UploadedBy = userId;
+                        uploadedDataList.Add(auditEntityObj);
 
                         dt.Rows.Add(dr);
 
@@ -165,6 +179,7 @@ namespace SSSNP.UI.Public_Works
                 }
 
                 Session["UploadedFinancialServiceLinkageTrackingData"] = validList;
+                Session["UploadedFinancialServiceLinkageTrackingAllData"] = uploadedDataList;
 
                 // Bind the data to RadGrid for display
                 RadGrid.DataSource = dt;
@@ -197,6 +212,13 @@ namespace SSSNP.UI.Public_Works
                     AddErrorMessage("No data available for import.");
                     return;
                 }
+
+                var allDataList = Session["UploadedFinancialServiceLinkageTrackingAllData"] as List<FinancialServiceLinkageAuditModel>;
+                if (allDataList != null && allDataList.Count > 0)
+                {
+                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Financial_Services_Linkage_Tracking_Audit");
+                }
+                Session["UploadedFinancialServiceLinkageTrackingAllData"] = null;
 
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
 

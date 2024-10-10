@@ -509,6 +509,30 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             gvWorkProposalAttachments.DataSource = null;
             gvWorkProposalAttachments.DataBind();
         }
+
+        if (ds.Tables[1].Rows.Count > 0)
+        {
+            try
+            {
+                txtWorkName.Text = ds.Tables[1].Rows[0]["WorkName"].ToString();
+                ddlAreaofWork.SelectedValue = ds.Tables[1].Rows[0]["intAreaofWork"].ToString();
+                ddlAreasofWork_SelectedIndexChanged(null, null);
+                ddlWorkActivity.SelectedValue = ds.Tables[1].Rows[0]["intWorkActivity"].ToString();
+                txtManpower.Text = ds.Tables[1].Rows[0]["EstManPower"].ToString();
+                txtEstDays.Text = ds.Tables[1].Rows[0]["EstDays"].ToString();
+                txtEstquantity1.Text = ds.Tables[1].Rows[0]["EquipmntQuantity"].ToString();
+                txtEstquantity2.Text = ds.Tables[1].Rows[0]["MaterialQuantity"].ToString();
+                txtSkillLabour.Text = ds.Tables[1].Rows[0]["EstSkilLabour"].ToString();
+                txtWorkStartDate.Text = ds.Tables[1].Rows[0]["EstWorkStartDate"].ToString();
+                txtEndDate.Text = ds.Tables[1].Rows[0]["EstWorkEndDate"].ToString();
+                txtLatitude.Text = ds.Tables[1].Rows[0]["Latitude"].ToString();
+                txtLongitude.Text = ds.Tables[1].Rows[0]["Longitude"].ToString();
+                txtEstCost.Text = ds.Tables[1].Rows[0]["EstCost"].ToString();
+            } catch (Exception e)
+            {
+                
+            }
+        }
     }
     #endregion
 

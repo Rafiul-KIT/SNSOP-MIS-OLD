@@ -1008,7 +1008,6 @@
                                                             Type="Date"
                                                             Operator="GreaterThanEqual"
                                                             Display="Dynamic"
-                                                            ErrorMessage="Estimated End Data cannot be earlier than Estimated Start Date"
                                                             ValidationGroup="child">
                                                         </asp:CompareValidator>
                                                     </td>

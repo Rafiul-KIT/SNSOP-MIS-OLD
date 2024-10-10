@@ -148,6 +148,8 @@ namespace SSSNP.UI.Public_Works
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
 
                 var validList = new List<BusinessPlanDevelopmentModel>();
+                var uploadedDataList = new List<BusinessPlanDevelopmentAuditModel>();
+                int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
 
                 foreach (var obj in list)
                 {
@@ -156,19 +158,33 @@ namespace SSSNP.UI.Public_Works
                         var validationResult = _component2Service.IsValidData(obj, validHouseholdNumbers);
 
                         DataRow dr = dt.NewRow();
+                        BusinessPlanDevelopmentAuditModel auditEntityObj = new BusinessPlanDevelopmentAuditModel();
+
                         dr["Id"] = serial;
                         dr["HouseholdNumber"] = obj.HouseholdNumber;
                         dr["BusinessPlanStatus"] = (obj.BusinessPlanStatus == true) ? "YES" : "NO";
                         dr["BusinessType"] = (obj.BusinessType == 1) ? "Farm" : "Non-farm";
+
+                        auditEntityObj.HouseholdNumber = obj.HouseholdNumber;
+                        auditEntityObj.BusinessPlanStatus = obj.BusinessPlanStatus;
+                        auditEntityObj.BusinessType = obj.BusinessType;
+
                         if (!validationResult.isValid)
                         {
+                            auditEntityObj.Validity = false;
+                            auditEntityObj.InvalidReason = validationResult.errorMessage;
                             dr["ValidationStatus"] = validationResult.errorMessage; // Store error message
                         }
                         else
                         {
+                            auditEntityObj.Validity = true;
                             dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
                             validList.Add(obj);
                         }
+
+                        auditEntityObj.UploadedBy = userId;
+                        uploadedDataList.Add(auditEntityObj);
+
                         dt.Rows.Add(dr);
 
                         serial++;
@@ -176,6 +192,7 @@ namespace SSSNP.UI.Public_Works
                 }
 
                 Session["UploadedBusinessPlanData"] = validList;
+                Session["UploadedBusinessPlanAllData"] = uploadedDataList;
 
                 // Bind the data to RadGrid for display
                 RadGrid.DataSource = dt;
@@ -208,6 +225,13 @@ namespace SSSNP.UI.Public_Works
                     AddErrorMessage("No data available for import.");
                     return;
                 }
+
+                var allDataList = Session["UploadedBusinessPlanAllData"] as List<BusinessPlanDevelopmentAuditModel>;
+                if (allDataList != null && allDataList.Count > 0)
+                {
+                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Business_Plan_Development_Audit");
+                }
+                Session["UploadedBusinessPlanAllData"] = null;
 
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
 

@@ -4299,7 +4299,7 @@ public class General
 
 
     //Created by siva as on 4-1-2016 :: Insert,Update Work Proposal 
-    public int InsertUpdWorkProposal(string intWorkid, string WorkCode, string IPid, string intPrjid, string MeetingDate, string intStateid, string intCountieid, string intPayamid, string intBomasid, string Status, string StatusDate, string PDC_ApprvDate, string Remarks, string Created_by, string TypeofMeeting, string screeningStatus)
+    public int InsertUpdWorkProposal(string intWorkid, string WorkCode, string IPid, string intPrjid, string MeetingDate, string intStateid, string intCountieid, string intPayamid, string intBomasid, string Status, string StatusDate, string PDC_ApprvDate, string Remarks, string Created_by, string TypeofMeeting, string screeningStatus, String WorkName)
     {
         SqlCommand com = new SqlCommand();
         com.CommandType = CommandType.StoredProcedure;
@@ -4396,6 +4396,11 @@ public class General
             com.Parameters.Add("@screening_status", SqlDbType.VarChar).Value = DBNull.Value;
         else
             com.Parameters.Add("@screening_status", SqlDbType.VarChar).Value = screeningStatus;
+
+        if (WorkName == null || WorkName == "")
+            com.Parameters.Add("@WorkName", SqlDbType.VarChar).Value = DBNull.Value;
+        else
+            com.Parameters.Add("@WorkName", SqlDbType.VarChar).Value = WorkName;
 
 
         con.OpenConnection();

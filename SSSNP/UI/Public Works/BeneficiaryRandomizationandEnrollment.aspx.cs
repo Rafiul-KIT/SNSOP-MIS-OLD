@@ -147,11 +147,14 @@ namespace SSSNP.UI.Public_Works
                 var validGroupId = _component2Service.GetValidGroupId();
 
                 var validBeneficiary = new List<BeneficiaryRandomizationAndEnrollmentModel>();
+                var uploadedDataList = new List<BeneficiaryEnrollmentAuditModel>();
+                int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
 
                 // Loop through the list and dynamically check for redundancy
                 foreach (var beneficiary in beneficiaries)
                 {
                     DataRow dr = dt.NewRow();
+                    BeneficiaryEnrollmentAuditModel auditEntityObj = new BeneficiaryEnrollmentAuditModel();
 
                     dr["HouseholdNumber"] = beneficiary.HouseholdNumber ?? (object)DBNull.Value;
                     dr["InterestedInParticipating"] = beneficiary.InterestedInParticipating.HasValue ? (object)beneficiary.InterestedInParticipating.Value : DBNull.Value;
@@ -160,6 +163,14 @@ namespace SSSNP.UI.Public_Works
                     dr["HHEnrollmentStatus"] = beneficiary.HHEnrollmentStatus.HasValue ? (object)beneficiary.HHEnrollmentStatus.Value : DBNull.Value;
                     dr["GroupID"] = beneficiary.GroupID.HasValue ? (object)beneficiary.GroupID.Value : DBNull.Value;
                     dr["EnrolledMemberID"] = beneficiary.EnrolledMemberID.HasValue ? (object)beneficiary.EnrolledMemberID.Value : DBNull.Value;
+
+                    auditEntityObj.HouseholdNumber = beneficiary.HouseholdNumber;
+                    auditEntityObj.InterestedInParticipating = beneficiary.InterestedInParticipating;
+                    auditEntityObj.SurvivesTargeting = beneficiary.SurvivesTargeting;
+                    auditEntityObj.TreatmentArm = beneficiary.TreatmentArm;
+                    auditEntityObj.HHEnrollmentStatus = beneficiary.HHEnrollmentStatus;
+                    auditEntityObj.GroupID = beneficiary.GroupID;
+                    auditEntityObj.EnrolledMemberID = beneficiary.EnrolledMemberID;
 
                     // Check if the household is redundant
                     if (!string.IsNullOrEmpty(beneficiary.HouseholdNumber) && existingHouseholds.ContainsKey(beneficiary.HouseholdNumber))
@@ -176,14 +187,19 @@ namespace SSSNP.UI.Public_Works
 
                     if (!validationResult.isValid)
                     {
+                        auditEntityObj.Validity = false;
+                        auditEntityObj.InvalidReason = validationResult.errorMessage;
                         dr["ValidationStatus"] = validationResult.errorMessage; // Store the error message
                     }
                     else
                     {
+                        auditEntityObj.Validity = true;
                         dr["ValidationStatus"] = "Valid"; // No error
                         validBeneficiary.Add(beneficiary);
                     }
 
+                    auditEntityObj.UploadedBy = userId;
+                    uploadedDataList.Add(auditEntityObj);
 
                     dt.Rows.Add(dr);
                 }
@@ -191,6 +207,7 @@ namespace SSSNP.UI.Public_Works
 
                // Store the DataTable in session for pagination
                 Session["AnalyzedData"] = validBeneficiary;
+                Session["UploadedBeneficiaryEnrollmentAllData"] = uploadedDataList;
 
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
@@ -234,6 +251,13 @@ namespace SSSNP.UI.Public_Works
                     btnAnalyze.Enabled = false;
                     return;
                 }
+
+                var allDataList = Session["UploadedBeneficiaryEnrollmentAllData"] as List<BeneficiaryEnrollmentAuditModel>;
+                if (allDataList != null && allDataList.Count > 0)
+                {
+                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Household_Enrollment_Data_Audit");
+                }
+                Session["UploadedBeneficiaryEnrollmentAllData"] = null;
 
                 // Pass the entire list to the service for processing
                 var response = service.SaveBeneficiaries(beneficiaries);

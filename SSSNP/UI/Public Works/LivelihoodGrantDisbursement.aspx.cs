@@ -127,6 +127,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
 
                 var validGrantList = grantList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
+                var uploadedDataList = new List<LivelihoodGrantDisbursementAuditModel>();
+                int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
 
                 foreach (var grant in validGrantList)
                 {
@@ -141,18 +143,32 @@ namespace SSSNP_SNSOP.UI.Public_Works
                                         ? grant.PaymentDate.Value.ToString("MM-dd-yyyy")
                                         : "N/A";
 
+                    LivelihoodGrantDisbursementAuditModel auditEntityObj = new LivelihoodGrantDisbursementAuditModel();
+                    auditEntityObj.HouseholdNumber = grant.HouseholdNumber;
+                    auditEntityObj.PaymentCycle = grant.PaymentCycle;
+                    auditEntityObj.PaymentAmount = grant.PaymentAmount;
+                    auditEntityObj.PaymentDate = grant.PaymentDate.Value;
+
                     if (!validationResult.isValid)
                     {
+                        auditEntityObj.Validity = false;
+                        auditEntityObj.InvalidReason = validationResult.errorMessage;
                         dr["ValidationStatus"] = validationResult.errorMessage;
                     }
                     else
                     {
+                        auditEntityObj.Validity = true;
                         dr["ValidationStatus"] = "Valid";
                     }
+
+                    auditEntityObj.UploadedBy = userId;
+                    uploadedDataList.Add(auditEntityObj);
 
                     dt.Rows.Add(dr);
                     serial++;
                 }
+
+                Session["UploadedLivelihoodGrantDisbursementAllData"] = uploadedDataList;
 
                 Session["AnalyzedData"] = dt;
                 int totalRecordCount = dt.Rows.Count;
@@ -190,6 +206,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     AddErrorMessage("No data available for import.");
                     return;
                 }
+
+                var allDataList = Session["UploadedLivelihoodGrantDisbursementAllData"] as List<LivelihoodGrantDisbursementAuditModel>;
+                if (allDataList != null && allDataList.Count > 0)
+                {
+                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Livelihood_Grant_Disbursement_Audit");
+                }
+                Session["UploadedLivelihoodGrantDisbursementAllData"] = null;
 
                 var validEntries = grantList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
                 if (validEntries.Count == 0)

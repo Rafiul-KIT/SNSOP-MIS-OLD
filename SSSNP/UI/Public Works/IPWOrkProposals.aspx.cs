@@ -316,6 +316,8 @@ public partial class IPWOrkProposals : System.Web.UI.Page
             Gen.getProjects(ddlProject, ddlIP.SelectedValue);
             ddlProject.SelectedValue = ds.Tables[0].Rows[0]["intprjid"].ToString();
 
+            txtWorkName.Text = ds.Tables[0].Rows[0]["WorkName"].ToString();
+
             getworksbyPojects();
 
             if (ds.Tables[0].Rows[0]["status"].ToString() != "")
@@ -480,6 +482,30 @@ public partial class IPWOrkProposals : System.Web.UI.Page
             gvWorkProposalAttachments.DataBind();
         }
 
+        if (ds.Tables[1].Rows.Count > 0)
+        {
+            try
+            {
+                txtWorkName.Text = ds.Tables[1].Rows[0]["WorkName"].ToString();
+                ddlAreaofWork.SelectedValue = ds.Tables[1].Rows[0]["intAreaofWork"].ToString();
+                ddlAreasofWork_SelectedIndexChanged(null, null);
+                ddlWorkActivity.SelectedValue = ds.Tables[1].Rows[0]["intWorkActivity"].ToString();
+                txtManpower.Text = ds.Tables[1].Rows[0]["EstManPower"].ToString();
+                txtEstDays.Text = ds.Tables[1].Rows[0]["EstDays"].ToString();
+                txtEstquantity1.Text = ds.Tables[1].Rows[0]["EquipmntQuantity"].ToString();
+                txtEstquantity2.Text = ds.Tables[1].Rows[0]["MaterialQuantity"].ToString();
+                txtSkillLabour.Text = ds.Tables[1].Rows[0]["EstSkilLabour"].ToString();
+                txtWorkStartDate.Text = ds.Tables[1].Rows[0]["EstWorkStartDate"].ToString();
+                txtEndDate.Text = ds.Tables[1].Rows[0]["EstWorkEndDate"].ToString();
+                txtLatitude.Text = ds.Tables[1].Rows[0]["Latitude"].ToString();
+                txtLongitude.Text = ds.Tables[1].Rows[0]["Longitude"].ToString();
+                txtEstCost.Text = ds.Tables[1].Rows[0]["EstCost"].ToString();
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
     }
     #endregion
 
@@ -725,7 +751,7 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                 }
             }
             //New step for approving work proposals
-            int i = Gen.InsertUpdWorkProposal("0", "", Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, (screeningStatus == "1") ? "IP-Submitted" : null, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus);
+            int i = Gen.InsertUpdWorkProposal("0", "", Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, (screeningStatus == "1") ? "IP-Submitted" : null, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus, txtWorkName.Text);
 
             if (ddlstatus.SelectedValue == "TST-Rejected")
             {
@@ -934,7 +960,7 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                     screeningStatus = "2";
                 }
             }
-            int i = Gen.InsertUpdWorkProposal(ids.ToString(), lblworkcode.Text, Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, ddlstatus.SelectedValue, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus);
+            int i = Gen.InsertUpdWorkProposal(ids.ToString(), lblworkcode.Text, Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, ddlstatus.SelectedValue, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus, txtWorkName.Text);
             if (ddlstatus.SelectedValue == "TST-Rejected")
             {
                 Gen.insertWorkComment(ids.ToString(), txtRemarks.Text, ddlstatus.SelectedValue, Session["uid"].ToString());
