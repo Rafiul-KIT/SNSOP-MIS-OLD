@@ -316,12 +316,18 @@ public partial class IPWOrkProposals : System.Web.UI.Page
             Gen.getProjects(ddlProject, ddlIP.SelectedValue);
             ddlProject.SelectedValue = ds.Tables[0].Rows[0]["intprjid"].ToString();
 
-            txtWorkName.Text = ds.Tables[0].Rows[0]["WorkName"].ToString();
-
             getworksbyPojects();
 
-            if (ds.Tables[0].Rows[0]["status"].ToString() != "")
-                ddlstatus.SelectedValue = ddlstatus.Items.FindByValue(ds.Tables[0].Rows[0]["status"].ToString()).Value;
+            if (ds.Tables[0].Rows[0]["status"].ToString() != "") 
+            {
+                try
+                {
+                    ddlstatus.SelectedValue = ddlstatus.Items.FindByValue(ds.Tables[0].Rows[0]["status"].ToString()).Value;
+                } catch (Exception e)
+                {
+
+                }
+            }
 
             if (ddlstatus.SelectedValue == "InProgress" || ddlstatus.SelectedValue == "Closed")
             {
@@ -752,7 +758,7 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                 }
             }
             //New step for approving work proposals
-            int i = Gen.InsertUpdWorkProposal("0", "", Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, (screeningStatus == "1") ? "IP-Submitted" : null, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus, txtWorkName.Text);
+            int i = Gen.InsertUpdWorkProposal("0", "", Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, (screeningStatus == "1") ? "IP-Submitted" : null, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus);
 
             if (ddlstatus.SelectedValue == "TST-Rejected")
             {
@@ -961,7 +967,7 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                     screeningStatus = "2";
                 }
             }
-            int i = Gen.InsertUpdWorkProposal(ids.ToString(), lblworkcode.Text, Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, ddlstatus.SelectedValue, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus, txtWorkName.Text);
+            int i = Gen.InsertUpdWorkProposal(ids.ToString(), lblworkcode.Text, Session["User_Code"].ToString(), ddlProject.SelectedValue, txtStartDate.Text, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, ddlstatus.SelectedValue, txtApprRejDate.Text, txtPDCApprvDate.Text, txtRemarks.Text, Session["uid"].ToString(), ddlMeeting.SelectedValue, screeningStatus);
             if (ddlstatus.SelectedValue == "TST-Rejected")
             {
                 Gen.insertWorkComment(ids.ToString(), txtRemarks.Text, ddlstatus.SelectedValue, Session["uid"].ToString());
