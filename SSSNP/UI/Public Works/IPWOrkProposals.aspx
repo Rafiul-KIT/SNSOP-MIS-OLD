@@ -1001,15 +1001,6 @@
                                                         <cc1:CalendarExtender ID="CalendarExtender3" runat="server"
                                                             Format="dd-MM-yyyy" PopupButtonID="txtEndDate"
                                                             TargetControlID="txtEndDate"></cc1:CalendarExtender>
-                                                        <asp:CompareValidator ID="EndToStartWorkStartValidator" runat="server"
-                                                            ControlToCompare="txtWorkStartDate"
-                                                            ControlToValidate="txtEndDate"
-                                                            CultureInvariantValues="true"
-                                                            Type="Date"
-                                                            Operator="GreaterThanEqual"
-                                                            Display="Dynamic"
-                                                            ValidationGroup="child">
-                                                        </asp:CompareValidator>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator37" runat="server"
