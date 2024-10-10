@@ -515,6 +515,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             try
             {
                 txtWorkName.Text = ds.Tables[1].Rows[0]["WorkName"].ToString();
+                txtWorkCode.Text = ds.Tables[1].Rows[0]["WorkCode"].ToString();
                 ddlAreaofWork.SelectedValue = ds.Tables[1].Rows[0]["intAreaofWork"].ToString();
                 ddlAreasofWork_SelectedIndexChanged(null, null);
                 ddlWorkActivity.SelectedValue = ds.Tables[1].Rows[0]["intWorkActivity"].ToString();
