@@ -1,11 +1,13 @@
 ﻿using SSSNP_SNSOP.Core.DbHandler;
+using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 public class LookupManagerService
 {
     private readonly IDbOperation _dbOperation;
-
+    public string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
     public LookupManagerService(string connectionString)
     {
         _dbOperation = new SqlDbOperation(connectionString);
@@ -33,4 +35,33 @@ public class LookupManagerService
         SqlParameter param = new SqlParameter("@payamId", payamId);
         return _dbOperation.ExecuteDataTable("SELECT intBomasid, BomaName FROM tm_Bomas WHERE intPayamid = @payamId", CommandType.Text, param);
     }
+
+    public DataTable GetGroupIds()
+    {
+        DataTable groupIdsTable = new DataTable();
+        try
+        {
+            string query = "SELECT Id, GroupName FROM tbl_com2_Household_Group_View";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(groupIdsTable);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error fetching Group IDs: " + ex.Message);
+            throw;
+        }
+
+        return groupIdsTable;
+    }
+
 }

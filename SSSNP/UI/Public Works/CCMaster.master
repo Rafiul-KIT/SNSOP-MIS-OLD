@@ -334,6 +334,7 @@
                                                      <li id="LivelihoodGrantDisbursement" runat="server"><a href="LivelihoodGrantDisbursement.aspx">Livelihood Grant Disbursement</a></li>
                                                      <li id="FinancialServiceLinkageTracking" runat="server"><a href="FinancialServiceLinkageTracking.aspx">Financial Service Linkage Tracking</a></li>
                                                      <li id="CoachingSessionTracking" runat="server"><a href="CoachingSessionTracking.aspx">Coaching Session Tracking</a></li>
+                                                     <li id="HouseholdAndGroupIdMapping" runat="server"><a href="HouseholdAndGroupIdMapping.aspx">Household And Group Id Mapping</a></li>
                                                  </ul>
                                             </li>
                                             <li id="LiPayroll" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-money"></i> Payroll</a>

@@ -16,12 +16,12 @@ namespace SSSNP_SNSOP.Core.Repository
     {
         private readonly IDbOperation _dbOperation;
         private static readonly object _locker = new object();
-
+        
+        string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
         public Component2Repository(string connectionString)
         {
             _dbOperation = new SqlDbOperation(connectionString);
         }
-
         public ResponseModel SaveTrainingAndAttendanceTracking(TrainingAndAttendanceModel obj)
         {
             var response = new ResponseModel();
@@ -29,7 +29,7 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 lock (_locker)
                 {
-                    var isExist = IsRecordExist(obj.HouseholdNumber?.Trim());
+                    var isExist = IsRecordExistInTrainingAndAttendence(obj.HouseholdNumber?.Trim());
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
                     if (denormalizedData == null)
@@ -90,7 +90,25 @@ namespace SSSNP_SNSOP.Core.Repository
                 };
             }
         }
-
+        
+        private bool IsRecordExistInTrainingAndAttendence(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public ResponseModel SaveLivelihoodGrantDisbursement(LivelihoodGrantDisbursementModel obj)
         {
             var response = new ResponseModel();
@@ -185,7 +203,6 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw ex;
             }
         }
-
         private int GetCourseIdByCode(string code)
         {
             int courseId = 0;
@@ -237,37 +254,6 @@ namespace SSSNP_SNSOP.Core.Repository
             return householdNumbers;
         }
 
-
-
-        public DenormalizedDataModel GetDenormalizedDataByHouseholdNumber(string householdNumber)
-        {
-            DenormalizedDataModel result = null;
-            try
-            {
-                SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT * FROM tbl_com2_Household_Enrollment_Data WHERE HouseholdNumber = @HouseholdNumber",
-                    CommandType.Text, param);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    result = new DenormalizedDataModel();
-                    result.StateID = dt.Rows[0]["StateID"] != null ? Convert.ToInt32(dt.Rows[0]["StateID"].ToString()) : 0;
-                    result.CountyID = dt.Rows[0]["CountyID"] != null ? Convert.ToInt32(dt.Rows[0]["CountyID"].ToString()) : 0;
-                    result.PayamID = dt.Rows[0]["PayamID"] != null ? Convert.ToInt32(dt.Rows[0]["PayamID"].ToString()) : 0;
-                    result.BomaID = dt.Rows[0]["BomaID"] != null ? Convert.ToInt32(dt.Rows[0]["BomaID"].ToString()) : 0;
-                    result.FirstName = dt.Rows[0]["FirstName"] != null ? dt.Rows[0]["FirstName"].ToString() : string.Empty;
-                    result.MiddleName = dt.Rows[0]["MiddleName"] != null ? dt.Rows[0]["MiddleName"].ToString() : string.Empty;
-                    result.LastName = dt.Rows[0]["LastName"] != null ? dt.Rows[0]["LastName"].ToString() : string.Empty;
-                    result.NickName = dt.Rows[0]["NickName"] != null ? dt.Rows[0]["NickName"].ToString() : string.Empty;
-                    result.Gender = dt.Rows[0]["Gender"] != null ? dt.Rows[0]["Gender"].ToString() : string.Empty;
-                    result.Age = dt.Rows[0]["Age"] != null ? Convert.ToInt32(dt.Rows[0]["Age"].ToString()) : 0;
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
 
         public ResponseModel SaveBeneficiary(BeneficiaryRandomizationAndEnrollmentModel model)
         {
@@ -377,26 +363,6 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-
-        private bool IsRecordExist(string householdNumber)
-        {
-            try
-            {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber",
-                    CommandType.Text, param);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         private bool IsRecordExistInBusinessPlanDevelopment(string householdNumber)
         {
             try
@@ -415,7 +381,6 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw ex;
             }
         }
-
         public ResponseModel SaveHouseholdGroup(HouseholdGroupModel model)
         {
             var response = new ResponseModel();
@@ -477,7 +442,6 @@ namespace SSSNP_SNSOP.Core.Repository
                 return response;
             }
         }
-
         public bool IsRecordExist_GroupName(string groupName)
         {
             try
@@ -498,7 +462,6 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw new Exception("Error checking if HouseholdGroup exists: " + ex.Message);
             }
         }
-
         public Dictionary<string, int> GetExistingGroupNames()
         {
             Dictionary<string, int> groupNames = new Dictionary<string, int>();
@@ -522,7 +485,6 @@ namespace SSSNP_SNSOP.Core.Repository
 
             return groupNames;
         }
-
         public DenormalizedDataModel GetDenormalizedBeneficiaryDataByHouseholdNumber(string householdNumber)
         {
             DenormalizedDataModel result = null;
@@ -567,7 +529,6 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw ex;
             }
         }
-
         public ResponseModel SaveBusinessPlanDevelopment(BusinessPlanDevelopmentModel obj)
         {
             var response = new ResponseModel();
@@ -732,6 +693,70 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
+        public ResponseModel SaveHouseholdGroupLinkage(HouseholdGroupLinkageModel obj)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                lock (_locker)
+                {
+
+                    var isExist = IsRecordExistInHouseholdGroupLinkage(obj.HouseholdNumber?.Trim());
+
+                    Dictionary<string, object> data = new Dictionary<string, object>();
+                    data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
+                    data.Add("GroupId", obj.GroupId);
+
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", obj.CreatedBy);
+                        data.Add("CreatedDate", obj.CreatedDate);
+                        var isAdded = _dbOperation.InsertData("tbl_com2_Household_Group_Linkage", data);
+                    }
+                    else
+                    {
+                        data.Add("ModifiedBy", obj.ModifiedBy);
+                        data.Add("ModifiedDate", obj.ModifiedDate);
+                        var isAdded = _dbOperation.UpdateData("tbl_com2_Household_Group_Linkage", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                    }
+
+                    response.Message = "Household Group linkage is saved successfully.";
+                    response.IsSuccess = true; // Add this to signify success
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel()
+                {
+                    IsSuccess = false,
+                    Message = "Error when saving Household Group linkage. Error: " + ex.ToString()
+                };
+            }
+        }
+
+
+
+
+        private bool IsRecordExistInHouseholdGroupLinkage(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Household_Group_Linkage WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public HashSet<string> GetValidHouseholdNumberValues()
         {
             try
@@ -829,6 +854,87 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
+
+        public DataTable GetHouseholdDataByLocation(SqlParameter stateParam, SqlParameter countyParam, SqlParameter payamParam, SqlParameter bomaParam)
+        {
+            DataTable householdsTable = new DataTable();
+
+            try
+            {
+                string query = @"
+            SELECT b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id as GroupId, g.GroupName
+            FROM tbl_BeneficiaryServiceDet b
+            INNER JOIN tbl_Nominee n 
+            ON b.household_number = n.application_id
+            LEFT JOIN tbl_com2_Household_Group_Linkage l
+            ON l.HouseholdNumber = b.household_number
+            LEFT JOIN tbl_com2_Household_Group_View g
+            ON g.Id = l.GroupId 
+            WHERE (@StateId IS NULL OR b.intStateid = @StateId)
+            AND (@CountyId IS NULL OR b.intCountieid = @CountyId)
+            AND (@PayamId IS NULL OR b.intPayamid = @PayamId)
+            AND (@BomaId IS NULL OR b.intBomasid = @BomaId) group by b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id, g.GroupName";
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.Add(stateParam);
+                        cmd.Parameters.Add(countyParam);
+                        cmd.Parameters.Add(payamParam);
+                        cmd.Parameters.Add(bomaParam);
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            da.Fill(householdsTable); // Fill the DataTable with the query result
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return householdsTable;
+        }
+
+        public void InsertHouseholdGroupLinkage(string householdNumber, int groupId)
+        {
+            try
+            {
+                string checkQuery = "SELECT COUNT(1) FROM tbl_com2_Household_Group_Linkage WHERE HouseholdNumber = @HouseholdNumber AND GroupId = @GroupId";
+                string insertQuery = "INSERT INTO tbl_com2_Household_Group_Linkage (HouseholdNumber, GroupId) VALUES (@HouseholdNumber, @GroupId)";
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Check if the record already exists
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@HouseholdNumber", householdNumber);
+                        checkCmd.Parameters.AddWithValue("@GroupId", groupId);
+                        int exists = (int)checkCmd.ExecuteScalar();
+
+                        // If the record doesn't exist, insert it
+                        if (exists == 0)
+                        {
+                            using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                            {
+                                insertCmd.Parameters.AddWithValue("@HouseholdNumber", householdNumber);
+                                insertCmd.Parameters.AddWithValue("@GroupId", groupId);
+                                insertCmd.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 
 }
