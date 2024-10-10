@@ -152,6 +152,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 var uploadedDataList = new List<TrainingAndAttendanceAuditModel>();
                 int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
+                Guid myuuid = Guid.NewGuid();
+                string FileId = myuuid.ToString().Replace("-", "").Substring(0, 10);
 
                 // Iterate over attendanceList and validate each entry
                 foreach (var attendance in validAttendanceList)
@@ -170,6 +172,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     dr["WhyMissed"] = attendance.WhyMissed;
 
                     TrainingAndAttendanceAuditModel auditEntityObj = new TrainingAndAttendanceAuditModel();
+                    auditEntityObj.FileId = FileId;
                     auditEntityObj.HouseholdNumber = attendance.HouseholdNumber;
                     auditEntityObj.CourseCode = attendance.CourseCode;
                     auditEntityObj.CourseDuration = attendance.CourseDuration;

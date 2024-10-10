@@ -150,6 +150,8 @@ namespace SSSNP.UI.Public_Works
                 var validList = new List<BusinessPlanDevelopmentModel>();
                 var uploadedDataList = new List<BusinessPlanDevelopmentAuditModel>();
                 int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
+                Guid myuuid = Guid.NewGuid();
+                string FileId = myuuid.ToString().Replace("-","").Substring(0,10);
 
                 foreach (var obj in list)
                 {
@@ -165,6 +167,7 @@ namespace SSSNP.UI.Public_Works
                         dr["BusinessPlanStatus"] = (obj.BusinessPlanStatus == true) ? "YES" : "NO";
                         dr["BusinessType"] = (obj.BusinessType == 1) ? "Farm" : "Non-farm";
 
+                        auditEntityObj.FileId = FileId;
                         auditEntityObj.HouseholdNumber = obj.HouseholdNumber;
                         auditEntityObj.BusinessPlanStatus = obj.BusinessPlanStatus;
                         auditEntityObj.BusinessType = obj.BusinessType;

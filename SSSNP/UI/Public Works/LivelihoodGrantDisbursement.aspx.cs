@@ -129,6 +129,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 var validGrantList = grantList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
                 var uploadedDataList = new List<LivelihoodGrantDisbursementAuditModel>();
                 int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
+                Guid myuuid = Guid.NewGuid();
+                string FileId = myuuid.ToString().Replace("-", "").Substring(0, 10);
 
                 foreach (var grant in validGrantList)
                 {
@@ -144,6 +146,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                                         : "N/A";
 
                     LivelihoodGrantDisbursementAuditModel auditEntityObj = new LivelihoodGrantDisbursementAuditModel();
+                    auditEntityObj.FileId = FileId;
                     auditEntityObj.HouseholdNumber = grant.HouseholdNumber;
                     auditEntityObj.PaymentCycle = grant.PaymentCycle;
                     auditEntityObj.PaymentAmount = grant.PaymentAmount;

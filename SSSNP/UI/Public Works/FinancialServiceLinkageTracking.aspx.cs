@@ -137,6 +137,8 @@ namespace SSSNP.UI.Public_Works
                 var validList = new List<FinancialServiceLinkageTrackingModel>();
                 var uploadedDataList = new List<FinancialServiceLinkageAuditModel>();
                 int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
+                Guid myuuid = Guid.NewGuid();
+                string FileId = myuuid.ToString().Replace("-", "").Substring(0, 10);
 
                 foreach (var obj in list)
                 {
@@ -152,6 +154,7 @@ namespace SSSNP.UI.Public_Works
                         dr["ConnectedFinancialServices"] = (obj.ConnectedFinancialServices == true) ? "YES" : "NO";
                         dr["EntityName"] = obj.EntityName;
 
+                        auditEntityObj.FileId = FileId;
                         auditEntityObj.HouseholdNumber = obj.HouseholdNumber;
                         auditEntityObj.ConnectedFinancialServices = obj.ConnectedFinancialServices;
                         auditEntityObj.EntityName = obj.EntityName;

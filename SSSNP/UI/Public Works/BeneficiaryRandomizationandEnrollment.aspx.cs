@@ -149,6 +149,8 @@ namespace SSSNP.UI.Public_Works
                 var validBeneficiary = new List<BeneficiaryRandomizationAndEnrollmentModel>();
                 var uploadedDataList = new List<BeneficiaryEnrollmentAuditModel>();
                 int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
+                Guid myuuid = Guid.NewGuid();
+                string FileId = myuuid.ToString().Replace("-", "").Substring(0, 10);
 
                 // Loop through the list and dynamically check for redundancy
                 foreach (var beneficiary in beneficiaries)
@@ -164,6 +166,7 @@ namespace SSSNP.UI.Public_Works
                     dr["GroupID"] = beneficiary.GroupID.HasValue ? (object)beneficiary.GroupID.Value : DBNull.Value;
                     dr["EnrolledMemberID"] = beneficiary.EnrolledMemberID.HasValue ? (object)beneficiary.EnrolledMemberID.Value : DBNull.Value;
 
+                    auditEntityObj.FileId = FileId;
                     auditEntityObj.HouseholdNumber = beneficiary.HouseholdNumber;
                     auditEntityObj.InterestedInParticipating = beneficiary.InterestedInParticipating;
                     auditEntityObj.SurvivesTargeting = beneficiary.SurvivesTargeting;
