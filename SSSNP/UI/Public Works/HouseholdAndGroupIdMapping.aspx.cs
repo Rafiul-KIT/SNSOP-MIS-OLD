@@ -311,7 +311,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
-
+            ClearMessages();
             try
             {
                 SelectedHouseholds.Clear();
@@ -441,6 +441,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
         protected void btnAssignGroup_Click(object sender, EventArgs e)
         {
+            ClearMessages();
             try
             {
                 // Check if the dropdown outside the grid is available and selected
@@ -611,6 +612,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected void rgResults_PageSizeChanged(object sender, GridPageSizeChangedEventArgs e)
         {
             rgResults.Rebind(); // This forces a rebind of the data when the page size is changed
+        }
+
+        private void ClearMessages()
+        {
+            // Clear and hide both success and error messages
+            lblSuccessMessage.Text = string.Empty;
+            lblSuccessMessage.Visible = false;
+            lblErrorMessage.Text = string.Empty;
+            lblErrorMessage.Visible = false;
         }
 
 

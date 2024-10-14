@@ -220,13 +220,13 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl liViewPaymentCycleDoc;
 
     /// <summary>
-    /// LiComponent2 control.
+    /// EconomicOpportunities control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiComponent2;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl EconomicOpportunities;
 
     /// <summary>
     /// BeneficiaryRandomizationandEnrollment control.
