@@ -149,6 +149,12 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 // Fetch valid household numbers for validation
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
                 var validAttendanceList = attendanceList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
+
+                var uploadedDataList = new List<TrainingAndAttendanceAuditModel>();
+                int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
+                Guid myuuid = Guid.NewGuid();
+                string FileId = myuuid.ToString().Replace("-", "").Substring(0, 10);
+
                 // Iterate over attendanceList and validate each entry
                 foreach (var attendance in validAttendanceList)
                 {
@@ -165,20 +171,37 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     dr["ClassesMissed"] = attendance.ClassesMissed ?? (object)DBNull.Value; // Handle null values
                     dr["WhyMissed"] = attendance.WhyMissed;
 
+                    TrainingAndAttendanceAuditModel auditEntityObj = new TrainingAndAttendanceAuditModel();
+                    auditEntityObj.FileId = FileId;
+                    auditEntityObj.HouseholdNumber = attendance.HouseholdNumber;
+                    auditEntityObj.CourseCode = attendance.CourseCode;
+                    auditEntityObj.CourseDuration = attendance.CourseDuration;
+                    auditEntityObj.ClassesAttended = attendance.ClassesAttended;
+                    auditEntityObj.ClassesHeld = attendance.ClassesHeld;
+                    auditEntityObj.ClassesMissed = attendance.ClassesMissed;
+                    auditEntityObj.WhyMissed = attendance.WhyMissed;
+
                     // Collect error messages to display in the ValidationStatus column
                     if (!validationResult.isValid)
                     {
-
+                        auditEntityObj.Validity = false;
+                        auditEntityObj.InvalidReason = validationResult.errorMessage;
                         dr["ValidationStatus"] = validationResult.errorMessage;
                     }
                     else
                     {
+                        auditEntityObj.Validity = true;
                         dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
                     }
+
+                    auditEntityObj.UploadedBy = userId;
+                    uploadedDataList.Add(auditEntityObj);
 
                     dt.Rows.Add(dr);
                     serial++;
                 }
+
+                Session["UploadedTrainingAndAttendanceAllData"] = uploadedDataList;
 
                 // Bind the data to RadGrid for display
                 Session["AnalyzedData"] = dt;
@@ -215,6 +238,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     AddErrorMessage("No data available for import.");
                     return;
                 }
+
+                var allDataList = Session["UploadedTrainingAndAttendanceAllData"] as List<TrainingAndAttendanceAuditModel>;
+                if (allDataList != null && allDataList.Count > 0)
+                {
+                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Training_Attendance_Audit");
+                }
+                Session["UploadedTrainingAndAttendanceAllData"] = null;
 
                 // Filter valid entries from the attendance list
                 var validEntries = attendanceList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();

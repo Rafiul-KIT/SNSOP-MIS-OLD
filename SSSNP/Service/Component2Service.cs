@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace SSSNP.Service
@@ -289,6 +290,17 @@ namespace SSSNP.Service
         public Dictionary<string, int> GetExistingGroupNames()
         {
             return _component2Repository.GetExistingGroupNames();
+        }
+
+        public void SaveAuditLog<T>(List<T> list, string tableName)
+        {
+            //_component2Repository.SaveAuditLog(list, tableName);
+            RunAuditLogSave(list, tableName);
+        }
+
+        public void RunAuditLogSave<T>(List<T> list, string tableName)
+        {
+            Task t1 = Task.Run(() => _component2Repository.SaveAuditLog(list, tableName));
         }
 
         public ResponseModel SaveBusinessPlanDevelopment(List<BusinessPlanDevelopmentModel> request, HashSet<string> validList)

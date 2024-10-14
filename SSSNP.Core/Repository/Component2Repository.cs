@@ -593,6 +593,22 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
+        public void SaveAuditLog<T>(List<T> list, string tableName)
+        {
+            try
+            {
+                //foreach (T dto in list)
+                //{
+                //    _dbOperation.GenericInsertData(dto, tableName);
+                //}
+                _dbOperation.GenericInsertDataList(list, tableName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when saving Business Plan Development Audit data. Error: " + ex.ToString());
+            }
+        }
+
         public ResponseModel SaveFinancialServiceLinkage(FinancialServiceLinkageTrackingModel obj)
         {
             var response = new ResponseModel();
