@@ -108,7 +108,7 @@
                                     <tr>
                                         <td colspan="2" align="center">
                                             <!-- Warning Label -->
-                                            <asp:Label ID="LblWarning" runat="server" ForeColor="Red" Visible="False" Text ="Please select a template"></asp:Label>
+                                            <asp:Label ID="LblWarning" runat="server" ForeColor="Red" Visible="False" ></asp:Label>
                                         </td>
                                     </tr>
                                 </table>
@@ -118,5 +118,8 @@
                 </div>
             </div>
         </ContentTemplate>
+        <Triggers>
+        <asp:AsyncPostBackTrigger ControlID="BtnDownload" EventName="Click" />
+        </Triggers>
     </asp:UpdatePanel>
 </asp:Content>

@@ -1228,6 +1228,14 @@ namespace SSSNP_SNSOP
         {
             try
             {
+                int? stateId = Session["SelectedStateId"] as int?;
+                int? countyId = Session["SelectedCountyId"] as int?;
+                int? payamId = Session["SelectedPayamId"] as int?;
+                int? bomaId = Session["SelectedBomaId"] as int?;
+
+                Component2Service service = new Component2Service();
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Create a new worksheet
@@ -1248,6 +1256,19 @@ namespace SSSNP_SNSOP
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
 
+                    var householdNumberList = householdNumbers.ToList(); // Convert HashSet to List
+                    
+                    if (householdNumberList.Count > 0)  // Check if there are any items in the list
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;  // Ensure valid range
+                    }
+
                     // Add dropdown for Course Code in column B (2nd column)
                     var courseCodes = new List<string> { "", "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" }; // Empty string for blank option
                     var validation = worksheet.DataValidations.AddListValidation("B2:B100"); // Adjust the range as needed
@@ -1260,6 +1281,8 @@ namespace SSSNP_SNSOP
                     validation.ErrorTitle = "Invalid Selection";
                     validation.Error = "Please select a course code from the list.";
 
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Cells["B2:G1000"].Style.Locked = false;
                     worksheet.Cells.AutoFitColumns();
 
                     // Set the content type and headers for the download
@@ -1292,10 +1315,8 @@ namespace SSSNP_SNSOP
                 int? payamId = Session["SelectedPayamId"] as int?;
                 int? bomaId = Session["SelectedBomaId"] as int?;
 
-
-                // Step 1: Fetch household numbers directly from the service
                 Component2Service service = new Component2Service();
-                //HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues();
+                
                 HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
                 HashSet<int> validGroupIds = service.GetValidGroupId();
                 using (ExcelPackage package = new ExcelPackage())
@@ -1404,6 +1425,15 @@ namespace SSSNP_SNSOP
         {
             try
             {
+                int? stateId = Session["SelectedStateId"] as int?;
+                int? countyId = Session["SelectedCountyId"] as int?;
+                int? payamId = Session["SelectedPayamId"] as int?;
+                int? bomaId = Session["SelectedBomaId"] as int?;
+
+                
+                Component2Service service = new Component2Service();
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Create a new worksheet
@@ -1420,6 +1450,19 @@ namespace SSSNP_SNSOP
                     for (int col = 1; col <= 4; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    var householdNumberList = householdNumbers.ToList(); // Convert HashSet to List
+
+                    if (householdNumberList.Count > 0)  // Check if there are any items in the list
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;  // Ensure valid range
                     }
 
                     // Suppose we know the number of data rows to be inserted
@@ -1445,6 +1488,9 @@ namespace SSSNP_SNSOP
                     dateValidation.Prompt = "Select a date or enter manually in the format dd-mm-yyyy";
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
+
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Cells["B2:G1000"].Style.Locked = false;
 
                     // Auto-fit columns for better appearance
                     worksheet.Cells.AutoFitColumns();
