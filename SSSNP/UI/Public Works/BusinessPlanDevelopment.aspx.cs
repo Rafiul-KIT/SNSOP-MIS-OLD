@@ -82,6 +82,12 @@ namespace SSSNP.UI.Public_Works
                                 continue;
                             }
                             uniqueHHNumber.Add(worksheet.Cells[row, 1].Text);
+
+                            if (string.IsNullOrEmpty(worksheet.Cells[row, 2].Text) && string.IsNullOrEmpty(worksheet.Cells[row, 3].Text))
+                            {
+                                continue; // Skip if columns 2 and 3 are empty
+                            }
+
                             int BusinessTypeVal = 0;
                             string cell3 = (worksheet.Cells[row, 3] != null) ? worksheet.Cells[row, 3].Text.ToString() : null;
                             if (cell3 != null)
@@ -95,6 +101,7 @@ namespace SSSNP.UI.Public_Works
                                     BusinessTypeVal = 2;
                                 }
                             }
+
                             BusinessPlanDevelopmentModel businessPlanObj = new BusinessPlanDevelopmentModel
                             {
                                 HouseholdNumber = worksheet.Cells[row, 1].Text,

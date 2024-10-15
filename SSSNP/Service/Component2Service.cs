@@ -532,5 +532,21 @@ namespace SSSNP.Service
             }
         }
 
+        public List<HouseholdGroupLinkageModel> GetMappedHouseholdNumberValues(int? stateId, int? countyId, int? payamId, int? bomaId)
+        {
+            try
+            {
+                // Call the updated repository method with the passed parameters
+                return _component2Repository.GetMappedHouseholdNumberWithGroupValues(stateId, countyId, payamId, bomaId);
+            }
+            catch (Exception ex)
+            {
+                // Handle any potential errors here (e.g., logging, throwing)
+                Debug.WriteLine($"Error in service method GetMappedHouseholdNumberValues: {ex.Message}");
+                return new List<HouseholdGroupLinkageModel>(); // Return an empty list in case of error
+            }
+        }
+
+
     }
 }

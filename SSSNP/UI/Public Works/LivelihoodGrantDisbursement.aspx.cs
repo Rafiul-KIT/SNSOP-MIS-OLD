@@ -73,6 +73,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         var paymentAmount = decimal.TryParse(worksheet.Cells[row, 3].Text, out decimal amount) ? amount : 0m; // Default to 0 if null or invalid
                         var paymentDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime date) ? date : DateTime.MinValue; // Default to DateTime.MinValue if null or invalid
 
+                        if (string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) && paymentAmount == 0m && paymentDate == DateTime.MinValue)
+                        {
+                            continue; // Skip this row
+                        }
+
                         LivelihoodGrantDisbursementModel grant = new LivelihoodGrantDisbursementModel
                         {
                             HouseholdNumber = worksheet.Cells[row, 1].Text,

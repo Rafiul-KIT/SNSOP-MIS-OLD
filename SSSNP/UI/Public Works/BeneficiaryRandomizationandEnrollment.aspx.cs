@@ -89,7 +89,7 @@ namespace SSSNP.UI.Public_Works
                             groupID = parsedGroupID;
                         }
 
-                        if (int.TryParse(worksheet.Cells[row, 7].Text, out int parsedEnrolledMemberID))
+                        if (int.TryParse(worksheet.Cells[row, 8].Text, out int parsedEnrolledMemberID))
                         {
                             enrolledMemberID = parsedEnrolledMemberID;
                         }
@@ -98,7 +98,6 @@ namespace SSSNP.UI.Public_Works
                             survivesTargeting == null &&
                             treatmentArm == null &&
                             hHEnrollmentStatus == null &&
-                            groupID == null &&
                             enrolledMemberID == null)
                         {
                             continue; // Skip row with no data

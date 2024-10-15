@@ -81,6 +81,12 @@ namespace SSSNP.UI.Public_Works
                             {
                                 continue;
                             }
+
+                            if (string.IsNullOrEmpty(worksheet.Cells[row, 2].Text) && string.IsNullOrEmpty(worksheet.Cells[row, 3].Text))
+                            {
+                                continue; // Skip the row if columns 2 and 3 are empty
+                            }
+
                             uniqueHHNumber.Add(worksheet.Cells[row, 1].Text);
                             FinancialServiceLinkageTrackingModel finServiceObj = new FinancialServiceLinkageTrackingModel
                             {
