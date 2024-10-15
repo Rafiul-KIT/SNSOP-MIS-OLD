@@ -78,12 +78,16 @@
                 </div>
 
                 <div class="row" style="margin-top: 20px;">
-                     <div class="row" style="margin-top: 20px;">
-                    <div class="col-lg-11">
-                        <asp:GridView ID="gvAuditRecords" runat="server" CssClass="table table-bordered table-striped" AutoGenerateColumns="true" />
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-lg-11">
+                            <asp:GridView ID="gvAuditRecords" runat="server" CssClass="table table-bordered table-striped" AutoGenerateColumns="true" OnRowDataBound="gvAuditRecords_RowDataBound">
+                                
+                            </asp:GridView>
+
+
+                        </div>
                     </div>
                 </div>
-            </div>
         </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Content>

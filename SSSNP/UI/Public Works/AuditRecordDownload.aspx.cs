@@ -3,6 +3,7 @@ using System.Data;
 using System.Web.UI.WebControls;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Web.UI;
 
 namespace SSSNP.UI.Public_Works
 {
@@ -66,7 +67,7 @@ namespace SSSNP.UI.Public_Works
             
         }
 
-        
+
         private DataTable GetAuditRecords(string tableName, DateTime? fromDate, DateTime? toDate)
         {
             DataTable dt = new DataTable();
@@ -76,9 +77,14 @@ namespace SSSNP.UI.Public_Works
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = $"SELECT * FROM {tableName} WHERE 1 = 1";
+                    // SQL Query with LEFT JOIN to get the UserName from tbl_Users
+                    string query = $@"
+                SELECT audit.*, users.User_name AS UploadedByUserName
+                FROM {tableName} AS audit
+                LEFT JOIN tbl_Users AS users ON audit.UploadedBy = users.intUserid
+                WHERE 1 = 1";
 
-                   
+                    // Add date filters to the query if the dates are provided
                     if (fromDate.HasValue)
                     {
                         query += " AND UploadDate >= @FromDate";
@@ -111,7 +117,7 @@ namespace SSSNP.UI.Public_Works
             }
             catch (Exception ex)
             {
-                
+                // Log error message or show error feedback
                 lblMessage.Text = "Error fetching audit records: " + ex.Message;
                 lblMessage.CssClass = "text-danger";
                 lblMessage.Visible = true;
@@ -119,6 +125,35 @@ namespace SSSNP.UI.Public_Works
 
             return dt;
         }
+
+
+
+        protected void gvAuditRecords_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+
+                if (e.Row.Cells.Count >= 6)
+                {
+
+                    int columnIndex = e.Row.Cells.Count - 6;
+
+
+                    string userName = DataBinder.Eval(e.Row.DataItem, "UploadedByUserName").ToString();
+
+
+                    e.Row.Cells[columnIndex].Text = userName;
+                }
+            }
+        }
+
+
+
+
+
+
+
+
 
         protected void txtFromDate_TextChanged(object sender, EventArgs e)
         {
