@@ -169,7 +169,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     dr["ClassesAttended"] = attendance.ClassesAttended ?? (object)DBNull.Value; // Handle null values
                     dr["ClassesHeld"] = attendance.ClassesHeld ?? (object)DBNull.Value; // Handle null values
                     dr["ClassesMissed"] = attendance.ClassesMissed ?? (object)DBNull.Value; // Handle null values
-                    dr["WhyMissed"] = attendance.WhyMissed;
+                    dr["WhyMissed"] = attendance.WhyMissed ?? (object)DBNull.Value;
 
                     TrainingAndAttendanceAuditModel auditEntityObj = new TrainingAndAttendanceAuditModel();
                     auditEntityObj.FileId = FileId;
