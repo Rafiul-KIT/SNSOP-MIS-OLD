@@ -142,7 +142,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     dr["PaymentCycle"] = grant.PaymentCycle;
                     dr["PaymentAmount"] = grant.PaymentAmount ?? (object)DBNull.Value;
                     dr["PaymentDate"] = grant.PaymentDate.HasValue && grant.PaymentDate.Value != DateTime.MinValue
-                                        ? grant.PaymentDate.Value.ToString("MM-dd-yyyy")
+                                        ? grant.PaymentDate.Value.ToString("dd-MM-yyyy")
                                         : "N/A";
 
                     LivelihoodGrantDisbursementAuditModel auditEntityObj = new LivelihoodGrantDisbursementAuditModel();

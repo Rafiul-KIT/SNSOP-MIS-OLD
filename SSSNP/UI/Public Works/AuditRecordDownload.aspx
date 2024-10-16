@@ -47,7 +47,7 @@
                                             <asp:Label ID="lblFromDate" runat="server" CssClass="LBLBLACK" Text="From Date:"></asp:Label>
                                         </td>
                                         <td style="padding: 2px;">
-                                            <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" Width="150px" placeholder="MM/DD/YYYY"></asp:TextBox>
+                                            <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" Width="150px" placeholder="MM/DD/YYYY" OnTextChanged="txtFromDate_TextChanged"></asp:TextBox>
                                             <cc1:CalendarExtender ID="calFromDate" runat="server" TargetControlID="txtFromDate" Format="MM/dd/yyyy" />
                                         </td>
                                     </tr>
@@ -56,7 +56,7 @@
                                             <asp:Label ID="lblToDate" runat="server" CssClass="LBLBLACK" Text="To Date:"></asp:Label>
                                         </td>
                                         <td style="padding: 2px;">
-                                            <asp:TextBox ID="txtToDate" runat="server" CssClass="form-control" Width="150px" placeholder="MM/DD/YYYY"></asp:TextBox>
+                                            <asp:TextBox ID="txtToDate" runat="server" CssClass="form-control" Width="150px" placeholder="MM/DD/YYYY" OnTextChanged="txtToDate_TextChanged"></asp:TextBox>
                                             <cc1:CalendarExtender ID="calToDate" runat="server" TargetControlID="txtToDate" Format="MM/dd/yyyy" />
                                         </td>
                                     </tr>
@@ -76,16 +76,19 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="row" style="margin-top: 20px;">
-                    <div class="row" style="margin-top: 20px;">
-                        <div class="col-lg-11">
-                            <asp:GridView ID="gvAuditRecords" runat="server" CssClass="table table-bordered table-striped" AutoGenerateColumns="true" OnRowDataBound="gvAuditRecords_RowDataBound">
-                                
-                            </asp:GridView>
+                    <div class="col-lg-11 grid-container" style="max-width: 92%; float: left; margin-right: 60px;">
+                        <telerik:RadGrid ID="gvAuditRecords" runat="server" CssClass="table table-bordered table-striped"
+                            AutoGenerateColumns="true" AllowPaging="true" AllowSorting="false" PageSize="10"
+                            GridLines="Both" Visible="false" OnNeedDataSource="gvAuditRecords_NeedDataSource">
 
+                            
+                            <MasterTableView AutoGenerateColumns="true" TableLayout="Auto"  AllowPaging="True" PagerStyle-AlwaysVisible="True">
+                            </MasterTableView>
 
-                        </div>
+                            <PagerStyle Mode="NextPrevNumericAndAdvanced" />
+                        </telerik:RadGrid>
                     </div>
                 </div>
         </ContentTemplate>
