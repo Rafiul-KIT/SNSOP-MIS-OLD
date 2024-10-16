@@ -820,14 +820,14 @@ namespace SSSNP_SNSOP.Core.Repository
 
             // Prepare query
             string query = @"
-        SELECT b.household_number 
-        FROM tbl_BeneficiaryServiceDet b
-        INNER JOIN tbl_Nominee n ON b.household_number = n.application_id 
-        WHERE (@StateId IS NULL OR b.intStateid = @StateId)
-        AND (@CountyId IS NULL OR b.intCountieid = @CountyId)
-        AND (@PayamId IS NULL OR b.intPayamid = @PayamId)
-        AND (@BomaId IS NULL OR b.intBomasid = @BomaId)
-        GROUP BY b.household_number";
+            SELECT b.household_number 
+            FROM tbl_BeneficiaryServiceDet b
+            INNER JOIN tbl_Nominee n ON b.household_number = n.application_id 
+            WHERE (@StateId IS NULL OR b.intStateid = @StateId)
+            AND (@CountyId IS NULL OR b.intCountieid = @CountyId)
+            AND (@PayamId IS NULL OR b.intPayamid = @PayamId)
+            AND (@BomaId IS NULL OR b.intBomasid = @BomaId)
+            GROUP BY b.household_number";
 
             List<SqlParameter> parameters = new List<SqlParameter>
             {

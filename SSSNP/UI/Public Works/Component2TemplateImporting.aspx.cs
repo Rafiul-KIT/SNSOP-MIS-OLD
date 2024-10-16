@@ -4,6 +4,7 @@ using System.Data;
 using System.Web;
 using System.Web.UI.WebControls;
 using SSSNP.Service;
+using SSSNP_SNSOP.Core.Model;
 
 namespace SSSNP.UI.Public_Works
 {
@@ -197,51 +198,26 @@ namespace SSSNP.UI.Public_Works
             {
                 LblWarning.Text = "";
 
-                int? selectedStateId = null;
-                int? selectedCountyId = null;
-                int? selectedPayamId = null;
-                int? selectedBomaId = null;
-                int attachmentType = 0;
-
-                if (int.TryParse(ddlState.SelectedValue, out int stateIdValue))
+                GeoLocationDto geoLocation = new GeoLocationDto
                 {
-                    selectedStateId = stateIdValue;
-                }
+                    StateId = int.TryParse(ddlState.SelectedValue, out int stateIdValue) ? (int?)stateIdValue : null,
+                    CountyId = int.TryParse(ddlCounty.SelectedValue, out int countyIdValue) ? (int?)countyIdValue : null,
+                    PayamId = int.TryParse(ddlPayam.SelectedValue, out int payamIdValue) ? (int?)payamIdValue : null,
+                    BomaId = int.TryParse(ddlBoma.SelectedValue, out int bomaIdValue) ? (int?)bomaIdValue : null
+                };
 
-                if (int.TryParse(ddlCounty.SelectedValue, out int countyIdValue))
-                {
-                    selectedCountyId = countyIdValue;
-                }
-
-                if (int.TryParse(ddlPayam.SelectedValue, out int payamIdValue))
-                {
-                    selectedPayamId = payamIdValue;
-                }
-
-                if (int.TryParse(ddlBoma.SelectedValue, out int bomaIdValue))
-                {
-                    selectedBomaId = bomaIdValue;
-                }
-
-                if (int.TryParse(ddlTemplate.SelectedValue, out int parsedAttachmentType))
-                {
-                    attachmentType = parsedAttachmentType;
-                }
-
-                // Store the parsed integer values in session
-                Session["SelectedStateId"] = selectedStateId;
-                Session["SelectedCountyId"] = selectedCountyId;
-                Session["SelectedPayamId"] = selectedPayamId;
-                Session["SelectedBomaId"] = selectedBomaId;
-
-
+                // Save the GeoLocationDto object in the session
+                Session["GeoLocation"] = geoLocation;
 
                 // Prepare redirect URL with parameters
-                string redirectUrl = $"~/ViewAttachmentHandler.aspx?AttachmentType={attachmentType}";
+                if (int.TryParse(ddlTemplate.SelectedValue, out int attachmentType))
+                {
+                    string redirectUrl = $"~/ViewAttachmentHandler.aspx?AttachmentType={attachmentType}";
 
-                // Redirect with query parameters
-                Response.Redirect(redirectUrl, false);
-                HttpContext.Current.ApplicationInstance.CompleteRequest();
+                    // Redirect with query parameters
+                    Response.Redirect(redirectUrl, false);
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                }
             }
             
         }

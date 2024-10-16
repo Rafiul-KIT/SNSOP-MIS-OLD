@@ -32,6 +32,7 @@ namespace SSSNP_SNSOP
         private readonly string _queryType = "AttachmentType";
         private HandlerAttachment _type;
         private object _attachmentValue;
+        private GeoLocationDto _location;
 
         public enum HandlerAttachment
         {
@@ -61,11 +62,21 @@ namespace SSSNP_SNSOP
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.LoadGeoLocation();
             if (!Page.IsPostBack)
             {
                 this.LoadAttachmentHandler();
-
+                
             }
+        }
+
+        private void LoadGeoLocation()
+        {
+            _location = Session["GeoLocation"] as GeoLocationDto;
+            /*if (_location == null)
+            {
+                throw new InvalidOperationException("Location details are missing from the session.");
+            }*/
         }
         private string LoadAttachmentHandler()
         {
@@ -147,10 +158,11 @@ namespace SSSNP_SNSOP
         {
             try
             {
-                int? stateId = Session["SelectedStateId"] as int?;
-                int? countyId = Session["SelectedCountyId"] as int?;
-                int? payamId = Session["SelectedPayamId"] as int?;
-                int? bomaId = Session["SelectedBomaId"] as int?;
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
 
                 Component2Service service = new Component2Service();
 
@@ -172,7 +184,16 @@ namespace SSSNP_SNSOP
 
                     // Pre-fill the Household Number column with the fetched household numbers
                     var householdNumberList = householdNumbers.ToList();
-                     
+                    if (householdNumberList.Count > 0)
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;
+                    }
 
                     // Define options for the drop-downs in columns 2 and 3
                     string[] yesNoOptions = { "Yes", "No" };
@@ -225,10 +246,11 @@ namespace SSSNP_SNSOP
         {
             try
             {
-                int? stateId = Session["SelectedStateId"] as int?;
-                int? countyId = Session["SelectedCountyId"] as int?;
-                int? payamId = Session["SelectedPayamId"] as int?;
-                int? bomaId = Session["SelectedBomaId"] as int?;
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
 
                 Component2Service service = new Component2Service();
 
@@ -1309,10 +1331,11 @@ namespace SSSNP_SNSOP
         {
             try
             {
-                int? stateId = Session["SelectedStateId"] as int?;
-                int? countyId = Session["SelectedCountyId"] as int?;
-                int? payamId = Session["SelectedPayamId"] as int?;
-                int? bomaId = Session["SelectedBomaId"] as int?;
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
 
                 Component2Service service = new Component2Service();
                 HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
@@ -1391,10 +1414,11 @@ namespace SSSNP_SNSOP
         {
             try
             {
-                int? stateId = Session["SelectedStateId"] as int?;
-                int? countyId = Session["SelectedCountyId"] as int?;
-                int? payamId = Session["SelectedPayamId"] as int?;
-                int? bomaId = Session["SelectedBomaId"] as int?;
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
 
                 Component2Service service = new Component2Service();
 
@@ -1503,12 +1527,13 @@ namespace SSSNP_SNSOP
         {
             try
             {
-                int? stateId = Session["SelectedStateId"] as int?;
-                int? countyId = Session["SelectedCountyId"] as int?;
-                int? payamId = Session["SelectedPayamId"] as int?;
-                int? bomaId = Session["SelectedBomaId"] as int?;
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
 
-                
+
+
                 Component2Service service = new Component2Service();
                 HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
 
@@ -1564,6 +1589,7 @@ namespace SSSNP_SNSOP
                     dateValidation.ErrorTitle = "Invalid Date";
                     dateValidation.Error = "Please enter a valid date in the format dd-mm-yyyy.";
                     dateValidation.Prompt = "Select a date or enter manually in the format dd-mm-yyyy";
+                    dateValidation.AllowBlank = true;
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
 
