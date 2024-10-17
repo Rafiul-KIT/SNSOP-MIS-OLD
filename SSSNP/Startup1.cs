@@ -28,16 +28,16 @@ namespace SSSNP
         public void ConfigureAuth(IAppBuilder app)
         {
             // Mock :: Household Group Linkage Module
-            var request = new SSSNP_SNSOP.Core.Model.Component2.HouseholdGroupLinkageModel();
-            var someHouseholdNumbers = new List<string>();
-            someHouseholdNumbers.Add("HH1");
-            someHouseholdNumbers.Add("HH2");
-            someHouseholdNumbers.Add("HH3");
-            request.HouseholdNumbers = someHouseholdNumbers;
-            request.GroupId = 1;
+            //var request = new SSSNP_SNSOP.Core.Model.Component2.HouseholdGroupLinkageModel();
+            //var someHouseholdNumbers = new List<string>();
+            //someHouseholdNumbers.Add("HH1");
+            //someHouseholdNumbers.Add("HH2");
+            //someHouseholdNumbers.Add("HH3");
+            //request.HouseholdNumbers = someHouseholdNumbers;
+            //request.GroupId = 1;
 
-            var response = new Component2Service().SaveHouseholdGroupLinkage(request);
-            Console.WriteLine(response.IsSuccess + "\n" +response.Message);
+            //var response = new Component2Service().SaveHouseholdGroupLinkage(request);
+            //Console.WriteLine(response.IsSuccess + "\n" +response.Message);
             // Mock :: Household Group Linkage Module
 
 
