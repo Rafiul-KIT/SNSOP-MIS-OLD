@@ -1303,6 +1303,24 @@ namespace SSSNP_SNSOP
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
+
+
+                    // Add data validation for Latitude (between -90 and 90)
+                    var latitudeValidation = worksheet.DataValidations.AddDecimalValidation(worksheet.Cells[2, 2, 1048576, 2].Address);
+                    latitudeValidation.ShowErrorMessage = true;
+                    latitudeValidation.ErrorTitle = "Invalid Latitude";
+                    latitudeValidation.Error = "Please enter a latitude between -90 and 90.";
+                    latitudeValidation.Formula.Value = -90;
+                    latitudeValidation.Formula2.Value = 90;
+
+                    // Add data validation for Longitude (between -180 and 180)
+                    var longitudeValidation = worksheet.DataValidations.AddDecimalValidation(worksheet.Cells[2, 3, 1048576, 3].Address);
+                    longitudeValidation.ShowErrorMessage = true;
+                    longitudeValidation.ErrorTitle = "Invalid Longitude";
+                    longitudeValidation.Error = "Please enter a longitude between -180 and 180.";
+                    longitudeValidation.Formula.Value = -180;
+                    longitudeValidation.Formula2.Value = 180;
+
                     worksheet.Cells.AutoFitColumns();
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
@@ -1546,7 +1564,7 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Payment Cycle";
                     worksheet.Cells[1, 3].Value = "Payment Amount";
-                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(dd-mm-yyyy)";
+                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(mm-dd-yyyy)";
                     worksheet.Cells[1, 4].Style.WrapText = true; 
 
                     // Set headers to be bold
@@ -1574,14 +1592,15 @@ namespace SSSNP_SNSOP
 
                     // Add a dropdown for "Payment Cycle" (column 2)
                     var paymentCycleValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 2, dataRows + 1, 2].Address);  // Apply to data rows only
-                    paymentCycleValidation.ShowErrorMessage = false;
+                    paymentCycleValidation.ShowErrorMessage = true;
+                    paymentCycleValidation.AllowBlank = true;
                     paymentCycleValidation.ErrorTitle = "Invalid Payment Cycle";
                     paymentCycleValidation.Error = "Please select 'Installment One' or 'Installment Two'.";
                     paymentCycleValidation.Formula.Values.Add("Installment One");
                     paymentCycleValidation.Formula.Values.Add("Installment Two");
 
                     // Set the format for "Payment Date" as DateTime for the actual data rows
-                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "dd-mm-yyyy"; // or any DateTime format
+                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
 
                     // Apply data validation for the "Payment Date" column (only to the actual data rows)
                     var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, dataRows + 1, 4].Address);
