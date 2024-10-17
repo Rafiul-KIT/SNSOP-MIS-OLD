@@ -150,7 +150,7 @@
                                 AllowSorting="false" GridLines="Both" EnableViewState="true" OnNeedDataSource="rgResults_NeedDataSource"
                                 OnItemCreated="rgResults_ItemCreated" OnItemDataBound="rgResults_ItemDataBound"
                                 OnPageSizeChanged="rgResults_PageSizeChanged" OnPageIndexChanged="rgResults_PageIndexChanged">
-                                <MasterTableView DataKeyNames="household_number" NoMasterRecordsText="No records available." AllowPaging="true">
+                                <MasterTableView DataKeyNames="household_number" NoMasterRecordsText="No records available." AllowPaging="true" PagerStyle-AlwaysVisible="True">
                                     <Columns>
 
                                         <telerik:GridTemplateColumn HeaderText="Select">

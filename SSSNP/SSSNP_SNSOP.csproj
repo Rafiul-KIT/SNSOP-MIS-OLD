@@ -376,6 +376,7 @@
     <Content Include="Resource\Styles\Site\responsiveslides.min.js" />
     <Content Include="Resource\Styles\Site\style.css" />
     <Content Include="TokenAccess.aspx" />
+    <Content Include="UI\Public Works\AuditRecordDownload.aspx" />
     <Content Include="UI\Public Works\BeneficiaryEnrollmentSummaryMNE.aspx" />
     <Content Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrint.aspx" />
@@ -828,7 +829,9 @@
     <Compile Include="Entity\Payroll_Download\PDPayrollAlternateDto.cs" />
     <Compile Include="Entity\Payroll_Download\PDPayrollDataDto.cs" />
     <Compile Include="Network\NetworkService.cs" />
+    <Compile Include="Service\AuditRecordService.cs" />
     <Compile Include="Service\Component2Service.cs" />
+    <Compile Include="Service\IAuditRecordService.cs" />
     <Compile Include="Service\LookupManagerService.cs" />
     <Compile Include="Service\WageRequestApiManager.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -924,6 +927,13 @@
     </Compile>
     <Compile Include="TokenAccess.aspx.designer.cs">
       <DependentUpon>TokenAccess.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\AuditRecordDownload.aspx.cs">
+      <DependentUpon>AuditRecordDownload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\AuditRecordDownload.aspx.designer.cs">
+      <DependentUpon>AuditRecordDownload.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\BeneficiaryEnrollmentSummaryMNE.aspx.cs">
       <DependentUpon>BeneficiaryEnrollmentSummaryMNE.aspx</DependentUpon>
