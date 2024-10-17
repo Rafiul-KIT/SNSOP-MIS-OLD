@@ -79,16 +79,27 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
                         // Handle null or empty values for each column
+                        var courseCode = string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) ? null : worksheet.Cells[row, 2].Text;
                         var courseDuration = string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 3].Text);
                         var classesAttended = string.IsNullOrWhiteSpace(worksheet.Cells[row, 4].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 4].Text);
                         var classesHeld = string.IsNullOrWhiteSpace(worksheet.Cells[row, 5].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 5].Text);
                         var classesMissed = string.IsNullOrWhiteSpace(worksheet.Cells[row, 6].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 6].Text);
                         var whyMissed = string.IsNullOrWhiteSpace(worksheet.Cells[row, 7].Text) ? null : worksheet.Cells[row, 7].Text;
 
+                        if (string.IsNullOrWhiteSpace(courseCode) &&
+                            courseDuration == null &&
+                            classesAttended == null &&
+                            classesHeld == null &&
+                            classesMissed == null &&
+                            string.IsNullOrWhiteSpace(whyMissed))
+                        {
+                            continue; // Skip this row
+                        }
+
                         TrainingAndAttendanceModel attendance = new TrainingAndAttendanceModel
                         {
                             HouseholdNumber = worksheet.Cells[row, 1].Text,
-                            CourseCode = worksheet.Cells[row, 2].Text,
+                            CourseCode = courseCode,
                             CourseDuration = courseDuration ?? 0, // Default to 0 if null
                             ClassesAttended = classesAttended ?? 0, // Default to 0 if null
                             ClassesHeld = classesHeld ?? 0, // Default to 0 if null

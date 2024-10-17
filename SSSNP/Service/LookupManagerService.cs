@@ -64,4 +64,8 @@ public class LookupManagerService
         return groupIdsTable;
     }
 
+    internal DataTable GetHouseholdNumbers(string state, string county, string payam, string boma)
+    {
+        throw new NotImplementedException();
+    }
 }

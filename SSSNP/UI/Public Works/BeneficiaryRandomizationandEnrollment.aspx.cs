@@ -1,4 +1,5 @@
-﻿using SSSNP.Service;
+﻿using OfficeOpenXml;
+using SSSNP.Service;
 using SSSNP_SNSOP.Core.Model.Component2;
 using System;
 using System.Collections.Generic;
@@ -80,8 +81,27 @@ namespace SSSNP.UI.Public_Works
                         bool? treatmentArm = ParseBoolean(worksheet.Cells[row, 4].Text);
                         bool? hHEnrollmentStatus = ParseBoolean(worksheet.Cells[row, 5].Text);
 
-                        int.TryParse(worksheet.Cells[row, 6].Text, out int groupID);
-                        int.TryParse(worksheet.Cells[row, 7].Text, out int enrolledMemberID);
+                        int? groupID = null;
+                        int? enrolledMemberID = null;
+
+                        if (int.TryParse(worksheet.Cells[row, 6].Text, out int parsedGroupID))
+                        {
+                            groupID = parsedGroupID;
+                        }
+
+                        if (int.TryParse(worksheet.Cells[row, 8].Text, out int parsedEnrolledMemberID))
+                        {
+                            enrolledMemberID = parsedEnrolledMemberID;
+                        }
+
+                        if (interestedInParticipating == null &&
+                            survivesTargeting == null &&
+                            treatmentArm == null &&
+                            hHEnrollmentStatus == null &&
+                            enrolledMemberID == null)
+                        {
+                            continue; // Skip row with no data
+                        } 
 
                         // Add to the list
                         beneficiaries.Add(new BeneficiaryRandomizationAndEnrollmentModel
@@ -207,10 +227,9 @@ namespace SSSNP.UI.Public_Works
                     dt.Rows.Add(dr);
                 }
 
-
-               // Store the DataTable in session for pagination
-                Session["AnalyzedData"] = validBeneficiary;
-                Session["UploadedBeneficiaryEnrollmentAllData"] = uploadedDataList;
+                // Store the DataTable in session for pagination
+                Session["AnalyzedData"] = dt;
+                Session["ValidBenediciary"] = validBeneficiary;
 
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
@@ -224,14 +243,13 @@ namespace SSSNP.UI.Public_Works
 
                 // Bind the DataTable to the RadGrid for display
                 RadGrid.DataSource = null;
-                RadGrid.DataSource = dt;
-                
-                RadGrid.Visible = true;
+                RadGrid.DataSource = dt;                
 
                 AddSuccessMessage("Data analyzed successfully.");
                 btnImport.Enabled = true;
                 isAnalyzed = true;
                 RadGrid.DataBind();
+                RadGrid.Visible = true;
             }
             catch (Exception ex)
             {
@@ -245,7 +263,7 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 Component2Service service = new Component2Service();
-                List<BeneficiaryRandomizationAndEnrollmentModel> beneficiaries = Session["AnalyzedData"] as List<BeneficiaryRandomizationAndEnrollmentModel>;
+                List<BeneficiaryRandomizationAndEnrollmentModel> beneficiaries = Session["ValidBenediciary"] as List<BeneficiaryRandomizationAndEnrollmentModel>;
 
                 if (beneficiaries == null || beneficiaries.Count == 0)
                 {
@@ -254,13 +272,6 @@ namespace SSSNP.UI.Public_Works
                     btnAnalyze.Enabled = false;
                     return;
                 }
-
-                var allDataList = Session["UploadedBeneficiaryEnrollmentAllData"] as List<BeneficiaryEnrollmentAuditModel>;
-                if (allDataList != null && allDataList.Count > 0)
-                {
-                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Household_Enrollment_Data_Audit");
-                }
-                Session["UploadedBeneficiaryEnrollmentAllData"] = null;
 
                 // Pass the entire list to the service for processing
                 var response = service.SaveBeneficiaries(beneficiaries);
@@ -373,7 +384,7 @@ namespace SSSNP.UI.Public_Works
                 if (Session["IsAnalyzing"] != null && (bool)Session["IsAnalyzing"])
                 {
                     // Fetch analyzed data from session
-                    dt = Session["Beneficiaries"] as DataTable;
+                    dt = Session["AnalyzedData"] as DataTable;
                 }
                 else
                 {
@@ -392,6 +403,8 @@ namespace SSSNP.UI.Public_Works
                 {
                     RadGrid.VirtualItemCount = 0; // Default to 0 if no valid count is found
                 }
+
+                
             }
             catch (Exception ex)
             {
@@ -401,24 +414,23 @@ namespace SSSNP.UI.Public_Works
 
         protected void RadGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
-
             if (e.Item is GridDataItem dataItem)
             {
                 // InterestedInParticipating column
                 string interestedInParticipating = dataItem["InterestedInParticipating"].Text;
-                dataItem["InterestedInParticipating"].Text = interestedInParticipating == "True" ? "Yes" : "No";
+                dataItem["InterestedInParticipating"].Text = interestedInParticipating == "True" ? "Yes" : (interestedInParticipating == "False" ? "No" : "");
 
                 // SurvivesTargeting column
                 string survivesTargeting = dataItem["SurvivesTargeting"].Text;
-                dataItem["SurvivesTargeting"].Text = survivesTargeting == "True" ? "Yes" : "No";
+                dataItem["SurvivesTargeting"].Text = survivesTargeting == "True" ? "Yes" : (survivesTargeting == "False" ? "No" : "");
 
                 // TreatmentArm column
                 string treatmentArm = dataItem["TreatmentArm"].Text;
-                dataItem["TreatmentArm"].Text = treatmentArm == "True" ? "Yes" : "No";
+                dataItem["TreatmentArm"].Text = treatmentArm == "True" ? "Treatment" : (treatmentArm == "False" ? "Control" : "");
 
                 // HHEnrollmentStatus column
                 string hHEnrollmentStatus = dataItem["HHEnrollmentStatus"].Text;
-                dataItem["HHEnrollmentStatus"].Text = hHEnrollmentStatus == "True" ? "Yes" : "No";
+                dataItem["HHEnrollmentStatus"].Text = hHEnrollmentStatus == "True" ? "Yes" : (hHEnrollmentStatus == "False" ? "No" : "");
 
                 if (isAnalyzed)
                 {
@@ -435,13 +447,20 @@ namespace SSSNP.UI.Public_Works
 
         private bool? ParseBoolean(string value)
         {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null; 
+            }
+
             if (string.Equals(value, "Yes", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(value, "1", StringComparison.OrdinalIgnoreCase))
+                string.Equals(value, "1", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(value, "Treatment", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
             else if (string.Equals(value, "No", StringComparison.OrdinalIgnoreCase) ||
-                     string.Equals(value, "0", StringComparison.OrdinalIgnoreCase))
+                     string.Equals(value, "0", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(value, "Control", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -449,7 +468,8 @@ namespace SSSNP.UI.Public_Works
             {
                 return result;
             }
-            return null; // Return null if the value cannot be parsed
+
+            return null;
         }
 
 

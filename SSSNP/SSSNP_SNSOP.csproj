@@ -420,8 +420,12 @@
     <Content Include="UI\Public Works\AutoMaticAlertProjectMonthlyFundsDisbursementReport.aspx" />
     <Content Include="UI\Public Works\AutoMaticAlertWorksMonthlyFundsDisbursementReport.aspx" />
     <Content Include="UI\Public Works\BDCMobilizationReg.aspx" />
-    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll" />
-    <Content Include="UI\Public Works\bin\itextsharp.dll" />
+    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Public Works\bin\itextsharp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UI\Public Works\BomaPaidInvoiceCyclewise.aspx" />
     <Content Include="UI\Public Works\BomaWiseReportNew.aspx" />
     <Content Include="UI\Public Works\BomaWiseReportNewLatest.aspx" />
@@ -539,6 +543,7 @@
     <Content Include="UI\Public Works\ImportFromServiceBenfWagesUpdateMatchedFP.aspx" />
     <Content Include="UI\Public Works\ImportFromServicePaymentsByBoma.aspx" />
     <Content Include="UI\Public Works\ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx" />
+    <Content Include="UI\Public Works\Component2TemplateImporting.aspx" />
     <Content Include="UI\Public Works\ImportUpdateFingerPrint.aspx" />
     <Content Include="UI\Public Works\ImportUpdateHouseHoldName.aspx" />
     <Content Include="UI\Public Works\ImportUpdatePhoto.aspx" />
@@ -1513,6 +1518,13 @@
     </Compile>
     <Compile Include="UI\Public Works\ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx.designer.cs">
       <DependentUpon>ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\Component2TemplateImporting.aspx.cs">
+      <DependentUpon>Component2TemplateImporting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\Component2TemplateImporting.aspx.designer.cs">
+      <DependentUpon>Component2TemplateImporting.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\ImportmasterPageLogin.master.designer.cs">
       <DependentUpon>ImportmasterPageLogin.master</DependentUpon>
@@ -4017,7 +4029,9 @@
     <Content Include="template\templateupdate.xlsx" />
     <Content Include="template\WagePaymentPA.xls" />
     <Content Include="UI\Public Works\AlertMaster.master" />
-    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll.refresh" />
+    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll.refresh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UI\Public Works\CCMaster.master" />
     <Content Include="UI\Public Works\CCMaster1.master" />
     <Content Include="Poppins\Poppins-Black.ttf" />
@@ -4042,6 +4056,7 @@
     <None Include="Properties\PublishProfiles\DEV.pubxml" />
     <Content Include="template\GBVTemplateFile.xlsx" />
     <Content Include="template\NonGBVTemplateFile.xlsx" />
+    <Content Include="template\BeneficiaryRandomizationEnrollmentTemplate.xlsx" />
     <None Include="UI\Public Works\Dataset\dsReport.xsd" />
     <Content Include="UI\Public Works\Dataset\dsReport.xss">
       <DependentUpon>dsReport.xsd</DependentUpon>

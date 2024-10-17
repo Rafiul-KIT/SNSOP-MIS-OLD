@@ -19,6 +19,10 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using OfficeOpenXml;
 using Image = iTextSharp.text.Image;
+using SSSNP.Service;
+using System.Diagnostics;
+using System.Data.SqlClient;
+using SSSNP_SNSOP.Core.Model;
 
 namespace SSSNP_SNSOP
 {
@@ -28,6 +32,7 @@ namespace SSSNP_SNSOP
         private readonly string _queryType = "AttachmentType";
         private HandlerAttachment _type;
         private object _attachmentValue;
+        private GeoLocationDto _location;
 
         public enum HandlerAttachment
         {
@@ -58,11 +63,21 @@ namespace SSSNP_SNSOP
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.LoadGeoLocation();
             if (!Page.IsPostBack)
             {
                 this.LoadAttachmentHandler();
-
+                
             }
+        }
+
+        private void LoadGeoLocation()
+        {
+            _location = Session["GeoLocation"] as GeoLocationDto;
+            /*if (_location == null)
+            {
+                throw new InvalidOperationException("Location details are missing from the session.");
+            }*/
         }
         private string LoadAttachmentHandler()
         {
@@ -145,79 +160,170 @@ namespace SSSNP_SNSOP
 
         private void BusinessPlanDevelopmentTemplate()
         {
-            string filenameFull;
-            string filename;
-
-            filenameFull = Server.MapPath("~/Template/BusinessPlanDevelopmentModule.xlsx");
-            filename = "BusinessPlanDevelopmentModule.xlsx";
-
             try
             {
-                byte[] buffer;
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
 
-                using (FileStream fs = new FileStream(filenameFull, FileMode.Open))
+
+                Component2Service service = new Component2Service();
+
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+                using (ExcelPackage package = new ExcelPackage())
                 {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Business Plan Development Template");
 
-                    buffer = new byte[(int)fs.Length];
-                    fs.Read(buffer, 0, (int)fs.Length);
-                    fs.Close();
+                    // Adding the three columns
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "BusinessPlanStatus";
+                    worksheet.Cells[1, 3].Value = "BusinessType";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Pre-fill the Household Number column with the fetched household numbers
+                    var householdNumberList = householdNumbers.ToList();
+                    if (householdNumberList.Count > 0)
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;
+                    }
+
+                    // Define options for the drop-downs in columns 2 and 3
+                    string[] yesNoOptions = { "Yes", "No" };
+                    string[] farmNonFarmOptions = { "Farm", "Non-Farm" };
+
+                    // Add drop-down for the Business Plan Status field (Column 2)
+                    var businessPlanStatusValidation = worksheet.DataValidations.AddListValidation("B2:B1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        businessPlanStatusValidation.Formula.Values.Add(option);
+                    }
+
+                    // Add drop-down for the Business Type field (Column 3)
+                    var businessTypeValidation = worksheet.DataValidations.AddListValidation("C2:C1000");
+                    foreach (string option in farmNonFarmOptions)
+                    {
+                        businessTypeValidation.Formula.Values.Add(option);
+                    }
+
+                    // Protect the worksheet so that locked cells (Household Number) are read-only
+                    worksheet.Protection.IsProtected = true;
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:C1000"].Style.Locked = false;
+
+                    // Auto-fit columns to adjust the size
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=BusinessPlanDevelopmentTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
                 }
-
-                Response.ClearHeaders();
-                Response.ContentType = "application/octet-stream";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
-                Response.AddHeader("Content-Length", buffer.Length.ToString());
-
-
-                Response.BinaryWrite((byte[])buffer);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // Log the error if needed
+                Debug.WriteLine($"Error: {ex}");
             }
-
-            Response.Flush();
-            Response.Close();
-
         }
+
+
 
         private void FinancialServiceLinkageTrackingTemplate()
         {
-            string filenameFull;
-            string filename;
-
-            filenameFull = Server.MapPath("~/Template/FinancialServicesLinkageTrackingModule.xlsx");
-            filename = "FinancialServicesLinkageTrackingModule.xlsx";
-
             try
             {
-                byte[] buffer;
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
 
-                using (FileStream fs = new FileStream(filenameFull, FileMode.Open))
+
+                Component2Service service = new Component2Service();
+
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+                using (ExcelPackage package = new ExcelPackage())
                 {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Financial Services Linkage Template");
 
-                    buffer = new byte[(int)fs.Length];
-                    fs.Read(buffer, 0, (int)fs.Length);
-                    fs.Close();
+                    // Adding the three columns
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Connected Financial Services";
+                    worksheet.Cells[1, 3].Value = "Entity Name";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Pre-fill the Household Number column with the fetched household numbers
+                    var householdNumberList = householdNumbers.ToList();
+                    if (householdNumberList.Count > 0)
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;
+                    }
+
+                    // Define options for the drop-down in the 2nd column
+                    string[] yesNoOptions = { "Yes", "No" };
+
+                    // Add drop-down for the Connected Financial Services field (Column 2)
+                    var connectedFinancialServicesValidation = worksheet.DataValidations.AddListValidation("B2:B1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        connectedFinancialServicesValidation.Formula.Values.Add(option);
+                    }
+
+                    // Protect the worksheet so that locked cells (Household Number) are read-only
+                    worksheet.Protection.IsProtected = true;
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:C1000"].Style.Locked = false;
+
+                    // Auto-fit columns to adjust the size
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=FinancialServicesLinkageTrackingTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
                 }
-
-                Response.ClearHeaders();
-                Response.ContentType = "application/octet-stream";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
-                Response.AddHeader("Content-Length", buffer.Length.ToString());
-
-
-                Response.BinaryWrite((byte[])buffer);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // Log the error if needed
+                Debug.WriteLine($"Error: {ex}");
             }
-
-            Response.Flush();
-            Response.Close();
-
         }
+
 
         private void Non_GBVAttachmentHandler(object valueFunction)
         {
@@ -1201,6 +1307,24 @@ namespace SSSNP_SNSOP
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
+
+
+                    // Add data validation for Latitude (between -90 and 90)
+                    var latitudeValidation = worksheet.DataValidations.AddDecimalValidation(worksheet.Cells[2, 2, 1048576, 2].Address);
+                    latitudeValidation.ShowErrorMessage = true;
+                    latitudeValidation.ErrorTitle = "Invalid Latitude";
+                    latitudeValidation.Error = "Please enter a latitude between -90 and 90.";
+                    latitudeValidation.Formula.Value = -90;
+                    latitudeValidation.Formula2.Value = 90;
+
+                    // Add data validation for Longitude (between -180 and 180)
+                    var longitudeValidation = worksheet.DataValidations.AddDecimalValidation(worksheet.Cells[2, 3, 1048576, 3].Address);
+                    longitudeValidation.ShowErrorMessage = true;
+                    longitudeValidation.ErrorTitle = "Invalid Longitude";
+                    longitudeValidation.Error = "Please enter a longitude between -180 and 180.";
+                    longitudeValidation.Formula.Value = -180;
+                    longitudeValidation.Formula2.Value = 180;
+
                     worksheet.Cells.AutoFitColumns();
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
@@ -1229,6 +1353,15 @@ namespace SSSNP_SNSOP
         {
             try
             {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+                Component2Service service = new Component2Service();
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Create a new worksheet
@@ -1249,6 +1382,19 @@ namespace SSSNP_SNSOP
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
 
+                    var householdNumberList = householdNumbers.ToList(); // Convert HashSet to List
+                    
+                    if (householdNumberList.Count > 0)  // Check if there are any items in the list
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;  // Ensure valid range
+                    }
+
                     // Add dropdown for Course Code in column B (2nd column)
                     var courseCodes = new List<string> { "", "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" }; // Empty string for blank option
                     var validation = worksheet.DataValidations.AddListValidation("B2:B100"); // Adjust the range as needed
@@ -1261,6 +1407,8 @@ namespace SSSNP_SNSOP
                     validation.ErrorTitle = "Invalid Selection";
                     validation.Error = "Please select a course code from the list.";
 
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Cells["B2:G1000"].Style.Locked = false;
                     worksheet.Cells.AutoFitColumns();
 
                     // Set the content type and headers for the download
@@ -1288,28 +1436,56 @@ namespace SSSNP_SNSOP
         {
             try
             {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+                Component2Service service = new Component2Service();
+
+                // Call the new method to get household numbers along with group info
+                List<HouseholdGroupLinkageModel> householdGroupData = service.GetMappedHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
                 using (ExcelPackage package = new ExcelPackage())
                 {
-                    // Create a new worksheet
+                    // Create the worksheet
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Beneficiary Enrollment Template");
 
-                    // Add headers to the worksheet reflecting the provided data columns
+                    // Define the headers
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Interested In Participating";
                     worksheet.Cells[1, 3].Value = "Survives Targeting";
                     worksheet.Cells[1, 4].Value = "Treatment Arm";
                     worksheet.Cells[1, 5].Value = "HH Enrollment Status";
                     worksheet.Cells[1, 6].Value = "Group ID";
-                    worksheet.Cells[1, 7].Value = "Enrolled Member ID";
+                    worksheet.Cells[1, 7].Value = "Group Name";
+                    worksheet.Cells[1, 8].Value = "Enrolled Member ID";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 7; col++)
+                    for (int col = 1; col <= 8; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
 
-                    // Define the Yes/No options for the drop-down
+                    // Pre-fill the Household Number, Group ID, and Group Name columns with the fetched data
+                    for (int row = 0; row < householdGroupData.Count; row++)
+                    {
+                        var data = householdGroupData[row];
+
+                        worksheet.Cells[row + 2, 1].Value = data.HouseholdNumber; // Household Number
+                        worksheet.Cells[row + 2, 6].Value = data.GroupId.HasValue ? data.GroupId.Value.ToString() : ""; // Group ID
+                        worksheet.Cells[row + 2, 7].Value = !string.IsNullOrEmpty(data.GroupName) ? data.GroupName : ""; // Group Name
+                    }
+
+                    // Lock the Household Number, Group ID, and Group Name columns (Columns 1, 6, and 7)
+                    worksheet.Cells["A2:A" + (householdGroupData.Count + 1)].Style.Locked = true;
+                    worksheet.Cells["F2:F" + (householdGroupData.Count + 1)].Style.Locked = true;
+                    worksheet.Cells["G2:G" + (householdGroupData.Count + 1)].Style.Locked = true;
+
+                    // Define the Yes/No options for the drop-downs
                     string[] yesNoOptions = { "Yes", "No" };
+                    string[] treatmentArm = { "Treatment", "Control" };
 
                     // Add drop-down for the InterestedInParticipating field (Column 2)
                     var validation1 = worksheet.DataValidations.AddListValidation("B2:B1000");
@@ -1327,7 +1503,7 @@ namespace SSSNP_SNSOP
 
                     // Add drop-down for the TreatmentArm field (Column 4)
                     var validation3 = worksheet.DataValidations.AddListValidation("D2:D1000");
-                    foreach (string option in yesNoOptions)
+                    foreach (string option in treatmentArm)
                     {
                         validation3.Formula.Values.Add(option);
                     }
@@ -1338,6 +1514,13 @@ namespace SSSNP_SNSOP
                     {
                         validation4.Formula.Values.Add(option);
                     }
+
+                    // Protect the worksheet so that locked cells (Household Number, Group ID, Group Name) are read-only
+                    worksheet.Protection.IsProtected = true;
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:E1000"].Style.Locked = false;
+                    worksheet.Cells["H2:H1000"].Style.Locked = false; // Allow users to edit "Enrolled Member ID"
 
                     // Auto-fit columns to adjust the size
                     worksheet.Cells.AutoFitColumns();
@@ -1356,15 +1539,26 @@ namespace SSSNP_SNSOP
             catch (Exception ex)
             {
                 // Log the error if needed
-                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+                Debug.WriteLine($"Error: {ex}");
             }
         }
+
 
 
         private void LivelihoodGrantDisbursementTemplate()
         {
             try
             {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+
+                Component2Service service = new Component2Service();
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Create a new worksheet
@@ -1374,7 +1568,7 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Payment Cycle";
                     worksheet.Cells[1, 3].Value = "Payment Amount";
-                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(dd-mm-yyyy)";
+                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(mm-dd-yyyy)";
                     worksheet.Cells[1, 4].Style.WrapText = true; 
 
                     // Set headers to be bold
@@ -1383,20 +1577,34 @@ namespace SSSNP_SNSOP
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
 
+                    var householdNumberList = householdNumbers.ToList(); // Convert HashSet to List
+
+                    if (householdNumberList.Count > 0)  // Check if there are any items in the list
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;  // Ensure valid range
+                    }
+
                     // Suppose we know the number of data rows to be inserted
                     // In this example, assume we are inserting 10 rows of data dynamically
                     int dataRows = 20; // Replace this with the actual number of data rows to be inserted
 
                     // Add a dropdown for "Payment Cycle" (column 2)
                     var paymentCycleValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 2, dataRows + 1, 2].Address);  // Apply to data rows only
-                    paymentCycleValidation.ShowErrorMessage = false;
+                    paymentCycleValidation.ShowErrorMessage = true;
+                    paymentCycleValidation.AllowBlank = true;
                     paymentCycleValidation.ErrorTitle = "Invalid Payment Cycle";
                     paymentCycleValidation.Error = "Please select 'Installment One' or 'Installment Two'.";
                     paymentCycleValidation.Formula.Values.Add("Installment One");
                     paymentCycleValidation.Formula.Values.Add("Installment Two");
 
                     // Set the format for "Payment Date" as DateTime for the actual data rows
-                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "dd-mm-yyyy"; // or any DateTime format
+                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
 
                     // Apply data validation for the "Payment Date" column (only to the actual data rows)
                     var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, dataRows + 1, 4].Address);
@@ -1404,8 +1612,12 @@ namespace SSSNP_SNSOP
                     dateValidation.ErrorTitle = "Invalid Date";
                     dateValidation.Error = "Please enter a valid date in the format dd-mm-yyyy.";
                     dateValidation.Prompt = "Select a date or enter manually in the format dd-mm-yyyy";
+                    dateValidation.AllowBlank = true;
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
+
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Cells["B2:G1000"].Style.Locked = false;
 
                     // Auto-fit columns for better appearance
                     worksheet.Cells.AutoFitColumns();

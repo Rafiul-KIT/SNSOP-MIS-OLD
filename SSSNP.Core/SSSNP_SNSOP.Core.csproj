@@ -203,6 +203,8 @@
     <Compile Include="Model\Component2\TrainingAndAttendanceAuditModel.cs" />
     <Compile Include="Model\Component2\TrainingAndAttendanceModel.cs" />
     <Compile Include="Model\HouseholdDataModel.cs" />
+    <Compile Include="Model\GeoLocationDto.cs" />
+    <Compile Include="Model\HouseholdGroupLinkageModel.cs" />
     <Compile Include="Model\ResponseModel.cs" />
     <Compile Include="Model\ValidHouseholdNumberModel.cs" />
     <Compile Include="OleDbMapping\CreateGBVImported.cs" />

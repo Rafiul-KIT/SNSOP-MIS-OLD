@@ -28,7 +28,7 @@ namespace SSSNP
         public void ConfigureAuth(IAppBuilder app)
         {
             // Mock :: Household Group Linkage Module
-            var request = new HouseholdGroupLinkageModel();
+            var request = new SSSNP_SNSOP.Core.Model.Component2.HouseholdGroupLinkageModel();
             var someHouseholdNumbers = new List<string>();
             someHouseholdNumbers.Add("HH1");
             someHouseholdNumbers.Add("HH2");

@@ -4,6 +4,7 @@ using SSSNP_SNSOP.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -530,8 +531,7 @@ namespace SSSNP.Service
             return (true, "Valid");
         }
 
-
-        public ResponseModel SaveHouseholdGroupLinkage(HouseholdGroupLinkageModel request)
+        public ResponseModel SaveHouseholdGroupLinkage(SSSNP_SNSOP.Core.Model.Component2.HouseholdGroupLinkageModel request)
         {
             var response = new ResponseModel();
             var errorMessages = new List<string>(); // To store validation error messages
@@ -574,7 +574,7 @@ namespace SSSNP.Service
         }
 
 
-        public (bool isValid, string errorMessage) IsValidData(HouseholdGroupLinkageModel obj)
+        public (bool isValid, string errorMessage) IsValidData(SSSNP_SNSOP.Core.Model.Component2.HouseholdGroupLinkageModel obj)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber))
             {
@@ -587,5 +587,34 @@ namespace SSSNP.Service
             return (true, string.Empty);
         }
 
+        public HashSet<string> GetValidHouseholdNumberValues(int? stateId, int? countyId, int? payamId, int? bomaId)
+        {
+            try
+            {
+                // Call the repository method with the passed parameters
+                return _component2Repository.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+            }
+            catch (Exception ex)
+            {
+                // Handle any potential errors here (e.g., logging, throwing)
+                Debug.WriteLine($"Error in service method GetValidHouseholdNumberValues: {ex.Message}");
+                return new HashSet<string>();
+            }
+        }
+
+        public List<SSSNP_SNSOP.Core.Model.HouseholdGroupLinkageModel> GetMappedHouseholdNumberValues(int? stateId, int? countyId, int? payamId, int? bomaId)
+        {
+            try
+            {
+                // Call the updated repository method with the passed parameters
+                return _component2Repository.GetMappedHouseholdNumberWithGroupValues(stateId, countyId, payamId, bomaId);
+            }
+            catch (Exception ex)
+            {
+                // Handle any potential errors here (e.g., logging, throwing)
+                Debug.WriteLine($"Error in service method GetMappedHouseholdNumberValues: {ex.Message}");
+                return new List<SSSNP_SNSOP.Core.Model.HouseholdGroupLinkageModel>(); // Return an empty list in case of error
+            }
+        }
     }
 }

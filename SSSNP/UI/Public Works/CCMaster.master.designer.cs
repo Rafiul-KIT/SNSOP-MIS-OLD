@@ -293,6 +293,7 @@ public partial class CCMaster
 
     /// <summary>
     /// HouseholdAndGroupIdMapping control.
+    /// Component2TemplateImporting control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
@@ -308,6 +309,7 @@ public partial class CCMaster
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl AuditRecordDownload;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl Component2TemplateImporting;
 
     /// <summary>
     /// LiPayroll control.
