@@ -541,6 +541,27 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
     {
     }
 
+    protected void gvpractical0_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        string filePath = e.CommandArgument.ToString();
+        string physicalPath = Server.MapPath(filePath); // Ensure this path is safe
+
+        if (File.Exists(physicalPath))
+        {
+            string fileName = Path.GetFileName(physicalPath);
+            Response.Clear();
+            Response.ContentType = "application/octet-stream"; // Change as necessary
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + fileName);
+            Response.TransmitFile(physicalPath);
+            Response.End();
+        }
+        else
+        {
+            // Handle file not found case
+            Response.Write("<script>alert('File not found.');</script>");
+        }
+    }
+
     #region Gridview Events
     protected void gvpractical0_RowDataBound(object sender, GridViewRowEventArgs e)
     {

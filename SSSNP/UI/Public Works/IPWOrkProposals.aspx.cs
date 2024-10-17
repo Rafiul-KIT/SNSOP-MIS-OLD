@@ -1150,7 +1150,7 @@ public partial class IPWOrkProposals : System.Web.UI.Page
                 }
                 if (ddlstatus.SelectedValue == "Approved")
                 {
-                    SendMailAnotherApprv(hdfIPEmail.Value, hdfWorkCode.Value, ddlstatus.SelectedValue, hdfTSTName.Value);
+                    //SendMailAnotherApprv(hdfIPEmail.Value, hdfWorkCode.Value, ddlstatus.SelectedValue, hdfTSTName.Value);
 
                     sendApprovalMailToIpByTST(hdfIPEmail.Value, hdfWorkCode.Value);
                 }
