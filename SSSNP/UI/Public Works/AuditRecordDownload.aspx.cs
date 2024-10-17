@@ -28,8 +28,10 @@ namespace SSSNP.UI.Public_Works
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            Session["SelectedAuditTable"] = null;
+            Session["AuditRecordData"] = null;
             string selectedAuditTable = ddlAuditRecordType.SelectedValue;
-
+            Session["SelectedAuditTable"] = selectedAuditTable;
             // Retrieve dates from ViewState if available, ensure proper casting
             DateTime? fromDate = ViewState["FromDate"] != null ? (DateTime?)ViewState["FromDate"] : null;
             DateTime? toDate = ViewState["ToDate"] != null ? (DateTime?)ViewState["ToDate"] : null;
@@ -86,7 +88,7 @@ namespace SSSNP.UI.Public_Works
                 {
                     // Store the records in ViewState for later use in RadGrid
                     ViewState["AuditRecords"] = auditRecords;
-
+                    Session["AuditRecordData"] = auditRecords;
                     // Rebind the RadGrid (with AutoGenerateColumns="true")
                     gvAuditRecords.Rebind();
                     lblMessage.Visible = false;
@@ -109,99 +111,26 @@ namespace SSSNP.UI.Public_Works
 
         protected void btnDownload_Click(object sender, EventArgs e)
         {
-            try
+            // Check if the session contains valid data
+            DataTable auditRecords = Session["AuditRecordData"] as DataTable;
+            string selectedAuditTable = Session["SelectedAuditTable"] as string;
+
+            if (auditRecords == null || auditRecords.Rows.Count == 0 || string.IsNullOrEmpty(selectedAuditTable))
             {
-                // Retrieve audit records from ViewState
-                if (ViewState["AuditRecords"] == null)
-                {
-                    lblMessage.Text = "No data available for download. Please search first.";
-                    lblMessage.CssClass = "text-danger";
-                    lblMessage.Visible = true;
-                    return;
-                }
-
-                DataTable auditRecords = (DataTable)ViewState["AuditRecords"];
-
-                // Check if there are records to download
-                if (auditRecords == null || auditRecords.Rows.Count == 0)
-                {
-                    lblMessage.Text = "No records available for download.";
-                    lblMessage.CssClass = "text-danger";
-                    lblMessage.Visible = true;
-                    return;
-                }
-
-                // Set the file name dynamically based on the selected audit record type
-                string selectedAuditTable = ddlAuditRecordType.SelectedItem.Text.Replace(" ", "_");
-                string fileName = $"{selectedAuditTable}_AuditRecords.pdf";
-
-                // Create a memory stream to hold the PDF
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    // Create the PDF document
-                    Document document = new Document(PageSize.A4, 10f, 10f, 10f, 10f);
-                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
-                    document.Open();
-
-                    // Add a title to the PDF document
-                    Font titleFont = FontFactory.GetFont("Arial", 16, Font.BOLD);
-                    Paragraph title = new Paragraph($"{selectedAuditTable} Audit Records", titleFont)
-                    {
-                        Alignment = Element.ALIGN_CENTER,
-                        SpacingAfter = 20f
-                    };
-                    document.Add(title);
-
-                    // Create a PDF table with the same number of columns as the DataTable
-                    PdfPTable pdfTable = new PdfPTable(auditRecords.Columns.Count)
-                    {
-                        WidthPercentage = 100,
-                        HorizontalAlignment = Element.ALIGN_LEFT
-                    };
-
-                    // Set table column headers dynamically
-                    foreach (DataColumn column in auditRecords.Columns)
-                    {
-                        PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, FontFactory.GetFont("Arial", 12, Font.BOLD)))
-                        {
-                            BackgroundColor = BaseColor.LIGHT_GRAY,
-                            HorizontalAlignment = Element.ALIGN_CENTER
-                        };
-                        pdfTable.AddCell(headerCell);
-                    }
-
-                    // Add rows to the PDF table dynamically from the DataTable
-                    foreach (DataRow row in auditRecords.Rows)
-                    {
-                        foreach (var cellData in row.ItemArray)
-                        {
-                            pdfTable.AddCell(new Phrase(cellData.ToString(), FontFactory.GetFont("Arial", 10)));
-                        }
-                    }
-
-                    // Add the table to the document
-                    document.Add(pdfTable);
-
-                    // Close the document
-                    document.Close();
-
-                    // Prepare the PDF for download
-                    Response.ContentType = "application/pdf";
-                    Response.AddHeader("content-disposition", $"attachment;filename={fileName}");
-                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                    Response.BinaryWrite(ms.ToArray());
-                    Response.Flush();
-                    Response.End();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the actual exception if necessary
-                lblMessage.Text = "An error occurred while downloading the PDF: " + ex.Message;
+                // If no data is available, show a message to the user and do not redirect
+                lblMessage.Text = "No data available for download.";
                 lblMessage.CssClass = "text-danger";
                 lblMessage.Visible = true;
+                return;
             }
+
+            // If data is available, proceed to download
+            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=22";
+            Response.Redirect(redirectUrl, false);
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+
         }
+
 
         protected void ddlAuditRecordType_SelectedIndexChanged(object sender, EventArgs e)
         {

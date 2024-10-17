@@ -52,7 +52,8 @@ namespace SSSNP_SNSOP
             BUSINESS_PLAN_DEVELOPMENT_TEMPLATE = 18,
             LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE = 19,
             BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE = 20,
-            FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21
+            FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21,
+            ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -133,6 +134,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE:
                     LivelihoodGrantDisbursementTemplate();
+                    return "OK";
+                case HandlerAttachment.ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD:
+                    EconomicOppontunityAuditRecordDownload();
                     return "OK";
             }
 
@@ -1424,6 +1428,81 @@ namespace SSSNP_SNSOP
                 System.Diagnostics.Debug.WriteLine($"Error: {ex}");
             }
         }
+
+        private void EconomicOppontunityAuditRecordDownload()
+        {
+            // Retrieve the selected audit table and data from the session
+            string selectedAuditTable = Session["SelectedAuditTable"] as string;
+            DataTable auditRecords = Session["AuditRecordData"] as DataTable;
+
+            // Step 1: Check if session data is still valid
+            if (string.IsNullOrEmpty(selectedAuditTable) || auditRecords == null || auditRecords.Rows.Count == 0)
+            {
+                // If no data, respond with a message or handle the error gracefully
+                Response.Clear();
+                Response.Write("No data available for download.");
+                Response.End();
+                return;
+            }
+
+            // Step 2: Create the PDF document in Landscape orientation
+            Document pdfDoc = new Document(PageSize.A4.Rotate(), 10f, 10f, 10f, 10f);  // Rotate A4 to Landscape
+            MemoryStream memoryStream = new MemoryStream();
+            PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+            pdfDoc.Open();
+
+            // Step 3: Add title to the PDF document
+            Paragraph title = new Paragraph("Audit Record Report - " + selectedAuditTable);
+            title.Alignment = Element.ALIGN_CENTER;
+            title.SpacingAfter = 20f;
+            pdfDoc.Add(title);
+
+            // Step 4: Create a table with the same number of columns as the DataTable
+            PdfPTable pdfTable = new PdfPTable(auditRecords.Columns.Count)
+            {
+                WidthPercentage = 100,
+                HorizontalAlignment = Element.ALIGN_LEFT
+            };
+
+            // Step 5: Set table column headers dynamically from the DataTable
+            foreach (DataColumn column in auditRecords.Columns)
+            {
+                PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, FontFactory.GetFont("Arial", 12, Font.BOLD)))
+                {
+                    BackgroundColor = BaseColor.LIGHT_GRAY,
+                    HorizontalAlignment = Element.ALIGN_CENTER
+                };
+                pdfTable.AddCell(headerCell);
+            }
+
+            // Step 6: Add rows to the PDF table dynamically from the DataTable
+            foreach (DataRow row in auditRecords.Rows)
+            {
+                foreach (var cellData in row.ItemArray)
+                {
+                    PdfPCell dataCell = new PdfPCell(new Phrase(cellData?.ToString() ?? "", FontFactory.GetFont("Arial", 10)))
+                    {
+                        HorizontalAlignment = Element.ALIGN_LEFT
+                    };
+                    pdfTable.AddCell(dataCell);
+                }
+            }
+
+            // Step 7: Add the table to the PDF document
+            pdfDoc.Add(pdfTable);
+
+            // Step 8: Close the document
+            pdfDoc.Close();
+
+            // Step 9: Send the PDF as a response for download
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-disposition", "attachment;filename=AuditRecord_" + selectedAuditTable + ".pdf");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.BinaryWrite(memoryStream.ToArray());
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+
+        }
+
 
         private void LogError(string v, Exception ex)
         {

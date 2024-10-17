@@ -28,14 +28,14 @@
                             <div class="panel-body">
                                 <table align="center" cellpadding="5" cellspacing="3" style="width: 90%">
                                     <tr>
-                                        <td style="padding: 2px;">
-                                            <asp:Label ID="lblAuditRecordType" runat="server" CssClass="LBLBLACK" Text="Select Audit Record:"></asp:Label>
+                                        <td style="padding: 5px;">
+                                            <asp:Label ID="lblAuditRecordType" runat="server" CssClass="LBLBLACK" Text="Select Audit Record&emsp;:"></asp:Label>
                                         </td>
-                                        <td style="padding: 2px;">
-                                            <asp:DropDownList ID="ddlAuditRecordType" runat="server" CssClass="form-control" Width="250px" OnSelectedIndexChanged="ddlAuditRecordType_SelectedIndexChanged" AutoPostBack="true">
-                                                <asp:ListItem Text="-- Select Audit Record Type --" Value=""></asp:ListItem>
-                                                <asp:ListItem Text="Household Enrollment Audit" Value="tbl_com2_Household_Enrollment_Data_Audit"></asp:ListItem>
-                                                <asp:ListItem Text="Training Attendance Audit" Value="tbl_com2_Training_Attendance_Audit"></asp:ListItem>
+                                        <td style="padding: 5px;">
+                                            <asp:DropDownList ID="ddlAuditRecordType" runat="server" CssClass="form-control" Width="230px" OnSelectedIndexChanged="ddlAuditRecordType_SelectedIndexChanged" AutoPostBack="true">
+                                                <asp:ListItem Text="-- Select Audit Record --" Value=""></asp:ListItem>
+                                                <asp:ListItem Text="Beneficiary Randomization and Enrollment Audit" Value="tbl_com2_Household_Enrollment_Data_Audit"></asp:ListItem>
+                                                <asp:ListItem Text="Training and Attendance Tracking Audit" Value="tbl_com2_Training_Attendance_Audit"></asp:ListItem>
                                                 <asp:ListItem Text="Livelihood Grant Disbursement Audit" Value="tbl_com2_Livelihood_Grant_Disbursement_Audit"></asp:ListItem>
                                                 <asp:ListItem Text="Financial Services Linkage Audit" Value="tbl_com2_Financial_Services_Linkage_Tracking_Audit"></asp:ListItem>
                                                 <asp:ListItem Text="Business Plan Development Audit" Value="tbl_com2_Business_Plan_Development_Audit"></asp:ListItem>
@@ -43,25 +43,26 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 2px;">
-                                            <asp:Label ID="lblFromDate" runat="server" CssClass="LBLBLACK" Text="From Date:"></asp:Label>
+                                        <td style="padding: 5px;">
+                                            <asp:Label ID="lblFromDate" runat="server" CssClass="LBLBLACK" Text="From Date&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;:"></asp:Label>
                                         </td>
-                                        <td style="padding: 2px;">
+                                        <td style="padding: 5px;">
                                             <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" Width="150px" placeholder="MM/DD/YYYY" OnTextChanged="txtFromDate_TextChanged"></asp:TextBox>
                                             <cc1:CalendarExtender ID="calFromDate" runat="server" TargetControlID="txtFromDate" Format="MM/dd/yyyy" />
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 2px;">
-                                            <asp:Label ID="lblToDate" runat="server" CssClass="LBLBLACK" Text="To Date:"></asp:Label>
+                                        <td style="padding: 5px;">
+                                            <asp:Label ID="lblToDate" runat="server" CssClass="LBLBLACK" Text="To Date&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;:"></asp:Label>
                                         </td>
-                                        <td style="padding: 2px;">
+                                        <td style="padding: 5px;">
                                             <asp:TextBox ID="txtToDate" runat="server" CssClass="form-control" Width="150px" placeholder="MM/DD/YYYY" OnTextChanged="txtToDate_TextChanged"></asp:TextBox>
                                             <cc1:CalendarExtender ID="calToDate" runat="server" TargetControlID="txtToDate" Format="MM/dd/yyyy" />
                                         </td>
                                     </tr>
+                                   
                                     <tr>
-                                        <td colspan="2" style="padding: 2px;" align="center">
+                                        <td colspan="2" style="padding: 30px;" align="center">
                                             <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn btn-primary" OnClick="btnSearch_Click" />
                                             <asp:Button ID="btnDownload" runat="server" Text="Download" CssClass="btn btn-success" OnClick="btnDownload_Click" Style="margin-left: 15px;" />
                                         </td>
@@ -93,4 +94,13 @@
                 </div>
         </ContentTemplate>
     </asp:UpdatePanel>
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>
