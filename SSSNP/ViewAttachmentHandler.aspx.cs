@@ -1467,7 +1467,7 @@ namespace SSSNP_SNSOP
             // Step 5: Set table column headers dynamically from the DataTable
             foreach (DataColumn column in auditRecords.Columns)
             {
-                PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, FontFactory.GetFont("Arial", 12, Font.BOLD)))
+                PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, FontFactory.GetFont("Arial", 10, Font.BOLD)))
                 {
                     BackgroundColor = BaseColor.LIGHT_GRAY,
                     HorizontalAlignment = Element.ALIGN_CENTER
