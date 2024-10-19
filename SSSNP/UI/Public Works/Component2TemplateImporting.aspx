@@ -9,7 +9,7 @@
                         <i class="fa fa-dashboard"></i><a href="Home.aspx">Dashboard</a>
                     </li>
                     <li class="active">
-                        <i class="fa fa-edit"></i><a href="#">Component 2 Template Importing</a>
+                        <i class="fa fa-edit"></i><a href="#">Economic Opportunities Template Importing</a>
                     </li>
                 </ol>
             </div>
@@ -18,16 +18,35 @@
                     <div class="col-lg-11" style="padding-left: 0px">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Component 2 Template Importing</h3>
+                                <h3 class="panel-title">Economic Opportunities Template Importing</h3>
                             </div>
                             <div class="panel-body">
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 90%">
                                     <tr>
-                                        <td style="vertical-align: top; width: 50%;">
+                                        <td style="vertical-align: top; width: 65%;">
                                             <!-- Left Side: State, County -->
                                             <table cellpadding="10" cellspacing="5" style="width: 100%;">
                                                 <tr>
-                                                    <td style="padding: 5px;">
+                                                    <td style="padding: 5px; width: 66px;">
+                                                        <asp:Label ID="LabelTemplate" runat="server" CssClass="LBLBLACK" Width="165px">Select Template</asp:Label>
+                                                        <span style="color: red">*</span>
+                                                        <!-- Add a red asterisk to indicate mandatory field -->
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <asp:DropDownList ID="ddlTemplate" runat="server" class="form-control txtbox" Width="260px" AutoPostBack="True"  OnSelectedIndexChanged="ddlTemplate_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="16">Household Group View Template</asp:ListItem>
+                                                            <asp:ListItem Value="20">Beneficiary Randomization Enrollment Template</asp:ListItem>
+                                                            <asp:ListItem Value="17">Training Attendance Tracking Template</asp:ListItem>
+                                                            <asp:ListItem Value="18">Business Plan Development Template</asp:ListItem>
+                                                            <asp:ListItem Value="19">Livelihood Grant Disbursement Template</asp:ListItem>
+                                                            <asp:ListItem Value="21">Financial Service Linkage Tracking Template</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; width: 66px;">
                                                         <asp:Label ID="LabelState" runat="server" CssClass="LBLBLACK" Width="165px">State Name</asp:Label>
                                                     </td>
                                                     <td>:</td>
@@ -39,7 +58,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="padding: 5px;">
+                                                    <td style="padding: 5px; width: 66px;">
                                                         <asp:Label ID="LabelCounty" runat="server" CssClass="LBLBLACK" Width="165px">County / Municipality Name</asp:Label>
                                                     </td>
                                                     <td>:</td>
@@ -48,6 +67,15 @@
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
+                                                </tr>
+                                                
+                                            </table>
+                                        </td>
+                                        <td style="vertical-align: top; width: 35%;">
+                                            <!-- Right Side: Payam, Boma -->
+                                            <table cellpadding="10" cellspacing="5" style="width: 100%;">                                                
+                                                <tr>
+                                                    <td style="padding: 15px;"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px;">
@@ -60,11 +88,6 @@
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
-                                            </table>
-                                        </td>
-                                        <td style="vertical-align: top; width: 50%;">
-                                            <!-- Right Side: Payam, Boma -->
-                                            <table cellpadding="10" cellspacing="5" style="width: 100%;">                                                
                                                 <tr>
                                                     <td style="padding: 5px;">
                                                         <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name</asp:Label>
@@ -76,26 +99,6 @@
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td style="padding: 5px;">
-                                                        <asp:Label ID="LabelTemplate" runat="server" CssClass="LBLBLACK" Width="165px">Select Template</asp:Label>
-                                                        <span style="color: red">*</span>
-                                                        <!-- Add a red asterisk to indicate mandatory field -->
-                                                    </td>
-                                                    <td>:</td>
-                                                    <td>
-                                                        <asp:DropDownList ID="ddlTemplate" runat="server" class="form-control txtbox" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
-                                                            <asp:ListItem Value="16">HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE</asp:ListItem>
-                                                            <asp:ListItem Value="17">TRAINING_ATTENDANCE_TRACKING_TEMPLATE</asp:ListItem>
-                                                            <asp:ListItem Value="18">BUSINESS_PLAN_DEVELOPMENT_TEMPLATE</asp:ListItem>
-                                                            <asp:ListItem Value="19">LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE</asp:ListItem>
-                                                            <asp:ListItem Value="20">BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE</asp:ListItem>
-                                                            <asp:ListItem Value="21">FINANCIAL_SERVICE_LINKAGE_TEMPLATE</asp:ListItem>
-                                                        </asp:DropDownList>
-                                                    </td>
-                                                </tr>
-
                                             </table>
                                         </td>
                                     </tr>

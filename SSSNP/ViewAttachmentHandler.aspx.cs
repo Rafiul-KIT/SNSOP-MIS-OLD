@@ -1599,9 +1599,16 @@ namespace SSSNP_SNSOP
                     paymentCycleValidation.ShowErrorMessage = true;
                     paymentCycleValidation.AllowBlank = true;
                     paymentCycleValidation.ErrorTitle = "Invalid Payment Cycle";
-                    paymentCycleValidation.Error = "Please select 'Installment One' or 'Installment Two'.";
-                    paymentCycleValidation.Formula.Values.Add("Installment One");
-                    paymentCycleValidation.Formula.Values.Add("Installment Two");
+                    paymentCycleValidation.Error = "Please select valid cycle.";
+                    paymentCycleValidation.Formula.Values.Add("Installment 1");
+                    paymentCycleValidation.Formula.Values.Add("Installment 2");
+                    paymentCycleValidation.Formula.Values.Add("Installment 3");
+                    paymentCycleValidation.Formula.Values.Add("Installment 4");
+                    paymentCycleValidation.Formula.Values.Add("Installment 5");
+                    paymentCycleValidation.Formula.Values.Add("Installment 6");
+                    paymentCycleValidation.Formula.Values.Add("Installment 7");
+                    paymentCycleValidation.Formula.Values.Add("Installment 8");
+                    paymentCycleValidation.Formula.Values.Add("Installment 9");
 
                     // Set the format for "Payment Date" as DateTime for the actual data rows
                     worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
@@ -1610,8 +1617,8 @@ namespace SSSNP_SNSOP
                     var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, dataRows + 1, 4].Address);
                     dateValidation.ShowErrorMessage = true;
                     dateValidation.ErrorTitle = "Invalid Date";
-                    dateValidation.Error = "Please enter a valid date in the format dd-mm-yyyy.";
-                    dateValidation.Prompt = "Select a date or enter manually in the format dd-mm-yyyy";
+                    dateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in MM-dd-yyyy";
+                    dateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in MM-dd-yyyy";
                     dateValidation.AllowBlank = true;
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
@@ -1664,7 +1671,27 @@ namespace SSSNP_SNSOP
             pdfDoc.Open();
 
             // Step 3: Add title to the PDF document
-            Paragraph title = new Paragraph("Audit Record Report - " + selectedAuditTable);
+            string reportName = "";
+            switch(selectedAuditTable)
+            {
+                case "tbl_com2_Household_Enrollment_Data_Audit":
+                    reportName = "Beneficiary Randomization and Enrollment";
+                    break;
+                case "tbl_com2_Training_Attendance_Audit":
+                    reportName = "Training and Attendance Tracking";
+                    break;
+                case "tbl_com2_Business_Plan_Development_Audit":
+                    reportName = "Business Plan Development";
+                    break;
+                case "tbl_com2_Livelihood_Grant_Disbursement_Audit":
+                    reportName = "Livelihood Grant Disbursement";
+                    break;
+                case "tbl_com2_Financial_Services_Linkage_Tracking_Audit":
+                    reportName = "Financial Services Linkage Tracking";
+                    break;
+            }
+
+            Paragraph title = new Paragraph("Audit Record Report - " + reportName);
             title.Alignment = Element.ALIGN_CENTER;
             title.SpacingAfter = 20f;
             pdfDoc.Add(title);

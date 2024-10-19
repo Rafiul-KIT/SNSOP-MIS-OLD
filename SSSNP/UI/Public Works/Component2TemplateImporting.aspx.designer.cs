@@ -24,6 +24,24 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.UpdatePanel upd1;
 
         /// <summary>
+        /// LabelTemplate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelTemplate;
+
+        /// <summary>
+        /// ddlTemplate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTemplate;
+
+        /// <summary>
         /// LabelState control.
         /// </summary>
         /// <remarks>
@@ -94,24 +112,6 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlBoma;
-
-        /// <summary>
-        /// LabelTemplate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelTemplate;
-
-        /// <summary>
-        /// ddlTemplate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTemplate;
 
         /// <summary>
         /// BtnDownload control.

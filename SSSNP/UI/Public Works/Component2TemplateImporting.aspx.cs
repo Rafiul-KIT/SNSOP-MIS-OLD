@@ -173,6 +173,36 @@ namespace SSSNP.UI.Public_Works
                 LblWarning.Visible = false;  // Hide warning when valid template is selected
                 LblWarning.Text = "";  // Clear the warning text
                 System.Diagnostics.Debug.WriteLine("Template selection changed. Warning hidden.");
+
+                int val = ddlTemplate.SelectedValue?.ToString() != null ?
+                    Convert.ToInt32(ddlTemplate.SelectedValue.ToString()) : 0;
+                if (val == 16)
+                {
+                    LabelState.Visible = false;
+                    ddlState.Visible = false;
+
+                    LabelCounty.Visible = false;
+                    ddlCounty.Visible = false;
+
+                    LabelPayam.Visible = false;
+                    ddlPayam.Visible = false;
+
+                    LabelBoma.Visible = false;
+                    ddlBoma.Visible = false;
+                } else
+                {
+                    LabelState.Visible = true;
+                    ddlState.Visible = true;
+
+                    LabelCounty.Visible = true;
+                    ddlCounty.Visible = true;
+
+                    LabelPayam.Visible = true;
+                    ddlPayam.Visible = true;
+
+                    LabelBoma.Visible = true;
+                    ddlBoma.Visible = true;
+                }
             }
         }
 

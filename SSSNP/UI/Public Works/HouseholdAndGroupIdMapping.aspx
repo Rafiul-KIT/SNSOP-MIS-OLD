@@ -16,7 +16,7 @@
                         <i class="fa fa-fw fa-desktop"></i>
                     </li>
                     <li class="active">
-                        <i class="fa fa-edit"></i><a href="#">Household And Group Id Mapping</a>
+                        <i class="fa fa-edit"></i><a href="#">Household And Group Mapping</a>
                     </li>
                 </ol>
             </div>

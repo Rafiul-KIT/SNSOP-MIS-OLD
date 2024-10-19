@@ -284,7 +284,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("SurvivesTargeting", model.SurvivesTargeting);
                     data.Add("TreatmentArm", model.TreatmentArm);
                     data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus);
-                    data.Add("GroupID", model.GroupID); // Assuming 0 is an invalid GroupID
+                    data.Add("GroupID", denormalizedData.GroupId ?? (object)DBNull.Value); // Assuming 0 is an invalid GroupID
                     data.Add("EnrolledMemberID", model.EnrolledMemberID); // Assuming 0 is invalid
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
@@ -493,9 +493,10 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 SqlParameter param = new SqlParameter("@HouseholdNumber", householdNumber);
                 var dt = _dbOperation.ExecuteDataTable("SELECT top 1 household_number, Age, Sex, NameofHousehold, " +
-                    "intStateid, intCountieid, intPayamid, intBomasid " +
+                    "intStateid, intCountieid, intPayamid, intBomasid, link.GroupId " +
                     "FROM tbl_BeneficiaryServiceDet b " +
                     "INNER JOIN tbl_Nominee n on b.household_number=n.application_id " +
+                    "LEFT JOIN tbl_com2_Household_Group_Linkage link on b.household_number=link.HouseholdNumber " +
                     "WHERE household_number = @HouseholdNumber "
                     ,
                     CommandType.Text, param);
@@ -522,6 +523,7 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     result.Gender = dt.Rows[0]["Sex"] != null ? dt.Rows[0]["Sex"].ToString() : string.Empty;
                     result.Age = dt.Rows[0]["Age"] != null ? Convert.ToInt32(dt.Rows[0]["Age"].ToString()) : 0;
+                    result.GroupId = dt.Rows[0]["GroupId"] != null ? Convert.ToInt32(dt.Rows[0]["GroupId"].ToString()) : 0;
                 }
                 return result;
             }

@@ -29,11 +29,11 @@
                                 <table align="center" cellpadding="5" cellspacing="3" style="width: 90%">
                                     <tr>
                                         <td style="padding: 5px;">
-                                            <asp:Label ID="lblAuditRecordType" runat="server" CssClass="LBLBLACK" Text="Select Audit Record&emsp;:"></asp:Label>
+                                            <asp:Label ID="lblAuditRecordType" runat="server" CssClass="LBLBLACK" Text="Select Module&emsp;:"></asp:Label>
                                         </td>
                                         <td style="padding: 5px;">
                                             <asp:DropDownList ID="ddlAuditRecordType" runat="server" CssClass="form-control" Width="230px" OnSelectedIndexChanged="ddlAuditRecordType_SelectedIndexChanged" AutoPostBack="true">
-                                                <asp:ListItem Text="-- Select Audit Record --" Value=""></asp:ListItem>
+                                                <asp:ListItem Text="-- Select --" Value=""></asp:ListItem>
                                                 <asp:ListItem Text="Beneficiary Randomization and Enrollment Audit" Value="tbl_com2_Household_Enrollment_Data_Audit"></asp:ListItem>
                                                 <asp:ListItem Text="Training and Attendance Tracking Audit" Value="tbl_com2_Training_Attendance_Audit"></asp:ListItem>
                                                 <asp:ListItem Text="Livelihood Grant Disbursement Audit" Value="tbl_com2_Livelihood_Grant_Disbursement_Audit"></asp:ListItem>

@@ -29,6 +29,7 @@ namespace SSSNP.UI.Public_Works
             }
 
             btnSearch.Enabled = true;
+            lnkDownloadTemplate.Visible = false;
         }
 
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
@@ -229,6 +230,7 @@ namespace SSSNP.UI.Public_Works
 
                 // Store the DataTable in session for pagination
                 Session["AnalyzedData"] = dt;
+                Session["UploadedBeneficiaryEnrollmentAllData"] = uploadedDataList;
                 Session["ValidBenediciary"] = validBeneficiary;
 
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
@@ -272,6 +274,13 @@ namespace SSSNP.UI.Public_Works
                     btnAnalyze.Enabled = false;
                     return;
                 }
+
+                var allDataList = Session["UploadedBeneficiaryEnrollmentAllData"] as List<BeneficiaryEnrollmentAuditModel>;
+                if (allDataList != null && allDataList.Count > 0)
+                {
+                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Household_Enrollment_Data_Audit");
+                }
+                Session["UploadedBeneficiaryEnrollmentAllData"] = null;
 
                 // Pass the entire list to the service for processing
                 var response = service.SaveBeneficiaries(beneficiaries);

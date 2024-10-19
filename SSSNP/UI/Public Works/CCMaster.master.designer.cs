@@ -229,13 +229,13 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl EconomicOpportunities;
 
     /// <summary>
-    /// BeneficiaryRandomizationandEnrollment control.
+    /// Component2TemplateImporting control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl BeneficiaryRandomizationandEnrollment;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl Component2TemplateImporting;
 
     /// <summary>
     /// HouseholdGroupView control.
@@ -245,6 +245,24 @@ public partial class CCMaster
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl HouseholdGroupView;
+
+    /// <summary>
+    /// HouseholdAndGroupIdMapping control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl HouseholdAndGroupIdMapping;
+
+    /// <summary>
+    /// BeneficiaryRandomizationandEnrollment control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl BeneficiaryRandomizationandEnrollment;
 
     /// <summary>
     /// TrainingandAttendanceTracking control.
@@ -292,16 +310,6 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl CoachingSessionTracking;
 
     /// <summary>
-    /// HouseholdAndGroupIdMapping control.
-    /// Component2TemplateImporting control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl HouseholdAndGroupIdMapping;
-
-    /// <summary>
     /// AuditRecordDownload control.
     /// </summary>
     /// <remarks>
@@ -309,7 +317,6 @@ public partial class CCMaster
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl AuditRecordDownload;
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl Component2TemplateImporting;
 
     /// <summary>
     /// LiPayroll control.

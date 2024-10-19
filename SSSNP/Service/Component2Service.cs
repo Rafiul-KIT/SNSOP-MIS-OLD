@@ -198,7 +198,18 @@ namespace SSSNP.Service
             }
 
             // Validate the PaymentCycle (for example, if you want to ensure valid cycles)
-            var validPaymentCycles = new List<string> { "Installment One", "Installment Two" };
+            var validPaymentCycles = new List<string> 
+            { 
+                "Installment 1", 
+                "Installment 2",
+                "Installment 3",
+                "Installment 4",
+                "Installment 5",
+                "Installment 6",
+                "Installment 7",
+                "Installment 8",
+                "Installment 9"
+            };
             if (!validPaymentCycles.Contains(obj.PaymentCycle.Trim()))
             {
                 return (false, $"Payment Cycle '{obj.PaymentCycle}' is not valid. Valid values are: {string.Join(", ", validPaymentCycles)}.");
@@ -210,7 +221,7 @@ namespace SSSNP.Service
             }
 
             // Ensure the date is not in the future and within a reasonable range (for example, between 1900 and today)
-            var minDate = new DateTime(1900, 1, 1);
+            var minDate = new DateTime(2023, 1, 1);
             var maxDate = DateTime.Today;
 
             if (obj.PaymentDate.Value < minDate || obj.PaymentDate.Value > maxDate)
@@ -523,7 +534,7 @@ namespace SSSNP.Service
 
             if (beneficiary.EnrolledMemberID == null)
             {
-                return (false, "EnrolledMemberID is required.");
+                return (false, "Enrolled Member ID is required.");
             }
 
 

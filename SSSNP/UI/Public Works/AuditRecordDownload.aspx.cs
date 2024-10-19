@@ -47,6 +47,8 @@ namespace SSSNP.UI.Public_Works
                 toDate = parsedToDate;
             }
 
+            toDate = toDate.Value.AddDays(1); // To get all date that were uploaded throughout the day till 23:59:59
+
             try
             {
                 DataTable auditRecords = null;
@@ -69,7 +71,7 @@ namespace SSSNP.UI.Public_Works
                         auditRecords = _auditRecordService.GetBusinessPlanDevelopmentAudit(fromDate, toDate);
                         break;
                     default:
-                        lblMessage.Text = "Please select a valid audit record.";
+                        lblMessage.Text = "Please select a valid module.";
                         lblMessage.CssClass = "text-danger";
                         lblMessage.Visible = true;
                         gvAuditRecords.Visible = false;
@@ -79,7 +81,7 @@ namespace SSSNP.UI.Public_Works
                 // Check if data was found
                 if (auditRecords == null || auditRecords.Rows.Count == 0)
                 {
-                    lblMessage.Text = "No records found for the selected audit and date range.";
+                    lblMessage.Text = "No records found for the selected module and date range.";
                     lblMessage.CssClass = "text-danger";
                     lblMessage.Visible = true;
                     gvAuditRecords.Visible = false;

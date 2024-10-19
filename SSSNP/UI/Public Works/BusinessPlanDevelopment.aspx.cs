@@ -29,6 +29,7 @@ namespace SSSNP.UI.Public_Works
                 btnImport.Enabled = false;
                 RadGrid.Visible = false;
             }
+            lnkDownloadTemplate.Visible = false;
         }
 
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)

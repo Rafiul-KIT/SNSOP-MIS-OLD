@@ -162,7 +162,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     if (fromDate.HasValue)
                         query += " AND UploadDate >= @FromDate";
                     if (toDate.HasValue)
-                        query += " AND UploadDate <= @ToDate";
+                        query += " AND UploadDate < @ToDate";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
