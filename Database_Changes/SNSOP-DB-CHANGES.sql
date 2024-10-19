@@ -1,3 +1,305 @@
+-- 19-10-2024
+
+create table tbl_com2_Business_Plan_Development
+(
+    Id                 int identity,
+    HouseholdNumber    nvarchar(255)
+        constraint UK_Business_Plan_Development
+            unique,
+    BusinessPlanStatus bit,
+    BusinessType       int,
+    CreatedBy          int,
+    CreatedDate        datetime,
+    ModifiedBy         int,
+    ModifiedDate       datetime,
+    StateID            int
+        references tm_States,
+    CountyID           int
+        references tm_Counties,
+    PayamID            int
+        references tm_Payams,
+    BomaID             int
+        references tm_Bomas,
+    FirstName          varchar(255),
+    MiddleName         varchar(255),
+    NickName           varchar(255),
+    LastName           varchar(255),
+    Gender             varchar,
+    Age                int
+)
+go
+
+create table tbl_com2_Business_Plan_Development_Audit
+(
+    Id                 int identity,
+    HouseholdNumber    nvarchar(255),
+    BusinessPlanStatus bit,
+    BusinessType       int,
+    UploadedBy         int,
+    UploadDate         datetime,
+    Validity           bit,
+    InvalidReason      varchar(max),
+    FileId             varchar(20)
+)
+go
+
+create table tbl_com2_course
+(
+    Id         int identity
+        primary key,
+    CourseCode varchar(32)
+        unique,
+    CourseName varchar(255)
+        unique
+)
+go
+
+create table tbl_com2_Financial_Services_Linkage_Tracking
+(
+    Id                         int identity,
+    HouseholdNumber            nvarchar(255)
+        constraint UK_Financial_Services_Linkage_Tracking
+            unique,
+    ConnectedFinancialServices bit,
+    EntityName                 varchar(255),
+    CreatedBy                  int,
+    CreatedDate                datetime,
+    ModifiedBy                 int,
+    ModifiedDate               datetime,
+    StateID                    int
+        references tm_States,
+    CountyID                   int
+        references tm_Counties,
+    PayamID                    int
+        references tm_Payams,
+    BomaID                     int
+        references tm_Bomas,
+    FirstName                  varchar(255),
+    MiddleName                 varchar(255),
+    NickName                   varchar(255),
+    LastName                   varchar(255),
+    Gender                     varchar,
+    Age                        int
+)
+go
+
+create table tbl_com2_Financial_Services_Linkage_Tracking_Audit
+(
+    Id                         int identity,
+    HouseholdNumber            nvarchar(255),
+    ConnectedFinancialServices bit,
+    EntityName                 varchar(255),
+    UploadedBy                 int,
+    UploadDate                 datetime,
+    Validity                   bit,
+    InvalidReason              varchar(max),
+    FileId                     varchar(20)
+)
+go
+
+create table tbl_com2_Household_Enrollment_Data
+(
+    Id                        int identity,
+    StateID                   int
+        references tm_States,
+    CountyID                  int
+        references tm_Counties,
+    PayamID                   int
+        references tm_Payams,
+    BomaID                    int
+        references tm_Bomas,
+    HouseholdNumber           nvarchar(255) not null
+        constraint UK_Household_Enrollment_Data
+            unique,
+    InterestedInParticipating bit,
+    FirstName                 nvarchar(255),
+    MiddleName                nvarchar(255),
+    LastName                  nvarchar(255),
+    NickName                  nvarchar(255),
+    Gender                    nvarchar(50),
+    Age                       int,
+    SurvivesTargeting         bit,
+    TreatmentArm              bit,
+    HHEnrollmentStatus        bit,
+    GroupID                   int,
+    EnrolledMemberID          int,
+    CreatedBy                 int,
+    CreatedDate               datetime,
+    ModifiedBy                int,
+    ModifiedDate              datetime
+)
+go
+
+create table tbl_com2_Household_Enrollment_Data_Audit
+(
+    Id                        int identity,
+    HouseholdNumber           nvarchar(255),
+    InterestedInParticipating bit,
+    SurvivesTargeting         bit,
+    TreatmentArm              bit,
+    HHEnrollmentStatus        bit,
+    GroupID                   int,
+    EnrolledMemberID          int,
+    UploadedBy                int,
+    UploadDate                datetime,
+    Validity                  bit,
+    InvalidReason             varchar(max),
+    FileId                    varchar(20)
+)
+go
+
+create table tbl_com2_Household_Group_Linkage
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255),
+    GroupId         int not null,
+    CreatedBy       int,
+    CreatedDate     datetime,
+    ModifiedBy      int,
+    ModifiedDate    datetime
+)
+go
+
+create table tbl_com2_Household_Group_View
+(
+    Id           int identity
+        constraint PK_tbl_com2_Household_Group_View
+            primary key,
+    GroupName    nvarchar(255)
+        constraint UK_Household_Group_View
+            unique,
+    Latitude     decimal(10, 7),
+    Longitude    decimal(10, 7),
+    CreatedBy    int,
+    CreatedDate  datetime,
+    ModifiedBy   int,
+    ModifiedDate datetime
+)
+go
+
+create table tbl_com2_Livelihood_Grant_Disbursement
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255) not null
+        constraint UK_Livelihood_Grant_Disbursement
+            unique,
+    PaymentCycle    nvarchar(50),
+    PaymentAmount   decimal(18, 2),
+    PaymentDate     datetime,
+    CreatedBy       int,
+    CreatedDate     datetime,
+    ModifiedBy      int,
+    ModifiedDate    datetime,
+    StateID         int
+        references tm_States,
+    CountyID        int
+        references tm_Counties,
+    PayamID         int
+        references tm_Payams,
+    BomaID          int
+        references tm_Bomas,
+    FirstName       varchar(255),
+    MiddleName      varchar(255),
+    NickName        varchar(255),
+    LastName        varchar(255),
+    Gender          varchar,
+    Age             int
+)
+go
+
+create table tbl_com2_Livelihood_Grant_Disbursement_Audit
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255),
+    PaymentCycle    nvarchar(50),
+    PaymentAmount   decimal(18, 2),
+    PaymentDate     datetime,
+    UploadedBy      int,
+    UploadDate      datetime,
+    Validity        bit,
+    InvalidReason   varchar(max),
+    FileId          varchar(20)
+)
+go
+
+create table tbl_com2_Training_Attendance
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255)
+        constraint UK_Training_Attendance
+            unique,
+    CourseCode      varchar(32),
+    CourseDuration  int,
+    ClassesAttended int,
+    ClassesHeld     int,
+    ClassesMissed   int,
+    WhyMissed       nvarchar(255),
+    CreatedBy       int,
+    CreatedDate     datetime,
+    ModifiedBy      int,
+    ModifiedDate    datetime,
+    StateID         int
+        references tm_States,
+    CountyID        int
+        references tm_Counties,
+    PayamID         int
+        references tm_Payams,
+    BomaID          int
+        references tm_Bomas,
+    FirstName       varchar(255),
+    MiddleName      varchar(255),
+    NickName        varchar(255),
+    LastName        varchar(255),
+    Gender          varchar,
+    Age             int,
+    CourseId        int
+        references tbl_com2_course
+)
+go
+
+create table tbl_com2_Training_Attendance_Audit
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255),
+    CourseCode      varchar(32),
+    CourseDuration  int,
+    ClassesAttended int,
+    ClassesHeld     int,
+    ClassesMissed   int,
+    WhyMissed       nvarchar(255),
+    UploadedBy      int,
+    UploadDate      datetime,
+    Validity        bit,
+    InvalidReason   varchar(max),
+    FileId          varchar(20)
+)
+go
+
+insert into tbl_com2_course (CourseCode, CourseName) values
+('FINLIT', 'Financial Literacy'),
+('LIVETECH', 'Livelihood Technical Training'),
+('LIFESKILL','Life-skills Training'),
+('SAVINGS', 'Savings Group')
+;
+
+create table tbl_payment_cycle_document_details
+(
+    id                   int identity
+        primary key,
+    pc_year              varchar(10),
+    payment_cycle        int,
+    document_1_file_name varchar(200),
+    document_2_file_name varchar(200),
+    document_3_file_name varchar(200),
+    uploaded_at          datetime default getdate() not null,
+    uploaded_by          int
+)
+go
+
+
+
+-- 19-10-2024
+
 -- 19-09-2024
 
 alter table tbl_Nominee add afis_nominee_id bigint unique;
