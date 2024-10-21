@@ -32,6 +32,7 @@ namespace SSSNP.UI.Public_Works
             Session["AuditRecordData"] = null;
             string selectedAuditTable = ddlAuditRecordType.SelectedValue;
             Session["SelectedAuditTable"] = selectedAuditTable;
+
             // Retrieve dates from ViewState if available, ensure proper casting
             DateTime? fromDate = ViewState["FromDate"] != null ? (DateTime?)ViewState["FromDate"] : null;
             DateTime? toDate = ViewState["ToDate"] != null ? (DateTime?)ViewState["ToDate"] : null;
@@ -47,7 +48,18 @@ namespace SSSNP.UI.Public_Works
                 toDate = parsedToDate;
             }
 
-            toDate = toDate.Value.AddDays(1); // To get all date that were uploaded throughout the day till 23:59:59
+            // Ensure both fromDate and toDate are provided
+            if (!fromDate.HasValue || !toDate.HasValue)
+            {
+                lblMessage.Text = "Both From Date and To Date are required.";
+                lblMessage.CssClass = "text-danger";
+                lblMessage.Visible = true;
+                gvAuditRecords.Visible = false;
+                return;
+            }
+
+            // Add one day to the toDate to include the full day
+            toDate = toDate.Value.AddDays(1);
 
             try
             {
