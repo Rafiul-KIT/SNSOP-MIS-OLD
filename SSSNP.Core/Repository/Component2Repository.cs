@@ -43,12 +43,12 @@ namespace SSSNP_SNSOP.Core.Repository
                     Dictionary<string, object> data = new Dictionary<string, object>();
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
                     data.Add("CourseId", GetCourseIdByCode(obj.CourseCode));
-                    data.Add("CourseCode", obj.CourseCode);
-                    data.Add("CourseDuration", obj.CourseDuration);
-                    data.Add("ClassesAttended", obj.ClassesAttended);
-                    data.Add("ClassesHeld", obj.ClassesHeld);
-                    data.Add("ClassesMissed", obj.ClassesMissed);
-                    data.Add("WhyMissed", obj.WhyMissed);
+                    data.Add("CourseCode", obj.CourseCode ?? (object)DBNull.Value);
+                    data.Add("CourseDuration", obj.CourseDuration ?? (object)DBNull.Value);
+                    data.Add("ClassesAttended", obj.ClassesAttended ?? (object)DBNull.Value);
+                    data.Add("ClassesHeld", obj.ClassesHeld ?? (object)DBNull.Value);
+                    data.Add("ClassesMissed", obj.ClassesMissed ?? (object)DBNull.Value);
+                    data.Add("WhyMissed", obj.WhyMissed ?? (object)DBNull.Value);
                     data.Add("StateID", denormalizedData.StateID);
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);

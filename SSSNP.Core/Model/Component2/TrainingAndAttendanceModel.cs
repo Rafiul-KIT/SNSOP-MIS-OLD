@@ -19,14 +19,14 @@ namespace SSSNP_SNSOP.Core.Model.Component2
         public int CourseId { get; set; }
 
         // Nested class instances as properties
-        public DenormalizedDataModel DenormalizedData { get; set; }
+        //public DenormalizedDataModel DenormalizedData { get; set; }
         //public CommonModel CommonData { get; set; }
 
         // Constructor to initialize nested class instances
-        public TrainingAndAttendanceModel()
+        /*public TrainingAndAttendanceModel()
         {
             DenormalizedData = new DenormalizedDataModel();
             //CommonData = new CommonModel();
-        }
+        }*/
     }
 }

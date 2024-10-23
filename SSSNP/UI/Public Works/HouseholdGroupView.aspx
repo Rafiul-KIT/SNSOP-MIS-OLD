@@ -3,25 +3,29 @@
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 20px; font-size: 16px;">
+        <div align="left" style="vertical-align: top">
+            <ol class="breadcrumb">
+                <li>You are here&nbsp;!&nbsp; &nbsp; &nbsp;</li>
+                <li>
+                    <i class="fa fa-dashboard"></i><a href="Home.aspx">Dashboard</a>
+                </li>
+                <li class="">
+                    <i class="fa fa-fw fa-desktop"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-edit"></i><a href="#">Household Group View</a>
+                </li>
+            </ol>
+        </div>
+        <br />
+        
+        <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click" 
+            Style="background-color: limegreen; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: normal;">&emsp;Import Household Group Template File</asp:LinkButton>
+    </div>
+
     <asp:UpdatePanel ID="upd1" runat="server">
         <ContentTemplate>
-            <!-- Breadcrumb Navigation -->
-            <div align="left" style="vertical-align: top">
-                <ol class="breadcrumb">
-                    <li>You are here&nbsp;!&nbsp; &nbsp; &nbsp;</li>
-                    <li>
-                        <i class="fa fa-dashboard"></i><a href="Home.aspx">Dashboard</a>
-                    </li>
-                    <li class="">
-                        <i class="fa fa-fw fa-desktop"></i>
-                    </li>
-                    <li class="active">
-                        <i class="fa fa-edit"></i><a href="#">Household Group View</a>
-                    </li>
-                </ol>
-            </div>
-
-            <!-- Main Panel -->
             <div align="center">
                 <div class="row" align="left" style="width: 98%">
                     <div class="col-lg-11" style="padding-left: 0px">
@@ -29,86 +33,101 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">Household Group View</h3>
                             </div>
-
                             <div class="panel-body">
-                                <!-- File Upload for Excel -->
-                                <%--<div class="form-group">
-                                    <label for="fileUpload" class="control-label">Attachment:</label>
-                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Enabled="true" Style="width: 400px;" />
-                                </div>
-
-                                <script type="text/javascript">
-                                    document.addEventListener("DOMContentLoaded", function () {
-                                        var fileInput = document.getElementById('<%= fileUpload.ClientID %>');
-
-                                        // Function to adjust the width based on the file name or default "No file chosen"
-                                        function adjustWidth() {
-                                            var fileName = fileInput.value.split('\\').pop(); // Get the file name
-                                            var defaultText = "No file chosen"; // Default text
-                                            var length = fileName.length || defaultText.length; // Use default text length if no file is selected
-
-                                            // Set the width dynamically based on the file name or default text
-                                            var newWidth = Math.max(110, length * 10); // Adjust multiplier for control over the width
-
-                                            // Apply the new calculated width
-                                            fileInput.style.width = newWidth + 'px';
-                                        }
-
-                                        // Set width when the page loads
-                                        adjustWidth();
-
-                                        // Add event listeners for when the input changes
-                                        fileInput.addEventListener('change', adjustWidth); // When a file is selected
-                                        fileInput.addEventListener('input', adjustWidth);  // To handle any other changes
-                                    });
-                                </script>--%>
+                                
                                 <div class="form-group">
                                     <label for="fileUpload" class="control-label">Attachment:</label>
-                                    <div style="display: flex;">
-                                        <input type="text" id="fileNameDisplay" runat="server" class="form-control" readonly="readonly" style="width: 150px;" placeholder="No file chosen" />
-                                        <button type="button" class="btn btn-default" onclick="document.getElementById('<%= fileUpload.ClientID %>').click()">Choose File</button>
-                                        <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" Style="display: none;" onchange="updateFileName()" />
+
+                                    <div class="custom-file-upload">
+                                        <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
+
+                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
+                                        <span id="fileInfo" class="file-info">No file chosen</span>
                                     </div>
                                 </div>
-
-                                <script type="text/javascript">
-                                    function updateFileName() {
-                                        var fileInput = document.getElementById('<%= fileUpload.ClientID %>');
-                                        var fileNameDisplay = document.getElementById('<%= fileNameDisplay.ClientID %>');
-                                        var fileName = fileInput.value.split('\\').pop(); // Get only the file name
-                                        fileNameDisplay.value = fileName || "No file chosen"; // Show file name or default text
-
-                                        // Adjust the width based on the file name length
-                                        var length = fileName.length || "No file chosen".length; // Calculate length of file name or default text
-                                        var newWidth = Math.max(150, length * 10); // Adjust width dynamically, with minimum width of 150px
-                                        fileNameDisplay.style.width = newWidth + 'px';
+                                <style type="text/css">
+                                    .custom-file-upload {
+                                        position: relative;
+                                        display: inline-block;
                                     }
 
-                                    function clearFileNameDisplay() {
-                                        var fileNameDisplay = document.getElementById('<%= fileNameDisplay.ClientID %>');
-                                        fileNameDisplay.value = "No file chosen"; // Clear only the file name display
-                                        fileNameDisplay.style.width = '150px'; // Reset width to default
+                                        .custom-file-upload button {
+                                            padding: 6px 15px;
+                                            font-size: 12px;
+                                            cursor: pointer;
+                                            border: 1px solid #ccc; 
+                                            border-radius: 4px;
+                                        }
+
+                                    .file-info {
+                                        display: inline-block;
+                                        margin-left: 10px;
+                                        font-size: 14px;
+                                        vertical-align: middle;
+                                        padding: 6px 15px; 
+                                        border: 1px solid #ccc;
+                                        border-radius: 4px;
+                                    }
+
+                                    .download-link {
+                                        display: inline-block;
+                                        color: #ffffff;
+                                        background-color: #007bff;
+                                        padding: 10px 20px;
+                                        text-decoration: none;
+                                        border-radius: 5px;
+                                        transition: background-color 0.3s ease;
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                    }
+
+                                        .download-link:hover {
+                                            background-color: #0056b3;
+                                            color: #fff;
+                                            text-decoration: none;
+                                        }
+
+                                        .download-link i {
+                                            margin-right: 5px;
+                                        }
+
+                                    .enhanced-link {
+                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                        transition: all 0.2s ease-in-out;
+                                    }
+
+                                        .enhanced-link:hover {
+                                            transform: translateY(-2px);
+                                            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+                                        }
+                                </style>
+
+
+
+                                
+                                <script type="text/javascript">
+                                    function handleFileChange(input) {
+                                        var fileName = input.files[0] ? input.files[0].name : "No file chosen";
+                                        var fileSize = input.files[0] ? (input.files[0].size / 1024).toFixed(2) + " KB" : "";
+                                        var fileInfo = document.getElementById('fileInfo');
+                                        fileInfo.innerText = fileName + (fileSize ? " (" + fileSize + ")" : "");
                                     }
                                 </script>
-
-                                <!-- Upload and Download Links -->
+                                <br />
+                                
                                 <div class="form-group">
-                                    <asp:Button ID="btnUpload" runat="server" CssClass="btn btn-warning" Text="Upload File" OnClientClick="clearFileNameDisplay();" OnClick="btnUpload_Click" />
-                                    <br />
-                                    <br />
-
-                                    <!-- Link for Downloading Excel Template -->
-                                    <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click">Import Household Group Template File</asp:LinkButton>
+                                    <asp:Button ID="btnUpload" runat="server" CssClass="btn btn-warning" Text="Upload File" OnClick="btnUpload_Click" />
+                                    <br /><br />
                                 </div>
 
-                                <!-- Action Buttons -->
+                                
                                 <div class="form-group" align="center">
-                                    <asp:Button ID="btnAnalyze" runat="server" CssClass="btn btn-warning" Text="Analyze" Enabled="false" OnClick="btnAnalyze_Click"/>
-                                    <asp:Button ID="btnImport" runat="server" CssClass="btn btn-success" Text="Import" Enabled="false" OnClick="btnImport_Click"/>
-                                    <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-success" Text="Search" Enabled="false" OnClick="btnSearch_Click"/>
+                                    <asp:Button ID="btnAnalyze" runat="server" CssClass="btn btn-warning" Text="Analyze" Enabled="false" OnClick="btnAnalyze_Click" />
+                                    <asp:Button ID="btnImport" runat="server" CssClass="btn btn-success" Text="Import" Enabled="false" OnClick="btnImport_Click" />
+                                    <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-primary" Text="Search" OnClick="btnSearch_Click" />
                                 </div>
 
-                                <!-- Success and Failure Messages -->
+                                
                                 <div id="DivSuccess" runat="server" visible="false" class="alert alert-success">
                                     <asp:Label ID="lblMessageSuccess" runat="server" />
                                 </div>
@@ -116,21 +135,20 @@
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
 
-
-                                <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" 
-                                    OnNeedDataSource="RadGrid_NeedDataSource" OnItemDataBound="RadGrid_ItemDataBound" AllowCustomPaging="True" GridLines="Both" >
+                                
+                                <telerik:RadGrid ID="RadGrid" runat="server" OnItemDataBound="RadGrid_ItemDataBound" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" 
+                                    OnNeedDataSource="RadGrid_NeedDataSource" AllowCustomPaging="True" GridLines="Both" >
                                     <PagerStyle Mode="NextPrevAndNumeric" />
-                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" PagerStyle-AlwaysVisible="True" AllowPaging="True" AllowCustomPaging="True">
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
                                         <Columns>
-                                            <telerik:GridBoundColumn DataField="Id" HeaderText="ID" UniqueName="Id" />
-                                            <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" UniqueName="GroupName" />
-                                            <telerik:GridBoundColumn DataField="Latitude" HeaderText="Latitude" UniqueName="Latitude" DataFormatString="{0:N7}" />
-                                            <telerik:GridBoundColumn DataField="Longitude" HeaderText="Longitude" UniqueName="Longitude" DataFormatString="{0:N7}" />
-                                            <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
+                                            <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
+                                            <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" />
+                                            <telerik:GridBoundColumn DataField="Latitude" HeaderText="Latitude" DataFormatString="{0:N7}" />
+                                            <telerik:GridBoundColumn DataField="Longitude" HeaderText="Longitude" DataFormatString="{0:N7}" />
+                                            <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" Visible="false" />
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
-
                             </div>
                         </div>
                     </div>
@@ -139,9 +157,9 @@
         </ContentTemplate>
         <Triggers>
             <asp:PostBackTrigger ControlID="btnUpload" />
-            <asp:PostBackTrigger ControlID="lnkDownloadTemplate" />
         </Triggers>
     </asp:UpdatePanel>
+
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
         <ProgressTemplate>
             <div class="overlay">
@@ -151,4 +169,5 @@
             </div>
         </ProgressTemplate>
     </asp:UpdateProgress>
+
 </asp:Content>

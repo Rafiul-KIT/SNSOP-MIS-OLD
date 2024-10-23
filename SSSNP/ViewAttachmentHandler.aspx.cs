@@ -1371,8 +1371,8 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Course Code";
                     worksheet.Cells[1, 3].Value = "Course Duration";
-                    worksheet.Cells[1, 4].Value = "Course Attended";
-                    worksheet.Cells[1, 5].Value = "Course Held";
+                    worksheet.Cells[1, 4].Value = "Classes Attended";
+                    worksheet.Cells[1, 5].Value = "Classes Held";
                     worksheet.Cells[1, 6].Value = "Classes Missed";
                     worksheet.Cells[1, 7].Value = "Why Missed";
 

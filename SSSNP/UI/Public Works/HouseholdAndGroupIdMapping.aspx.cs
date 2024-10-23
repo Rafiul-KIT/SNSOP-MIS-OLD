@@ -378,6 +378,111 @@ namespace SSSNP_SNSOP.UI.Public_Works
         }
 
 
+        protected void btnAssignGroup_Click(object sender, EventArgs e)
+        {
+            ClearMessages();
+            try
+            {
+                // Check if the dropdown outside the grid is available and selected
+                if (ddlGroupIDOutside == null || ddlGroupIDOutside.SelectedValue == "0")
+                {
+                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "Please select a valid Group ID.";
+                    return;
+                }
+
+                int selectedGroupId = int.Parse(ddlGroupIDOutside.SelectedValue);
+                string selectedGroupName = ddlGroupIDOutside.SelectedItem.Text.Split('-')[1].Trim(); // Extract only the group name
+
+                // Create a list to store selected household numbers
+                List<string> selectedHouseholdNumbers = new List<string>();
+
+                // Loop through the grid items to find the selected households
+                foreach (GridDataItem item in rgResults.MasterTableView.Items)
+                {
+                    CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
+                    if (chkSelect != null && chkSelect.Checked)
+                    {
+                        string householdNumber = item.GetDataKeyValue("household_number").ToString();
+                        selectedHouseholdNumbers.Add(householdNumber);
+                    }
+                }
+
+                // Check if any households were selected
+                if (selectedHouseholdNumbers.Count == 0)
+                {
+                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "No households were selected.";
+                    return;
+                }
+
+                // Ensure Session["UserId"] is available
+                if (Session["uid"] == null)
+                {
+                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "User session has expired. Please log in again.";
+                    return;
+                }
+
+                // Create an instance of the HouseholdGroupLinkageModel
+                var householdGroupLinkageModel = new HouseholdGroupLinkageModel
+                {
+                    HouseholdNumbers = selectedHouseholdNumbers,
+                    GroupId = selectedGroupId,
+                    CreatedBy = HttpContext.Current.Session["uid"] != null ? Convert.ToInt32(HttpContext.Current.Session["uid"]) : 0,
+                    CreatedDate = DateTime.Now,
+                    ModifiedBy = HttpContext.Current.Session["uid"] != null ? Convert.ToInt32(HttpContext.Current.Session["uid"]) : 0,
+                    ModifiedDate = DateTime.Now
+                };
+
+                // Call the service method to save the household group linkage
+                var response = _component2Service.SaveHouseholdGroupLinkage(householdGroupLinkageModel);
+
+                // Display a success or error message based on the response
+                if (response.IsSuccess)
+                {
+                    lblSuccessMessage.Visible = true;
+                    lblSuccessMessage.Text = "Group ID assigned successfully to selected households.";
+
+                    // Update the DataTable stored in session to reflect the new group assignment
+                    DataTable householdsTable = Session["HouseholdData"] as DataTable;
+                    if (householdsTable != null)
+                    {
+                        foreach (DataRow row in householdsTable.Rows)
+                        {
+                            string householdNumber = row["household_number"].ToString();
+                            if (selectedHouseholdNumbers.Contains(householdNumber))
+                            {
+                                // Update the GroupID and only the GroupName columns for the selected households
+                                row["GroupID"] = selectedGroupId;
+                                row["GroupName"] = selectedGroupName;  // Only the group name
+                            }
+                        }
+
+                        // Rebind the grid to show the changes immediately
+                        RebindHouseholdGridInOrder();
+                    }
+
+                    SelectedHouseholds.Clear();
+                }
+                else
+                {
+                    lblErrorMessage.Visible = true;
+                    lblErrorMessage.Text = "Error: " + response.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                lblErrorMessage.Visible = true;
+                lblErrorMessage.Text = "An error occurred while assigning group ID: " + ex.Message;
+            }
+
+            HideLabelsAfterDelay();
+        }
+
+
+
+
         protected void rgResults_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
             try
@@ -387,6 +492,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 if (householdsTable != null)
                 {
+                    householdsTable.DefaultView.Sort = "household_number ASC";
                     rgResults.DataSource = householdsTable;
                 }
                 else
@@ -398,6 +504,27 @@ namespace SSSNP_SNSOP.UI.Public_Works
             catch (Exception ex)
             {
                 LogError("Error in NeedDataSource: " + ex.Message, ex);
+            }
+        }
+
+        private void RebindHouseholdGridInOrder()
+        {
+            try
+            {
+                // Re-fetch the household data from session
+                DataTable householdsTable = Session["HouseholdData"] as DataTable;
+
+                if (householdsTable != null)
+                {
+                    // Sort by household number to maintain the original order
+                    householdsTable.DefaultView.Sort = "household_number ASC";
+                    rgResults.DataSource = householdsTable;
+                    rgResults.Rebind(); // Rebind the grid to reflect the changes
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("Error while re-binding the grid: " + ex.Message, ex);
             }
         }
 
@@ -438,101 +565,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
         }
 
 
-
-        protected void btnAssignGroup_Click(object sender, EventArgs e)
-        {
-            ClearMessages();
-            try
-            {
-                // Check if the dropdown outside the grid is available and selected
-                if (ddlGroupIDOutside == null || ddlGroupIDOutside.SelectedValue == "0")
-                {
-                    lblErrorMessage.Visible = true;
-                    lblErrorMessage.Text = "Please select a valid Group ID.";
-                    return;
-                }
-
-                int selectedGroupId = int.Parse(ddlGroupIDOutside.SelectedValue);
-
-                // Create a list to store selected household numbers
-                List<string> selectedHouseholdNumbers = new List<string>();
-
-                // Loop through the grid items to find the selected households
-                foreach (GridDataItem item in rgResults.MasterTableView.Items)
-                {
-                    CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
-                    if (chkSelect != null && chkSelect.Checked)
-                    {
-                        string householdNumber = item.GetDataKeyValue("household_number").ToString();
-                        selectedHouseholdNumbers.Add(householdNumber);
-                    }
-                }
-
-                // Check if any households were selected
-                if (selectedHouseholdNumbers.Count == 0)
-                {
-                    lblErrorMessage.Visible = true;
-                    lblErrorMessage.Text = "No households were selected.";
-                    return;
-                }
-
-                // Ensure Session["UserId"] is available
-                if (Session["uid"] == null)
-                {
-                    lblErrorMessage.Visible = true;
-                    lblErrorMessage.Text = "User session has expired. Please log in again.";
-                    return;
-                }
-
-                // Create an instance of the HouseholdGroupLinkageModel
-                var householdGroupLinkageModel = new HouseholdGroupLinkageModel
-                {
-                    HouseholdNumbers = selectedHouseholdNumbers,
-                    GroupId = selectedGroupId,
-                    CreatedBy = HttpContext.Current.Session["uid"] != null ? Convert.ToInt32(HttpContext.Current.Session["uid"]) : 0, // Set the creator based on session or any relevant user ID
-                    CreatedDate = DateTime.Now, // Current date and time for record creation
-                    ModifiedBy = HttpContext.Current.Session["uid"] != null ? Convert.ToInt32(HttpContext.Current.Session["uid"]) : 0,
-                    ModifiedDate = DateTime.Now
-                };
-
-                // Call the service method to save the household group linkage
-                var response = _component2Service.SaveHouseholdGroupLinkage(householdGroupLinkageModel);
-
-                // Display a success or error message based on the response
-                if (response.IsSuccess)
-                {
-                    lblSuccessMessage.Visible = true;
-                    lblSuccessMessage.Text = "Group ID assigned successfully to selected households.";
-
-                    // Uncheck the checkboxes and clear selected households
-                    foreach (GridDataItem item in rgResults.MasterTableView.Items)
-                    {
-                        CheckBox chkSelect = (CheckBox)item.FindControl("chkSelect");
-                        if (chkSelect != null)
-                        {
-                            chkSelect.Checked = false; // Uncheck the checkbox
-                        }
-                    }
-                    SelectedHouseholds.Clear();
-                    rgResults.Rebind();
-                }
-                else
-                {
-                    lblErrorMessage.Visible = true;
-                    lblErrorMessage.Text = "Error: " + response.Message;
-                }
-            }
-            catch (Exception ex)
-            {
-                lblErrorMessage.Visible = true;
-                lblErrorMessage.Text = "An error occurred while assigning group ID: " + ex.Message;
-            }
-
-            // Set the visibility of the labels for a limited time
-            lblSuccessMessage.Visible = true;
-            lblErrorMessage.Visible = true;
-            HideLabelsAfterDelay();  // Call a function to hide the labels after a delay
-        }
 
         // Function to hide success and error labels after a delay
         private void HideLabelsAfterDelay()

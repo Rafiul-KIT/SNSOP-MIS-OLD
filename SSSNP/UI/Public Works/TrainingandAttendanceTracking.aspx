@@ -19,7 +19,7 @@
             </ol>
         </div>
         <br />
-        <!-- Link for Downloading Excel Template -->
+        
         <asp:LinkButton ID="lnkDownloadTemplate" runat="server" CssClass="download-link" OnClick="lnkDownloadTemplate_Click" Style="background-color: limegreen; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: normal;">&emsp;Import Training and Attendance Template</asp:LinkButton>
 
     </div>
@@ -33,21 +33,21 @@
                                 <h3 class="panel-title">Training and Attendance Tracking</h3>
                             </div>
                             <div class="panel-body">
-                                <!-- File Upload for Excel -->
+                                
                                 <div class="form-group">
                                     <label for="fileUpload" class="control-label">Attachment:</label>
 
-                                    <!-- Custom file upload button -->
+                                    
                                     <div class="custom-file-upload">
                                         <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
 
                                         <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
                                         <span id="fileInfo" class="file-info">No file chosen</span>
-                                        <!-- File name and size display -->
+                                        
                                     </div>
                                 </div>
 
-                                <!-- CSS for styling -->
+                                
                                 <style type="text/css">
                                     .custom-file-upload {
                                         position: relative;
@@ -58,7 +58,7 @@
                                             padding: 6px 15px;
                                             font-size: 12px;
                                             cursor: pointer;
-                                            border: 1px solid #ccc; /* Add border around the button */
+                                            border: 1px solid #ccc; 
                                             border-radius: 4px;
                                         }
 
@@ -67,8 +67,8 @@
                                         margin-left: 10px;
                                         font-size: 14px;
                                         vertical-align: middle;
-                                        padding: 6px 15px; /* Adjust padding for alignment with button */
-                                        border: 1px solid #ccc; /* Add border around the "No file chosen" field */
+                                        padding: 6px 15px; 
+                                        border: 1px solid #ccc;
                                         border-radius: 4px;
                                     }
 
@@ -107,7 +107,7 @@
 
 
 
-                                <!-- JavaScript to handle file change and display file info -->
+                                
                                 <script type="text/javascript">
                                     function handleFileChange(input) {
                                         var fileName = input.files[0] ? input.files[0].name : "No file chosen";
@@ -117,7 +117,7 @@
                                     }
                                 </script>
                                 <br />
-                                <!-- Upload and Download Links -->
+                                
                                 <div class="form-group">
                                     <asp:Button ID="btnUpload" runat="server" CssClass="btn btn-warning" Text="Upload File" OnClick="btnUpload_Click" />
                                     <br />
@@ -126,14 +126,14 @@
 
                                 </div>
 
-                                <!-- Action Buttons -->
+                                
                                 <div class="form-group" align="center">
                                     <asp:Button ID="btnAnalyze" runat="server" CssClass="btn btn-warning" Text="Analyze" Enabled="false" OnClick="btnAnalyze_Click" />
                                     <asp:Button ID="btnImport" runat="server" CssClass="btn btn-success" Text="Import" Enabled="false" OnClick="btnImport_Click" />
                                     <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-primary" Text="Search" OnClick="btnSearch_Click" />
                                 </div>
 
-                                <!-- Success and Failure Messages -->
+                                
                                 <div id="DivSuccess" runat="server" visible="false" class="alert alert-success">
                                     <asp:Label ID="lblMessageSuccess" runat="server" />
                                 </div>
@@ -141,7 +141,7 @@
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
 
-                                <!-- Telerik RadGrid for displaying data -->
+                                
                                <telerik:RadGrid ID="RadGrid" runat="server" OnItemDataBound="RadGrid_ItemDataBound" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" 
                                     OnNeedDataSource="RadGrid_NeedDataSource" AllowCustomPaging="True" GridLines="Both" >
                                     <PagerStyle Mode="NextPrevAndNumeric" />

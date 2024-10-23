@@ -15,6 +15,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
     {
 
         /// <summary>
+        /// lnkDownloadTemplate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkDownloadTemplate;
+
+        /// <summary>
         /// upd1 control.
         /// </summary>
         /// <remarks>
@@ -22,15 +31,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel upd1;
-
-        /// <summary>
-        /// fileNameDisplay control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText fileNameDisplay;
 
         /// <summary>
         /// fileUpload control.
@@ -49,15 +49,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnUpload;
-
-        /// <summary>
-        /// lnkDownloadTemplate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkDownloadTemplate;
 
         /// <summary>
         /// btnAnalyze control.

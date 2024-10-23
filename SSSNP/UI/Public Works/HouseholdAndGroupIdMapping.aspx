@@ -166,7 +166,7 @@
                                         <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Household Name" />
                                         <telerik:GridBoundColumn DataField="Sex" HeaderText="Gender" />
                                         <telerik:GridBoundColumn DataField="Age" HeaderText="Age" />
-                                        <telerik:GridBoundColumn DataField="GroupId" HeaderText="Group ID" />
+                                        
                                         <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" />
 
                                     </Columns>
