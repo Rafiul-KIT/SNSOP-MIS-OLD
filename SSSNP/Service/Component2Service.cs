@@ -522,20 +522,20 @@ namespace SSSNP.Service
                 return (false, "Enrollment Status is required.");
             }
 
-            if (beneficiary.GroupID == null)
+            /*if (beneficiary.GroupID == null)
             {
-                return (false, "GroupID is required.");
+                //return (false, "GroupID is required.");
             }
 
             if (!validGroupId.Contains(beneficiary.GroupID.Value))
             {
-                return (false, "GroupID is not valid.");
+                //return (false, "GroupID is not valid.");
             }
 
             if (beneficiary.EnrolledMemberID == null)
             {
-                return (false, "Enrolled Member ID is required.");
-            }
+                //return (false, "Enrolled Member ID is required.");
+            }*/
 
 
             // All validations passed

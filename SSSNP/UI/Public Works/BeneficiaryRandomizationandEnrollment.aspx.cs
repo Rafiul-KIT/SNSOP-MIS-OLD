@@ -244,13 +244,13 @@ namespace SSSNP.UI.Public_Works
                 RadGrid.CurrentPageIndex = 0;
 
                 // Bind the DataTable to the RadGrid for display
-                RadGrid.DataSource = null;
-                RadGrid.DataSource = dt;                
+                //RadGrid.DataSource = null;
+                //RadGrid.DataSource = dt;                
 
                 AddSuccessMessage("Data analyzed successfully.");
                 btnImport.Enabled = true;
                 isAnalyzed = true;
-                RadGrid.DataBind();
+                RadGrid.Rebind();
                 RadGrid.Visible = true;
             }
             catch (Exception ex)
@@ -353,10 +353,39 @@ namespace SSSNP.UI.Public_Works
         }
         private DataTable GetBeneficiaryRandomizationandEnrollmentData(int pageIndex, int pageSize)
         {
-            string query = @"SELECT Id, HouseholdNumber, InterestedInParticipating, SurvivesTargeting, TreatmentArm, HHEnrollmentStatus, GroupID, EnrolledMemberID
-                     FROM tbl_com2_Household_Enrollment_Data 
-                     ORDER BY Id 
-                     OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+            string query = @"WITH NomineeCTE AS (
+                        SELECT 
+                            n.application_id, 
+                            n.id, 
+                            ROW_NUMBER() OVER (PARTITION BY n.application_id ORDER BY n.id) AS row_index,
+                            CONCAT(n.nominee_first_name, ' ', 
+                                   ISNULL(n.nominee_middle_name, ''), ' ', 
+                                   ISNULL(n.nominee_last_name, '')) AS NomineeName
+                        FROM tbl_Nominee n
+                    )
+                    SELECT 
+                        e.Id, 
+                        e.HouseholdNumber, 
+                        e.InterestedInParticipating, 
+                        e.SurvivesTargeting, 
+                        e.TreatmentArm, 
+                        e.HHEnrollmentStatus,
+                        g.GroupName,
+                        e.EnrolledMemberID,
+                        NomineeCTE.NomineeName
+                    FROM 
+                        tbl_com2_Household_Enrollment_Data e
+                    LEFT JOIN 
+                        tbl_com2_Household_Group_View g ON e.GroupID = g.Id
+                    LEFT JOIN
+                        NomineeCTE ON e.HouseholdNumber = NomineeCTE.application_id 
+                                   AND e.EnrolledMemberID = NomineeCTE.row_index
+                    ORDER BY 
+                        e.Id 
+                    OFFSET 
+                        @Offset ROWS 
+                    FETCH NEXT 
+                        @PageSize ROWS ONLY;";
 
             DataTable dt = new DataTable();
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -384,6 +413,7 @@ namespace SSSNP.UI.Public_Works
             return dt;
         }
 
+
         protected void RadGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
             try
@@ -394,11 +424,29 @@ namespace SSSNP.UI.Public_Works
                 {
                     // Fetch analyzed data from session
                     dt = Session["AnalyzedData"] as DataTable;
+
+                    GridColumn groupIDColumn = RadGrid.MasterTableView.GetColumn("GroupID");
+                    GridColumn groupNameColumn = RadGrid.MasterTableView.GetColumn("GroupName");
+                    GridColumn groupNomineeColumn = RadGrid.MasterTableView.GetColumn("NomineeName");
+
+                    // If analyzing, show GroupID and hide GroupName, otherwise do the opposite
+                    groupIDColumn.Visible = true;
+                    groupNameColumn.Visible = false;
+                    groupNomineeColumn.Visible = false;
                 }
                 else
                 {
                     // Fetch the data for search result
                     dt = GetBeneficiaryRandomizationandEnrollmentData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+
+                    GridColumn groupIDColumn = RadGrid.MasterTableView.GetColumn("GroupID");
+                    GridColumn groupNameColumn = RadGrid.MasterTableView.GetColumn("GroupName");
+                    GridColumn groupNomineeColumn = RadGrid.MasterTableView.GetColumn("NomineeName");
+
+                    // If analyzing, show GroupID and hide GroupName, otherwise do the opposite
+                    groupIDColumn.Visible = false;
+                    groupNameColumn.Visible = true;
+                    groupNomineeColumn.Visible = true;
                 }
 
                 RadGrid.DataSource = dt;
@@ -412,8 +460,6 @@ namespace SSSNP.UI.Public_Works
                 {
                     RadGrid.VirtualItemCount = 0; // Default to 0 if no valid count is found
                 }
-
-                
             }
             catch (Exception ex)
             {
@@ -441,7 +487,7 @@ namespace SSSNP.UI.Public_Works
                 string hHEnrollmentStatus = dataItem["HHEnrollmentStatus"].Text;
                 dataItem["HHEnrollmentStatus"].Text = hHEnrollmentStatus == "True" ? "Yes" : (hHEnrollmentStatus == "False" ? "No" : "");
 
-                if (isAnalyzed)
+                if ((bool)Session["IsAnalyzing"])
                 {
                     string validationStatus = dataItem["ValidationStatus"].Text;
 

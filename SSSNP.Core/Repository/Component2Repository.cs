@@ -284,8 +284,8 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("SurvivesTargeting", model.SurvivesTargeting);
                     data.Add("TreatmentArm", model.TreatmentArm);
                     data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus);
-                    data.Add("GroupID", denormalizedData.GroupId ?? (object)DBNull.Value); // Assuming 0 is an invalid GroupID
-                    data.Add("EnrolledMemberID", model.EnrolledMemberID); // Assuming 0 is invalid
+                    data.Add("GroupID", model.GroupID ?? (object)DBNull.Value); // Assuming 0 is an invalid GroupID
+                    data.Add("EnrolledMemberID", model.EnrolledMemberID ?? (object)DBNull.Value); // Assuming 0 is invalid
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
                     data.Add("BomaID", denormalizedData.BomaID);
