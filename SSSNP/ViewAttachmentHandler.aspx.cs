@@ -1474,7 +1474,7 @@ namespace SSSNP_SNSOP
                         var data = householdGroupData[row];
 
                         worksheet.Cells[row + 2, 1].Value = data.HouseholdNumber; // Household Number
-                        worksheet.Cells[row + 2, 6].Value = data.GroupId.HasValue ? data.GroupId.Value.ToString() : ""; // Group ID
+                        worksheet.Cells[row + 2, 6].Value = data.GroupId.HasValue ? (object)data.GroupId.Value : null; // Group ID
                         worksheet.Cells[row + 2, 7].Value = !string.IsNullOrEmpty(data.GroupName) ? data.GroupName : ""; // Group Name
                     }
 

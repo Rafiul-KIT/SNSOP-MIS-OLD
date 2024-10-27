@@ -32,10 +32,10 @@ namespace SSSNP.Service
             return _component2Repository.GetValidHouseholdNumberValues();
         }
 
-        public HashSet<int> GetValidGroupId()
+        /*public HashSet<int> GetValidGroupId()
         {
             return _component2Repository.GetValidGroupId();
-        }
+        }*/
 
         public ResponseModel SaveTrainingAndAttendanceTracking(List<TrainingAndAttendanceModel> request)
         {
@@ -443,15 +443,15 @@ namespace SSSNP.Service
             int skipCount = 0;
 
             // Fetch valid household numbers as a HashSet for faster lookup
-            var validHouseholdNumbers = _component2Repository.GetValidHouseholdNumberValues(); // Assuming it returns HashSet<string>
-            var validGroupId = _component2Repository.GetValidGroupId();
+            //var validHouseholdNumbers = _component2Repository.GetValidHouseholdNumberValues(); // Assuming it returns HashSet<string>
+            //var validGroupId = _component2Repository.GetValidGroupId();
 
             try
             {
                 foreach (var beneficiary in beneficiaries)
                 {
                     // Pass valid household numbers to IsValidData
-                    var validationResult = IsValidData(beneficiary, validHouseholdNumbers,validGroupId); // Pass HashSet to validation
+                    var validationResult = IsValidData(beneficiary); // Pass HashSet to validation
                     if (!validationResult.isValid)
                     {
                         skipCount++;
@@ -484,18 +484,12 @@ namespace SSSNP.Service
         }
 
 
-        public (bool isValid, string errorMessage) IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary, HashSet<string> validHouseholdNumbers, HashSet<int> validGroupId)
+        public (bool isValid, string errorMessage) IsValidData(BeneficiaryRandomizationAndEnrollmentModel beneficiary)
         {
             // Check for missing Household Number
             if (string.IsNullOrWhiteSpace(beneficiary?.HouseholdNumber))
             {
                 return (false, "Household Number is required.");
-            }
-
-            // Check if the household number is valid using the HashSet for faster lookup
-            if (!validHouseholdNumbers.Contains(beneficiary.HouseholdNumber?.Trim()))
-            {
-                return (false, "Household Number is not valid.");
             }
 
             // Check for missing InterestedInParticipating value
@@ -522,12 +516,12 @@ namespace SSSNP.Service
                 return (false, "Enrollment Status is required.");
             }
 
-            /*if (beneficiary.GroupID == null)
+            /*if (beneficiary.GroupID == null || beneficiary.GroupID != null)
             {
-                //return (false, "GroupID is required.");
-            }
+                return (true, "Valid");
+            }*/
 
-            if (!validGroupId.Contains(beneficiary.GroupID.Value))
+            /*if (!validGroupId.Contains(beneficiary.GroupID.Value))
             {
                 //return (false, "GroupID is not valid.");
             }

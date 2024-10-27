@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -81,7 +82,7 @@ namespace SSSNP.UI.Public_Works
                         bool? survivesTargeting = ParseBoolean(worksheet.Cells[row, 3].Text);
                         bool? treatmentArm = ParseBoolean(worksheet.Cells[row, 4].Text);
                         bool? hHEnrollmentStatus = ParseBoolean(worksheet.Cells[row, 5].Text);
-
+                        
                         int? groupID = null;
                         int? enrolledMemberID = null;
 
@@ -164,8 +165,8 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("EnrolledMemberID", typeof(int));  // Add EnrolledMemberID
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
-                var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
-                var validGroupId = _component2Service.GetValidGroupId();
+                //var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
+                //var validGroupId = _component2Service.GetValidGroupId();
 
                 var validBeneficiary = new List<BeneficiaryRandomizationAndEnrollmentModel>();
                 var uploadedDataList = new List<BeneficiaryEnrollmentAuditModel>();
@@ -206,7 +207,7 @@ namespace SSSNP.UI.Public_Works
                         dr["Id"] = DBNull.Value; // Not redundant, no HouseholdId
                     }
 
-                    var validationResult = service.IsValidData(beneficiary, validHouseholdNumbers,validGroupId);
+                    var validationResult = service.IsValidData(beneficiary);
 
 
                     if (!validationResult.isValid)
@@ -281,7 +282,6 @@ namespace SSSNP.UI.Public_Works
                     _component2Service.SaveAuditLog(allDataList, "tbl_com2_Household_Enrollment_Data_Audit");
                 }
                 Session["UploadedBeneficiaryEnrollmentAllData"] = null;
-
                 // Pass the entire list to the service for processing
                 var response = service.SaveBeneficiaries(beneficiaries);
                 if (!response.IsSuccess)

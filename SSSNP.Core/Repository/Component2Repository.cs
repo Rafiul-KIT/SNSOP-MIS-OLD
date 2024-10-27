@@ -258,6 +258,7 @@ namespace SSSNP_SNSOP.Core.Repository
 
         public ResponseModel SaveBeneficiary(BeneficiaryRandomizationAndEnrollmentModel model)
         {
+            //Debug.WriteLine(model.ToString());
             var response = new ResponseModel();
             int insertCount = 0; // Counter for successfully inserted records
             try
@@ -274,8 +275,6 @@ namespace SSSNP_SNSOP.Core.Repository
                         response.Message = "Nominee info not found for this household number: " + model.HouseholdNumber?.Trim();
                         return response;
                     }
-
-
                     // Prepare data to insert/update
                     Dictionary<string, object> data = new Dictionary<string, object>();
 
@@ -284,8 +283,9 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("SurvivesTargeting", model.SurvivesTargeting);
                     data.Add("TreatmentArm", model.TreatmentArm);
                     data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus);
-                    data.Add("GroupID", model.GroupID ?? (object)DBNull.Value); // Assuming 0 is an invalid GroupID
-                    data.Add("EnrolledMemberID", model.EnrolledMemberID ?? (object)DBNull.Value); // Assuming 0 is invalid
+                    data.Add("GroupID", model.GroupID ?? (object)DBNull.Value);
+                    data.Add("EnrolledMemberID", model.EnrolledMemberID ?? (object)DBNull.Value); 
+                    data.Add("StateID", denormalizedData.StateID);
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
                     data.Add("BomaID", denormalizedData.BomaID);
@@ -295,7 +295,6 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("LastName", denormalizedData.LastName ?? (object)DBNull.Value);
                     data.Add("Gender", denormalizedData.Gender ?? (object)DBNull.Value);
                     data.Add("Age", denormalizedData.Age);
-
 
                     // Add audit information based on whether the record is new or existing
                     if (!isExist)
@@ -337,7 +336,7 @@ namespace SSSNP_SNSOP.Core.Repository
             catch (Exception ex)
             {
                 response.IsSuccess = false;
-                response.Message = "Error when saving Beneficiary data: " + ex.Message;
+                response.Message = "Error when saving Beneficiary data: " + ex.Message + model.HouseholdNumber;
                 return response;
             }
         }
@@ -820,7 +819,7 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-        public HashSet<int> GetValidGroupId()
+        /*public HashSet<int> GetValidGroupId()
         {
             try
             {
@@ -855,7 +854,7 @@ namespace SSSNP_SNSOP.Core.Repository
                 Console.WriteLine("Error when retrieving valid Group IDs. Error: " + ex.ToString());
                 return new HashSet<int>();
             }
-        }
+        }*/
 
         public DataTable GetHouseholdDataByLocation(SqlParameter stateParam, SqlParameter countyParam, SqlParameter payamParam, SqlParameter bomaParam)
         {
