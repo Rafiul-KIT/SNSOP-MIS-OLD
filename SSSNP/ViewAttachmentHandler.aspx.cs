@@ -1458,12 +1458,12 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 3].Value = "Survives Targeting";
                     worksheet.Cells[1, 4].Value = "Treatment Arm";
                     worksheet.Cells[1, 5].Value = "HH Enrollment Status";
-                    worksheet.Cells[1, 6].Value = "Group ID";
-                    worksheet.Cells[1, 7].Value = "Group Name";
-                    worksheet.Cells[1, 8].Value = "Enrolled Member ID";
+                    //worksheet.Cells[1, 6].Value = "Group ID";
+                    worksheet.Cells[1, 6].Value = "Group Name";
+                    worksheet.Cells[1, 7].Value = "Enrolled Member ID";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 8; col++)
+                    for (int col = 1; col <= 7; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -1474,14 +1474,14 @@ namespace SSSNP_SNSOP
                         var data = householdGroupData[row];
 
                         worksheet.Cells[row + 2, 1].Value = data.HouseholdNumber; // Household Number
-                        worksheet.Cells[row + 2, 6].Value = data.GroupId.HasValue ? (object)data.GroupId.Value : null; // Group ID
-                        worksheet.Cells[row + 2, 7].Value = !string.IsNullOrEmpty(data.GroupName) ? data.GroupName : ""; // Group Name
+                        //worksheet.Cells[row + 2, 6].Value = data.GroupId.HasValue ? (object)data.GroupId.Value : null; // Group ID
+                        worksheet.Cells[row + 2, 6].Value = !string.IsNullOrEmpty(data.GroupName) ? data.GroupName : ""; // Group Name
                     }
 
                     // Lock the Household Number, Group ID, and Group Name columns (Columns 1, 6, and 7)
                     worksheet.Cells["A2:A" + (householdGroupData.Count + 1)].Style.Locked = true;
                     worksheet.Cells["F2:F" + (householdGroupData.Count + 1)].Style.Locked = true;
-                    worksheet.Cells["G2:G" + (householdGroupData.Count + 1)].Style.Locked = true;
+                    //worksheet.Cells["G2:G" + (householdGroupData.Count + 1)].Style.Locked = true;
 
                     // Define the Yes/No options for the drop-downs
                     string[] yesNoOptions = { "Yes", "No" };
@@ -1520,7 +1520,7 @@ namespace SSSNP_SNSOP
 
                     // Unlock other cells so they can be edited by the user
                     worksheet.Cells["B2:E1000"].Style.Locked = false;
-                    worksheet.Cells["H2:H1000"].Style.Locked = false; // Allow users to edit "Enrolled Member ID"
+                    worksheet.Cells["G2:G1000"].Style.Locked = false; // Allow users to edit "Enrolled Member ID"
 
                     // Auto-fit columns to adjust the size
                     worksheet.Cells.AutoFitColumns();

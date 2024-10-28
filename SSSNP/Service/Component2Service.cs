@@ -479,6 +479,7 @@ namespace SSSNP.Service
             {
                 response.IsSuccess = false;
                 response.Message = "Error saving Beneficiary data: " + ex.Message;
+                Debug.WriteLine(ex.Message);
                 return response;
             }
         }

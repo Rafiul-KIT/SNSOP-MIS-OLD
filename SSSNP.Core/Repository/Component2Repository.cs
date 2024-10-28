@@ -283,7 +283,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("SurvivesTargeting", model.SurvivesTargeting);
                     data.Add("TreatmentArm", model.TreatmentArm);
                     data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus);
-                    data.Add("GroupID", model.GroupID ?? (object)DBNull.Value);
+                    data.Add("GroupID", denormalizedData.GroupId ?? (object)DBNull.Value);
                     data.Add("EnrolledMemberID", model.EnrolledMemberID ?? (object)DBNull.Value); 
                     data.Add("StateID", denormalizedData.StateID);
                     data.Add("CountyID", denormalizedData.CountyID);
@@ -311,13 +311,34 @@ namespace SSSNP_SNSOP.Core.Repository
                     // Insert or update the data
                     if (isExist)
                     {
-                        _dbOperation.UpdateData("tbl_com2_Household_Enrollment_Data", data, " HouseholdNumber = '" + model.HouseholdNumber?.Trim() + "'");
+                        try
+                        {
+                            _dbOperation.UpdateData("tbl_com2_Household_Enrollment_Data", data, " HouseholdNumber = '" + model.HouseholdNumber?.Trim() + "'");
+                        }
+                        catch (Exception ex)
+                        {
+                            response.IsSuccess = false;
+                            response.Message = "Error updating Beneficiary data for Household Number: " + model.HouseholdNumber?.Trim() + ". " + ex.Message;
+                            Debug.WriteLine($"Update Exception: {ex}");
+                            return response; // Return immediately if update fails
+                        }
                     }
                     else
                     {
-                        _dbOperation.InsertData("tbl_com2_Household_Enrollment_Data", data);
-                        insertCount++; // Increment the counter for successful insertion
+                        try
+                        {
+                            _dbOperation.InsertData("tbl_com2_Household_Enrollment_Data", data);
+                            insertCount++; // Increment the counter for successful insertion
+                        }
+                        catch (Exception ex)
+                        {
+                            response.IsSuccess = false;
+                            response.Message = "Error inserting Beneficiary data for Household Number: " + model.HouseholdNumber?.Trim() + ". " + ex.Message;
+                            Debug.WriteLine($"Insert Exception: {ex}");
+                            return response; // Return immediately if insert fails
+                        }
                     }
+
 
                     // Include insert count in the success message if insertions were made
                     if (insertCount > 0)
@@ -337,6 +358,7 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 response.IsSuccess = false;
                 response.Message = "Error when saving Beneficiary data: " + ex.Message + model.HouseholdNumber;
+                Debug.WriteLine($"Exception: {ex}");
                 return response;
             }
         }
@@ -522,7 +544,7 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     result.Gender = dt.Rows[0]["Sex"] != null ? dt.Rows[0]["Sex"].ToString() : string.Empty;
                     result.Age = dt.Rows[0]["Age"] != null ? Convert.ToInt32(dt.Rows[0]["Age"].ToString()) : 0;
-                    result.GroupId = dt.Rows[0]["GroupId"] != null ? Convert.ToInt32(dt.Rows[0]["GroupId"].ToString()) : 0;
+                    result.GroupId = dt.Rows[0]["GroupId"] != DBNull.Value ? Convert.ToInt32(dt.Rows[0]["GroupId"]) : (int?)null;
                 }
                 return result;
             }

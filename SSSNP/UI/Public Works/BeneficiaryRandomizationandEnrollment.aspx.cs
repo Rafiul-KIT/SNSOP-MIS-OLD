@@ -83,15 +83,15 @@ namespace SSSNP.UI.Public_Works
                         bool? treatmentArm = ParseBoolean(worksheet.Cells[row, 4].Text);
                         bool? hHEnrollmentStatus = ParseBoolean(worksheet.Cells[row, 5].Text);
                         
-                        int? groupID = null;
+                        //int? groupID = null;
                         int? enrolledMemberID = null;
 
-                        if (int.TryParse(worksheet.Cells[row, 6].Text, out int parsedGroupID))
+                        /*if (int.TryParse(worksheet.Cells[row, 6].Text, out int parsedGroupID))
                         {
                             groupID = parsedGroupID;
-                        }
+                        }*/
 
-                        if (int.TryParse(worksheet.Cells[row, 8].Text, out int parsedEnrolledMemberID))
+                        if (int.TryParse(worksheet.Cells[row, 7].Text, out int parsedEnrolledMemberID))
                         {
                             enrolledMemberID = parsedEnrolledMemberID;
                         }
@@ -113,7 +113,7 @@ namespace SSSNP.UI.Public_Works
                             SurvivesTargeting = survivesTargeting,
                             TreatmentArm = treatmentArm,
                             HHEnrollmentStatus = hHEnrollmentStatus,
-                            GroupID = groupID,
+                            //GroupID = groupID,
                             EnrolledMemberID = enrolledMemberID,
                             CreatedBy = userId,
                             ModifiedBy = userId
@@ -161,7 +161,7 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("SurvivesTargeting", typeof(bool));
                 dt.Columns.Add("TreatmentArm", typeof(bool));
                 dt.Columns.Add("HHEnrollmentStatus", typeof(bool));
-                dt.Columns.Add("GroupID", typeof(int));  // Add GroupID
+                //dt.Columns.Add("GroupID", typeof(int));  // Add GroupID
                 dt.Columns.Add("EnrolledMemberID", typeof(int));  // Add EnrolledMemberID
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
@@ -185,7 +185,7 @@ namespace SSSNP.UI.Public_Works
                     dr["SurvivesTargeting"] = beneficiary.SurvivesTargeting.HasValue ? (object)beneficiary.SurvivesTargeting.Value : DBNull.Value;
                     dr["TreatmentArm"] = beneficiary.TreatmentArm.HasValue ? (object)beneficiary.TreatmentArm.Value : DBNull.Value;
                     dr["HHEnrollmentStatus"] = beneficiary.HHEnrollmentStatus.HasValue ? (object)beneficiary.HHEnrollmentStatus.Value : DBNull.Value;
-                    dr["GroupID"] = beneficiary.GroupID.HasValue ? (object)beneficiary.GroupID.Value : DBNull.Value;
+                    //dr["GroupID"] = beneficiary.GroupID.HasValue ? (object)beneficiary.GroupID.Value : DBNull.Value;
                     dr["EnrolledMemberID"] = beneficiary.EnrolledMemberID.HasValue ? (object)beneficiary.EnrolledMemberID.Value : DBNull.Value;
 
                     auditEntityObj.FileId = FileId;
@@ -194,7 +194,7 @@ namespace SSSNP.UI.Public_Works
                     auditEntityObj.SurvivesTargeting = beneficiary.SurvivesTargeting;
                     auditEntityObj.TreatmentArm = beneficiary.TreatmentArm;
                     auditEntityObj.HHEnrollmentStatus = beneficiary.HHEnrollmentStatus;
-                    auditEntityObj.GroupID = beneficiary.GroupID;
+                    //auditEntityObj.GroupID = beneficiary.GroupID;
                     auditEntityObj.EnrolledMemberID = beneficiary.EnrolledMemberID;
 
                     // Check if the household is redundant
@@ -425,13 +425,12 @@ namespace SSSNP.UI.Public_Works
                     // Fetch analyzed data from session
                     dt = Session["AnalyzedData"] as DataTable;
 
-                    GridColumn groupIDColumn = RadGrid.MasterTableView.GetColumn("GroupID");
+                    //GridColumn groupIDColumn = RadGrid.MasterTableView.GetColumn("GroupID");
                     GridColumn groupNameColumn = RadGrid.MasterTableView.GetColumn("GroupName");
                     GridColumn groupNomineeColumn = RadGrid.MasterTableView.GetColumn("NomineeName");
 
                     // If analyzing, show GroupID and hide GroupName, otherwise do the opposite
-                    groupIDColumn.Visible = true;
-                    groupNameColumn.Visible = false;
+                    //groupIDColumn.Visible = true;
                     groupNomineeColumn.Visible = false;
                 }
                 else
@@ -439,13 +438,12 @@ namespace SSSNP.UI.Public_Works
                     // Fetch the data for search result
                     dt = GetBeneficiaryRandomizationandEnrollmentData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
 
-                    GridColumn groupIDColumn = RadGrid.MasterTableView.GetColumn("GroupID");
+                    //GridColumn groupIDColumn = RadGrid.MasterTableView.GetColumn("GroupID");
                     GridColumn groupNameColumn = RadGrid.MasterTableView.GetColumn("GroupName");
                     GridColumn groupNomineeColumn = RadGrid.MasterTableView.GetColumn("NomineeName");
 
                     // If analyzing, show GroupID and hide GroupName, otherwise do the opposite
-                    groupIDColumn.Visible = false;
-                    groupNameColumn.Visible = true;
+                    //groupIDColumn.Visible = false;
                     groupNomineeColumn.Visible = true;
                 }
 
