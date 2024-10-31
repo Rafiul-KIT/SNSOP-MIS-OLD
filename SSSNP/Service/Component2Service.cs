@@ -505,7 +505,7 @@ namespace SSSNP.Service
                 return (false, "Survives Targeting is required.");
             }
 
-            // Check for missing TreatmentArm value
+            /*// Check for missing TreatmentArm value
             if (beneficiary.TreatmentArm == null)
             {
                 return (false, "Treatment Arm is required.");
@@ -515,7 +515,7 @@ namespace SSSNP.Service
             if (beneficiary.HHEnrollmentStatus == null)
             {
                 return (false, "Enrollment Status is required.");
-            }
+            }*/
 
             /*if (beneficiary.GroupID == null || beneficiary.GroupID != null)
             {

@@ -258,7 +258,7 @@ namespace SSSNP_SNSOP.Core.Repository
 
         public ResponseModel SaveBeneficiary(BeneficiaryRandomizationAndEnrollmentModel model)
         {
-            //Debug.WriteLine(model.ToString());
+            Debug.WriteLine(model.ToString());
             var response = new ResponseModel();
             int insertCount = 0; // Counter for successfully inserted records
             try
@@ -281,7 +281,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("HouseholdNumber", model.HouseholdNumber?.Trim());
                     data.Add("InterestedInParticipating", model.InterestedInParticipating);
                     data.Add("SurvivesTargeting", model.SurvivesTargeting);
-                    data.Add("TreatmentArm", model.TreatmentArm);
+                    data.Add("TreatmentArm", model.TreatmentArm ?? (object)DBNull.Value);
                     data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus);
                     data.Add("GroupID", denormalizedData.GroupId ?? (object)DBNull.Value);
                     data.Add("EnrolledMemberID", model.EnrolledMemberID ?? (object)DBNull.Value); 

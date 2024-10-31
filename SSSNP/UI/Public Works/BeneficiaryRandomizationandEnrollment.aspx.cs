@@ -103,7 +103,13 @@ namespace SSSNP.UI.Public_Works
                             enrolledMemberID == null)
                         {
                             continue; // Skip row with no data
-                        } 
+                        }
+
+                        if (hHEnrollmentStatus == false) // Enrollment Status is NO
+                        {
+                            treatmentArm = null;
+                            enrolledMemberID = null;
+                        }
 
                         // Add to the list
                         beneficiaries.Add(new BeneficiaryRandomizationAndEnrollmentModel
@@ -430,7 +436,7 @@ namespace SSSNP.UI.Public_Works
                     GridColumn groupNomineeColumn = RadGrid.MasterTableView.GetColumn("NomineeName");
 
                     // If analyzing, show GroupID and hide GroupName, otherwise do the opposite
-                    //groupIDColumn.Visible = true;
+                    groupNameColumn.Visible = false;
                     groupNomineeColumn.Visible = false;
                 }
                 else
@@ -443,7 +449,7 @@ namespace SSSNP.UI.Public_Works
                     GridColumn groupNomineeColumn = RadGrid.MasterTableView.GetColumn("NomineeName");
 
                     // If analyzing, show GroupID and hide GroupName, otherwise do the opposite
-                    //groupIDColumn.Visible = false;
+                    groupNameColumn.Visible = true;
                     groupNomineeColumn.Visible = true;
                 }
 

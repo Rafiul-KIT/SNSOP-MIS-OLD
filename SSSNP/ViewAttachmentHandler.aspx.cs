@@ -1515,6 +1515,18 @@ namespace SSSNP_SNSOP
                         validation4.Formula.Values.Add(option);
                     }
 
+                    // Add custom validation for TreatmentArm field (Column 4) to enforce condition based on HH Enrollment Status
+                    var treatmentArmValidation = worksheet.DataValidations.AddCustomValidation("D2:D1000");
+                    treatmentArmValidation.Formula.ExcelFormula = "IF($E2=\"Yes\",TRUE,FALSE)";
+                    treatmentArmValidation.ShowErrorMessage = true;
+                    treatmentArmValidation.Error = "Treatment Arm can only be filled if HH Enrollment Status is Yes.";
+
+                    // Add custom validation for Enrolled Member ID field (Column 7) to enforce condition based on HH Enrollment Status
+                    var enrolledMemberValidation = worksheet.DataValidations.AddCustomValidation("G2:G1000");
+                    enrolledMemberValidation.Formula.ExcelFormula = "IF($E2=\"Yes\",TRUE,FALSE)";
+                    enrolledMemberValidation.ShowErrorMessage = true;
+                    enrolledMemberValidation.Error = "Enrolled Member ID should only be entered if HH Enrollment Status is Yes.";
+
                     // Protect the worksheet so that locked cells (Household Number, Group ID, Group Name) are read-only
                     worksheet.Protection.IsProtected = true;
 
