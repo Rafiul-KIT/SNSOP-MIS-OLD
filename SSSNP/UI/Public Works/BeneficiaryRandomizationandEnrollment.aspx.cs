@@ -105,11 +105,11 @@ namespace SSSNP.UI.Public_Works
                             continue; // Skip row with no data
                         }
 
-                        if (hHEnrollmentStatus == false) // Enrollment Status is NO
+                        /*if (hHEnrollmentStatus == false) // Enrollment Status is NO
                         {
                             treatmentArm = null;
                             enrolledMemberID = null;
-                        }
+                        }*/
 
                         // Add to the list
                         beneficiaries.Add(new BeneficiaryRandomizationAndEnrollmentModel

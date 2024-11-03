@@ -259,6 +259,7 @@
                     document.getElementById('<%= txtUserCode.ClientID %>').value = userCode;
                     document.getElementById('<%= ddlStatus.ClientID %>').value = status;
                     document.getElementById('<%= txtEmail.ClientID %>').value = email;
+                    document.getElementById('<%= txtEmail.ClientID %>').readOnly = true;
 
                     // Set GBV User radio button
                     if (gbvUser === "True") {

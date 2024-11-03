@@ -327,6 +327,7 @@
                                             </li>
                                             <li id="EconomicOpportunities" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-money"></i>Economic Opportunities</a>
                                                  <ul class="down_menu">
+                                                     <li id="EconomicOpportunitiesDashboard" runat="server"><a href="EconomicOpportunitiesDashboard.aspx">Economic Opportunities Dashboard</a></li>
                                                      <li id="Component2TemplateImporting" runat="server"><a href="Component2TemplateImporting.aspx">Excel Template Download</a></li>
                                                      <li id="HouseholdGroupView" runat="server"><a href="HouseholdGroupView.aspx">Household Group View</a></li>
                                                      <li id="HouseholdAndGroupIdMapping" runat="server"><a href="HouseholdAndGroupIdMapping.aspx">Household And Group Mapping</a></li>                                                     

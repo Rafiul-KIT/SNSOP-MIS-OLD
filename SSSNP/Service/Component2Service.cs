@@ -505,17 +505,31 @@ namespace SSSNP.Service
                 return (false, "Survives Targeting is required.");
             }
 
-            /*// Check for missing TreatmentArm value
-            if (beneficiary.TreatmentArm == null)
+            // Treatment Arm should only be specified if HH Enrollment Status is "Yes"
+            if (beneficiary.HHEnrollmentStatus == true && beneficiary.TreatmentArm == null)
             {
                 return (false, "Treatment Arm is required.");
+            }
+            else if (beneficiary.HHEnrollmentStatus == false && beneficiary.TreatmentArm != null)
+            {
+                return (false, "Treatment Arm should only be specified if HH Enrollment Status is 'Yes'.");
             }
 
             // Check for missing HHEnrollmentStatus value
             if (beneficiary.HHEnrollmentStatus == null)
             {
                 return (false, "Enrollment Status is required.");
-            }*/
+            }
+
+            // Enrolled Member ID should only be specified if HH Enrollment Status is "Yes"
+            if (beneficiary.HHEnrollmentStatus == true && beneficiary.EnrolledMemberID == null)
+            {
+                return (false, "Enrolled Member ID is required.");
+            }
+            else if (beneficiary.HHEnrollmentStatus == false && beneficiary.EnrolledMemberID != null)
+            {
+                return (false, "Enrolled Member ID should only be specified if HH Enrollment Status is 'Yes'.");
+            }
 
             /*if (beneficiary.GroupID == null || beneficiary.GroupID != null)
             {
