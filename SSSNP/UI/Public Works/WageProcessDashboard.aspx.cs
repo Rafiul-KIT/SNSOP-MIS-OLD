@@ -37,7 +37,20 @@ public partial class WageProcessDashboard : System.Web.UI.Page
         #region Is not Postback Statement
         if (!IsPostBack)
         {
-            lblOfficer.Text = Session["user_type"].ToString().Trim();
+            string userType = Session["user_type"].ToString().Trim();
+            switch (userType)
+            {
+                case "Cordinator":
+                    userType = "Initial Reviewer";
+                    break;
+                case "Specialist":
+                    userType = "Financial Approver";
+                    break;
+                case "Manager":
+                    userType = "Final Payment Authorizer";
+                    break;
+            }
+            lblOfficer.Text = userType;
 
             FillDetails();
 
@@ -92,7 +105,8 @@ public partial class WageProcessDashboard : System.Web.UI.Page
         DataSet ds = new DataSet();
         DataSet dsLoc = new DataSet();
 
-        ds = Gen.getWageProcessDashboard(Session["uid"].ToString().Trim(), Session["user_type"].ToString().Trim());
+        //ds = Gen.getWageProcessDashboard(Session["uid"].ToString().Trim(), Session["user_type"].ToString().Trim());
+        ds = Gen.getWageProcessDashboardKIT(Session["uid"].ToString().Trim(), Session["user_type"].ToString().Trim());
     
 
         if (ds.Tables[0].Rows.Count > 0)

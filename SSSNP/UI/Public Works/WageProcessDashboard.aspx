@@ -37,7 +37,7 @@
                 <div class="panel panel-warning">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <asp:Label ID="lblOfficer" runat="server" Text="Label"></asp:Label>&nbsp; Wages Dashboard 
+                            <asp:Label ID="lblOfficer" runat="server" Text="Label"></asp:Label> Wages Dashboard 
                         </h3>
                     </div>
 
