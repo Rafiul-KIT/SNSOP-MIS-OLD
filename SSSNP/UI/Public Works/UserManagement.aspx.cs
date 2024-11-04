@@ -89,6 +89,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         UpdateOperation(userEmail, userName);
                     }
                 }
+
+                // Clear hidden fields
+                hfCreatedBy.Value = "";
+                hfCreatedDt.Value = "";
+                hfModifiedBy.Value = "";
+                hfModifiedDt.Value = "";
+                hfOriginalEmail.Value = "";
             }
             catch (Exception ex)
             {
@@ -362,6 +369,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
             rblIPApprover.ClearSelection();
             rblEmailReceiver.ClearSelection();
             lblMessage.Text = "";
+
+            // Clear hidden fields
+            hfCreatedBy.Value = "";
+            hfCreatedDt.Value = "";
+            hfModifiedBy.Value = "";
+            hfModifiedDt.Value = "";
+            hfOriginalEmail.Value = "";
 
             // Clear server-side validation warnings if needed
             Page.Validate();

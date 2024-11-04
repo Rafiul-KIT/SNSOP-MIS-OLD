@@ -55,10 +55,6 @@
                                                             ErrorMessage="Please Enter User ID" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span>
                                                         </asp:RequiredFieldValidator>
 
-                                                       <%-- <!-- Regular Expression Validator for No Spaces -->
-                                                        <asp:RegularExpressionValidator ID="revUserId" runat="server" ControlToValidate="txtUserId"
-                                                            ErrorMessage="Spaces are not allowed in User ID" ValidationExpression="^\S+$"
-                                                            CssClass="text-danger" Display="Dynamic"></asp:RegularExpressionValidator>--%>
                                                     </td>
                                                 </tr>
                                                 <!-- User Name Field -->
@@ -309,25 +305,6 @@
                     // Clear any validation messages
                     clearValidationMessages();
                 }
-
-                /*// Client-side validation
-                 * 
-                 * OnClientClick="return validateForm();"
-                 * 
-                function validateForm() {
-                    var userId = document.getElementById('*/<%= txtUserId.ClientID %>/*').value;
-                    var userName = document.getElementById('*/<%= txtUserName.ClientID %>/*').value;
-                    var userType = document.getElementById('*/<%= ddlUserType.ClientID %>/*').value;
-                    var userCode = document.getElementById('*/<%= txtUserCode.ClientID %>/*').value;
-                    var email = document.getElementById('*/<%= txtEmail.ClientID %>/*').value;
-
-                    if (!userId || !userName || !userType || !userCode || !email) {
-                        alert("Please fill in all required fields.");
-                        return false;
-                    }
-
-                    return true;
-                }*/
 
                 function clearValidationMessages() {
                     var validators = document.getElementsByClassName('text-danger');
