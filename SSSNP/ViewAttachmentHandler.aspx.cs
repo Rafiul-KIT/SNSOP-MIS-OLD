@@ -177,8 +177,8 @@ namespace SSSNP_SNSOP
 
                     // Adding the three columns
                     worksheet.Cells[1, 1].Value = "Household Number";
-                    worksheet.Cells[1, 2].Value = "BusinessPlanStatus";
-                    worksheet.Cells[1, 3].Value = "BusinessType";
+                    worksheet.Cells[1, 2].Value = "Business Plan Status";
+                    worksheet.Cells[1, 3].Value = "Business Type";
 
                     // Set headers to be bold
                     for (int col = 1; col <= 3; col++)
@@ -1568,7 +1568,7 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Payment Cycle";
                     worksheet.Cells[1, 3].Value = "Payment Amount";
-                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(mm-dd-yyyy)";
+                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(dd-mm-yyyy)";
                     worksheet.Cells[1, 4].Style.WrapText = true; 
 
                     // Set headers to be bold
@@ -1611,14 +1611,14 @@ namespace SSSNP_SNSOP
                     paymentCycleValidation.Formula.Values.Add("Installment 9");
 
                     // Set the format for "Payment Date" as DateTime for the actual data rows
-                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
+                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "dd-MM-yyyy"; // or any DateTime format
 
                     // Apply data validation for the "Payment Date" column (only to the actual data rows)
                     var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, dataRows + 1, 4].Address);
                     dateValidation.ShowErrorMessage = true;
                     dateValidation.ErrorTitle = "Invalid Date";
-                    dateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in MM-dd-yyyy";
-                    dateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in MM-dd-yyyy";
+                    dateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-mm-yyyy";
+                    dateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-MM-yyyy";
                     dateValidation.AllowBlank = true;
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
