@@ -9122,6 +9122,45 @@ public class General
         }
     }
 
+    public DataSet getWageProcessDashboardKIT(string intOfficerid, string OfficerLevel)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("getWageProcessDashboardKIT", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+
+            if (intOfficerid.Trim() == "" || intOfficerid.Trim() == null)
+                da.SelectCommand.Parameters.Add("@intOfficerid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intOfficerid", SqlDbType.VarChar).Value = intOfficerid.ToString();
+
+            if (OfficerLevel.Trim() == "" || OfficerLevel.Trim() == null)
+                da.SelectCommand.Parameters.Add("@OfficerLevel", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@OfficerLevel", SqlDbType.VarChar).Value = OfficerLevel.ToString();
+
+
+
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+
+
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
+
     public DataSet GetWagesdashboarddrildownDet(string intOfficerid, string OfficerLevel, string ReqStatus, string intIPid, string intStateid, string intCountyid, string intProjectid, string intTypeofworkid, string intPayamid, string intBomaid, string workcode, string wagereqno)
     {
         con.OpenConnection();
@@ -9212,6 +9251,96 @@ public class General
         }
     }
 
+    public DataSet GetWagesdashboarddrildownDetKIT(string intOfficerid, string OfficerLevel, string ReqStatus, string intIPid, string intStateid, string intCountyid, string intProjectid, string intTypeofworkid, string intPayamid, string intBomaid, string workcode, string wagereqno)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("GetWagesdashboarddrildownDetLatKIT", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            if (intOfficerid.Trim() == "" || intOfficerid.Trim() == null)
+                da.SelectCommand.Parameters.Add("@intOfficerid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intOfficerid", SqlDbType.VarChar).Value = intOfficerid.ToString();
+
+            if (OfficerLevel.Trim() == "" || OfficerLevel.Trim() == null)
+                da.SelectCommand.Parameters.Add("@OfficerLevel", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@OfficerLevel", SqlDbType.VarChar).Value = OfficerLevel.ToString();
+
+            if (ReqStatus.Trim() == "" || ReqStatus.Trim() == null)
+                da.SelectCommand.Parameters.Add("@ReqStatus", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@ReqStatus", SqlDbType.VarChar).Value = ReqStatus.ToString();
+
+            if (intIPid.Trim() == "" || intIPid.Trim() == null || intIPid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intIPid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intIPid", SqlDbType.VarChar).Value = intIPid.ToString();
+
+            if (intStateid.Trim() == "" || intStateid.Trim() == null || intStateid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intStateid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intStateid", SqlDbType.VarChar).Value = intStateid.ToString();
+
+            if (intCountyid.Trim() == "" || intCountyid.Trim() == null || intCountyid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intCountyid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intCountyid", SqlDbType.VarChar).Value = intCountyid.ToString();
+
+
+            if (intProjectid.Trim() == "" || intProjectid.Trim() == null || intProjectid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intProjectid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intProjectid", SqlDbType.VarChar).Value = intProjectid.ToString();
+
+            if (intTypeofworkid.Trim() == "" || intTypeofworkid.Trim() == null || intTypeofworkid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intTypeofworkid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intTypeofworkid", SqlDbType.VarChar).Value = intTypeofworkid.ToString();
+
+            if (intPayamid.Trim() == "" || intPayamid.Trim() == null || intPayamid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intPayamid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intPayamid", SqlDbType.VarChar).Value = intPayamid.ToString();
+
+
+            if (intBomaid.Trim() == "" || intBomaid.Trim() == null || intBomaid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intBomaid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intBomaid", SqlDbType.VarChar).Value = intBomaid.ToString();
+
+            if (workcode.Trim() == "" || workcode.Trim() == null || workcode.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@workcode", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@workcode", SqlDbType.VarChar).Value = workcode.ToString();
+
+            if (wagereqno.Trim() == "" || wagereqno.Trim() == null || wagereqno.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@wagereqno", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@wagereqno", SqlDbType.VarChar).Value = wagereqno.ToString();
+
+            //string intIPid,string intStateid,string intCountyid,string intProjectid,string intTypeofworkid,string intPayamid,string intBomaid,string workcode,string wagereqno
+
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+
+
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
+
     public DataSet GetWagesdashboarddrildownDetAttachCount(string intOfficerid, string OfficerLevel, string ReqStatus, string intIPid, string intStateid, string intCountyid, string intProjectid, string intTypeofworkid, string intPayamid, string intBomaid, string workcode, string wagereqno)
     {
         con.OpenConnection();
@@ -9220,6 +9349,96 @@ public class General
         try
         {
             da = new SqlDataAdapter("GetWagesdashboarddrildownDetLatAttachCount", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            if (intOfficerid.Trim() == "" || intOfficerid.Trim() == null)
+                da.SelectCommand.Parameters.Add("@intOfficerid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intOfficerid", SqlDbType.VarChar).Value = intOfficerid.ToString();
+
+            if (OfficerLevel.Trim() == "" || OfficerLevel.Trim() == null)
+                da.SelectCommand.Parameters.Add("@OfficerLevel", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@OfficerLevel", SqlDbType.VarChar).Value = OfficerLevel.ToString();
+
+            if (ReqStatus.Trim() == "" || ReqStatus.Trim() == null)
+                da.SelectCommand.Parameters.Add("@ReqStatus", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@ReqStatus", SqlDbType.VarChar).Value = ReqStatus.ToString();
+
+            if (intIPid.Trim() == "" || intIPid.Trim() == null || intIPid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intIPid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intIPid", SqlDbType.VarChar).Value = intIPid.ToString();
+
+            if (intStateid.Trim() == "" || intStateid.Trim() == null || intStateid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intStateid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intStateid", SqlDbType.VarChar).Value = intStateid.ToString();
+
+            if (intCountyid.Trim() == "" || intCountyid.Trim() == null || intCountyid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intCountyid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intCountyid", SqlDbType.VarChar).Value = intCountyid.ToString();
+
+
+            if (intProjectid.Trim() == "" || intProjectid.Trim() == null || intProjectid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intProjectid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intProjectid", SqlDbType.VarChar).Value = intProjectid.ToString();
+
+            if (intTypeofworkid.Trim() == "" || intTypeofworkid.Trim() == null || intTypeofworkid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intTypeofworkid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intTypeofworkid", SqlDbType.VarChar).Value = intTypeofworkid.ToString();
+
+            if (intPayamid.Trim() == "" || intPayamid.Trim() == null || intPayamid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intPayamid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intPayamid", SqlDbType.VarChar).Value = intPayamid.ToString();
+
+
+            if (intBomaid.Trim() == "" || intBomaid.Trim() == null || intBomaid.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@intBomaid", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@intBomaid", SqlDbType.VarChar).Value = intBomaid.ToString();
+
+            if (workcode.Trim() == "" || workcode.Trim() == null || workcode.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@workcode", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@workcode", SqlDbType.VarChar).Value = workcode.ToString();
+
+            if (wagereqno.Trim() == "" || wagereqno.Trim() == null || wagereqno.Trim() == "--Select--")
+                da.SelectCommand.Parameters.Add("@wagereqno", SqlDbType.VarChar).Value = "%";
+            else
+                da.SelectCommand.Parameters.Add("@wagereqno", SqlDbType.VarChar).Value = wagereqno.ToString();
+
+            //string intIPid,string intStateid,string intCountyid,string intProjectid,string intTypeofworkid,string intPayamid,string intBomaid,string workcode,string wagereqno
+
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+
+
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
+
+    public DataSet GetWagesdashboarddrildownDetAttachCountKIT(string intOfficerid, string OfficerLevel, string ReqStatus, string intIPid, string intStateid, string intCountyid, string intProjectid, string intTypeofworkid, string intPayamid, string intBomaid, string workcode, string wagereqno)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("GetWagesdashboarddrildownDetLatAttachCountKIT", con.GetConnection);
             da.SelectCommand.CommandType = CommandType.StoredProcedure;
 
             if (intOfficerid.Trim() == "" || intOfficerid.Trim() == null)
