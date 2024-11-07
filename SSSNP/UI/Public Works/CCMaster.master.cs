@@ -43,6 +43,10 @@ public partial class CCMaster : System.Web.UI.MasterPage
         LiIp4.Visible = value;
 
         LiIp5.Visible = value;
+        WageRequestApplyLIPW.Visible = value;
+        WageRequestApplyDIS.Visible = value;
+        WageRequestDraft.Visible = value;
+        RejectedWages.Visible = value;
 
         LiPaymentCycleDocument.Visible = value;
         liUploadPaymentCycleDoc.Visible = value;
@@ -188,6 +192,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
         liUploadPaymentCycleDoc.Visible = false;
         liViewPaymentCycleDoc.Visible = false;
 
+        setAllMenuPermission(false);
+
         if (Session.Count > 0)
         {
             lblwecome.Text = Session["username"].ToString();
@@ -227,7 +233,6 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 {
                     //setAllMenuPermission(false);
                     LiIp5.Visible = true;
-                    RejectedWages.Visible = true;
                     WageRequestDraft.Visible = true;
                 }
                 else

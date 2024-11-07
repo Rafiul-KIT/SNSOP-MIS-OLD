@@ -1,4 +1,4 @@
-<%@ page language="C#" masterpagefile="~/UI/Public Works/TstMaster.master" autoeventwireup="true" inherits="frmMainBenDet" title=":: SSSNP Online Management System ::" enableeventvalidation="false" codebehind="frmMainBenDet.aspx.cs" %>
+<%@ page language="C#" masterpagefile="~/UI/Public Works/CCMaster.master" autoeventwireup="true" inherits="frmMainBenDet" title=":: SSSNP Online Management System ::" enableeventvalidation="false" codebehind="frmMainBenDet.aspx.cs" %>
 
 <%@ register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 <%@ register assembly="Telerik.Web.UI" namespace="Telerik.Web.UI" tagprefix="telerik" %>

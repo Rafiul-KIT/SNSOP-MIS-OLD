@@ -311,11 +311,10 @@
                                             </li>
                                             <li id="LiIp5" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-pencil-square-o"></i>Wage Request</a>
                                                 <ul class="down_menu">
-                                                    <li><a href="PDCHouseholdWagesApply.aspx">Apply for Wage Request LIPW</a> </li>
-                                                    <li><a href="PDCHouseholdWagesApplyDIS.aspx">Apply for Wage Request DIS</a> </li>
+                                                    <li id="WageRequestApplyLIPW" visible="false" runat="server"><a href="PDCHouseholdWagesApply.aspx">Apply for Wage Request LIPW</a> </li>
+                                                    <li id="WageRequestApplyDIS" visible="false" runat="server"><a href="PDCHouseholdWagesApplyDIS.aspx">Apply for Wage Request DIS</a> </li>
                                                     <li id ="WageRequestDraft" visible="false" runat="server"><a href="WagesDasboardDrildown.aspx?Status=0">Wage Request Drafts</a> </li>
                                                     <li id ="RejectedWages" visible="false" runat="server"><a href="WageDraftRejectedList.aspx">Rejected Wages</a> </li>
-
                                                 </ul>
                                             </li>
                                             <li id="LiPaymentCycleDocument" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-pencil-square-o"></i>Payment Cycle Docs</a>
