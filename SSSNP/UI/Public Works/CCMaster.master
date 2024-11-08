@@ -367,7 +367,6 @@
                                                     <li id="gbvNewMenuDashboard" runat="server" visible="false">
                                                         <a href="GBVDashboard.aspx">GBV Dashboard</a>
                                                     </li>
-                                                    <li id="GRMMenuDashboard" visible="false" runat="server"></li>
                                                     <li id="grmReport" visible="false" runat="server"><a href="GrievancesDashboard.aspx">Grievances Status Report</a></li>
                                                     <li id="grmImporting" visible="false" runat="server"><a href="GBVExcelImporting.aspx">Excel Importing</a></li>
                                                 </ul>

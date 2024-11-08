@@ -238,7 +238,12 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 else
                 {
                     LiIp1.Visible = true;
+                    IPDashboard.Visible = true;
+                    IPInvoiceDashboard.Visible = true;
+                    APIDashboard.Visible = true;
+
                     LiIp2.Visible = true;
+
                     LiIp3.Visible = true;
                     workProposalMenu.Visible = true;
                     beneficiaryRegistrationMenu.Visible = true;
@@ -246,17 +251,34 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     printIdCardMenu.Visible = true;
                     workProgressMenu.Visible = true;
                     lipwExportMenu.Visible = true;
-                    LiIp4.Visible = true;
-                    LiIp5.Visible = true;
 
+                    LiIp4.Visible = true;
+
+                    LiIp5.Visible = true;
+                    WageRequestApplyLIPW.Visible = true;
+                    WageRequestApplyDIS.Visible = true;
+                    RejectedWages.Visible = true;
 
                     LiIp6.Visible = true;
+                    nongbvMenu.Visible = true;
+                    nongbvDashboardMenu.Visible = true;
+                    gbvNewMenu.Visible = true;
+                    gbvNewMenuDashboard.Visible = true;
+                    grmReport.Visible = true;
+                    grmImporting.Visible = true;
+
                     LiIp7.Visible = true;
+
                     LiIp8.Visible = true;
+
                     LiIp9.Visible = true;
+
                     LiIp10.Visible = true;
+
                     LiIp11.Visible = true;
+
                     LiPayroll.Visible = true;
+
                     LiMNE.Visible = true;
                     EconomicOpportunities.Visible = true;
                     //LiUM.Visible = true;
@@ -288,7 +310,12 @@ public partial class CCMaster : System.Web.UI.MasterPage
             if (Session["user_type"].ToString() == "MIS")
             {
                 LiIp1.Visible = true;
+                IPDashboard.Visible = true;
+                IPInvoiceDashboard.Visible = true;
+                APIDashboard.Visible = true;
+
                 LiIp2.Visible = true;
+
                 LiIp3.Visible = true;
                 workProposalMenu.Visible = true;
                 beneficiaryRegistrationMenu.Visible = true;
@@ -296,11 +323,19 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 printIdCardMenu.Visible = true;
                 workProgressMenu.Visible = true;
                 lipwExportMenu.Visible = true;
+
                 LiIp4.Visible = true;
                 LiIp5.Visible = false; // Apply Wage Request menus hidden for MIS user_type
 
 
                 LiIp6.Visible = true;
+                nongbvMenu.Visible = true;
+                nongbvDashboardMenu.Visible = true;
+                gbvNewMenu.Visible = true;
+                gbvNewMenuDashboard.Visible = true;
+                grmReport.Visible = true;
+                grmImporting.Visible = true;
+
                 LiIp7.Visible = true;
                 LiIp8.Visible = true;
                 LiIp9.Visible = true;
