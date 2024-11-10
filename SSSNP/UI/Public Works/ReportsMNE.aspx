@@ -1,5 +1,7 @@
 ﻿<%@ Page Title=":: :: SSSNP : : Reports" MasterPageFile="~/UI/Public Works/CCMaster.master" Language="C#" AutoEventWireup="true" CodeBehind="ReportsMNE.aspx.cs" Inherits="SSSNP.UI.Public_Works.ReportsMNE" %>
 
+<%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:UpdatePanel ID="upd1" runat="server">
         <ContentTemplate>
@@ -27,42 +29,6 @@
                             <div class="panel-body">
                                 <table style="width: 100%;">
                                     <tr>
-                                        <td style="padding: 5px 0;">
-                                            <div style="display: flex; align-items: center;">
-                                                <label for="ddlReportType" style="margin-right: 10px;">Report Type</label>
-                                                <asp:DropDownList ID="ddlReportType" runat="server" CssClass="form-control" Style="width: auto;" OnSelectedIndexChanged="ddlReportType_SelectedIndexChanged">
-                                                    <asp:ListItem Text="Select Report Type" Value="0"></asp:ListItem>
-                                                    <asp:ListItem Text="Partner Monitoring" Value="PartnerMonitoring"></asp:ListItem>
-                                                    <asp:ListItem Text="SPCU Monitoring" Value="SPCUMonitoring"></asp:ListItem>
-                                                    <asp:ListItem Text="Third Party Monitoring" Value="ThirdPartyMonitoring"></asp:ListItem>
-                                                    <asp:ListItem Text="Final Periodic" Value="FinalPeriodic"></asp:ListItem>
-                                                    <asp:ListItem Text="Evaluation" Value="Evaluation"></asp:ListItem>
-                                                </asp:DropDownList>
-                                            </div>
-                                        </td>
-                                        
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 5px 0;">
-                                            <div style="display: flex; align-items: center;">
-                                                <label for="fileUpload" class="control-label" style="margin-right: 10px;">Attachment</label>
-                                                <div class="custom-file-upload">
-                                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Style="display: none;" onchange="handleFileChange(this)" />
-                                                    <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
-                                                    <span id="fileInfo" class="file-info">No file chosen</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        
-                                    </tr>    
-                                </table>
-                                <div class="form-group" style="display: flex; justify-content: left; gap: 15px; margin-top: 10px;">
-                                    <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-success" Text="Submit" OnClick="btnSubmit_Click" />  
-                                </div>
-                                <br />
-                                <p><b>Search :</b></p>
-                                <table style="width: 100%;">
-                                    <tr>
                                         <td style="padding: 10px 0;">
                                             <div style="display: flex; align-items: center;">
                                                 <label for="ddlReportType" style="margin-right: 10px;">Report Type</label>
@@ -83,30 +49,91 @@
                                                 <ajaxToolkit:CalendarExtender ID="FromDateCalendarExtender" runat="server" TargetControlID="txtFromDate" Format="dd-MM-yyyy" />
                                             </div>
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <td>&emsp;</td>
+
                                         <td style="padding: 10px 0;">
-                                            <div style="display: flex; align-items: center;">
-                                                <label for="txtToDate" style="margin-right: 10px;">To Date &emsp; :</label>
+                                            <div style="display: flex; align-items: end;">
+                                                <label for="txtToDate" style="margin-right: 10px;">To Date &emsp;&emsp;&nbsp; :</label>
                                                 <asp:TextBox ID="txtToDate" runat="server" CssClass="form-control" placeholder="DD-MM-YYYY" Width="150px"></asp:TextBox>
                                                 <ajaxToolkit:CalendarExtender ID="ToDateCalendarExtender" runat="server" TargetControlID="txtToDate" Format="dd-MM-yyyy" />
                                             </div>
-                                        </td> 
+                                        </td>
                                     </tr>
-                                    </table>
+                                </table>
+
+
                                 <div class="form-group" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
                                     <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-primary" Text="Search" OnClick="btnSearch_Click" />
                                 </div>
+                                <br />
+                                <br />
+
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="padding: 5px 0;">
+                                            <div style="display: flex; align-items: center;">
+                                                <label for="ddlReportType" style="margin-right: 10px;">Report Type</label>
+                                                <asp:DropDownList ID="ddlReportType" runat="server" CssClass="form-control" Style="width: auto;" OnSelectedIndexChanged="ddlReportType_SelectedIndexChanged">
+                                                    <asp:ListItem Text="Select Report Type" Value="0"></asp:ListItem>
+                                                    <asp:ListItem Text="Partner Monitoring" Value="PartnerMonitoring"></asp:ListItem>
+                                                    <asp:ListItem Text="SPCU Monitoring" Value="SPCUMonitoring"></asp:ListItem>
+                                                    <asp:ListItem Text="Third Party Monitoring" Value="ThirdPartyMonitoring"></asp:ListItem>
+                                                    <asp:ListItem Text="Final Periodic" Value="FinalPeriodic"></asp:ListItem>
+                                                    <asp:ListItem Text="Evaluation" Value="Evaluation"></asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0;">
+                                            <div style="display: flex; align-items: center;">
+                                                <label for="fileUpload" class="control-label" style="margin-right: 10px;">Attachment</label>
+                                                <div class="custom-file-upload">
+                                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
+                                        
+                                                    <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
+                                                    <span id="fileInfo" class="file-info">No file chosen</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="form-group" style="display: flex; justify-content: left; gap: 15px; margin-top: 10px;">
+                                    <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-success" Text="Submit" OnClick="btnSubmit_Click" />
+                                </div>
+                                
+                                
+
                                 <div id="DivSuccess" runat="server" visible="false" class="alert alert-success">
                                     <asp:Label ID="lblMessageSuccess" runat="server" />
                                 </div>
                                 <div id="DivFailure" runat="server" visible="false" class="alert alert-danger">
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
+
+                                <telerik:radgrid id="RadGrid" runat="server" onneeddatasource="RadGrid_NeedDataSource" autogeneratecolumns="false" allowpaging="true" pagesize="10">
+                                    <pagerstyle mode="NextPrevAndNumeric" />
+                                    <mastertableview autogeneratecolumns="False" datakeynames="Id" allowpaging="True" pagerstyle-alwaysvisible="True">
+                                        <columns>
+                                            <telerik:gridboundcolumn datafield="Id" headertext="ID" uniquename="Id" />
+                                            <telerik:gridboundcolumn datafield="FileName" headertext="File Name" uniquename="FileName" />
+                                            <telerik:gridboundcolumn datafield="ReportType" headertext="Report Type" uniquename="ReportType" />
+                                        </columns>
+                                    </mastertableview>
+                                </telerik:radgrid>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </ContentTemplate>
+         <Triggers>
+    <asp:PostBackTrigger ControlID="btnSubmit"/>
+</Triggers>
     </asp:UpdatePanel>
     <script type="text/javascript">
         function handleFileChange(input) {
