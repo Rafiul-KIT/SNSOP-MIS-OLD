@@ -29,6 +29,14 @@
                             <div class="panel-body">
                                 <table style="width: 100%;">
                                     <tr>
+                                        
+                                        <td style="padding: 10px 0;">
+                                            <div style="display: flex; align-items: center;">
+                                                <label for="txtFromDate" style="margin-right: 10px;">From Date &emsp; :</label>
+                                                <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" placeholder="DD-MM-YYYY" Width="150px"></asp:TextBox>
+                                                <ajaxToolkit:CalendarExtender ID="FromDateCalendarExtender" runat="server" TargetControlID="txtFromDate" Format="dd-MM-yyyy" />
+                                            </div>
+                                        </td>
                                         <td style="padding: 10px 0;">
                                             <div style="display: flex; align-items: center;">
                                                 <label for="ddlReportType" style="margin-right: 10px;">Report Type</label>
@@ -42,17 +50,8 @@
                                                 </asp:DropDownList>
                                             </div>
                                         </td>
-                                        <td style="padding: 10px 0;">
-                                            <div style="display: flex; align-items: center;">
-                                                <label for="txtFromDate" style="margin-right: 10px;">From Date &emsp; :</label>
-                                                <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" placeholder="DD-MM-YYYY" Width="150px"></asp:TextBox>
-                                                <ajaxToolkit:CalendarExtender ID="FromDateCalendarExtender" runat="server" TargetControlID="txtFromDate" Format="dd-MM-yyyy" />
-                                            </div>
-                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>&emsp;</td>
-
                                         <td style="padding: 10px 0;">
                                             <div style="display: flex; align-items: end;">
                                                 <label for="txtToDate" style="margin-right: 10px;">To Date &emsp;&emsp;&nbsp; :</label>
@@ -74,6 +73,17 @@
                                     <tr>
                                         <td style="padding: 5px 0;">
                                             <div style="display: flex; align-items: center;">
+                                                <label for="fileUpload" class="control-label" style="margin-right: 10px;">Attachment</label>
+                                                <div class="custom-file-upload">
+                                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
+                                        
+                                                    <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
+                                                    <span id="fileInfo" class="file-info">No file chosen</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 5px 0;">
+                                            <div style="display: flex; align-items: center;">
                                                 <label for="ddlReportType" style="margin-right: 10px;">Report Type</label>
                                                 <asp:DropDownList ID="ddlReportType" runat="server" CssClass="form-control" Style="width: auto;" OnSelectedIndexChanged="ddlReportType_SelectedIndexChanged">
                                                     <asp:ListItem Text="Select Report Type" Value="0"></asp:ListItem>
@@ -85,23 +95,9 @@
                                                 </asp:DropDownList>
                                             </div>
                                         </td>
-
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 5px 0;">
-                                            <div style="display: flex; align-items: center;">
-                                                <label for="fileUpload" class="control-label" style="margin-right: 10px;">Attachment</label>
-                                                <div class="custom-file-upload">
-                                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
-                                        
-                                                    <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
-                                                    <span id="fileInfo" class="file-info">No file chosen</span>
-                                                </div>
-                                            </div>
-                                        </td>
                                     </tr>
                                 </table>
-                                <div class="form-group" style="display: flex; justify-content: left; gap: 15px; margin-top: 10px;">
+                                <div class="form-group" style="display: flex; justify-content: center; gap: 15px; margin-top: 10px;">
                                     <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-success" Text="Submit" OnClick="btnSubmit_Click" />
                                 </div>
                                 
@@ -114,7 +110,7 @@
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
 
-                                <telerik:radgrid id="RadGrid" runat="server" onneeddatasource="RadGrid_NeedDataSource" autogeneratecolumns="false" allowpaging="true" pagesize="10">
+                                <telerik:radgrid id="RadGrid" runat="server" onneeddatasource="RadGrid_NeedDataSource" autogeneratecolumns="false" allowpaging="true" pagesize="10" Visible="false">
                                     <pagerstyle mode="NextPrevAndNumeric" />
                                     <mastertableview autogeneratecolumns="False" datakeynames="Id" allowpaging="True" pagerstyle-alwaysvisible="True">
                                         <columns>
@@ -132,8 +128,9 @@
             </div>
         </ContentTemplate>
          <Triggers>
-    <asp:PostBackTrigger ControlID="btnSubmit"/>
-</Triggers>
+            <asp:PostBackTrigger ControlID="btnSubmit"/>
+             <asp:PostBackTrigger ControlID="btnSearch"/>
+        </Triggers>
     </asp:UpdatePanel>
     <script type="text/javascript">
         function handleFileChange(input) {

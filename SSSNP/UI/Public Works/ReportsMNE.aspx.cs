@@ -107,7 +107,7 @@ namespace SSSNP.UI.Public_Works
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            // Retrieve the data from the database and bind it to the GridView
+            RadGrid.Visible = true;
             GetReportData();
         }
 
@@ -134,7 +134,7 @@ namespace SSSNP.UI.Public_Works
 
         protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            RadGrid.DataSource = GetReportData(); // Bind data
+            RadGrid.DataSource = GetReportData();
         }
 
 

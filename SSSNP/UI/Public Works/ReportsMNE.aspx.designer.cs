@@ -24,15 +24,6 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.UpdatePanel upd1;
 
         /// <summary>
-        /// DropDownList1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
-
-        /// <summary>
         /// txtFromDate control.
         /// </summary>
         /// <remarks>
@@ -49,6 +40,15 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::AjaxControlToolkit.CalendarExtender FromDateCalendarExtender;
+
+        /// <summary>
+        /// DropDownList1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
 
         /// <summary>
         /// txtToDate control.
@@ -78,15 +78,6 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
-        /// ddlReportType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlReportType;
-
-        /// <summary>
         /// fileUpload control.
         /// </summary>
         /// <remarks>
@@ -94,6 +85,15 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.FileUpload fileUpload;
+
+        /// <summary>
+        /// ddlReportType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlReportType;
 
         /// <summary>
         /// btnSubmit control.
