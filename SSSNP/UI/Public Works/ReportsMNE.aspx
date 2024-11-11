@@ -27,47 +27,6 @@
                                 <h3 class="panel-title">Reports</h3>
                             </div>
                             <div class="panel-body">
-                                <table style="width: 100%;">
-                                    <tr>
-                                        
-                                        <td style="padding: 10px 0;">
-                                            <div style="display: flex; align-items: center;">
-                                                <label for="txtFromDate" style="margin-right: 10px;">From Date &emsp; :</label>
-                                                <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" placeholder="DD-MM-YYYY" Width="150px"></asp:TextBox>
-                                                <ajaxToolkit:CalendarExtender ID="FromDateCalendarExtender" runat="server" TargetControlID="txtFromDate" Format="dd-MM-yyyy" />
-                                            </div>
-                                        </td>
-                                        <td style="padding: 10px 0;">
-                                            <div style="display: flex; align-items: center;">
-                                                <label for="ddlReportType" style="margin-right: 10px;">Report Type</label>
-                                                <asp:DropDownList ID="DropDownList1" runat="server" CssClass="form-control" Style="width: auto;" OnSelectedIndexChanged="ddlReportType_SelectedIndexChanged">
-                                                    <asp:ListItem Text="Select Report Type" Value="0"></asp:ListItem>
-                                                    <asp:ListItem Text="Partner Monitoring" Value="PartnerMonitoring"></asp:ListItem>
-                                                    <asp:ListItem Text="SPCU Monitoring" Value="SPCUMonitoring"></asp:ListItem>
-                                                    <asp:ListItem Text="Third Party Monitoring" Value="ThirdPartyMonitoring"></asp:ListItem>
-                                                    <asp:ListItem Text="Final Periodic" Value="FinalPeriodic"></asp:ListItem>
-                                                    <asp:ListItem Text="Evaluation" Value="Evaluation"></asp:ListItem>
-                                                </asp:DropDownList>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 10px 0;">
-                                            <div style="display: flex; align-items: end;">
-                                                <label for="txtToDate" style="margin-right: 10px;">To Date &emsp;&emsp;&nbsp; :</label>
-                                                <asp:TextBox ID="txtToDate" runat="server" CssClass="form-control" placeholder="DD-MM-YYYY" Width="150px"></asp:TextBox>
-                                                <ajaxToolkit:CalendarExtender ID="ToDateCalendarExtender" runat="server" TargetControlID="txtToDate" Format="dd-MM-yyyy" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-
-
-                                <div class="form-group" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
-                                    <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-primary" Text="Search" OnClick="btnSearch_Click" />
-                                </div>
-                                <br />
-                                <br />
 
                                 <table style="width: 100%;">
                                     <tr>
@@ -84,8 +43,8 @@
                                         </td>
                                         <td style="padding: 5px 0;">
                                             <div style="display: flex; align-items: center;">
-                                                <label for="ddlReportType" style="margin-right: 10px;">Report Type</label>
-                                                <asp:DropDownList ID="ddlReportType" runat="server" CssClass="form-control" Style="width: auto;" OnSelectedIndexChanged="ddlReportType_SelectedIndexChanged">
+                                                <label for="ddlSubmitReportType" style="margin-right: 10px;">Report Type</label>
+                                                <asp:DropDownList ID="ddlSubmitReportType" runat="server" CssClass="form-control" Style="width: auto;" OnSelectedIndexChanged="ddlSubmitReportType_SelectedIndexChanged">
                                                     <asp:ListItem Text="Select Report Type" Value="0"></asp:ListItem>
                                                     <asp:ListItem Text="Partner Monitoring" Value="PartnerMonitoring"></asp:ListItem>
                                                     <asp:ListItem Text="SPCU Monitoring" Value="SPCUMonitoring"></asp:ListItem>
@@ -100,6 +59,56 @@
                                 <div class="form-group" style="display: flex; justify-content: center; gap: 15px; margin-top: 10px;">
                                     <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-success" Text="Submit" OnClick="btnSubmit_Click" />
                                 </div>
+
+
+
+
+                                <table style="width: 100%;">
+                                    <tr>
+                                        
+                                        <td style="padding: 10px 0;">
+                                            <div style="display: flex; align-items: center;">
+                                                <label for="txtFromDate" style="margin-right: 10px;">From Date &emsp; :</label>
+                                                <asp:TextBox ID="txtFromDate" runat="server" CssClass="form-control" placeholder="DD-MM-YYYY" Width="150px" OnTextChanged="txtFromDate_TextChanged"></asp:TextBox>
+                                                <ajaxToolkit:CalendarExtender ID="FromDateCalendarExtender" runat="server" TargetControlID="txtFromDate" Format="dd-MM-yyyy" />
+                                            </div>
+                                        </td>
+                                        <td>&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;</td>
+                                        <td style="padding: 10px 0;">
+                                            <div style="display: flex; align-items: center;">
+                                                <label for="ddlSearchReportType" style="margin-right: 10px;">Report Type</label>
+                                                <asp:DropDownList ID="ddlSearchReportType" runat="server" CssClass="form-control" Style="width: auto;" OnSelectedIndexChanged="ddlSearchReportType_SelectedIndexChanged">
+                                                    <asp:ListItem Text="Select Report Type" Value="0"></asp:ListItem>
+                                                    <asp:ListItem Text="Partner Monitoring" Value="PartnerMonitoring"></asp:ListItem>
+                                                    <asp:ListItem Text="SPCU Monitoring" Value="SPCUMonitoring"></asp:ListItem>
+                                                    <asp:ListItem Text="Third Party Monitoring" Value="ThirdPartyMonitoring"></asp:ListItem>
+                                                    <asp:ListItem Text="Final Periodic" Value="FinalPeriodic"></asp:ListItem>
+                                                    <asp:ListItem Text="Evaluation" Value="Evaluation"></asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px 0;">
+                                            <div style="display: flex; align-items: end;">
+                                                <label for="txtToDate" style="margin-right: 10px;">To Date &emsp;&emsp;&nbsp; :</label>
+                                                <asp:TextBox ID="txtToDate" runat="server" CssClass="form-control" placeholder="DD-MM-YYYY" Width="150px" OnTextChanged="txtToDate_TextChanged"></asp:TextBox>
+                                                <ajaxToolkit:CalendarExtender ID="ToDateCalendarExtender" runat="server" TargetControlID="txtToDate" Format="dd-MM-yyyy" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+                                <div class="form-group" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
+                                    <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-primary" Text="Search" OnClick="btnSearch_Click" />
+                                    <asp:Button ID="btnShowDeletedRecords" runat="server" CssClass="btn btn-warning" Text="Deleted Records" OnClick="btnShowDeletedRecords_Click" />
+                                    <asp:Button ID="btnClear" runat="server" CssClass="btn btn-danger" Text="Clear" OnClick="btnClear_Click" />
+                                </div>
+                                <br />
+                                <br />
+
+                                
                                 
                                 
 
@@ -110,16 +119,35 @@
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
 
-                                <telerik:radgrid id="RadGrid" runat="server" onneeddatasource="RadGrid_NeedDataSource" autogeneratecolumns="false" allowpaging="true" pagesize="10" Visible="false">
-                                    <pagerstyle mode="NextPrevAndNumeric" />
-                                    <mastertableview autogeneratecolumns="False" datakeynames="Id" allowpaging="True" pagerstyle-alwaysvisible="True">
-                                        <columns>
-                                            <telerik:gridboundcolumn datafield="Id" headertext="ID" uniquename="Id" />
-                                            <telerik:gridboundcolumn datafield="FileName" headertext="File Name" uniquename="FileName" />
-                                            <telerik:gridboundcolumn datafield="ReportType" headertext="Report Type" uniquename="ReportType" />
-                                        </columns>
-                                    </mastertableview>
-                                </telerik:radgrid>
+                                <telerik:RadGrid ID="RadGrid" runat="server" OnNeedDataSource="RadGrid_NeedDataSource" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false" OnItemCommand="RadGrid_ItemCommand">
+
+                                    <PagerStyle Mode="NextPrevAndNumeric" />
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" PagerStyle-AlwaysVisible="True">
+                                        <Columns>
+                                            <telerik:GridBoundColumn DataField="Id" HeaderText="ID" UniqueName="Id" />
+                                            <telerik:GridBoundColumn DataField="FileName" HeaderText="File Name" UniqueName="FileName" />
+                                            <telerik:GridBoundColumn DataField="ReportType" HeaderText="Report Type" UniqueName="ReportType" />
+                                            <telerik:GridBoundColumn DataField="UploadedBy" HeaderText="Uploaded By" UniqueName="UploadedBy" Visible="false" />
+                                            <telerik:GridBoundColumn DataField="UploadedDate" HeaderText="Uploaded Date" UniqueName="UploadedDate" Visible="false" />
+                                            <telerik:GridBoundColumn DataField="DeletedBy" HeaderText="Deleted By" UniqueName="DeletedBy" Visible="false" />
+                                            <telerik:GridBoundColumn DataField="DeletedDate" HeaderText="Deleted Date" UniqueName="DeletedDate" Visible="false" />
+                                            <telerik:GridTemplateColumn HeaderText="&emsp;&emsp;&emsp;&emsp;&emsp;Actions" UniqueName="Actions" Visible="false">
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="btnDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-success action-button" Text="Download" />
+                                                    <asp:Label Text="&nbsp;&nbsp;" runat="server" />
+                                                    <asp:LinkButton ID="btnRemove" runat="server" CommandName="Remove" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-danger action-button" Text="Remove" />
+                                                </ItemTemplate>
+                                            </telerik:GridTemplateColumn>
+                                            <telerik:GridTemplateColumn HeaderText="&emsp;&emsp;&emsp;&emsp;&emsp;Manage" UniqueName="Manage" Visible="false">
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="btnRecycle" runat="server" CommandName="Recycle" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-success action-button" Text="Recycle" />
+                                                    <asp:Label Text="&nbsp;&nbsp;" runat="server" />
+                                                    <asp:LinkButton ID="btnDelete" runat="server" CommandName="Delete" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-danger action-button" Text="Delete" />
+                                                </ItemTemplate>
+                                            </telerik:GridTemplateColumn>
+                                        </Columns>
+                                    </MasterTableView>
+                                </telerik:RadGrid>
 
                             </div>
                         </div>
@@ -130,6 +158,7 @@
          <Triggers>
             <asp:PostBackTrigger ControlID="btnSubmit"/>
              <asp:PostBackTrigger ControlID="btnSearch"/>
+             <asp:PostBackTrigger ControlID="btnClear"/>
         </Triggers>
     </asp:UpdatePanel>
     <script type="text/javascript">
@@ -164,5 +193,12 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        .action-button {
+            font-size: 12px;
+            color: #ffffff !important;
+            padding: 5px 10px;
+        
+        }
+
     </style>
 </asp:Content>
