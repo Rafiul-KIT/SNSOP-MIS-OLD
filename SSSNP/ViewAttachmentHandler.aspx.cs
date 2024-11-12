@@ -1559,6 +1559,15 @@ namespace SSSNP_SNSOP
                         validation4.Formula.Values.Add(option);
                     }
 
+                    // Add validation for the Enrolled Member ID field (Column 7) to only allow integers between 1 and 5, or leave blank
+                    var validation5 = worksheet.DataValidations.AddCustomValidation("G2:G1000");
+                    validation5.Formula.ExcelFormula = "OR(ISBLANK(G2), AND(ISNUMBER(G2), G2 >= 1, G2 <= 5))";
+                    validation5.ShowErrorMessage = true;
+                    validation5.ErrorTitle = "Invalid Input";
+                    validation5.Error = "Please enter a whole number between 1 and 5, or leave the cell blank.";
+                    validation5.PromptTitle = "Input Restriction";
+                    validation5.Prompt = "Enter a whole number between 1 and 5, or leave blank.";
+
                     // Protect the worksheet so that locked cells (Household Number, Group ID, Group Name) are read-only
                     worksheet.Protection.IsProtected = true;
 
