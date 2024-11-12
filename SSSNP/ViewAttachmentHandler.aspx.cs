@@ -797,7 +797,8 @@ namespace SSSNP_SNSOP
                     {
                         // Beneficiary Details
                         AddCellToPdfTableBody(table, payroll.intBenid.ToString());
-                        AddPhotoToPdfTable(table, payroll.houseHoldDetail.biometric.Photo);
+                        string beneficiaryPhoto = payroll.houseHoldDetail.biometric != null ? payroll.houseHoldDetail.biometric.Photo : null;
+                        AddPhotoToPdfTable(table, beneficiaryPhoto);
                         AddCellToPdfTableBody(table, $"{payroll.houseHoldDetail.firstName} {payroll.houseHoldDetail.middleName} {payroll.houseHoldDetail.lastName}");
                         AddCellToPdfTableBody(table, GetGenderString(payroll.houseHoldDetail.gender)); // Updated gender logic
                         AddCellToPdfTableBody(table, payroll.houseHoldDetail.age.ToString());
@@ -807,7 +808,8 @@ namespace SSSNP_SNSOP
                         {
                             var firstAlternate = payroll.alternates[0];
                             AddCellToPdfTableBody(table, firstAlternate.id.ToString());  // ID for the first alternate
-                            AddPhotoToPdfTable(table, firstAlternate.biometric.Photo);
+                            string firstAlternatePhoto = firstAlternate.biometric != null ? firstAlternate.biometric.Photo : null;
+                            AddPhotoToPdfTable(table, firstAlternatePhoto);
                             AddCellToPdfTableBody(table, $"{firstAlternate.firstName} {firstAlternate.middleName} {firstAlternate.lastName}");
                             AddCellToPdfTableBody(table, GetGenderString(firstAlternate.gender)); // Updated gender logic
                             AddCellToPdfTableBody(table, firstAlternate.age.ToString());
@@ -825,7 +827,8 @@ namespace SSSNP_SNSOP
                         {
                             var secondAlternate = payroll.alternates[1];
                             AddCellToPdfTableBody(table, secondAlternate.id.ToString());  // ID for the second alternate
-                            AddPhotoToPdfTable(table, secondAlternate.biometric.Photo);
+                            string secondAlternatePhoto = secondAlternate.biometric != null ? secondAlternate.biometric.Photo : null;
+                            AddPhotoToPdfTable(table, secondAlternatePhoto);
                             AddCellToPdfTableBody(table, $"{secondAlternate.firstName} {secondAlternate.middleName} {secondAlternate.lastName}");
                             AddCellToPdfTableBody(table, GetGenderString(secondAlternate.gender)); // Updated gender logic
                             AddCellToPdfTableBody(table, secondAlternate.age.ToString());
@@ -864,30 +867,49 @@ namespace SSSNP_SNSOP
         // Helper methods remain unchanged
         private void AddPhotoToPdfTable(PdfPTable table, string base64Photo)
         {
+            // Check if the base64Photo is null or empty
             if (!string.IsNullOrEmpty(base64Photo))
             {
-                byte[] imageBytes = Convert.FromBase64String(base64Photo);
-                Image img = Image.GetInstance(imageBytes);
-                img.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
-
-                PdfPCell imageCell = new PdfPCell(img, true)
+                try
                 {
-                    HorizontalAlignment = Element.ALIGN_CENTER,
-                    VerticalAlignment = Element.ALIGN_MIDDLE,
-                    Padding = 2f,// Match the fixed height of other cells// Add some padding to prevent overlap
-                    FixedHeight = 50f 
-                };
-                table.AddCell(imageCell);
+                    byte[] imageBytes = Convert.FromBase64String(base64Photo);
+                    Image img = Image.GetInstance(imageBytes);
+                    img.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
+
+                    PdfPCell imageCell = new PdfPCell(img, true)
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        Padding = 2f,
+                        FixedHeight = 50f
+                    };
+                    table.AddCell(imageCell);
+                }
+                catch (FormatException)
+                {
+                    // Handle invalid base64 strings by adding an empty cell
+                    PdfPCell emptyCell = new PdfPCell(new Phrase("No Image"))
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        FixedHeight = 50f
+                    };
+                    table.AddCell(emptyCell);
+                }
             }
             else
             {
-                PdfPCell emptyCell = new PdfPCell(new Phrase(string.Empty))
+                // Add an empty cell if the photo data is missing
+                PdfPCell emptyCell = new PdfPCell(new Phrase("No Image"))
                 {
-                    FixedHeight = 50f // Match the fixed height of other cells
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_MIDDLE,
+                    FixedHeight = 50f
                 };
                 table.AddCell(emptyCell);
             }
         }
+
 
         private void AddSectionHeaderToPdfTable(PdfPTable table, string headerText, int colspan)
         {
