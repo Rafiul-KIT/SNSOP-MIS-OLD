@@ -68,6 +68,22 @@ namespace SSSNP.UI.Public_Works
                         return;
                     }
 
+                    //for checking headers
+                    List<string> expectedHeaders = new List<string>
+                    {
+                        "Household Number", "Business Plan Status", "Business Type"
+                    };
+                    
+                    for (int col = 1; col <= expectedHeaders.Count; col++)
+                    {
+                        var header = worksheet.Cells[1, col].Text.Trim();
+                        if (header != expectedHeaders[col - 1])
+                        {
+                            AddErrorMessage($"Invalid file format. The header '{header}' does not match the expected header '{expectedHeaders[col - 1]}' in column {col}.");
+                            return;
+                        }
+                    }
+
                     // Create a list to hold the parsed data
                     List<BusinessPlanDevelopmentModel> list = new List<BusinessPlanDevelopmentModel>();
 

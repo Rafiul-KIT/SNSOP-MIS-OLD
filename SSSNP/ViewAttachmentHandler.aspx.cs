@@ -23,6 +23,7 @@ using SSSNP.Service;
 using System.Diagnostics;
 using System.Data.SqlClient;
 using SSSNP_SNSOP.Core.Model;
+using System.Configuration;
 
 namespace SSSNP_SNSOP
 {
@@ -58,7 +59,8 @@ namespace SSSNP_SNSOP
             LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE = 19,
             BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE = 20,
             FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21,
-            ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22
+            ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22,
+            MNE_REPORT_DOWNLOAD = 23
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -153,6 +155,9 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD:
                     EconomicOppontunityAuditRecordDownload();
                     return "OK";
+                case HandlerAttachment.MNE_REPORT_DOWNLOAD:
+                    DownloadFile(GetAttachmentValueAsInt);
+                    return "OK";
             }
 
             return "";
@@ -177,8 +182,8 @@ namespace SSSNP_SNSOP
 
                     // Adding the three columns
                     worksheet.Cells[1, 1].Value = "Household Number";
-                    worksheet.Cells[1, 2].Value = "BusinessPlanStatus";
-                    worksheet.Cells[1, 3].Value = "BusinessType";
+                    worksheet.Cells[1, 2].Value = "Business Plan Status";
+                    worksheet.Cells[1, 3].Value = "Business Type";
 
                     // Set headers to be bold
                     for (int col = 1; col <= 3; col++)
@@ -576,6 +581,23 @@ namespace SSSNP_SNSOP
                     return null;
                 }
             }
+        }
+
+        private int GetAttachmentValueAsInt
+        {
+
+            get
+            {
+                try
+                {
+                    return Convert.ToInt32(Request.QueryString[_queryValue]);
+                }
+                catch
+                {
+                    return 0; // or handle default as appropriate
+                }
+            }   
+            
         }
 
         //downlaod encrypted payroll data module start
@@ -1568,7 +1590,7 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Payment Cycle";
                     worksheet.Cells[1, 3].Value = "Payment Amount";
-                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(mm-dd-yyyy)";
+                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(dd-mm-yyyy)";
                     worksheet.Cells[1, 4].Style.WrapText = true; 
 
                     // Set headers to be bold
@@ -1611,14 +1633,14 @@ namespace SSSNP_SNSOP
                     paymentCycleValidation.Formula.Values.Add("Installment 9");
 
                     // Set the format for "Payment Date" as DateTime for the actual data rows
-                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
+                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "dd-MM-yyyy"; // or any DateTime format
 
                     // Apply data validation for the "Payment Date" column (only to the actual data rows)
                     var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, dataRows + 1, 4].Address);
                     dateValidation.ShowErrorMessage = true;
                     dateValidation.ErrorTitle = "Invalid Date";
-                    dateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in MM-dd-yyyy";
-                    dateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in MM-dd-yyyy";
+                    dateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-mm-yyyy";
+                    dateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-MM-yyyy";
                     dateValidation.AllowBlank = true;
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
@@ -1742,6 +1764,35 @@ namespace SSSNP_SNSOP
 
         }
 
+
+        private void DownloadFile(int reportId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT FilePath FROM tbl_mne_Report WHERE Id = @ReportId AND Status = 'Active'";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ReportId", reportId);
+                    conn.Open();
+                    string filePath = cmd.ExecuteScalar() as string;
+
+                    if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                    {
+                        Response.Clear();
+                        Response.ContentType = "application/octet-stream";
+                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(filePath)}");
+                        Response.TransmitFile(filePath);
+                        Response.End();
+                    }
+                    else
+                    {
+                        Response.Write("File not found or inactive.");
+                    }
+                }
+            }
+        }
 
         private void LogError(string v, Exception ex)
         {
