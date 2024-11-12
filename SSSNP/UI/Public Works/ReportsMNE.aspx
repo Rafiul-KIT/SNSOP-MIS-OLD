@@ -35,7 +35,7 @@
                                                 <label for="fileUpload" class="control-label" style="margin-right: 10px;">Attachment</label>
                                                 <div class="custom-file-upload">
                                                     <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
-                                        
+
                                                     <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
                                                     <span id="fileInfo" class="file-info">No file chosen</span>
                                                 </div>
@@ -65,7 +65,7 @@
 
                                 <table style="width: 100%;">
                                     <tr>
-                                        
+
                                         <td style="padding: 10px 0;">
                                             <div style="display: flex; align-items: center;">
                                                 <label for="txtFromDate" style="margin-right: 10px;">From Date &emsp; :</label>
@@ -108,9 +108,9 @@
                                 <br />
                                 <br />
 
-                                
-                                
-                                
+
+
+
 
                                 <div id="DivSuccess" runat="server" visible="false" class="alert alert-success">
                                     <asp:Label ID="lblMessageSuccess" runat="server" />
@@ -119,7 +119,7 @@
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
 
-                                <telerik:RadGrid ID="RadGrid" runat="server" OnNeedDataSource="RadGrid_NeedDataSource" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false" OnItemCommand="RadGrid_ItemCommand">
+                                <telerik:RadGrid ID="RadGrid" runat="server" OnNeedDataSource="RadGrid_NeedDataSource" DataKeyNames="Id" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false" OnItemCommand="RadGrid_ItemCommand">
 
                                     <PagerStyle Mode="NextPrevAndNumeric" />
                                     <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" PagerStyle-AlwaysVisible="True">
@@ -140,7 +140,7 @@
                                             </telerik:GridTemplateColumn>
                                             <telerik:GridTemplateColumn HeaderText="&emsp;&emsp;&emsp;&emsp;&emsp;Manage" UniqueName="Manage" Visible="false">
                                                 <ItemTemplate>
-                                                    <asp:LinkButton ID="btnRecycle" runat="server" CommandName="Recycle" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-success action-button" Text="Recycle" />
+                                                    <asp:LinkButton ID="btnRecover" runat="server" CommandName="Recover" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-success action-button" Text="Recover" />
                                                     <asp:Label Text="&nbsp;&nbsp;" runat="server" />
                                                     <asp:LinkButton ID="btnDelete" runat="server" CommandName="Delete" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-danger action-button" Text="Delete" />
                                                 </ItemTemplate>
@@ -148,17 +148,16 @@
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </ContentTemplate>
-         <Triggers>
-            <asp:PostBackTrigger ControlID="btnSubmit"/>
-             <asp:PostBackTrigger ControlID="btnSearch"/>
-             <asp:PostBackTrigger ControlID="btnClear"/>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="btnSubmit" />
+            <asp:PostBackTrigger ControlID="btnSearch" />
+            <asp:PostBackTrigger ControlID="btnClear" />
         </Triggers>
     </asp:UpdatePanel>
     <script type="text/javascript">
@@ -193,12 +192,11 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
         .action-button {
             font-size: 12px;
             color: #ffffff !important;
             padding: 5px 10px;
-        
         }
-
     </style>
 </asp:Content>
