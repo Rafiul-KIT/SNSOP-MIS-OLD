@@ -28,6 +28,48 @@
                             </div>
                             <div class="panel-body">
 
+                                <script type="text/javascript">
+                                    function handleFileChange(input) {
+                                        var fileName = input.files[0] ? input.files[0].name : "No file chosen";
+                                        var fileSize = input.files[0] ? (input.files[0].size / 1024).toFixed(2) + " KB" : "";
+                                        var fileInfo = document.getElementById('fileInfo');
+                                        fileInfo.innerText = fileName + (fileSize ? " (" + fileSize + ")" : "");
+                                    }
+                                </script>
+
+                                <style type="text/css">
+                                    .custom-file-upload {
+                                        position: relative;
+                                        display: inline-block;
+                                    }
+
+                                        .custom-file-upload button {
+                                            padding: 6px 15px;
+                                            font-size: 12px;
+                                            cursor: pointer;
+                                            border: 1px solid #ccc;
+                                            border-radius: 4px;
+                                        }
+
+                                    .file-info {
+                                        display: inline-block;
+                                        margin-left: 10px;
+                                        font-size: 14px;
+                                        vertical-align: middle;
+                                        padding: 6px 15px;
+                                        border: 1px solid #ccc;
+                                        border-radius: 4px;
+                                    }
+
+                                    .action-button {
+                                        font-size: 12px;
+                                        color: #ffffff !important;
+                                        padding: 5px 10px;
+                                    }
+                                </style>
+
+
+
                                 <table style="width: 100%;">
                                     <tr>
                                         <td style="padding: 5px 0;">
@@ -160,43 +202,5 @@
             <asp:PostBackTrigger ControlID="btnClear" />
         </Triggers>
     </asp:UpdatePanel>
-    <script type="text/javascript">
-        function handleFileChange(input) {
-            var fileName = input.files[0] ? input.files[0].name : "No file chosen";
-            var fileSize = input.files[0] ? (input.files[0].size / 1024).toFixed(2) + " KB" : "";
-            var fileInfo = document.getElementById('fileInfo');
-            fileInfo.innerText = fileName + (fileSize ? " (" + fileSize + ")" : "");
-        }
-    </script>
 
-    <style type="text/css">
-        .custom-file-upload {
-            position: relative;
-            display: inline-block;
-        }
-
-            .custom-file-upload button {
-                padding: 6px 15px;
-                font-size: 12px;
-                cursor: pointer;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-            }
-
-        .file-info {
-            display: inline-block;
-            margin-left: 10px;
-            font-size: 14px;
-            vertical-align: middle;
-            padding: 6px 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .action-button {
-            font-size: 12px;
-            color: #ffffff !important;
-            padding: 5px 10px;
-        }
-    </style>
 </asp:Content>
