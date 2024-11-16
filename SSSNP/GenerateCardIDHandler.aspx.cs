@@ -67,8 +67,11 @@ namespace SSSNP
         }
         private byte[] GeneratePDF(GenerateCardID cardID)
         {
-            string imageFilePath = Server.MapPath("~/Resource/Images/snsop-id-card-bg1.png");
-            string imageFilePath2 = Server.MapPath("~/Resource/Images/snsop-id-card-bg2.png");
+            /*string imageFilePath = Server.MapPath("~/Resource/Images/SNSOP_Beneficiary_ID_Proposed_Design_front.jpg");
+            string imageFilePath2 = Server.MapPath("~/Resource/Images/SNSOP_Beneficiary_ID_Proposed Design_back.jpg");*/
+            string imageFilePath = Server.MapPath("~/Resource/Images/SNSOP_Beneficiary_ID_Proposed_Design_front.jpg");
+            string imageFilePath2 = Server.MapPath("~/Resource/Images/SNSOP_Beneficiary_ID_Proposed_Design_back.jpg");
+
 
             string emptyPhoto = Server.MapPath("~/Resource/Images/not-available.jpg");
             // string emptyPhoto = Server.MapPath("~/Photo/testO1.png");
@@ -99,11 +102,11 @@ namespace SSSNP
             jpg2.SetAbsolutePosition(300, 35);
 
             iTextSharp.text.Image jpg3 = iTextSharp.text.Image.GetInstance(photoBeneficiary); 
-            jpg3.ScaleAbsoluteWidth(90f);
-            jpg3.ScaleAbsoluteHeight(116f);
+            jpg3.ScaleAbsoluteWidth(60f);
+            jpg3.ScaleAbsoluteHeight(80f);
             //jpg3.ScaleToFit(94f, 120f);
             jpg3.Alignment = iTextSharp.text.Image.TITLE;
-            jpg3.SetAbsolutePosition(47, 54);
+            jpg3.SetAbsolutePosition(58, 70);
             // jpg3.SetAbsolutePosition(43, 76);
 
             //alternative 1
@@ -112,7 +115,7 @@ namespace SSSNP
             jpg5.ScaleAbsoluteHeight(90f);
             //jpg5.ScaleToFit(iTextSharp.text.Utilities.MillimetersToPoints(15), iTextSharp.text.Utilities.MillimetersToPoints(15));
             jpg5.Alignment = iTextSharp.text.Image.TITLE;
-            jpg5.SetAbsolutePosition(315, 80);
+            jpg5.SetAbsolutePosition(320, 90);
 
             //alternative 2
             iTextSharp.text.Image jpg4 = iTextSharp.text.Image.GetInstance(photoAnternate2);
@@ -120,7 +123,7 @@ namespace SSSNP
             jpg4.ScaleAbsoluteWidth(50f);
             jpg4.ScaleAbsoluteHeight(90f);
             jpg4.Alignment = iTextSharp.text.Image.TITLE;
-            jpg4.SetAbsolutePosition(390, 80);
+            jpg4.SetAbsolutePosition(390, 90);
 
             MemoryStream fs = new MemoryStream();
 
@@ -176,7 +179,7 @@ namespace SSSNP
             cb4.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             cb4.SetFontAndSize(f_cn, 10);
-            cb4.SetTextMatrix(312, 61);  //(xPos, yPos)
+            cb4.SetTextMatrix(320, 80);  //(xPos, yPos)
             cb4.ShowText( "1. " + cardID.AlternateName1);
             cb4.EndText();
 
@@ -185,7 +188,7 @@ namespace SSSNP
             cb5.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             cb5.SetFontAndSize(f_cn, 10);
-            cb5.SetTextMatrix(312, 46);  //(xPos, yPos)
+            cb5.SetTextMatrix(320, 68);  //(xPos, yPos)
             cb5.ShowText("2. " + cardID.AlternateName2);
             cb5.EndText();
 
@@ -274,7 +277,7 @@ namespace SSSNP
             iTextSharp.text.Image img = Qr.GetImage();
             img.ScaleAbsoluteWidth(50);
             img.ScaleAbsoluteHeight(50);
-            img.SetAbsolutePosition(495, 135);
+            img.SetAbsolutePosition(490, 130);
             img.Alignment = iTextSharp.text.Image.ALIGN_CENTER;
 
             document.Add(jpg);
