@@ -151,7 +151,7 @@
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" />
                                             <telerik:GridBoundColumn DataField="PaymentCycle" HeaderText="Payment Cycle" />
                                             <telerik:GridBoundColumn DataField="PaymentAmount" HeaderText="Payment Amount" />
-                                            <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" UniqueName="PaymentDate" DataFormatString="{0:MM-dd-yyyy}" HtmlEncode="false" />
+                                            <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date (mm-dd-yyyy)" UniqueName="PaymentDate" DataFormatString="{0:MM-dd-yyyy}" HtmlEncode="false" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>

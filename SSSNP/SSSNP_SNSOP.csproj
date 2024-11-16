@@ -5105,6 +5105,8 @@
     <Folder Include="Photo\74780\Household\" />
     <Folder Include="tempsave\" />
     <Folder Include="TSTPhoto\" />
+    <Folder Include="UI\Uploads\Deleted Files\" />
+    <Folder Include="UI\Uploads\Saved Files\" />
     <Folder Include="Uploads\EnviFiles\1076EnviFile02032018113349\" />
     <Folder Include="WorkProgressDoc\AAH Public Works 01\test1\" />
     <Folder Include="WorkProgressDoc\AAH Public Works 01\test\" />

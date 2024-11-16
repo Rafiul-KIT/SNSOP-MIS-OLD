@@ -23,6 +23,7 @@ using SSSNP.Service;
 using System.Diagnostics;
 using System.Data.SqlClient;
 using SSSNP_SNSOP.Core.Model;
+using System.Configuration;
 
 namespace SSSNP_SNSOP
 {
@@ -58,7 +59,8 @@ namespace SSSNP_SNSOP
             LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE = 19,
             BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE = 20,
             FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21,
-            ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22
+            ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22,
+            MNE_REPORT_DOWNLOAD = 23
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -153,6 +155,9 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD:
                     EconomicOppontunityAuditRecordDownload();
                     return "OK";
+                case HandlerAttachment.MNE_REPORT_DOWNLOAD:
+                    DownloadFile(GetAttachmentValueAsInt);
+                    return "OK";
             }
 
             return "";
@@ -177,8 +182,8 @@ namespace SSSNP_SNSOP
 
                     // Adding the three columns
                     worksheet.Cells[1, 1].Value = "Household Number";
-                    worksheet.Cells[1, 2].Value = "BusinessPlanStatus";
-                    worksheet.Cells[1, 3].Value = "BusinessType";
+                    worksheet.Cells[1, 2].Value = "Business Plan Status";
+                    worksheet.Cells[1, 3].Value = "Business Type";
 
                     // Set headers to be bold
                     for (int col = 1; col <= 3; col++)
@@ -578,6 +583,23 @@ namespace SSSNP_SNSOP
             }
         }
 
+        private int GetAttachmentValueAsInt
+        {
+
+            get
+            {
+                try
+                {
+                    return Convert.ToInt32(Request.QueryString[_queryValue]);
+                }
+                catch
+                {
+                    return 0; // or handle default as appropriate
+                }
+            }   
+            
+        }
+
         //downlaod encrypted payroll data module start
         private void EncryptedPayrollDataHandler()
         {
@@ -775,7 +797,8 @@ namespace SSSNP_SNSOP
                     {
                         // Beneficiary Details
                         AddCellToPdfTableBody(table, payroll.intBenid.ToString());
-                        AddPhotoToPdfTable(table, payroll.houseHoldDetail.biometric.Photo);
+                        string beneficiaryPhoto = payroll.houseHoldDetail.biometric != null ? payroll.houseHoldDetail.biometric.Photo : null;
+                        AddPhotoToPdfTable(table, beneficiaryPhoto);
                         AddCellToPdfTableBody(table, $"{payroll.houseHoldDetail.firstName} {payroll.houseHoldDetail.middleName} {payroll.houseHoldDetail.lastName}");
                         AddCellToPdfTableBody(table, GetGenderString(payroll.houseHoldDetail.gender)); // Updated gender logic
                         AddCellToPdfTableBody(table, payroll.houseHoldDetail.age.ToString());
@@ -785,7 +808,8 @@ namespace SSSNP_SNSOP
                         {
                             var firstAlternate = payroll.alternates[0];
                             AddCellToPdfTableBody(table, firstAlternate.id.ToString());  // ID for the first alternate
-                            AddPhotoToPdfTable(table, firstAlternate.biometric.Photo);
+                            string firstAlternatePhoto = firstAlternate.biometric != null ? firstAlternate.biometric.Photo : null;
+                            AddPhotoToPdfTable(table, firstAlternatePhoto);
                             AddCellToPdfTableBody(table, $"{firstAlternate.firstName} {firstAlternate.middleName} {firstAlternate.lastName}");
                             AddCellToPdfTableBody(table, GetGenderString(firstAlternate.gender)); // Updated gender logic
                             AddCellToPdfTableBody(table, firstAlternate.age.ToString());
@@ -803,7 +827,8 @@ namespace SSSNP_SNSOP
                         {
                             var secondAlternate = payroll.alternates[1];
                             AddCellToPdfTableBody(table, secondAlternate.id.ToString());  // ID for the second alternate
-                            AddPhotoToPdfTable(table, secondAlternate.biometric.Photo);
+                            string secondAlternatePhoto = secondAlternate.biometric != null ? secondAlternate.biometric.Photo : null;
+                            AddPhotoToPdfTable(table, secondAlternatePhoto);
                             AddCellToPdfTableBody(table, $"{secondAlternate.firstName} {secondAlternate.middleName} {secondAlternate.lastName}");
                             AddCellToPdfTableBody(table, GetGenderString(secondAlternate.gender)); // Updated gender logic
                             AddCellToPdfTableBody(table, secondAlternate.age.ToString());
@@ -842,30 +867,49 @@ namespace SSSNP_SNSOP
         // Helper methods remain unchanged
         private void AddPhotoToPdfTable(PdfPTable table, string base64Photo)
         {
+            // Check if the base64Photo is null or empty
             if (!string.IsNullOrEmpty(base64Photo))
             {
-                byte[] imageBytes = Convert.FromBase64String(base64Photo);
-                Image img = Image.GetInstance(imageBytes);
-                img.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
-
-                PdfPCell imageCell = new PdfPCell(img, true)
+                try
                 {
-                    HorizontalAlignment = Element.ALIGN_CENTER,
-                    VerticalAlignment = Element.ALIGN_MIDDLE,
-                    Padding = 2f,// Match the fixed height of other cells// Add some padding to prevent overlap
-                    FixedHeight = 50f 
-                };
-                table.AddCell(imageCell);
+                    byte[] imageBytes = Convert.FromBase64String(base64Photo);
+                    Image img = Image.GetInstance(imageBytes);
+                    img.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
+
+                    PdfPCell imageCell = new PdfPCell(img, true)
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        Padding = 2f,
+                        FixedHeight = 50f
+                    };
+                    table.AddCell(imageCell);
+                }
+                catch (FormatException)
+                {
+                    // Handle invalid base64 strings by adding an empty cell
+                    PdfPCell emptyCell = new PdfPCell(new Phrase("No Image"))
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        FixedHeight = 50f
+                    };
+                    table.AddCell(emptyCell);
+                }
             }
             else
             {
-                PdfPCell emptyCell = new PdfPCell(new Phrase(string.Empty))
+                // Add an empty cell if the photo data is missing
+                PdfPCell emptyCell = new PdfPCell(new Phrase("No Image"))
                 {
-                    FixedHeight = 50f // Match the fixed height of other cells
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_MIDDLE,
+                    FixedHeight = 50f
                 };
                 table.AddCell(emptyCell);
             }
         }
+
 
         private void AddSectionHeaderToPdfTable(PdfPTable table, string headerText, int colspan)
         {
@@ -1515,6 +1559,15 @@ namespace SSSNP_SNSOP
                         validation4.Formula.Values.Add(option);
                     }
 
+                    // Add validation for the Enrolled Member ID field (Column 7) to only allow integers between 1 and 5, or leave blank
+                    var validation5 = worksheet.DataValidations.AddCustomValidation("G2:G1000");
+                    validation5.Formula.ExcelFormula = "OR(ISBLANK(G2), AND(ISNUMBER(G2), G2 >= 1, G2 <= 5))";
+                    validation5.ShowErrorMessage = true;
+                    validation5.ErrorTitle = "Invalid Input";
+                    validation5.Error = "Please enter a whole number between 1 and 5, or leave the cell blank.";
+                    validation5.PromptTitle = "Input Restriction";
+                    validation5.Prompt = "Enter a whole number between 1 and 5, or leave blank.";
+
                     // Protect the worksheet so that locked cells (Household Number, Group ID, Group Name) are read-only
                     worksheet.Protection.IsProtected = true;
 
@@ -1568,7 +1621,7 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Payment Cycle";
                     worksheet.Cells[1, 3].Value = "Payment Amount";
-                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(mm-dd-yyyy)";
+                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(dd-mm-yyyy)";
                     worksheet.Cells[1, 4].Style.WrapText = true; 
 
                     // Set headers to be bold
@@ -1611,14 +1664,14 @@ namespace SSSNP_SNSOP
                     paymentCycleValidation.Formula.Values.Add("Installment 9");
 
                     // Set the format for "Payment Date" as DateTime for the actual data rows
-                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
+                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "dd-MM-yyyy"; // or any DateTime format
 
                     // Apply data validation for the "Payment Date" column (only to the actual data rows)
                     var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, dataRows + 1, 4].Address);
                     dateValidation.ShowErrorMessage = true;
                     dateValidation.ErrorTitle = "Invalid Date";
-                    dateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in MM-dd-yyyy";
-                    dateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in MM-dd-yyyy";
+                    dateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-mm-yyyy";
+                    dateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-MM-yyyy";
                     dateValidation.AllowBlank = true;
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
@@ -1742,6 +1795,35 @@ namespace SSSNP_SNSOP
 
         }
 
+
+        private void DownloadFile(int reportId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT FilePath FROM tbl_mne_Report WHERE Id = @ReportId AND Status = 'Active'";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ReportId", reportId);
+                    conn.Open();
+                    string filePath = cmd.ExecuteScalar() as string;
+
+                    if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                    {
+                        Response.Clear();
+                        Response.ContentType = "application/octet-stream";
+                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(filePath)}");
+                        Response.TransmitFile(filePath);
+                        Response.End();
+                    }
+                    else
+                    {
+                        Response.Write("File not found or inactive.");
+                    }
+                }
+            }
+        }
 
         private void LogError(string v, Exception ex)
         {

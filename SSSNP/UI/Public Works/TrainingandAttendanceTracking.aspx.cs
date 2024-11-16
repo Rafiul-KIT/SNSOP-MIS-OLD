@@ -62,6 +62,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     return;
                 }
 
+                
+
                 // Parse the Excel file into a list of TrainingAttendance objects
                 using (var package = new OfficeOpenXml.ExcelPackage(fileUpload.PostedFile.InputStream))
                 {
@@ -71,6 +73,24 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     {
                         AddErrorMessage("The uploaded file does not contain any worksheet.");
                         return;
+                    }
+
+                    //for checking header
+                    
+                    List<string> expectedHeaders = new List<string>
+                    {
+                        "Household Number", "Course Code", "Course Duration", "Classes Attended", "Classes Held", "Classes Missed", "Why Missed"
+                    };
+
+                    // Validate headers
+                    for (int col = 1; col <= expectedHeaders.Count; col++)
+                    {
+                        var header = worksheet.Cells[1, col].Text.Trim();
+                        if (header != expectedHeaders[col - 1])
+                        {
+                            AddErrorMessage($"Invalid file format. The header '{header}' does not match the expected header '{expectedHeaders[col - 1]}' in column {col}.");
+                            return;
+                        }
                     }
 
                     // Create a list to hold the parsed data
