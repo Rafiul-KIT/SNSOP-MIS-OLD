@@ -630,6 +630,7 @@
     <Content Include="UI\Public Works\PaymentSelectionPayingagencyBenfWages.aspx" />
     <Content Include="UI\Public Works\PaymentsReportDatewise.aspx" />
     <Content Include="UI\Public Works\PayrollDownload.aspx" />
+    <Content Include="UI\Public Works\Payroll\ReconcilePayroll.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendance.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendancedeleting.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendanceDeletingnew.aspx" />
@@ -1864,6 +1865,13 @@
     </Compile>
     <Compile Include="UI\Public Works\PayrollDownload.aspx.designer.cs">
       <DependentUpon>PayrollDownload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\Payroll\ReconcilePayroll.aspx.cs">
+      <DependentUpon>ReconcilePayroll.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\Payroll\ReconcilePayroll.aspx.designer.cs">
+      <DependentUpon>ReconcilePayroll.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\PDCHouseholdAttendance.aspx.designer.cs">
       <DependentUpon>PDCHouseholdAttendance.aspx</DependentUpon>

@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Implentation Partner Details" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPDetails" Codebehind="IPDetails.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Implentation Partner Details" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPDetails" Codebehind="IPDetails.aspx.cs" %>
 
 
 

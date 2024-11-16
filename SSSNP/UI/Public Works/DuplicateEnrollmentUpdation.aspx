@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/UI/Public Works/CCMaster.master" Inherits="DuplicateEnrollmentUpdation" Title=":: :: SSSNP : ::" Codebehind="DuplicateEnrollmentUpdation.aspx.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/UI/Public Works/CCMaster.master" Inherits="DuplicateEnrollmentUpdation" Title=":: :: SNSOP : ::" Codebehind="DuplicateEnrollmentUpdation.aspx.cs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 

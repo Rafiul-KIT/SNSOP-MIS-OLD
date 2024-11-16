@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Component 2 Template Importing" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="Component2TemplateImporting.aspx.cs" Inherits="SSSNP.UI.Public_Works.Component2TemplateImporting" %>
+﻿<%@ Page Title=":: :: SNSOP : : Component 2 Template Importing" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="Component2TemplateImporting.aspx.cs" Inherits="SSSNP.UI.Public_Works.Component2TemplateImporting" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:UpdatePanel ID="upd1" runat="server">
         <ContentTemplate>

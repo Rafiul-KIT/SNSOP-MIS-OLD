@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="IPBeneficiaryRegistration1"
-    Title=":: :: SSSNP : ::" Codebehind="IPBeneficiaryRegistration1.aspx.cs" %>
+    Title=":: :: SNSOP : ::" Codebehind="IPBeneficiaryRegistration1.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">

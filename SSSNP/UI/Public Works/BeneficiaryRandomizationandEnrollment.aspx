@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Beneficiary Randomization and Enrollment" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="BeneficiaryRandomizationandEnrollment.aspx.cs" Inherits="SSSNP.UI.Public_Works.BeneficiaryRandomizationandEnrollment" %>
+﻿<%@ Page Title=":: :: SNSOP : : Beneficiary Randomization and Enrollment" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="BeneficiaryRandomizationandEnrollment.aspx.cs" Inherits="SSSNP.UI.Public_Works.BeneficiaryRandomizationandEnrollment" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>

@@ -53,15 +53,21 @@ public partial class CCMaster : System.Web.UI.MasterPage
         liViewPaymentCycleDoc.Visible = value;
 
         EconomicOpportunities.Visible = value;
-        BeneficiaryRandomizationandEnrollment.Visible = value;
+        EconomicOpportunitiesDashboard.Visible = value;
+        Component2TemplateImporting.Visible = value;
         HouseholdGroupView.Visible = value;
+        HouseholdAndGroupIdMapping.Visible = value;
+        BeneficiaryRandomizationandEnrollment.Visible = value;
         TrainingandAttendanceTracking.Visible = value;
         BusinessPlanDevelopment.Visible = value;
         LivelihoodGrantDisbursement.Visible = value;
         FinancialServiceLinkageTracking.Visible = value;
         CoachingSessionTracking.Visible = value;
+        AuditRecordDownload.Visible = value;
 
         LiPayroll.Visible = value;
+        payrollDownload.Visible = value;
+        payrollReconcile.Visible = value;
 
         LiMNE.Visible = value;
 
@@ -278,9 +284,22 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiIp11.Visible = true;
 
                     LiPayroll.Visible = true;
+                    payrollDownload.Visible = true;
+                    payrollReconcile.Visible = true;
 
                     LiMNE.Visible = true;
                     EconomicOpportunities.Visible = true;
+                    EconomicOpportunitiesDashboard.Visible = true;
+                    Component2TemplateImporting.Visible = true;
+                    HouseholdGroupView.Visible = true;
+                    HouseholdAndGroupIdMapping.Visible = true;
+                    BeneficiaryRandomizationandEnrollment.Visible = true;
+                    TrainingandAttendanceTracking.Visible = true;
+                    BusinessPlanDevelopment.Visible = true;
+                    LivelihoodGrantDisbursement.Visible = true;
+                    FinancialServiceLinkageTracking.Visible = true;
+                    CoachingSessionTracking.Visible = true;
+                    AuditRecordDownload.Visible = true;
                     //LiUM.Visible = true;
 
                     nongbvMenu.Visible = true;
@@ -302,6 +321,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 printIdCardMenu.Visible = true;
                 Li1.Visible = false;
                 LiPayroll.Visible = true;
+                payrollDownload.Visible = true;
+                payrollReconcile.Visible = true;
 
                 LiPaymentCycleDocument.Visible = true;
                 liUploadPaymentCycleDoc.Visible = false;
@@ -342,6 +363,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiIp10.Visible = true;
                 LiIp11.Visible = true;
                 LiPayroll.Visible = true;
+                payrollDownload.Visible = true;
+                payrollReconcile.Visible = true;
                 LiMNE.Visible = true;
                 LiUM.Visible = true;
                 EconomicOpportunities.Visible = true;
@@ -352,7 +375,6 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 gbvNewMenuDashboard.Visible = true;
                 grmReport.Visible = true;
                 grmImporting.Visible = true;
-				LiPayroll.Visible = true;
             }
             if (Session["user_type"].ToString() == "Report")
             {

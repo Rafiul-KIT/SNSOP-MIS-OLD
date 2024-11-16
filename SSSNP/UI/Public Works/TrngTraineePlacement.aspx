@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : :  Trainee Placement " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngTraineePlacement" Codebehind="TrngTraineePlacement.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : :  Trainee Placement " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngTraineePlacement" Codebehind="TrngTraineePlacement.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Implentation Partner Details" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TSTIPregistration" Codebehind="TSTIPregistration.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Implentation Partner Details" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TSTIPregistration" Codebehind="TSTIPregistration.aspx.cs" %>
 
 
 

@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : :Boma/Quarter Council  Development Committee " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TSTBDCReg" Codebehind="TSTBDCReg.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : :Boma/Quarter Council  Development Committee " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TSTBDCReg" Codebehind="TSTBDCReg.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

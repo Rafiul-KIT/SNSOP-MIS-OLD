@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Approved Works " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPApprovalWorkActivities" Codebehind="IPApprovalWorkActivities.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Approved Works " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPApprovalWorkActivities" Codebehind="IPApprovalWorkActivities.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

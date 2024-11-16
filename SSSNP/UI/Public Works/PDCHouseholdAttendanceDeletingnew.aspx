@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Attendance Report" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="PDCHouseholdAttendanceDeletingnew" Codebehind="PDCHouseholdAttendanceDeletingnew.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Attendance Report" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="PDCHouseholdAttendanceDeletingnew" Codebehind="PDCHouseholdAttendanceDeletingnew.aspx.cs" %>
 
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>

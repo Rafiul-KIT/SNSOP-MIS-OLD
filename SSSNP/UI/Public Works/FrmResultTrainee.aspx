@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="FrmResultTrainee" Title=":: :: SSSNP : :: Result" Codebehind="FrmResultTrainee.aspx.cs" %>
+<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="FrmResultTrainee" Title=":: :: SNSOP : :: Result" Codebehind="FrmResultTrainee.aspx.cs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 

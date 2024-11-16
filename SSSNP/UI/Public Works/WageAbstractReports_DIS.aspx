@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Report from Pay Connect Team" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="WageAbstractReports_DIS" Codebehind="WageAbstractReports_DIS.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Wages Report from Pay Connect Team" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="WageAbstractReports_DIS" Codebehind="WageAbstractReports_DIS.aspx.cs" %>
 
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>

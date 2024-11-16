@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Beneficiary Enrollment Summary" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="BeneficiaryEnrollmentSummaryMNE" CodeBehind="BeneficiaryEnrollmentSummaryMNE.aspx.cs" %>
+﻿<%@ Page Title=":: :: SNSOP : : Beneficiary Enrollment Summary" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="BeneficiaryEnrollmentSummaryMNE" CodeBehind="BeneficiaryEnrollmentSummaryMNE.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>

@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Add Designation " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="AddDesignation" Codebehind="AddDesignations.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Add Designation " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="AddDesignation" Codebehind="AddDesignations.aspx.cs" %>
 
 
 

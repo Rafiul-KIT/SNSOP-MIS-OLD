@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : :  Trainee Certification " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngTraineeCertification" Codebehind="TrngTraineeCertification.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : :  Trainee Certification " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngTraineeCertification" Codebehind="TrngTraineeCertification.aspx.cs" %>
 
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>

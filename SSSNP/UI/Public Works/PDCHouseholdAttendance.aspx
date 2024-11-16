@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Beneficiary Attendance " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="True" Inherits="PDCHouseholdAttendance" CodeBehind="PDCHouseholdAttendance.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Beneficiary Attendance " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="True" Inherits="PDCHouseholdAttendance" CodeBehind="PDCHouseholdAttendance.aspx.cs" %>
 
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>

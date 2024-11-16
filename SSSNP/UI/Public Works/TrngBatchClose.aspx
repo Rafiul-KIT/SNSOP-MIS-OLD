@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : :  Batch Closing " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngBatchClose" Codebehind="TrngBatchClose.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : :  Batch Closing " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngBatchClose" Codebehind="TrngBatchClose.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

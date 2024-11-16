@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Key Monitoring Indicator" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="KeyMonitoringIndicatorsMNE.aspx.cs" Inherits="SSSNP.UI.Public_Works.KeyMonitoringIndicatorsMNE" %>
+﻿<%@ Page Title=":: :: SNSOP : : Key Monitoring Indicator" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="KeyMonitoringIndicatorsMNE.aspx.cs" Inherits="SSSNP.UI.Public_Works.KeyMonitoringIndicatorsMNE" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:UpdatePanel ID="upd1" runat="server">

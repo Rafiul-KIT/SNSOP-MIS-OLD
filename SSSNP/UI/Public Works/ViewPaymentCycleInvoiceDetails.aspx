@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : View Payment Cycle wise Details" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="ViewPaymentCycleInvoiceDetails" CodeBehind="ViewPaymentCycleInvoiceDetails.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : View Payment Cycle wise Details" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="ViewPaymentCycleInvoiceDetails" CodeBehind="ViewPaymentCycleInvoiceDetails.aspx.cs" %>
 
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>

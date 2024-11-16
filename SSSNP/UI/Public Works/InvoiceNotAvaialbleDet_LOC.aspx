@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/MasterwithoutMenu.master" AutoEventWireup="true" Inherits="InvoiceNotAvaialbleDet_LOC" Title=":: :: SSSNP : :: Home" Codebehind="InvoiceNotAvaialbleDet_LOC.aspx.cs" %>
+<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/MasterwithoutMenu.master" AutoEventWireup="true" Inherits="InvoiceNotAvaialbleDet_LOC" Title=":: :: SNSOP : :: Home" Codebehind="InvoiceNotAvaialbleDet_LOC.aspx.cs" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
  
     <script language="javascript">

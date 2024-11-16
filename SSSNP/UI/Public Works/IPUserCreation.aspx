@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Implentation Partner User Creation Details" Language="C#"
+<%@ Page Title=":: :: SNSOP : : Implentation Partner User Creation Details" Language="C#"
     MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true"
     Inherits="IPUserCreation" Codebehind="IPUserCreation.aspx.cs" %>
 
