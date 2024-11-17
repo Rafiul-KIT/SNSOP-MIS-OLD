@@ -59,7 +59,13 @@ namespace SSSNP.UI.Public_Works
                     return;
                 }
 
-                using (var package = new OfficeOpenXml.ExcelPackage(fileUpload.FileContent))
+                List<string> expectedHeaders = new List<string>
+                    {
+                        "Household Number", "Interested In Participating", "Survives Targeting", "Treatment Arm",
+                        "HH Enrollment Status", "Group Name", "Enrolled Member ID"
+                    };
+
+                using (var package = new ExcelPackage(fileUpload.PostedFile.InputStream))
                 {
                     int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
                     var worksheet = package.Workbook.Worksheets.FirstOrDefault();
@@ -67,6 +73,16 @@ namespace SSSNP.UI.Public_Works
                     {
                         AddErrorMessage("The uploaded file does not contain any worksheet.");
                         return;
+                    }
+
+                    for (int col = 1; col <= expectedHeaders.Count; col++)
+                    {
+                        var header = worksheet.Cells[1, col].Text.Trim();
+                        if (header != expectedHeaders[col - 1])
+                        {
+                            AddErrorMessage($"Invalid file format. The header '{header}' does not match the expected header '{expectedHeaders[col - 1]}' in column {col}.");
+                            return;
+                        }
                     }
 
                     // List to hold beneficiary data

@@ -67,6 +67,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         return;
                     }
 
+                    List<string> expectedHeaders = new List<string>
+                    {
+                        "Household Number", "Payment Cycle", "Payment Amount", "Payment Date" + "\n" + "(dd-mm-yyyy)",
+                    };
+
+                    // Validate headers
+                    for (int col = 1; col <= expectedHeaders.Count; col++)
+                    {
+                        var header = worksheet.Cells[1, col].Text.Trim();
+                        if (header != expectedHeaders[col - 1])
+                        {
+                            AddErrorMessage($"Invalid file format. The header '{header}' does not match the expected header '{expectedHeaders[col - 1]}' in column {col}.");
+                            return;
+                        }
+                    }
+
                     List<LivelihoodGrantDisbursementModel> grantList = new List<LivelihoodGrantDisbursementModel>();
 
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++)

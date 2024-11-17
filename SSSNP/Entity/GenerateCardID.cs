@@ -13,6 +13,7 @@ namespace SSSNP_SNSOP.Entity
         public string BeneficiaryName { get; set; }
         public string BeneficiaryPhoto { get; set; }
         public string CountryName { get; set; }
+        public string BomaName { get; set; }
         public string ValidTo { get; set; }
         public string AlternateName1 { get; set; }
         public string AlternatePhoto1 { get; set; }
