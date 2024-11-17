@@ -84,7 +84,7 @@ namespace SSSNP.UI.Public_Works
 
             // Define the file name and file path
             string fileName = fileUpload.FileName;
-            string folderPath = Server.MapPath("~/UI/Uploads/Saved Files");
+            string folderPath = @"C:\xampp\htdocs\snsop_docs\MnEReports";
             string filePath = Path.Combine(folderPath, fileName);
 
             // Database connection and validation
