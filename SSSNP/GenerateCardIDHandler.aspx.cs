@@ -207,9 +207,9 @@ namespace SSSNP
 
             cb.SetLineWidth(0.3); // Border thickness
             cb.SetColorStroke(BaseColor.BLACK); // Border color
-            cb.Rectangle(35, 35, iTextSharp.text.Utilities.MillimetersToPoints(90), iTextSharp.text.Utilities.MillimetersToPoints(60)); // Front template
+            cb.Rectangle(35, 35, iTextSharp.text.Utilities.MillimetersToPoints(90), iTextSharp.text.Utilities.MillimetersToPoints(58)); // Front template
             cb.Stroke();
-            cb.Rectangle(300, 35, iTextSharp.text.Utilities.MillimetersToPoints(90), iTextSharp.text.Utilities.MillimetersToPoints(60)); // Back template
+            cb.Rectangle(300, 35, iTextSharp.text.Utilities.MillimetersToPoints(90), iTextSharp.text.Utilities.MillimetersToPoints(58)); // Back template
             cb.Stroke();
 
             // Add borders conditionally around beneficiary photos
