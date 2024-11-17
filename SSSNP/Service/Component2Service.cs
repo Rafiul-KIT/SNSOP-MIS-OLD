@@ -221,7 +221,7 @@ namespace SSSNP.Service
             }
 
             // Ensure the date is not in the future and within a reasonable range (for example, between 1900 and today)
-            var minDate = new DateTime(2023, 1, 1);
+            var minDate = new DateTime(2020, 1, 1);
             var maxDate = DateTime.Today;
 
             if (obj.PaymentDate.Value < minDate || obj.PaymentDate.Value > maxDate)
