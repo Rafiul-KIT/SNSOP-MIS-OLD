@@ -3,6 +3,62 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:UpdatePanel ID="upd1" runat="server">
         <ContentTemplate>
+            <style type="text/css">
+                                    .custom-file-upload {
+                                        position: relative;
+                                        display: inline-block;
+                                    }
+
+                                        .custom-file-upload button {
+                                            padding: 6px 15px;
+                                            font-size: 12px;
+                                            cursor: pointer;
+                                            border: 1px solid #ccc; 
+                                            border-radius: 4px;
+                                        }
+
+                                    .file-info {
+                                        display: inline-block;
+                                        margin-left: 10px;
+                                        font-size: 14px;
+                                        vertical-align: middle;
+                                        padding: 6px 15px; 
+                                        border: 1px solid #ccc;
+                                        border-radius: 4px;
+                                    }
+
+                                    .download-link {
+                                        display: inline-block;
+                                        color: #ffffff;
+                                        background-color: #007bff;
+                                        padding: 10px 20px;
+                                        text-decoration: none;
+                                        border-radius: 5px;
+                                        transition: background-color 0.3s ease;
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                    }
+
+                                        .download-link:hover {
+                                            background-color: #0056b3;
+                                            color: #fff;
+                                            text-decoration: none;
+                                        }
+
+                                        .download-link i {
+                                            margin-right: 5px;
+                                        }
+
+                                    .enhanced-link {
+                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                        transition: all 0.2s ease-in-out;
+                                    }
+
+                                        .enhanced-link:hover {
+                                            transform: translateY(-2px);
+                                            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+                                        }
+                                </style>
             <div align="left" style="vertical-align: top">
                 <ol class="breadcrumb">
                     <li>You are here&nbsp;!&nbsp; &nbsp; &nbsp;</li>
@@ -89,6 +145,23 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" align="center">
+                                            <div class="form-group">
+                                                <label for="fileUpload" class="control-label">Attachment:</label>
+
+                                                <div class="custom-file-upload">
+                                                    <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
+
+                                                    <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
+                                                    <span id="fileInfo" class="file-info">No file chosen</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <asp:Button ID="btnUpload" runat="server" CssClass="btn btn-warning" Text="Upload File" OnClick="btnUpload_Click" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="center">
                                             <!-- Warning Label -->
                                             <asp:Label ID="LblWarning" runat="server" ForeColor="Red" Visible="False" ></asp:Label>
                                         </td>
@@ -99,9 +172,18 @@
                     </div>
                 </div>
             </div>
+            <script type="text/javascript">
+                                    function handleFileChange(input) {
+                                        var fileName = input.files[0] ? input.files[0].name : "No file chosen";
+                                        var fileSize = input.files[0] ? (input.files[0].size / 1024).toFixed(2) + " KB" : "";
+                                        var fileInfo = document.getElementById('fileInfo');
+                                        fileInfo.innerText = fileName + (fileSize ? " (" + fileSize + ")" : "");
+                                    }
+            </script>
         </ContentTemplate>
         <Triggers>
-        <asp:AsyncPostBackTrigger ControlID="BtnDownload" EventName="Click" />
+            <asp:AsyncPostBackTrigger ControlID="BtnDownload" EventName="Click" />
+            <asp:PostBackTrigger ControlID="btnUpload" />
         </Triggers>
     </asp:UpdatePanel>
 </asp:Content>

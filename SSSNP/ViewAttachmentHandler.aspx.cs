@@ -33,6 +33,7 @@ namespace SSSNP_SNSOP
         private HandlerAttachment _type;
         private object _attachmentValue;
         private GeoLocationDto _location;
+        private General genDbAccess = new General();
 
         public enum HandlerAttachment
         {
@@ -58,7 +59,8 @@ namespace SSSNP_SNSOP
             LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE = 19,
             BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE = 20,
             FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21,
-            ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22
+            ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22,
+            PAYROLL_RECONCILE = 30
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -152,6 +154,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD:
                     EconomicOppontunityAuditRecordDownload();
+                    return "OK";
+                case HandlerAttachment.PAYROLL_RECONCILE:
+                    PayrollReconcileTemplate();
                     return "OK";
             }
 
@@ -1740,6 +1745,165 @@ namespace SSSNP_SNSOP
             Response.BinaryWrite(memoryStream.ToArray());
             HttpContext.Current.ApplicationInstance.CompleteRequest();
 
+        }
+
+        private void PayrollReconcileTemplate()
+        {
+            try
+            {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+                DataSet ds = genDbAccess.GetReconciledUnpaidPayrollKIT(stateId, countyId, payamId, bomaId);
+                if (ds == null || ds.Tables != null && ds.Tables.Count > 0 && ds.Tables[0].Rows != null && ds.Tables[0].Rows.Count <= 0)
+                {
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
+
+                    Response.BinaryWrite(null);
+                    Response.Flush();
+                    Response.Close();
+                    return;
+                }
+
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Payroll");
+
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Enrollment Number";
+                    worksheet.Cells[1, 3].Value = "First Name";
+                    worksheet.Cells[1, 4].Value = "Sur Name";
+                    worksheet.Cells[1, 5].Value = "Last Name";
+                    worksheet.Cells[1, 6].Value = "Payment Status";
+                    worksheet.Cells[1, 7].Value = "Payment Center";
+                    worksheet.Cells[1, 8].Value = "Paid To";
+                    worksheet.Cells[1, 9].Value = "Wage";
+                    worksheet.Cells[1, 10].Value = "Attendance";
+                    worksheet.Cells[1, 11].Value = "Exchange Rate";
+                    worksheet.Cells[1, 12].Value = "Amount in SSP";
+                    worksheet.Cells[1, 13].Value = "Work Code";
+                    worksheet.Cells[1, 14].Value = "Work Id";
+                    worksheet.Cells[1, 15].Value = "Transaction Id";
+                    worksheet.Cells[1, 16].Value = "UUID";
+                    worksheet.Cells[1, 17].Value = "Payroll Start Date";
+                    worksheet.Cells[1, 18].Value = "Payroll End Date";
+                    worksheet.Cells[1, 19].Value = "Created At";
+                    worksheet.Cells[1, 20].Value = "Generated At";
+                    worksheet.Cells[1, 21].Value = "Latitude";
+                    worksheet.Cells[1, 22].Value = "Longitude";
+                    worksheet.Cells[1, 1].Style.WrapText = true;
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 4; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    for (int row = 0; row < ds.Tables[0].Rows.Count; row++)
+                    {
+                        worksheet.Cells[row + 2, 1].Value = ds.Tables[0].Rows[row]["household_number"].ToString();
+                        worksheet.Cells["A2:A" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 2].Value = ds.Tables[0].Rows[row]["EnrollmentNo"].ToString();
+                        worksheet.Cells["B2:B" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        if (ds.Tables[0].Rows[row]["NameofHousehold"] != null)
+                        {
+                            var names = ds.Tables[0].Rows[row]["NameofHousehold"].ToString().Split(' ');
+                            if (names != null && names.Length > 0)
+                            {
+                                if (names.Length >= 3)
+                                {
+                                    worksheet.Cells[row + 2, 3].Value = names[0];
+                                    worksheet.Cells["C2:C" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                                    worksheet.Cells[row + 2, 4].Value = names[1];
+                                    worksheet.Cells["D2:D" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                                    worksheet.Cells[row + 2, 5].Value = names[2];
+                                    worksheet.Cells["E2:E" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+                                }
+                            }
+                        }
+
+                        worksheet.Cells[row + 2, 6].Value = ds.Tables[0].Rows[row]["status"].ToString();
+                        worksheet.Cells[row + 2, 7].Value = ""; // payment center
+                        worksheet.Cells[row + 2, 8].Value = ""; // paid to
+
+                        worksheet.Cells[row + 2, 9].Value = ds.Tables[0].Rows[row]["AmountInSSP"].ToString();
+                        worksheet.Cells["I2:I" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 10].Value = ds.Tables[0].Rows[row]["TotAttendance"].ToString();
+                        worksheet.Cells["J2:J" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 11].Value = ds.Tables[0].Rows[row]["Exchangerateattime"].ToString();
+                        worksheet.Cells["K2:K" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 12].Value = ds.Tables[0].Rows[row]["AmountInSSP"].ToString();
+                        worksheet.Cells["L2:L" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 13].Value = ds.Tables[0].Rows[row]["WorkCode"].ToString();
+                        worksheet.Cells["M2:M" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 14].Value = ds.Tables[0].Rows[row]["intWorkid"].ToString();
+                        worksheet.Cells["N2:N" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 15].Value = ds.Tables[0].Rows[row]["trans_id"].ToString();
+                        worksheet.Cells["O2:O" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 16].Value = ds.Tables[0].Rows[row]["uuid"].ToString();
+                        worksheet.Cells["P2:P" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 17].Value = ds.Tables[0].Rows[row]["ReqFromDate"].ToString();
+                        worksheet.Cells["Q2:Q" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 18].Value = ds.Tables[0].Rows[row]["ReqToDate"].ToString();
+                        worksheet.Cells["R2:R" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 19].Value = ds.Tables[0].Rows[row]["Created_dt"].ToString();
+                        worksheet.Cells["S2:S" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 20].Value = ds.Tables[0].Rows[row]["Modified_dt"].ToString();
+                        worksheet.Cells["T2:T" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 21].Value = ds.Tables[0].Rows[row]["latitude"].ToString();
+                        worksheet.Cells["U2:U" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 22].Value = ds.Tables[0].Rows[row]["longitude"].ToString();
+                        worksheet.Cells["V2:V" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+                    }
+
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Cells.AutoFitColumns();
+
+                    var statusValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 6, 100000, 6].Address);
+                    statusValidation.ShowErrorMessage = true;
+                    statusValidation.ErrorTitle = "Invalid Status";
+                    statusValidation.Error = "Please select status.";
+                    statusValidation.Formula.Values.Add("UNPAID");
+                    statusValidation.Formula.Values.Add("PAID");
+
+                    worksheet.Cells["F2:F10000"].Style.Locked = false;
+                    worksheet.Cells["G2:G10000"].Style.Locked = false;
+                    worksheet.Cells["H2:H10000"].Style.Locked = false;
+
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
+
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error: {ex}");
+            }
         }
 
 

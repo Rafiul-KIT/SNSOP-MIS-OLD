@@ -26460,6 +26460,51 @@ public class General
         return value;
     }
 
+    public DataSet GetReconciledUnpaidPayrollKIT(int? stateId, int? countyId, int? payamId, int? bomaId)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("getReconciledUnpaidPayrollKIT", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+
+            if (stateId == null)
+                da.SelectCommand.Parameters.Add("@intStateId", SqlDbType.Int).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@intStateId", SqlDbType.Int).Value = stateId;
+
+            if (countyId == null)
+                da.SelectCommand.Parameters.Add("@intCountieId", SqlDbType.Int).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@intCountieId", SqlDbType.Int).Value = countyId;
+
+            if (payamId == null)
+                da.SelectCommand.Parameters.Add("@intPayamId", SqlDbType.Int).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@intPayamId", SqlDbType.Int).Value = payamId;
+
+            if (bomaId == null)
+                da.SelectCommand.Parameters.Add("@intBomaId", SqlDbType.Int).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@intBomaId", SqlDbType.Int).Value = bomaId;
+
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
+
     public DataSet GetBomaListWageApplied()
     {
         con.OpenConnection();
