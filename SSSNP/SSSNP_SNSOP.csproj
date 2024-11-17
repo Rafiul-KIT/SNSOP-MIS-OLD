@@ -223,10 +223,11 @@
     <Content Include="Alternatetwo\readme.txt" />
     <Content Include="assets\Background.png" />
     <Content Include="assets\Loading.gif" />
+    <Content Include="Resource\Images\ID_back.jpg" />
+    <Content Include="Resource\Images\ID_front.jpg" />
+    <Content Include="Resource\Images\not-available-2.jpg" />
     <Content Include="Resource\Images\snsop-id-card-bg2.png" />
     <Content Include="Resource\Images\snsop-id-card-bg1.png" />
-    <Content Include="Resource\Images\SNSOP_Beneficiary_ID_Proposed_Design_back.jpg" />
-    <Content Include="Resource\Images\SNSOP_Beneficiary_ID_Proposed_Design_front.jpg" />
     <Content Include="Resource\Styles\css\payroll-download-style.css" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
