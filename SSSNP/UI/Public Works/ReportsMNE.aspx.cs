@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -21,6 +22,7 @@ namespace SSSNP.UI.Public_Works
                 lblMessageError.Visible = false;
                 DivFailure.Visible = false;
                 DivSuccess.Visible = false;
+
             }
 
         }
@@ -55,55 +57,104 @@ namespace SSSNP.UI.Public_Works
                 return;
             }
 
+            // Validate file type and size
+            string fileExtension = Path.GetExtension(fileUpload.FileName).ToLower();
+            int maxFileSize = 5 * 1024 * 1024; // 5 MB in bytes
+
+            // Allowed file extensions
+            string[] allowedExtensions = { ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                lblMessageError.Text = "Only PDF, DOC, DOCX, XLS, and XLSX files are allowed.";
+                lblMessageError.ForeColor = System.Drawing.Color.Red;
+                lblMessageError.Visible = true;
+                DivFailure.Visible = true;
+                return;
+            }
+
+            if (fileUpload.PostedFile.ContentLength > maxFileSize)
+            {
+                lblMessageError.Text = "File size cannot exceed 5 MB.";
+                lblMessageError.ForeColor = System.Drawing.Color.Red;
+                lblMessageError.Visible = true;
+                DivFailure.Visible = true;
+                return;
+            }
+
             // Define the file name and file path
             string fileName = fileUpload.FileName;
             string folderPath = Server.MapPath("~/UI/Uploads/Saved Files");
             string filePath = Path.Combine(folderPath, fileName);
-            // Attempt to save the file and perform database operations
-            try
+
+            // Database connection and validation
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                // Save the file
-                fileUpload.SaveAs(filePath);
+                conn.Open();
 
-                // Database connection and insertion
-                string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                // Check if the file already exists in the database
+                string checkQuery = "SELECT COUNT(1) FROM tbl_mne_Report WHERE FileName = @FileName";
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
                 {
-                    string query = "INSERT INTO tbl_mne_Report (FileName, FilePath, UploadedBy, UploadedDate, ReportType, Status) " +
-                                   "VALUES (@FileName, @FilePath, @UploadedBy, @UploadedDate, @ReportType, @Status)";
+                    checkCmd.Parameters.AddWithValue("@FileName", fileName);
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    int fileExists = (int)checkCmd.ExecuteScalar();
+
+                    if (fileExists > 0)
                     {
-                        // Define parameters and add values
-                        cmd.Parameters.AddWithValue("@FileName", fileName);
-                        cmd.Parameters.AddWithValue("@FilePath", filePath);
-                        cmd.Parameters.AddWithValue("@UploadedBy", uploadedBy);
-                        cmd.Parameters.AddWithValue("@UploadedDate", uploadedDate);
-                        cmd.Parameters.AddWithValue("@ReportType", reportType);
-                        cmd.Parameters.AddWithValue("@Status", status);
-
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
+                        // Display message if file already exists
+                        lblMessageError.Text = "This file is already in the system.";
+                        lblMessageError.ForeColor = System.Drawing.Color.Red;
+                        lblMessageError.Visible = true;
+                        DivFailure.Visible = true;
+                        return;
                     }
                 }
 
-                // Display success message if everything is successful
-                lblMessageSuccess.Text = "Report uploaded successfully!";
-                lblMessageSuccess.ForeColor = System.Drawing.Color.Green;
-                lblMessageSuccess.Visible = true;
-                DivSuccess.Visible = true;
-                ddlSubmitReportType.SelectedIndex = 0;
+                // Attempt to save the file and perform database insertion
+                try
+                {
+                    // Save the file
+                    fileUpload.SaveAs(filePath);
 
-            }
-            catch (Exception ex)
-            {
-                // Display an error message if file upload or database insertion fails
-                lblMessageError.Text = "An error occurred while uploading the file. Please try again. " + ex.Message;
-                lblMessageError.ForeColor = System.Drawing.Color.Red;
-                lblMessageError.Visible = true;
-                DivFailure.Visible = true;
+                    // Insert the file information into the database
+                    string insertQuery = "INSERT INTO tbl_mne_Report (FileName, FilePath, UploadedBy, UploadedDate, ReportType, Status) " +
+                                         "VALUES (@FileName, @FilePath, @UploadedBy, @UploadedDate, @ReportType, @Status)";
+                    using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                    {
+                        insertCmd.Parameters.AddWithValue("@FileName", fileName);
+                        insertCmd.Parameters.AddWithValue("@FilePath", filePath);
+                        insertCmd.Parameters.AddWithValue("@UploadedBy", uploadedBy);
+                        insertCmd.Parameters.AddWithValue("@UploadedDate", uploadedDate);
+                        insertCmd.Parameters.AddWithValue("@ReportType", reportType);
+                        insertCmd.Parameters.AddWithValue("@Status", status);
+
+                        insertCmd.ExecuteNonQuery();
+                    }
+
+                    // Display success message if everything is successful
+                    lblMessageSuccess.Text = "Report uploaded successfully!";
+                    lblMessageSuccess.ForeColor = System.Drawing.Color.Green;
+                    lblMessageSuccess.Visible = true;
+                    DivSuccess.Visible = true;
+                    ddlSubmitReportType.SelectedIndex = 0;
+                }
+                catch (Exception ex)
+                {
+                    // Display an error message if file upload or database insertion fails
+                    lblMessageError.Text = "An error occurred while uploading the file. Please try again. " + ex.Message;
+                    lblMessageError.ForeColor = System.Drawing.Color.Red;
+                    lblMessageError.Visible = true;
+                    DivFailure.Visible = true;
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
         }
+
 
         protected void ddlReportType_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -113,6 +164,7 @@ namespace SSSNP.UI.Public_Works
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             ClearLabels();
+            ViewState["ReportMode"] = "Saved";
             RadGrid.MasterTableView.GetColumn("UploadedBy").Visible = true;
             RadGrid.MasterTableView.GetColumn("UploadedDate").Visible = true;
             RadGrid.MasterTableView.GetColumn("DeletedBy").Visible = false;
@@ -125,8 +177,12 @@ namespace SSSNP.UI.Public_Works
             DateTime? fromDate = string.IsNullOrWhiteSpace(txtFromDate.Text) ? (DateTime?)null : DateTime.ParseExact(txtFromDate.Text, "dd-MM-yyyy", null);
             DateTime? toDate = string.IsNullOrWhiteSpace(txtToDate.Text) ? (DateTime?)null : DateTime.ParseExact(txtToDate.Text, "dd-MM-yyyy", null);
 
+            ViewState["ReportType"] = reportType;
+            ViewState["FromDate"] = fromDate;
+            ViewState["ToDate"] = toDate;
+
             // Call GetReportData with the selected criteria
-            DataTable dt = GetSavedReportData(fromDate, toDate, reportType);
+            DataTable dt = GetSavedReportData(RadGrid.CurrentPageIndex, RadGrid.PageSize, fromDate, toDate, reportType);
 
             // Bind the grid
             RadGrid.DataSource = dt;
@@ -139,6 +195,7 @@ namespace SSSNP.UI.Public_Works
         protected void btnShowDeletedRecords_Click(object sender, EventArgs e)
         {
             ClearLabels();
+            ViewState["ReportMode"] = "Deleted";
             RadGrid.MasterTableView.GetColumn("UploadedBy").Visible = false;
             RadGrid.MasterTableView.GetColumn("UploadedDate").Visible = false;
             RadGrid.MasterTableView.GetColumn("DeletedBy").Visible = true;
@@ -146,14 +203,17 @@ namespace SSSNP.UI.Public_Works
             RadGrid.MasterTableView.GetColumn("Manage").Visible = true;
             RadGrid.MasterTableView.GetColumn("Actions").Visible = false;
 
-
             // Get values from the search fields
             string reportType = ddlSearchReportType.SelectedValue != "0" ? ddlSearchReportType.SelectedValue : null;
             DateTime? fromDate = string.IsNullOrWhiteSpace(txtFromDate.Text) ? (DateTime?)null : DateTime.ParseExact(txtFromDate.Text, "dd-MM-yyyy", null);
             DateTime? toDate = string.IsNullOrWhiteSpace(txtToDate.Text) ? (DateTime?)null : DateTime.ParseExact(txtToDate.Text, "dd-MM-yyyy", null);
-
+           
+            ViewState["ReportType"] = reportType;
+            ViewState["FromDate"] = fromDate;
+            ViewState["ToDate"] = toDate;
+            
             // Call GetReportData with the selected criteria
-            DataTable dt = GetDeletedReportData(fromDate, toDate, reportType);
+            DataTable dt = GetDeletedReportData(RadGrid.CurrentPageIndex, RadGrid.PageSize, fromDate, toDate, reportType);
 
             // Bind the grid
             RadGrid.DataSource = dt;
@@ -163,7 +223,7 @@ namespace SSSNP.UI.Public_Works
 
 
 
-        private DataTable GetSavedReportData(DateTime? fromDate = null, DateTime? toDate = null, string reportType = null)
+        private DataTable GetSavedReportData(int pageIndex, int pageSize, DateTime? fromDate = null, DateTime? toDate = null, string reportType = null)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -171,28 +231,50 @@ namespace SSSNP.UI.Public_Works
                 using (SqlCommand cmd = new SqlCommand())
                 {
                     cmd.Connection = conn;
-                    var query = "SELECT Id, FileName, ReportType, UploadedBy, UploadedDate FROM tbl_mne_Report WHERE Status = 'Active'";
 
-                    // Append conditions based on criteria
+                    // Calculate starting and ending rows for the current page
+                    int startRow = (pageIndex * pageSize) + 1;
+                    int endRow = (pageIndex + 1) * pageSize;
+
+                    var query = @"
+                SELECT * FROM (
+                    SELECT ROW_NUMBER() OVER (ORDER BY r.UploadedDate ASC) AS RowNum, 
+                           r.Id, 
+                           r.FileName, 
+                           r.ReportType, 
+                           u.User_name AS UploadedBy, 
+                           r.UploadedDate
+                    FROM tbl_mne_Report AS r
+                    LEFT JOIN tbl_Users AS u ON r.UploadedBy = u.intUserid
+                    WHERE r.Status = 'Active'";
+
+                    // Add conditions within the inner query
                     if (fromDate.HasValue)
                     {
-                        query += " AND UploadedDate >= @FromDate";
+                        query += " AND r.UploadedDate >= @FromDate";
                         cmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
                     }
 
                     if (toDate.HasValue)
                     {
-                        query += " AND UploadedDate <= @ToDate";
+                        query += " AND r.UploadedDate <= @ToDate";
                         cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
                     }
 
                     if (!string.IsNullOrEmpty(reportType))
                     {
-                        query += " AND ReportType = @ReportType";
+                        query += " AND r.ReportType = @ReportType";
                         cmd.Parameters.AddWithValue("@ReportType", reportType);
                     }
 
+                    query += @"
+                ) AS Result
+                WHERE RowNum BETWEEN @StartRow AND @EndRow";
+
+                    cmd.Parameters.AddWithValue("@StartRow", startRow);
+                    cmd.Parameters.AddWithValue("@EndRow", endRow);
                     cmd.CommandText = query;
+
                     using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                     {
                         DataTable dt = new DataTable();
@@ -206,7 +288,9 @@ namespace SSSNP.UI.Public_Works
 
 
 
-        private DataTable GetDeletedReportData(DateTime? fromDate = null, DateTime? toDate = null, string reportType = null)
+
+
+        private DataTable GetDeletedReportData(int pageIndex, int pageSize, DateTime? fromDate = null, DateTime? toDate = null, string reportType = null)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -214,28 +298,49 @@ namespace SSSNP.UI.Public_Works
                 using (SqlCommand cmd = new SqlCommand())
                 {
                     cmd.Connection = conn;
-                    var query = "SELECT Id, FileName, ReportType, DeletedBy, DeletedDate FROM tbl_mne_Report WHERE Status = 'inactive'";
 
-                    // Append conditions based on criteria
+                    int startRow = (pageIndex * pageSize) + 1;
+                    int endRow = (pageIndex + 1) * pageSize;
+
+                    var query = @"
+                SELECT * FROM (
+                    SELECT ROW_NUMBER() OVER (ORDER BY r.DeletedDate ASC) AS RowNum, 
+                           r.Id, 
+                           r.FileName, 
+                           r.ReportType, 
+                           u.User_name AS DeletedBy, 
+                           r.DeletedDate
+                    FROM tbl_mne_Report AS r
+                    LEFT JOIN tbl_Users AS u ON r.DeletedBy = u.intUserid
+                    WHERE r.Status = 'Inactive'";
+
+                    // Add conditions within the inner query
                     if (fromDate.HasValue)
                     {
-                        query += " AND DeletedDate >= @FromDate";
+                        query += " AND r.DeletedDate >= @FromDate";
                         cmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
                     }
 
                     if (toDate.HasValue)
                     {
-                        query += " AND DeletedDate <= @ToDate";
+                        query += " AND r.DeletedDate <= @ToDate";
                         cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
                     }
 
                     if (!string.IsNullOrEmpty(reportType))
                     {
-                        query += " AND ReportType = @ReportType";
+                        query += " AND r.ReportType = @ReportType";
                         cmd.Parameters.AddWithValue("@ReportType", reportType);
                     }
 
+                    query += @"
+                ) AS Result
+                WHERE RowNum BETWEEN @StartRow AND @EndRow";
+
+                    cmd.Parameters.AddWithValue("@StartRow", startRow);
+                    cmd.Parameters.AddWithValue("@EndRow", endRow);
                     cmd.CommandText = query;
+
                     using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                     {
                         DataTable dt = new DataTable();
@@ -245,30 +350,54 @@ namespace SSSNP.UI.Public_Works
                 }
             }
         }
+
+
 
 
 
         protected void RadGrid_ItemCommand(object sender, GridCommandEventArgs e)
         {
-            int reportId = Convert.ToInt32((e.Item as GridDataItem).GetDataKeyValue("Id"));
+            if (e.Item is GridDataItem dataItem)
+            {
+                
+                object dataKey = dataItem.GetDataKeyValue("Id");
+                if (dataKey == null)
+                {
+                    
+                    return;
+                }
 
-            if (e.CommandName == "Download")
-            {
-                DownloadFile(reportId);
-            }
-            else if (e.CommandName == "Delete")
-            {
-                DeleteFile(reportId);
-            }
-            else if (e.CommandName == "Recycle")
-            {
-                RecycleFile(reportId);
-            }
-            else if (e.CommandName == "Remove")
-            {
-                RemoveFile(reportId);
+                
+                int reportId = Convert.ToInt32(dataKey);
+
+                
+                switch (e.CommandName)
+                {
+                    case "Download":
+                        DownloadFile(reportId);
+                        break;
+
+                    case "Delete":
+                        DeleteFile(reportId);
+                        break;
+
+                    case "Recover":
+                        RecoverFile(reportId);
+                        break;
+
+                    case "Remove":
+                        RemoveFile(reportId);
+                        break;
+
+                    default:
+                        
+                        break;
+                }
             }
         }
+
+
+
 
 
         private void DownloadFile(int reportId)
@@ -279,10 +408,6 @@ namespace SSSNP.UI.Public_Works
                 int attachmentType = 23;
 
                 string redirectUrl = $"~/ViewAttachmentHandler.aspx?AttachmentType={attachmentType}&AttachmentValue={attachmentId}";
-
-                // Log or handle any preparation before redirecting, if necessary
-                // Example: Log the attempt to redirect
-                //Console.WriteLine("Redirecting to: " + redirectUrl); // Or use a proper logging mechanism
 
                 // Perform the redirect
                 Response.Redirect(redirectUrl, false);
@@ -305,7 +430,7 @@ namespace SSSNP.UI.Public_Works
             RadGrid.Rebind();
         }
 
-        private void RecycleFile(int reportId)
+        private void RecoverFile(int reportId)
         {
             UpdateFileStatus(reportId, "Active", null, null);
             lblMessageSuccess.Text = "File restored successfully.";
@@ -320,15 +445,39 @@ namespace SSSNP.UI.Public_Works
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                // Retrieve file path
+
+                // Retrieve the file path from the database
                 string filePath = GetFilePath(reportId, conn);
+                string fullPath = Path.IsPathRooted(filePath) ? filePath : Server.MapPath(filePath);
+              
+                    if (File.Exists(fullPath))
+                    {
+                        try
+                        {
+                            File.Delete(fullPath); // Delete file from the disk
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log error if necessary and notify user
+                            Debug.WriteLine("Error deleting file: " + ex.Message);
+                            lblMessageError.Text = "Failed to delete the file from disk.";
+                            lblMessageError.ForeColor = System.Drawing.Color.Red;
+                            lblMessageError.Visible = true;
+                            DivFailure.Visible = true;
+                            conn.Close();
+                            return; // Exit without deleting database entry if file deletion fails
+                        }
+                    }
+                    else
+                    {
+                        lblMessageError.Text = "File not found on disk.";
+                        lblMessageError.ForeColor = System.Drawing.Color.Red;
+                        lblMessageError.Visible = true;
+                        DivFailure.Visible = true;
+                    }
+                
 
-                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-                {
-                    File.Delete(filePath);  // Delete file from disk
-                }
-
-                // Permanently delete from database
+                // Permanently delete from the database
                 string query = "DELETE FROM tbl_mne_Report WHERE Id = @ReportId";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -336,13 +485,18 @@ namespace SSSNP.UI.Public_Works
                     cmd.ExecuteNonQuery();
                 }
 
-                lblMessageSuccess.Text = "File permanently removed.";
+                // Notify success
+                lblMessageSuccess.Text = "File permanently removed from database and disk.";
+                lblMessageSuccess.ForeColor = System.Drawing.Color.Green;
                 lblMessageSuccess.Visible = true;
                 DivSuccess.Visible = true;
+                conn.Close();
             }
 
+            // Refresh the grid to reflect changes
             RadGrid.Rebind();
         }
+
 
         private void UpdateFileStatus(int reportId, string status, DateTime? deletedDate, object deletedBy)
         {
@@ -359,6 +513,7 @@ namespace SSSNP.UI.Public_Works
                     cmd.Parameters.AddWithValue("@ReportId", reportId);
                     cmd.ExecuteNonQuery();
                 }
+                conn.Close();
             }
         }
 
@@ -387,9 +542,23 @@ namespace SSSNP.UI.Public_Works
 
         protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            RadGrid.DataSource = GetSavedReportData();
-            RadGrid.DataSource = GetDeletedReportData();
+            int pageIndex = RadGrid.CurrentPageIndex;
+            int pageSize = RadGrid.PageSize; // This dynamically adjusts based on the user's selection
+
+            string reportType = ViewState["ReportType"] as string;
+            DateTime? fromDate = ViewState["FromDate"] as DateTime?;
+            DateTime? toDate = ViewState["ToDate"] as DateTime?;
+
+            if (ViewState["ReportMode"] != null && ViewState["ReportMode"].ToString() == "Deleted")
+            {
+                RadGrid.DataSource = GetDeletedReportData(pageIndex, pageSize, fromDate, toDate, reportType);
+            }
+            else
+            {
+                RadGrid.DataSource = GetSavedReportData(pageIndex, pageSize, fromDate, toDate, reportType);
+            }
         }
+
 
 
 
@@ -415,6 +584,12 @@ namespace SSSNP.UI.Public_Works
 
         protected void btnClear_Click(object sender, EventArgs e)
         {
+            // Clear specific ViewState values
+            ViewState["ReportType"] = null;
+            ViewState["FromDate"] = null;
+            ViewState["ToDate"] = null;
+            ViewState["ReportMode"] = null;
+            // Refresh the page to reset controls
             Response.Redirect(Request.RawUrl, false);
         }
     }
