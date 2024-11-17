@@ -79,7 +79,7 @@
                                                     <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control-file" Enabled="true" Style="display: none;" onchange="handleFileChange(this)" />
 
                                                     <button type="button" class="btn btn-primary" onclick="document.getElementById('<%= fileUpload.ClientID %>').click();">Choose File</button>
-                                                    <span id="fileInfo" class="file-info">No file chosen</span>
+                                                    <span id="fileInfo" class="file-info" style="margin-left: 10px; display: inline-block; max-width: 500px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No file chosen</span>
                                                 </div>
                                             </div>
                                         </td>
