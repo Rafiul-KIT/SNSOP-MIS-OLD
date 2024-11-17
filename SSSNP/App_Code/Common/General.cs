@@ -32223,7 +32223,8 @@ public class General
             if (PaidDate == "" || PaidDate == null)
                 cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = DBNull.Value;
             else
-                cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = Convert.ToDateTime(PaidDate.Trim());
+                //cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = Convert.ToDateTime(PaidDate.Trim());
+                cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = cmf.convertDateIndia(PaidDate.Trim());
 
             if (Created_by.Trim() == "" || Created_by.Trim() == null)
                 cmd.Parameters.Add("@Created_by", SqlDbType.VarChar).Value = DBNull.Value;
@@ -32283,7 +32284,7 @@ public class General
                 cmd.Parameters.Add("@matched_fp", SqlDbType.VarChar).Value = matched_fp.Trim();
 
 
-            if (supervisor_id.Trim() == "" || supervisor_id.Trim() == null)
+            if (supervisor_id == null || supervisor_id.Trim() == "" || supervisor_id.Trim() == null)
                 cmd.Parameters.Add("@supervisor_id", SqlDbType.VarChar).Value = DBNull.Value;
             else
                 cmd.Parameters.Add("@supervisor_id", SqlDbType.VarChar).Value = supervisor_id.Trim();

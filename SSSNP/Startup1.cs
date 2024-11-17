@@ -121,6 +121,7 @@ namespace SSSNP
             //// test code for thread management: START
             //// Start grm notifocation thread
             ThreadHandler.GetInstance(new SendGrmNotificationAsynch()).StartThread();
+            ThreadHandler.GetInstance(new AutoReconcilePayrollAsync()).StartThread();
             //// test code for thread management: END
 
 
