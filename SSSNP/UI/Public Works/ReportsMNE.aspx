@@ -70,7 +70,7 @@
 
 
 
-                                <table style="width: 100%;">
+                                <table style="width: 100%; table-layout: fixed;">
                                     <tr>
                                         <td style="padding: 5px 0;">
                                             <div style="display: flex; align-items: center;">
@@ -83,7 +83,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td style="padding: 5px 0;">
+                                        <td style="padding: 5px 50px;">
                                             <div style="display: flex; align-items: center;">
                                                 <label for="ddlSubmitReportType" style="margin-right: 10px;">Report Type</label>
                                                 <asp:DropDownList ID="ddlSubmitReportType" runat="server" CssClass="form-control" Style="width: auto;" OnSelectedIndexChanged="ddlSubmitReportType_SelectedIndexChanged">
