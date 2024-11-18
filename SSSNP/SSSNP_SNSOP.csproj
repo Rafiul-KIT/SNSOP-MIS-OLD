@@ -223,6 +223,9 @@
     <Content Include="Alternatetwo\readme.txt" />
     <Content Include="assets\Background.png" />
     <Content Include="assets\Loading.gif" />
+    <Content Include="Resource\Images\ID_back.jpg" />
+    <Content Include="Resource\Images\ID_front.jpg" />
+    <Content Include="Resource\Images\not-available-2.jpg" />
     <Content Include="Resource\Images\snsop-id-card-bg2.png" />
     <Content Include="Resource\Images\snsop-id-card-bg1.png" />
     <Content Include="Resource\Styles\css\payroll-download-style.css" />

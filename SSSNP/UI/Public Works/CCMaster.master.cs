@@ -13,7 +13,7 @@ using System.Web.Services;
 
 public partial class CCMaster : System.Web.UI.MasterPage
 {
-
+    General Gen = new General();
     [WebMethod]
     public string Username()
     {
@@ -36,6 +36,9 @@ public partial class CCMaster : System.Web.UI.MasterPage
         printIdCardMenu.Visible = value;
         workProgressMenu.Visible = value;
         lipwExportMenu.Visible = value;
+
+        RejectedWages.Visible = value;
+        WageRequestDraft.Visible = value;
 
         LiIp4.Visible = value;
 
@@ -220,40 +223,51 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
             if (Session["user_type"].ToString() == "IP")
             {
-                LiIp1.Visible = true;
-                LiIp2.Visible = true;
-                LiIp3.Visible = true;
-                workProposalMenu.Visible = true;
-                beneficiaryRegistrationMenu.Visible = true;
-                jobCardMenu.Visible = true;
-                printIdCardMenu.Visible = true;
-                workProgressMenu.Visible = true;
-                lipwExportMenu.Visible = true;
-                LiIp4.Visible = true;
-                LiIp5.Visible = true;
+                if (Gen.CheckIsIPApprover(Session["uid"].ToString().Trim()).Tables[0].Rows.Count > 0)
+                {
+                    //setAllMenuPermission(false);
+                    LiIp5.Visible = true;
+                    RejectedWages.Visible = true;
+                    WageRequestDraft.Visible = true;
+                }
+                else
+                {
+                    LiIp1.Visible = true;
+                    LiIp2.Visible = true;
+                    LiIp3.Visible = true;
+                    workProposalMenu.Visible = true;
+                    beneficiaryRegistrationMenu.Visible = true;
+                    jobCardMenu.Visible = true;
+                    printIdCardMenu.Visible = true;
+                    workProgressMenu.Visible = true;
+                    lipwExportMenu.Visible = true;
+                    LiIp4.Visible = true;
+                    LiIp5.Visible = true;
 
 
-                LiIp6.Visible = true;
-                LiIp7.Visible = true;
-                LiIp8.Visible = true;
-                LiIp9.Visible = true;
-                LiIp10.Visible = true;
-                LiIp11.Visible = true;
-                LiPayroll.Visible = true;
-                LiMNE.Visible = true;
-                EconomicOpportunities.Visible = true;
-                //LiUM.Visible = true;
+                    LiIp6.Visible = true;
+                    LiIp7.Visible = true;
+                    LiIp8.Visible = true;
+                    LiIp9.Visible = true;
+                    LiIp10.Visible = true;
+                    LiIp11.Visible = true;
+                    LiPayroll.Visible = true;
+                    LiMNE.Visible = true;
+                    EconomicOpportunities.Visible = true;
+                    //LiUM.Visible = true;
 
-                nongbvMenu.Visible = true;
-                nongbvDashboardMenu.Visible = true;
-                gbvNewMenu.Visible = true;
-                gbvNewMenuDashboard.Visible = true;
-                grmReport.Visible = true;
-                grmImporting.Visible = true;
+                    nongbvMenu.Visible = true;
+                    nongbvDashboardMenu.Visible = true;
+                    gbvNewMenu.Visible = true;
+                    gbvNewMenuDashboard.Visible = true;
+                    grmReport.Visible = true;
+                    grmImporting.Visible = true;
 
-                LiPaymentCycleDocument.Visible = true;
-                liUploadPaymentCycleDoc.Visible = false;
-                liViewPaymentCycleDoc.Visible = true;
+                    LiPaymentCycleDocument.Visible = true;
+                    liUploadPaymentCycleDoc.Visible = false;
+                    liViewPaymentCycleDoc.Visible = true;
+                }
+                
             }
             if (Session["user_type"].ToString() == "FSP")
             {

@@ -555,6 +555,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             cardId.AlternatePhoto1 = hdPhotoA1.Value;
             cardId.AlternatePhoto2 = hdPhotoA2.Value;
             cardId.CountryName = string.Format("{0}/{1}", lblPayam.Text,  lblCounti.Text);
+            cardId.BomaName = lblBoma.Text;
 
             string json = JsonConvert.SerializeObject(cardId);
 
