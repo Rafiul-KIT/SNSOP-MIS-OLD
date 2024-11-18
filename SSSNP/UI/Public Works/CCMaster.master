@@ -342,7 +342,7 @@
                                             <li id="LiPayroll" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-money"></i>Payroll</a>
                                                  <ul class="down_menu">
                                                     <li id="payrollDownload" runat="server" visible="false"><a href="PayrollDownload.aspx">Payroll Download</a></li>
-                                                    <li id="payrollReconcile" runat="server" visible="false"><a href="Payroll/ReconcilePayroll.aspx">Payroll Reconcile</a></li>
+                                                    <li id="payrollReconcile" runat="server" visible="false"><a href="ReconcilePayroll.aspx">Payroll Reconcile</a></li>
                                                  </ul>
                                             </li>
                                             <li id="LiMNE" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-line-chart"></i>Monitoring and Evaluation</a>

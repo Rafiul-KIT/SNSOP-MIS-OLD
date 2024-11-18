@@ -1816,10 +1816,19 @@ namespace SSSNP_SNSOP
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
 
-                    Response.BinaryWrite(null);
-                    Response.Flush();
-                    Response.Close();
-                    return;
+                    using (ExcelPackage package = new ExcelPackage())
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Payroll");
+
+                        Response.ClearHeaders();
+                        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                        Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
+
+                        Response.BinaryWrite(package.GetAsByteArray());
+                        Response.Flush();
+                        Response.Close();
+                        return;
+                    }
                 }
 
                 using (ExcelPackage package = new ExcelPackage())
