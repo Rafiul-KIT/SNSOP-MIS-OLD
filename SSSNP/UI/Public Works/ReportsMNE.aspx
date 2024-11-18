@@ -163,8 +163,7 @@
 
                                 <telerik:RadGrid ID="RadGrid" runat="server" OnNeedDataSource="RadGrid_NeedDataSource" DataKeyNames="Id" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false" OnItemCommand="RadGrid_ItemCommand">
 
-                                    <PagerStyle Mode="NextPrevAndNumeric" />
-                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" PagerStyle-AlwaysVisible="True">
+                                    <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True" PagerStyle-AlwaysVisible="True">
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="ID" UniqueName="Id" />
                                             <telerik:GridBoundColumn DataField="FileName" HeaderText="File Name" UniqueName="FileName" />
@@ -189,6 +188,7 @@
                                             </telerik:GridTemplateColumn>
                                         </Columns>
                                     </MasterTableView>
+                                    <PagerStyle Mode="NextPrevAndNumeric" />
                                 </telerik:RadGrid>
                             </div>
                         </div>

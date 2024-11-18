@@ -69,7 +69,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Household Number", "Payment Cycle", "Payment Amount", "Payment Date" + "\n" + "(dd-mm-yyyy)",
+                        "Household Number", "Payment Cycle", "Payment Amount", "Payment Date" + "\n" + "(mm-dd-yyyy)",
                     };
 
                     // Validate headers
@@ -413,7 +413,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             lblMessageSuccess.Text = message;
 
             ScriptManager.RegisterStartupScript(this, GetType(), "HideSuccess",
-                "setTimeout(function() { document.getElementById('" + DivSuccess.ClientID + "').style.display = 'none'; }, 5000);", true);
+                "setTimeout(function() { document.getElementById('" + DivSuccess.ClientID + "').style.display = 'none'; }, 10000);", true);
         }
 
         private void AddErrorMessage(string message)

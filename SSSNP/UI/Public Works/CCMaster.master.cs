@@ -368,6 +368,17 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiMNE.Visible = true;
                 LiUM.Visible = true;
                 EconomicOpportunities.Visible = true;
+                EconomicOpportunitiesDashboard.Visible = true;
+                Component2TemplateImporting.Visible = true;
+                HouseholdGroupView.Visible = true;
+                HouseholdAndGroupIdMapping.Visible = true;
+                BeneficiaryRandomizationandEnrollment.Visible = true;
+                TrainingandAttendanceTracking.Visible = true;
+                BusinessPlanDevelopment.Visible = true;
+                LivelihoodGrantDisbursement.Visible = true;
+                FinancialServiceLinkageTracking.Visible = true;
+                CoachingSessionTracking.Visible = true;
+                AuditRecordDownload.Visible = true;
 
                 nongbvMenu.Visible = true;
                 nongbvDashboardMenu.Visible = true;
