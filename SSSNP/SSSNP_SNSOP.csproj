@@ -633,6 +633,7 @@
     <Content Include="UI\Public Works\PaymentSelectionPayingagencyBenfWages.aspx" />
     <Content Include="UI\Public Works\PaymentsReportDatewise.aspx" />
     <Content Include="UI\Public Works\PayrollDownload.aspx" />
+    <Content Include="UI\Public Works\Payroll\ReconcilePayroll.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendance.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendancedeleting.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendanceDeletingnew.aspx" />
@@ -819,6 +820,7 @@
     <Compile Include="App_Code\CUserContext.cs" />
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
+    <Compile Include="Asynch\AutoReconcilePayrollAsync.cs" />
     <Compile Include="Asynch\SendGrmNotificationAsynch.cs" />
     <Compile Include="Entity\AlternateNewCardInfo.cs" />
     <Compile Include="Entity\IdCard\IdCardInfoV1.cs" />
@@ -1867,6 +1869,17 @@
     </Compile>
     <Compile Include="UI\Public Works\PayrollDownload.aspx.designer.cs">
       <DependentUpon>PayrollDownload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\Payroll\BulkResponseDto.cs" />
+    <Compile Include="UI\Public Works\Payroll\PayrollReconciliationDto.cs" />
+    <Compile Include="UI\Public Works\Payroll\PayrollReconciliationRequest.cs" />
+    <Compile Include="UI\Public Works\Payroll\PayrollReconciliationResponse.cs" />
+    <Compile Include="UI\Public Works\Payroll\ReconcilePayroll.aspx.cs">
+      <DependentUpon>ReconcilePayroll.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\Payroll\ReconcilePayroll.aspx.designer.cs">
+      <DependentUpon>ReconcilePayroll.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\PDCHouseholdAttendance.aspx.designer.cs">
       <DependentUpon>PDCHouseholdAttendance.aspx</DependentUpon>

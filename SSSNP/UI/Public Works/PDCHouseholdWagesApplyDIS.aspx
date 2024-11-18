@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" EnableEventValidation="true"
+<%@ Page Title=":: :: SNSOP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" EnableEventValidation="true"
     AutoEventWireup="true" Inherits="PDCHouseholdWagesApplyDIS" CodeBehind="PDCHouseholdWagesApplyDIS.aspx.cs" MaintainScrollPositionOnPostback="true" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>

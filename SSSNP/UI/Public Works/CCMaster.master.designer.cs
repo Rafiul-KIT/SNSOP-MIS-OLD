@@ -193,6 +193,24 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiIp5;
 
     /// <summary>
+    /// WageRequestApplyLIPW control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestApplyLIPW;
+
+    /// <summary>
+    /// WageRequestApplyDIS control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestApplyDIS;
+
+    /// <summary>
     /// WageRequestDraft control.
     /// </summary>
     /// <remarks>
@@ -355,6 +373,24 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiPayroll;
 
     /// <summary>
+    /// payrollDownload control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl payrollDownload;
+
+    /// <summary>
+    /// payrollReconcile control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl payrollReconcile;
+
+    /// <summary>
     /// LiMNE control.
     /// </summary>
     /// <remarks>
@@ -416,15 +452,6 @@ public partial class CCMaster
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl gbvNewMenuDashboard;
-
-    /// <summary>
-    /// GRMMenuDashboard control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl GRMMenuDashboard;
 
     /// <summary>
     /// grmReport control.

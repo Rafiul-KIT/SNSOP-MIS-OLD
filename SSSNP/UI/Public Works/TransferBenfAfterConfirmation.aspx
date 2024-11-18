@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/UI/Public Works/CCMaster.master" Inherits="TransferBenfAfterConfirmation" Title=":: :: SSSNP : ::" CodeBehind="TransferBenfAfterConfirmation.aspx.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/UI/Public Works/CCMaster.master" Inherits="TransferBenfAfterConfirmation" Title=":: :: SNSOP : ::" CodeBehind="TransferBenfAfterConfirmation.aspx.cs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 

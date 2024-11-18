@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Implentation Partner Details" Language="C#" MasterPageFile="~/UI/Public Works/AlertMaster.master" AutoEventWireup="true" Inherits="AutoMaticAlertWorksMonthlyFundsDisbursementReport" Codebehind="AutoMaticAlertWorksMonthlyFundsDisbursementReport.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Implentation Partner Details" Language="C#" MasterPageFile="~/UI/Public Works/AlertMaster.master" AutoEventWireup="true" Inherits="AutoMaticAlertWorksMonthlyFundsDisbursementReport" Codebehind="AutoMaticAlertWorksMonthlyFundsDisbursementReport.aspx.cs" %>
 
 <%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
 

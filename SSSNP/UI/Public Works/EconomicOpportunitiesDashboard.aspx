@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Economic Opportunities Dashboard" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="EconomicOpportunitiesDashboard.aspx.cs" Inherits="SSSNP.UI.Public_Works.EconomicOpportunitiesDashboard" %>
+﻿<%@ Page Title=":: :: SNSOP : : Economic Opportunities Dashboard" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="EconomicOpportunitiesDashboard.aspx.cs" Inherits="SSSNP.UI.Public_Works.EconomicOpportunitiesDashboard" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:UpdatePanel ID="upd1" runat="server">

@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="ViewWagesReqDetailsAutoRec" CodeBehind="ViewWagesReqDetailsAutoRec.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="ViewWagesReqDetailsAutoRec" CodeBehind="ViewWagesReqDetailsAutoRec.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>

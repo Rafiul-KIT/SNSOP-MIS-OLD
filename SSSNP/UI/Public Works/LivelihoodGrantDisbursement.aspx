@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Livelihood Grant Disbursement" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="LivelihoodGrantDisbursement.aspx.cs" Inherits="SSSNP_SNSOP.UI.Public_Works.LivelihoodGrantDisbursement" %>
+﻿<%@ Page Title=":: :: SNSOP : : Livelihood Grant Disbursement" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="LivelihoodGrantDisbursement.aspx.cs" Inherits="SSSNP_SNSOP.UI.Public_Works.LivelihoodGrantDisbursement" %>
 
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 

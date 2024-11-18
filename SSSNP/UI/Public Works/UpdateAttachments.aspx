@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"
+<%@ Page Title=":: :: SNSOP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"
     AutoEventWireup="true" Inherits="UpdateAttachments"
     EnableEventValidation="true" CodeBehind="UpdateAttachments.aspx.cs" %>
 

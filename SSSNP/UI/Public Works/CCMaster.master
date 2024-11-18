@@ -311,11 +311,10 @@
                                             </li>
                                             <li id="LiIp5" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-pencil-square-o"></i>Wage Request</a>
                                                 <ul class="down_menu">
-                                                    <li><a href="PDCHouseholdWagesApply.aspx">Apply for Wage Request LIPW</a> </li>
-                                                    <li><a href="PDCHouseholdWagesApplyDIS.aspx">Apply for Wage Request DIS</a> </li>
+                                                    <li id="WageRequestApplyLIPW" visible="false" runat="server"><a href="PDCHouseholdWagesApply.aspx">Apply for Wage Request LIPW</a> </li>
+                                                    <li id="WageRequestApplyDIS" visible="false" runat="server"><a href="PDCHouseholdWagesApplyDIS.aspx">Apply for Wage Request DIS</a> </li>
                                                     <li id ="WageRequestDraft" visible="false" runat="server"><a href="WagesDasboardDrildown.aspx?Status=0">Wage Request Drafts</a> </li>
                                                     <li id ="RejectedWages" visible="false" runat="server"><a href="WageDraftRejectedList.aspx">Rejected Wages</a> </li>
-
                                                 </ul>
                                             </li>
                                             <li id="LiPaymentCycleDocument" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-pencil-square-o"></i>Payment Cycle Docs</a>
@@ -340,9 +339,10 @@
                                                      <li id="AuditRecordDownload" runat="server"><a href="AuditRecordDownload.aspx">Audit Download</a></li>
                                                  </ul>
                                             </li>
-                                            <li id="LiPayroll" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-money"></i> Payroll</a>
+                                            <li id="LiPayroll" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-money"></i>Payroll</a>
                                                  <ul class="down_menu">
-                                                    <li><a href="PayrollDownload.aspx">Payroll Download</a></li>
+                                                    <li id="payrollDownload" runat="server" visible="false"><a href="PayrollDownload.aspx">Payroll Download</a></li>
+                                                    <li id="payrollReconcile" runat="server" visible="false"><a href="Payroll/ReconcilePayroll.aspx">Payroll Reconcile</a></li>
                                                  </ul>
                                             </li>
                                             <li id="LiMNE" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-line-chart"></i>Monitoring and Evaluation</a>
@@ -368,7 +368,6 @@
                                                     <li id="gbvNewMenuDashboard" runat="server" visible="false">
                                                         <a href="GBVDashboard.aspx">GBV Dashboard</a>
                                                     </li>
-                                                    <li id="GRMMenuDashboard" visible="false" runat="server"></li>
                                                     <li id="grmReport" visible="false" runat="server"><a href="GrievancesDashboard.aspx">Grievances Status Report</a></li>
                                                     <li id="grmImporting" visible="false" runat="server"><a href="GBVExcelImporting.aspx">Excel Importing</a></li>
                                                 </ul>

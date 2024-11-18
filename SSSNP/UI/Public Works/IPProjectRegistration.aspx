@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Project Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPProjectRegistration" Codebehind="IPProjectRegistration.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Project Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPProjectRegistration" Codebehind="IPProjectRegistration.aspx.cs" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 
 

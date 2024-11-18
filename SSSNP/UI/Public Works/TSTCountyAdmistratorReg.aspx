@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : County Administration Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TSTCountyAdmistratorReg" Codebehind="TSTCountyAdmistratorReg.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : County Administration Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TSTCountyAdmistratorReg" Codebehind="TSTCountyAdmistratorReg.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

@@ -26460,6 +26460,51 @@ public class General
         return value;
     }
 
+    public DataSet GetReconciledUnpaidPayrollKIT(int? stateId, int? countyId, int? payamId, int? bomaId)
+    {
+        con.OpenConnection();
+        SqlDataAdapter da;
+        DataSet ds = new DataSet();
+        try
+        {
+            da = new SqlDataAdapter("getReconciledUnpaidPayrollKIT", con.GetConnection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+
+            if (stateId == null)
+                da.SelectCommand.Parameters.Add("@intStateId", SqlDbType.Int).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@intStateId", SqlDbType.Int).Value = stateId;
+
+            if (countyId == null)
+                da.SelectCommand.Parameters.Add("@intCountieId", SqlDbType.Int).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@intCountieId", SqlDbType.Int).Value = countyId;
+
+            if (payamId == null)
+                da.SelectCommand.Parameters.Add("@intPayamId", SqlDbType.Int).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@intPayamId", SqlDbType.Int).Value = payamId;
+
+            if (bomaId == null)
+                da.SelectCommand.Parameters.Add("@intBomaId", SqlDbType.Int).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@intBomaId", SqlDbType.Int).Value = bomaId;
+
+
+            da.Fill(ds);
+            con.CloseConnection(); return ds;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            con.CloseConnection();
+        }
+    }
+
     public DataSet GetBomaListWageApplied()
     {
         con.OpenConnection();
@@ -32178,7 +32223,8 @@ public class General
             if (PaidDate == "" || PaidDate == null)
                 cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = DBNull.Value;
             else
-                cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = Convert.ToDateTime(PaidDate.Trim());
+                //cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = Convert.ToDateTime(PaidDate.Trim());
+                cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = cmf.convertDateIndia(PaidDate.Trim());
 
             if (Created_by.Trim() == "" || Created_by.Trim() == null)
                 cmd.Parameters.Add("@Created_by", SqlDbType.VarChar).Value = DBNull.Value;
@@ -32238,7 +32284,7 @@ public class General
                 cmd.Parameters.Add("@matched_fp", SqlDbType.VarChar).Value = matched_fp.Trim();
 
 
-            if (supervisor_id.Trim() == "" || supervisor_id.Trim() == null)
+            if (supervisor_id == null || supervisor_id.Trim() == "" || supervisor_id.Trim() == null)
                 cmd.Parameters.Add("@supervisor_id", SqlDbType.VarChar).Value = DBNull.Value;
             else
                 cmd.Parameters.Add("@supervisor_id", SqlDbType.VarChar).Value = supervisor_id.Trim();

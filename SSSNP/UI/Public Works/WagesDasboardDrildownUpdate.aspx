@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/TstMaster.master" AutoEventWireup="true" Inherits="WagesDasboardDrildownUpdate" Title=":: SSSNP Online Management System ::" CodeBehind="WagesDasboardDrildownUpdate.aspx.cs" %>
+<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="WagesDasboardDrildownUpdate" Title=":: SSSNP Online Management System ::" CodeBehind="WagesDasboardDrildownUpdate.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 
