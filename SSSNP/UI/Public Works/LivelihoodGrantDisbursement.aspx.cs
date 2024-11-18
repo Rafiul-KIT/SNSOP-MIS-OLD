@@ -69,7 +69,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Household Number", "Payment Cycle", "Payment Amount", "Payment Date" + "\n" + "(dd-mm-yyyy)",
+                        "Household Number", "Payment Cycle", "Payment Amount", "Payment Date" + "\n" + "(mm-dd-yyyy)",
                     };
 
                     // Validate headers
