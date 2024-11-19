@@ -165,7 +165,7 @@ namespace SSSNP
             cb2.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             cb2.SetFontAndSize(f_cn, 8);
-            cb2.SetTextMatrix(168, 123);  //(xPos, yPos)
+            cb2.SetTextMatrix(133, 123);  //(xPos, yPos)
             cb2.ShowText(cardID.BeneficiaryName);
             cb2.EndText();
 
