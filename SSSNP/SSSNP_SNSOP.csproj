@@ -821,6 +821,7 @@
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
     <Compile Include="Asynch\AutoReconcilePayrollAsync.cs" />
+    <Compile Include="Asynch\BulkIdCardGenerationAsync.cs" />
     <Compile Include="Asynch\SendGrmNotificationAsynch.cs" />
     <Compile Include="Entity\AlternateNewCardInfo.cs" />
     <Compile Include="Entity\IdCard\IdCardInfoV1.cs" />
