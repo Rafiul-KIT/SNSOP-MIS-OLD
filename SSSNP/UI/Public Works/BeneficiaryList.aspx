@@ -104,8 +104,7 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlPayam" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px" AutoPostBack="True"
-                                                            OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
+                                                            Height="33px" Width="180px" AutoPostBack="True" OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
 
                                                         </asp:DropDownList>
@@ -150,14 +149,18 @@
                                             </table>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
-                                            <asp:Button ID="BtnSearch" runat="server" CssClass="btn btn-primary"
-                                                Height="32px" OnClick="BtnSearch_Click" TabIndex="10" Text="Search"
-                                                ValidationGroup="group" Width="110px" />
-                                        </td>
-                                    </tr>
                                 </table>
+                                <div style="display: flex; justify-content: center; align-items: center; gap: 20px; padding: 10px;">
+                                    <asp:Button ID="BtnSearch" runat="server" CssClass="btn btn-primary"
+                                        Height="32px" OnClick="BtnSearch_Click" TabIndex="10" Text="Search"
+                                        ValidationGroup="group" Width="110px" />
+
+                                    <asp:Button ID="BtnClear" runat="server" CssClass="btn btn-primary"
+                                        Height="32px" OnClick="BtnClear_Click" TabIndex="10" Text="Clear"
+                                        ValidationGroup="group" Width="110px" />
+                                </div>
+
+
                                 <div id="DivSuccess" runat="server" visible="true" class="alert alert-success">
                                     <asp:Label ID="lblMessageSuccess" runat="server" />
                                 </div>
@@ -166,7 +169,7 @@
                                 </div>
                             </div>
                         </div>
-                        <telerik:RadGrid ID="RadGrid" runat="server" OnNeedDataSource="RadGrid_NeedDataSource" DataKeyNames="Id" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false" OnItemCommand="RadGrid_ItemCommand">
+                        <telerik:RadGrid ID="RadGrid" runat="server" DataKeyNames="Id" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false">
 
                             <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True" PagerStyle-AlwaysVisible="True">
                                 <Columns>
