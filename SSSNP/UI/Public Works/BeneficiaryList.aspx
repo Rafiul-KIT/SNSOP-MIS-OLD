@@ -166,7 +166,7 @@
                                 </div>
                             </div>
                         </div>
-                        <telerik:RadGrid ID="RadGrid" runat="server" OnNeedDataSource="RadGrid_NeedDataSource" DataKeyNames="Id" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false" OnItemCommand="RadGrid_ItemCommand">
+                        <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false">
 
                             <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True" PagerStyle-AlwaysVisible="True">
                                 <Columns>
