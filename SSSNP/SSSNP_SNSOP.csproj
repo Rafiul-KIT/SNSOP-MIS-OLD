@@ -381,6 +381,7 @@
     <Content Include="TokenAccess.aspx" />
     <Content Include="UI\Public Works\AuditRecordDownload.aspx" />
     <Content Include="UI\Public Works\BeneficiaryEnrollmentSummaryMNE.aspx" />
+    <Content Include="UI\Public Works\BeneficiaryList.aspx" />
     <Content Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrint.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx" />
@@ -952,6 +953,13 @@
     </Compile>
     <Compile Include="UI\Public Works\BeneficiaryEnrollmentSummaryMNE.aspx.designer.cs">
       <DependentUpon>BeneficiaryEnrollmentSummaryMNE.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\BeneficiaryList.aspx.cs">
+      <DependentUpon>BeneficiaryList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\BeneficiaryList.aspx.designer.cs">
+      <DependentUpon>BeneficiaryList.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx.cs">
       <DependentUpon>BeneficiaryRandomizationandEnrollment.aspx</DependentUpon>
