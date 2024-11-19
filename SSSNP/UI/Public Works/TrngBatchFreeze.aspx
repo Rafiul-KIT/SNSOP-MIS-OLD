@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : :  Batch Freezing " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngBatchFreeze" Codebehind="TrngBatchFreeze.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : :  Batch Freezing " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngBatchFreeze" Codebehind="TrngBatchFreeze.aspx.cs" %>
 
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>

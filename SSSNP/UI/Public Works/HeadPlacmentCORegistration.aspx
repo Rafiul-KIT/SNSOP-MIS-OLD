@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Placement Coordinator Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="HeadPlacmentCORegistration" Codebehind="HeadPlacmentCORegistration.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Placement Coordinator Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="HeadPlacmentCORegistration" Codebehind="HeadPlacmentCORegistration.aspx.cs" %>
 
 
 

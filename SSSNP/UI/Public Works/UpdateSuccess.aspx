@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Title=":: SSSNP ::"  MasterPageFile="~/UI/Public Works/CCMaster.master" CodeBehind="UpdateSuccess.aspx.cs" Inherits="SSSNP.UI.Public_Works.UpdateSuccess" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Title=":: SNSOP ::"  MasterPageFile="~/UI/Public Works/CCMaster.master" CodeBehind="UpdateSuccess.aspx.cs" Inherits="SSSNP.UI.Public_Works.UpdateSuccess" %>
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">

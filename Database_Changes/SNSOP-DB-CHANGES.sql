@@ -1,3 +1,33 @@
+-- 16/11/2024
+
+create procedure getReconciledUnpaidPayrollKIT
+(
+    @intStateId int,
+    @intCountieId int,
+    @intPayamId int,
+    @intBomaId int
+) as
+select wrbd.AmountInSSP, wrbd.TotAttendance, wwr.ReqFromDate, wwr.ReqToDate,
+ben.EnrollmentNo, wwr.Exchangerateattime, ben.NameofHousehold, wwr.Created_dt,
+ben.household_number, ben.latitude, ben.longitude, '' PaidTo,
+'UNPAID' status, wrbd.intWagesReqBenTransid trans_id, wwr.intWagePaymentReqid uuid,
+wrbd.AmountInSSP, wm.WorkCode, wm.intWorkid
+from td_WageReqBenDet wrbd
+inner join td_WorkWageRequest wwr on wrbd.intWagePaymentReqid = wwr.intWagePaymentReqid
+inner join tbl_WorkMaster wm on wrbd.intWorkid = wm.intWorkid
+inner join tbl_BeneficiaryDet ben on wrbd.intBenid=ben.intBenid
+left join tr_BenWagesPayment pay on wrbd.intWagesReqBenTransid=pay.trans_id
+where 1=1
+and wwr.Status > 4 and pay.intWageid is null
+and (@intStateId is null or ben.intStateid=@intStateId)
+and (@intCountieId is null or ben.intCountieid=@intCountieId)
+and (@intPayamId is null or ben.intPayamid=@intPayamId)
+and (@intBomaId is null or ben.intBomasid=@intBomaId)
+;
+go
+
+-- 16/11/2024
+
 -- 19-10-2024
 
 create table tbl_com2_Business_Plan_Development

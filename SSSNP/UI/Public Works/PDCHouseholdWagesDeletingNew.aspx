@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Payment" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="PDCHouseholdWagesDeletingNew" Codebehind="PDCHouseholdWagesDeletingNew.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Wages Payment" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="PDCHouseholdWagesDeletingNew" Codebehind="PDCHouseholdWagesDeletingNew.aspx.cs" %>
 
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>

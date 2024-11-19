@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Payam / Block Development Committee " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TSTPDCReg" Codebehind="TSTPDCReg.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Payam / Block Development Committee " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TSTPDCReg" Codebehind="TSTPDCReg.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

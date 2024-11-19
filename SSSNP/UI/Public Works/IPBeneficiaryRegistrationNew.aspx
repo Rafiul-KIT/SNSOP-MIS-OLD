@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Beneficiary Enrollment " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="True" CodeBehind="IPBeneficiaryRegistrationNew.aspx.cs" Inherits="IPBeneficiaryRegistrationNew" %>
+<%@ Page Title=":: :: SNSOP : : Beneficiary Enrollment " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="True" CodeBehind="IPBeneficiaryRegistrationNew.aspx.cs" Inherits="IPBeneficiaryRegistrationNew" %>
 
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>

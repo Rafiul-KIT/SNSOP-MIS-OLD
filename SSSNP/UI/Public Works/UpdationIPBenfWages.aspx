@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="UpdationIPBenfWages" EnableEventValidation="true" CodeBehind="UpdationIPBenfWages.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="UpdationIPBenfWages" EnableEventValidation="true" CodeBehind="UpdationIPBenfWages.aspx.cs" %>
 
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>

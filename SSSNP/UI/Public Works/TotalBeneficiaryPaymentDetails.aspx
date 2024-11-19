@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Report from Pay Connect Team" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="TotalBeneficiaryPaymentDetails" CodeBehind="TotalBeneficiaryPaymentDetails.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Wages Report from Pay Connect Team" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="TotalBeneficiaryPaymentDetails" CodeBehind="TotalBeneficiaryPaymentDetails.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>

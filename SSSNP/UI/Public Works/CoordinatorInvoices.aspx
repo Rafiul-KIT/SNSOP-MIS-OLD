@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/TstMaster.master" AutoEventWireup="true" Inherits="CoordinatorInvoices" Title=":: SSSNP Online Management System ::" Codebehind="CoordinatorInvoices.aspx.cs" %>
+<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="CoordinatorInvoices" Title=":: SSSNP Online Management System ::" Codebehind="CoordinatorInvoices.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : :  Trainee Business Start up Details  for - Group " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngBusinessStartUpGrp" Codebehind="TrngBusinessStartUpGrp.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : :  Trainee Business Start up Details  for - Group " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngBusinessStartUpGrp" Codebehind="TrngBusinessStartUpGrp.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

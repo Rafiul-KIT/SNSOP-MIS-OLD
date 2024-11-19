@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Results Framework" MasterPageFile="~/UI/Public Works/CCMaster.master" Language="C#" AutoEventWireup="true" CodeBehind="ResultsFrameworkMNE.aspx.cs" Inherits="SSSNP.UI.Public_Works.ResultsFrameworkMNE" %>
+﻿<%@ Page Title=":: :: SNSOP : : Results Framework" MasterPageFile="~/UI/Public Works/CCMaster.master" Language="C#" AutoEventWireup="true" CodeBehind="ResultsFrameworkMNE.aspx.cs" Inherits="SSSNP.UI.Public_Works.ResultsFrameworkMNE" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:UpdatePanel ID="upd1" runat="server">

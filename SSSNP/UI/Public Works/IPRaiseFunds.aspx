@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Raise Funds " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPRaiseFunds" Codebehind="IPRaiseFunds.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Raise Funds " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPRaiseFunds" Codebehind="IPRaiseFunds.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

@@ -84,11 +84,14 @@ namespace SSSNP.UI.Public_Works
 
             // Define the file name and file path
             string fileName = fileUpload.FileName;
-            string folderPath = Server.MapPath("~/UI/Uploads/Saved Files");
-            string filePath = Path.Combine(folderPath, fileName);
 
-            // Database connection and validation
+            
+            string baseFolderPath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"];
+            string folderPath = Path.Combine(baseFolderPath, "ReportsMnE");
+            string filePath = Path.Combine(folderPath, fileName);
             string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+            
+            
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -163,6 +166,7 @@ namespace SSSNP.UI.Public_Works
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+
             ClearLabels();
             ViewState["ReportMode"] = "Saved";
             RadGrid.MasterTableView.GetColumn("UploadedBy").Visible = true;
@@ -181,12 +185,8 @@ namespace SSSNP.UI.Public_Works
             ViewState["FromDate"] = fromDate;
             ViewState["ToDate"] = toDate;
 
-            // Call GetReportData with the selected criteria
-            DataTable dt = GetSavedReportData(RadGrid.CurrentPageIndex, RadGrid.PageSize, fromDate, toDate, reportType);
-
-            // Bind the grid
-            RadGrid.DataSource = dt;
-            RadGrid.DataBind();
+            RadGrid.CurrentPageIndex = 0;
+            RadGrid.Rebind();
             RadGrid.Visible = true;
         }
 
@@ -211,71 +211,229 @@ namespace SSSNP.UI.Public_Works
             ViewState["ReportType"] = reportType;
             ViewState["FromDate"] = fromDate;
             ViewState["ToDate"] = toDate;
-            
-            // Call GetReportData with the selected criteria
-            DataTable dt = GetDeletedReportData(RadGrid.CurrentPageIndex, RadGrid.PageSize, fromDate, toDate, reportType);
 
-            // Bind the grid
-            RadGrid.DataSource = dt;
-            RadGrid.DataBind();
+
+            RadGrid.CurrentPageIndex = 0;
+            RadGrid.Rebind();
             RadGrid.Visible = true;
         }
 
 
 
-        private DataTable GetSavedReportData(int pageIndex, int pageSize, DateTime? fromDate = null, DateTime? toDate = null, string reportType = null)
+        private DataTable GetSavedReportData(int pageIndex, int pageSize, out int totalRecords, DateTime? fromDate = null, DateTime? toDate = null, string reportType = null)
         {
+            totalRecords = 0;
             string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand())
+                conn.Open();
+
+                // Calculate total records
+                string countQuery = @"
+            SELECT COUNT(*)
+            FROM tbl_mne_Report AS r
+            WHERE r.Status = 'Active'";
+
+                if (fromDate.HasValue)
                 {
-                    cmd.Connection = conn;
+                    countQuery += " AND r.UploadedDate >= @FromDate";
+                }
 
-                    // Calculate starting and ending rows for the current page
-                    int startRow = (pageIndex * pageSize) + 1;
-                    int endRow = (pageIndex + 1) * pageSize;
+                if (toDate.HasValue)
+                {
+                    countQuery += " AND r.UploadedDate <= @ToDate";
+                }
 
-                    var query = @"
-                SELECT * FROM (
-                    SELECT ROW_NUMBER() OVER (ORDER BY r.UploadedDate ASC) AS RowNum, 
-                           r.Id, 
-                           r.FileName, 
-                           r.ReportType, 
-                           u.User_name AS UploadedBy, 
-                           r.UploadedDate
-                    FROM tbl_mne_Report AS r
-                    LEFT JOIN tbl_Users AS u ON r.UploadedBy = u.intUserid
-                    WHERE r.Status = 'Active'";
+                if (!string.IsNullOrEmpty(reportType))
+                {
+                    countQuery += " AND r.ReportType = @ReportType";
+                }
 
-                    // Add conditions within the inner query
+                using (SqlCommand countCmd = new SqlCommand(countQuery, conn))
+                {
                     if (fromDate.HasValue)
                     {
-                        query += " AND r.UploadedDate >= @FromDate";
-                        cmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
+                        countCmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
                     }
-
                     if (toDate.HasValue)
                     {
-                        query += " AND r.UploadedDate <= @ToDate";
-                        cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
+                        countCmd.Parameters.AddWithValue("@ToDate", toDate.Value);
                     }
-
                     if (!string.IsNullOrEmpty(reportType))
                     {
-                        query += " AND r.ReportType = @ReportType";
-                        cmd.Parameters.AddWithValue("@ReportType", reportType);
+                        countCmd.Parameters.AddWithValue("@ReportType", reportType);
                     }
 
-                    query += @"
-                ) AS Result
-                WHERE RowNum BETWEEN @StartRow AND @EndRow";
+                    totalRecords = Convert.ToInt32(countCmd.ExecuteScalar());
+                }
 
-                    cmd.Parameters.AddWithValue("@StartRow", startRow);
-                    cmd.Parameters.AddWithValue("@EndRow", endRow);
-                    cmd.CommandText = query;
+                // Fetch paginated data
+                string dataQuery = @"
+            SELECT * FROM (
+                SELECT ROW_NUMBER() OVER (ORDER BY r.UploadedDate ASC) AS RowNum, 
+                       r.Id, 
+                       r.FileName, 
+                       r.ReportType, 
+                       u.User_name AS UploadedBy, 
+                       r.UploadedDate
+                FROM tbl_mne_Report AS r
+                LEFT JOIN tbl_Users AS u ON r.UploadedBy = u.intUserid
+                WHERE r.Status = 'Active'";
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                if (fromDate.HasValue)
+                {
+                    dataQuery += " AND r.UploadedDate >= @FromDate";
+                }
+                if (toDate.HasValue)
+                {
+                    dataQuery += " AND r.UploadedDate <= @ToDate";
+                }
+                if (!string.IsNullOrEmpty(reportType))
+                {
+                    dataQuery += " AND r.ReportType = @ReportType";
+                }
+
+                dataQuery += @"
+            ) AS Result
+            WHERE RowNum BETWEEN @StartRow AND @EndRow";
+
+                int startRow = (pageIndex * pageSize) + 1;
+                int endRow = (pageIndex + 1) * pageSize;
+
+                using (SqlCommand dataCmd = new SqlCommand(dataQuery, conn))
+                {
+                    if (fromDate.HasValue)
+                    {
+                        dataCmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
+                    }
+                    if (toDate.HasValue)
+                    {
+                        dataCmd.Parameters.AddWithValue("@ToDate", toDate.Value);
+                    }
+                    if (!string.IsNullOrEmpty(reportType))
+                    {
+                        dataCmd.Parameters.AddWithValue("@ReportType", reportType);
+                    }
+
+                    dataCmd.Parameters.AddWithValue("@StartRow", startRow);
+                    dataCmd.Parameters.AddWithValue("@EndRow", endRow);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(dataCmd))
+                    {
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+                        return dt;
+                    }
+                }
+
+            }
+
+            
+
+        }
+
+
+
+        private DataTable GetDeletedReportData(int pageIndex, int pageSize, out int totalRecords, DateTime? fromDate = null, DateTime? toDate = null, string reportType = null)
+        {
+            totalRecords = 0;
+
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                // Step 1: Calculate total record count
+                string countQuery = @"
+            SELECT COUNT(*)
+            FROM tbl_mne_Report AS r
+            WHERE r.Status = 'Inactive'";
+
+                if (fromDate.HasValue)
+                {
+                    countQuery += " AND r.DeletedDate >= @FromDate";
+                }
+
+                if (toDate.HasValue)
+                {
+                    countQuery += " AND r.DeletedDate <= @ToDate";
+                }
+
+                if (!string.IsNullOrEmpty(reportType))
+                {
+                    countQuery += " AND r.ReportType = @ReportType";
+                }
+
+                using (SqlCommand countCmd = new SqlCommand(countQuery, conn))
+                {
+                    if (fromDate.HasValue)
+                    {
+                        countCmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
+                    }
+                    if (toDate.HasValue)
+                    {
+                        countCmd.Parameters.AddWithValue("@ToDate", toDate.Value);
+                    }
+                    if (!string.IsNullOrEmpty(reportType))
+                    {
+                        countCmd.Parameters.AddWithValue("@ReportType", reportType);
+                    }
+
+                    totalRecords = Convert.ToInt32(countCmd.ExecuteScalar());
+                }
+
+                // Step 2: Fetch paginated data
+                string dataQuery = @"
+            SELECT * FROM (
+                SELECT ROW_NUMBER() OVER (ORDER BY r.DeletedDate ASC) AS RowNum, 
+                       r.Id, 
+                       r.FileName, 
+                       r.ReportType, 
+                       u.User_name AS DeletedBy, 
+                       r.DeletedDate
+                FROM tbl_mne_Report AS r
+                LEFT JOIN tbl_Users AS u ON r.DeletedBy = u.intUserid
+                WHERE r.Status = 'Inactive'";
+
+                if (fromDate.HasValue)
+                {
+                    dataQuery += " AND r.DeletedDate >= @FromDate";
+                }
+                if (toDate.HasValue)
+                {
+                    dataQuery += " AND r.DeletedDate <= @ToDate";
+                }
+                if (!string.IsNullOrEmpty(reportType))
+                {
+                    dataQuery += " AND r.ReportType = @ReportType";
+                }
+
+                dataQuery += @"
+            ) AS Result
+            WHERE RowNum BETWEEN @StartRow AND @EndRow";
+
+                int startRow = (pageIndex * pageSize) + 1;
+                int endRow = (pageIndex + 1) * pageSize;
+
+                using (SqlCommand dataCmd = new SqlCommand(dataQuery, conn))
+                {
+                    if (fromDate.HasValue)
+                    {
+                        dataCmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
+                    }
+                    if (toDate.HasValue)
+                    {
+                        dataCmd.Parameters.AddWithValue("@ToDate", toDate.Value);
+                    }
+                    if (!string.IsNullOrEmpty(reportType))
+                    {
+                        dataCmd.Parameters.AddWithValue("@ReportType", reportType);
+                    }
+
+                    dataCmd.Parameters.AddWithValue("@StartRow", startRow);
+                    dataCmd.Parameters.AddWithValue("@EndRow", endRow);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(dataCmd))
                     {
                         DataTable dt = new DataTable();
                         adapter.Fill(dt);
@@ -285,71 +443,6 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-
-
-
-
-
-        private DataTable GetDeletedReportData(int pageIndex, int pageSize, DateTime? fromDate = null, DateTime? toDate = null, string reportType = null)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand())
-                {
-                    cmd.Connection = conn;
-
-                    int startRow = (pageIndex * pageSize) + 1;
-                    int endRow = (pageIndex + 1) * pageSize;
-
-                    var query = @"
-                SELECT * FROM (
-                    SELECT ROW_NUMBER() OVER (ORDER BY r.DeletedDate ASC) AS RowNum, 
-                           r.Id, 
-                           r.FileName, 
-                           r.ReportType, 
-                           u.User_name AS DeletedBy, 
-                           r.DeletedDate
-                    FROM tbl_mne_Report AS r
-                    LEFT JOIN tbl_Users AS u ON r.DeletedBy = u.intUserid
-                    WHERE r.Status = 'Inactive'";
-
-                    // Add conditions within the inner query
-                    if (fromDate.HasValue)
-                    {
-                        query += " AND r.DeletedDate >= @FromDate";
-                        cmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
-                    }
-
-                    if (toDate.HasValue)
-                    {
-                        query += " AND r.DeletedDate <= @ToDate";
-                        cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
-                    }
-
-                    if (!string.IsNullOrEmpty(reportType))
-                    {
-                        query += " AND r.ReportType = @ReportType";
-                        cmd.Parameters.AddWithValue("@ReportType", reportType);
-                    }
-
-                    query += @"
-                ) AS Result
-                WHERE RowNum BETWEEN @StartRow AND @EndRow";
-
-                    cmd.Parameters.AddWithValue("@StartRow", startRow);
-                    cmd.Parameters.AddWithValue("@EndRow", endRow);
-                    cmd.CommandText = query;
-
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                    {
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
-                        return dt;
-                    }
-                }
-            }
-        }
 
 
 
@@ -543,20 +636,25 @@ namespace SSSNP.UI.Public_Works
         protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
             int pageIndex = RadGrid.CurrentPageIndex;
-            int pageSize = RadGrid.PageSize; // This dynamically adjusts based on the user's selection
+            int pageSize = RadGrid.PageSize;
 
             string reportType = ViewState["ReportType"] as string;
             DateTime? fromDate = ViewState["FromDate"] as DateTime?;
             DateTime? toDate = ViewState["ToDate"] as DateTime?;
 
+            int totalRecords;
+            
             if (ViewState["ReportMode"] != null && ViewState["ReportMode"].ToString() == "Deleted")
             {
-                RadGrid.DataSource = GetDeletedReportData(pageIndex, pageSize, fromDate, toDate, reportType);
+                RadGrid.DataSource = GetDeletedReportData(pageIndex, pageSize, out totalRecords, fromDate, toDate, reportType);
             }
             else
             {
-                RadGrid.DataSource = GetSavedReportData(pageIndex, pageSize, fromDate, toDate, reportType);
+                RadGrid.DataSource = GetSavedReportData(pageIndex, pageSize, out totalRecords, fromDate, toDate, reportType);
             }
+
+            RadGrid.VirtualItemCount = totalRecords;
+
         }
 
 

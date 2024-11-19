@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="UpdateSelectionPayingagencyBenfWages" Codebehind="UpdateSelectionPayingagencyBenfWages.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Wages Payment Apply" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="UpdateSelectionPayingagencyBenfWages" Codebehind="UpdateSelectionPayingagencyBenfWages.aspx.cs" %>
 
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>

@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : ::   : Dashboard " Language="C#" MasterPageFile="~/UI/Public Works/TstMaster.master" AutoEventWireup="true" Inherits="WageProcessDashboardCO" Codebehind="WageProcessDashboardCO.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : ::   : Dashboard " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="WageProcessDashboardCO" Codebehind="WageProcessDashboardCO.aspx.cs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
