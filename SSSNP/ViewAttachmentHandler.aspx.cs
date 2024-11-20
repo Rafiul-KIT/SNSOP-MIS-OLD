@@ -62,6 +62,7 @@ namespace SSSNP_SNSOP
             FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21,
             ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22,
             MNE_REPORT_DOWNLOAD = 23,
+            ID_CARD_DOWNLOAD = 24,
             PAYROLL_RECONCILE = 30
         }
 
@@ -162,6 +163,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.MNE_REPORT_DOWNLOAD:
                     DownloadFile(GetAttachmentValueAsInt);
+                    return "OK";
+                case HandlerAttachment.ID_CARD_DOWNLOAD:
+                    DownloadIdCard(GetAttachmentValueAsInt);
                     return "OK";
             }
 
@@ -1997,6 +2001,36 @@ namespace SSSNP_SNSOP
                 }
             }
         }
+
+        private void DownloadIdCard(int benId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT id_card_path FROM tbl_BeneficiaryDet WHERE inBenid = @ID AND id_card_generation_status = 1";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ID", benId);
+                    conn.Open();
+                    string filePath = cmd.ExecuteScalar() as string;
+
+                    if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                    {
+                        Response.Clear();
+                        Response.ContentType = "application/pdf";
+                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(filePath)}");
+                        Response.TransmitFile(filePath);
+                        Response.End();
+                    }
+                    else
+                    {
+                        Response.Write("ID card file not found or not yet generated.");
+                    }
+                }
+            }
+        }
+
 
         private void LogError(string v, Exception ex)
         {

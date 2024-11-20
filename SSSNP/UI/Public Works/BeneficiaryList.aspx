@@ -20,6 +20,15 @@
                     </li>
                 </ol>
             </div>
+
+            <style type="text/css">
+                                    .action-button {
+                                        font-size: 12px;
+                                        color: #ffffff !important;
+                                        padding: 5px 10px;
+                                    }
+                                </style>
+
             <div align="center">
                 <div class="row" align="left" style="width: 98%">
                     <div class="col-lg-11" style="padding-left: 0px">
@@ -161,20 +170,34 @@
                                 </div>
 
 
-                                <div id="DivSuccess" runat="server" visible="true" class="alert alert-success">
+                                <div id="DivSuccess" runat="server" visible="false" class="alert alert-success">
                                     <asp:Label ID="lblMessageSuccess" runat="server" />
                                 </div>
-                                <div id="DivFailure" runat="server" visible="true" class="alert alert-danger">
+                                <div id="DivFailure" runat="server" visible="false" class="alert alert-danger">
                                     <asp:Label ID="lblMessageError" runat="server" />
                                 </div>
                             </div>
                         </div>
-                        <telerik:RadGrid ID="RadGrid" runat="server" DataKeyNames="Id" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" Visible="false">
-
-                            <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" AllowCustomPaging="True" PagerStyle-AlwaysVisible="True">
+                        <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" OnNeedDataSource="RadGrid_NeedDataSource" OnItemCommand="RadGrid_ItemCommand">
+                            <MasterTableView AutoGenerateColumns="False" DataKeyNames="EnrollmentNo" AllowPaging="True" PagerStyle-AlwaysVisible="True" >
                                 <Columns>
-                                    
-                                       
+                                    <telerik:GridBoundColumn DataField="intBenid" HeaderText="ID" UniqueName="intBenid" Visible="false" />
+                                    <telerik:GridBoundColumn DataField="StateName" HeaderText="State Name" UniqueName="StateName" />
+                                    <telerik:GridBoundColumn DataField="CountyName" HeaderText="County Name" UniqueName="CountyName" />
+                                    <telerik:GridBoundColumn DataField="PayamName" HeaderText="Payam Name" UniqueName="PayamName" />
+                                    <telerik:GridBoundColumn DataField="BomaName" HeaderText="Boma Name" UniqueName="BomaName" />
+                                    <telerik:GridBoundColumn DataField="Name" HeaderText="Name" UniqueName="Name" />
+                                    <telerik:GridBoundColumn DataField="Sex" HeaderText="Sex" UniqueName="Sex" />
+                                    <telerik:GridBoundColumn DataField="Age" HeaderText="Age" UniqueName="Age" />
+                                    <telerik:GridBoundColumn DataField="ContactNo" HeaderText="Contact No" UniqueName="ContactNo" />
+                                    <telerik:GridBoundColumn DataField="Email" HeaderText="Email" UniqueName="Email" />
+                                    <telerik:GridBoundColumn DataField="EnrollmentNo" HeaderText="Enrollment No" UniqueName="EnrollmentNo" />
+                                    <telerik:GridBoundColumn DataField="Component" HeaderText="Component" UniqueName="Component" />
+                                    <telerik:GridTemplateColumn HeaderText="Actions" UniqueName="Actions">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="btnDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("EnrollmentNo") %>' CssClass="btn btn-success action-button" Text="Download" />
+                                        </ItemTemplate>
+                                    </telerik:GridTemplateColumn>
                                 </Columns>
                             </MasterTableView>
                             <PagerStyle Mode="NextPrevAndNumeric" />

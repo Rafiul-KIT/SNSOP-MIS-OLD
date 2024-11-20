@@ -1,5 +1,6 @@
 ﻿using SSSNP_SNSOP.Core.DbHandler;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -68,4 +69,10 @@ public class LookupManagerService
     {
         throw new NotImplementedException();
     }
+
+    public DataTable ExecuteQuery(string query, CommandType commandType, List<SqlParameter> parameters)
+    {
+        return _dbOperation.ExecuteDataTable(query, commandType, parameters);
+    }
+
 }

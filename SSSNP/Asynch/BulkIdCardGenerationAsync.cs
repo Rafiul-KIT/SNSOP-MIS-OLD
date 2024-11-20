@@ -147,6 +147,34 @@ namespace SSSNP.Asynch
                                 }
                                 filePath += "\\" + dto.NumberID + ".pdf";
                                 File.WriteAllBytes(filePath, file);
+
+                                try
+                                {                                   
+                                    Dictionary<string, object> data = new Dictionary<string, object>
+                                    {
+                                        { "id_card_generation_status", 1 }, 
+                                        { "id_card_path", filePath }       
+                                    };
+                                    
+                                    string wherePart = $"household_number = '{dto.NumberID}'";
+                                    
+                                    bool isUpdated = _dbOperation.UpdateData("tbl_BeneficiaryDet", data, wherePart);
+                                    
+                                    if (isUpdated)
+                                    {
+                                        Console.WriteLine($"Successfully updated the database for Household Number: {dto.NumberID}");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"Failed to update the database for Household Number: {dto.NumberID}");
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("Error updating database for ID card generation status:");
+                                    Console.WriteLine(ex.ToString());
+                                }
+
                             }
                         }
                         catch (Exception ex)

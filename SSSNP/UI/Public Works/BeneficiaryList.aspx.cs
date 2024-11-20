@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -73,8 +74,108 @@ namespace SSSNP.UI.Public_Works
 
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
+            try
+            {
+                // Collect filter values
+                int stateId = !string.IsNullOrEmpty(ddlState.SelectedValue) && ddlState.SelectedValue != "--Select--"
+                              ? int.Parse(ddlState.SelectedValue) : 0;
 
+                int countyId = !string.IsNullOrEmpty(ddlCounty.SelectedValue) && ddlCounty.SelectedValue != "--Select--"
+                               ? int.Parse(ddlCounty.SelectedValue) : 0;
+
+                int payamId = !string.IsNullOrEmpty(ddlPayam.SelectedValue) && ddlPayam.SelectedValue != "--Select--"
+                              ? int.Parse(ddlPayam.SelectedValue) : 0;
+
+                int bomaId = !string.IsNullOrEmpty(ddlBoma.SelectedValue) && ddlBoma.SelectedValue != "--Select--"
+                             ? int.Parse(ddlBoma.SelectedValue) : 0;
+
+                string enrollmentNumber = txtEnrollmentNumber.Text.Trim();
+                string groupType = ddlGroup.SelectedValue.Trim();
+                string name = txtName.Text.Trim();
+                string householdNumber = txtHouseholdNumber.Text.Trim();
+
+                // Base query
+                string query = @"SELECT
+                                bd.intBenid,
+                                s.StateName,
+                                c.CountieName AS CountyName,
+                                p.PayamName,
+                                b.BomaName,
+                                bd.NameofHousehold AS Name,
+                                bd.Sex,
+                                bd.Age,
+                                bd.ContactNo,
+                                bd.Email,
+                                bd.EnrollmentNo,
+                                bd.BeneficiaryType AS Component
+                            FROM 
+                                tbl_BeneficiaryDet bd
+                            LEFT JOIN tm_States s ON bd.intStateid = s.intStateid
+                            LEFT JOIN tm_Counties c ON bd.intCountieid = c.intCountieid
+                            LEFT JOIN tm_Payams p ON bd.intPayamid = p.intPayamid
+                            LEFT JOIN tm_Bomas b ON bd.intBomasid = b.intBomasid
+                            WHERE 1=1";
+
+                // Add filters dynamically
+                var parameters = new List<SqlParameter>();
+
+                if (stateId > 0)
+                {
+                    query += " AND bd.intStateid = @StateId";
+                    parameters.Add(new SqlParameter("@StateId", stateId));
+                }
+                if (countyId > 0)
+                {
+                    query += " AND bd.intCountieid = @CountyId";
+                    parameters.Add(new SqlParameter("@CountyId", countyId));
+                }
+                if (payamId > 0)
+                {
+                    query += " AND bd.intPayamid = @PayamId";
+                    parameters.Add(new SqlParameter("@PayamId", payamId));
+                }
+                if (bomaId > 0)
+                {
+                    query += " AND bd.intBomasid = @BomaId";
+                    parameters.Add(new SqlParameter("@BomaId", bomaId));
+                }
+                if (!string.IsNullOrEmpty(enrollmentNumber))
+                {
+                    query += " AND bd.EnrollmentNo LIKE @EnrollmentNumber";
+                    parameters.Add(new SqlParameter("@EnrollmentNumber", $"%{enrollmentNumber}%"));
+                }
+                if (!string.IsNullOrEmpty(groupType) && groupType != "--Select--")
+                {
+                    query += " AND bd.BeneficiaryType = @GroupType";
+                    parameters.Add(new SqlParameter("@GroupType", groupType));
+                }
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query += " AND bd.NameofHousehold LIKE @Name";
+                    parameters.Add(new SqlParameter("@Name", $"%{name}%"));
+                }
+                if (!string.IsNullOrEmpty(householdNumber))
+                {
+                    query += " AND bd.household_number LIKE @HouseholdNumber";
+                    parameters.Add(new SqlParameter("@HouseholdNumber", $"%{householdNumber}%"));
+                }
+
+                // Execute query using _dbOperation
+                DataTable dtResults = _lookupManagerService.ExecuteQuery(query, CommandType.Text, parameters);
+
+                // Store results in session
+                Session["RadGridDataSource"] = dtResults;
+
+                // Rebind RadGrid
+                RadGrid.Rebind();
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in BtnSearch_Click: " + ex.Message, ex);
+            }
         }
+
+
 
         protected void ddlGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -195,12 +296,113 @@ namespace SSSNP.UI.Public_Works
 
         protected void BtnClear_Click(object sender, EventArgs e)
         {
+            try
+            {
+                // Clear all textboxes
+                txtEnrollmentNumber.Text = string.Empty;
+                txtName.Text = string.Empty;
+                txtHouseholdNumber.Text = string.Empty;
 
+                // Reset all dropdowns to default
+                ddlState.ClearSelection();
+                ddlState.Items[0].Selected = true;
+
+                ddlCounty.Items.Clear();
+                ddlCounty.Items.Add(new ListItem("--Select--", ""));
+
+                ddlPayam.Items.Clear();
+                ddlPayam.Items.Add(new ListItem("--Select--", ""));
+
+                ddlBoma.Items.Clear();
+                ddlBoma.Items.Add(new ListItem("--Select--", ""));
+
+                ddlGroup.ClearSelection();
+                ddlGroup.Items[0].Selected = true;
+
+                // Clear any grid data
+                RadGrid.DataSource = null;
+                RadGrid.DataBind();
+                RadGrid.Visible = false;
+
+                // Optionally clear any session data for the grid
+                Session["RadGridDataSource"] = null;
+
+                // Clear messages (success/error labels)
+                lblMessageSuccess.Text = string.Empty;
+                lblMessageError.Text = string.Empty;
+
+                // Optionally set focus to the first field
+                ddlState.Focus();
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in BtnClear_Click: " + ex.Message, ex);
+            }
         }
+
 
         protected void ddlBoma_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
+
+        protected void RadGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
+        {
+            try
+            {
+                // Check if the data is already stored in the session
+                if (Session["RadGridDataSource"] != null)
+                {
+                    RadGrid.DataSource = Session["RadGridDataSource"] as DataTable;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in RadGrid_NeedDataSource: " + ex.Message, ex);
+            }
+        }
+
+        protected void RadGrid_ItemCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
+        {
+            if (e.CommandName == "Download")
+            {
+                try
+                {
+                    // Get the unique identifier (intBenid) from CommandArgument
+                    int benId = int.Parse(e.CommandArgument.ToString());
+
+                    // Call the method to handle the file download
+                    DownloadIdCard(benId);
+                }
+                catch (Exception ex)
+                {
+                    LogError("Error in RadGrid_ItemCommand: " + ex.Message, ex);
+                }
+            }
+        }
+
+        private void DownloadIdCard(int benId)
+        {
+            try
+            {
+                int attachmentId = benId;
+                int attachmentType = 24;
+
+                string redirectUrl = $"~/ViewAttachmentHandler.aspx?AttachmentType={attachmentType}&AttachmentValue={attachmentId}";
+
+                // Perform the redirect
+                Response.Redirect(redirectUrl, false);
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+            }
+            catch (Exception ex)
+            {
+                lblMessageError.Text = "An issue occurred during file download redirection.";
+                lblMessageError.Visible = true;
+                // Handle any unexpected issues gracefully
+                Console.WriteLine("An issue occurred during file download redirection." + ex.Message); // Replace with actual logging
+            }
+        }
+
+
     }
 }
