@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SSSNP.UI.Public_Works.Payroll;
 using SSSNP_SNSOP.App_Code;
 using SSSNP_SNSOP.Core.Model;
 using System;
@@ -13,7 +14,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace SSSNP.UI.Public_Works.Payroll
+namespace SSSNP.UI.Public_Works
 {
     public partial class ReconcilePayroll : System.Web.UI.Page
     {
