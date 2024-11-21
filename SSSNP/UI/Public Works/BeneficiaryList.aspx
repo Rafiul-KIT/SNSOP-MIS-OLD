@@ -84,7 +84,7 @@
                                                         <asp:TextBox ID="txtEnrollmentNumber" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="50" OnTextChanged="txtEnrollmentNumber_TextChanged" />
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <%--<tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelGroup" runat="server" CssClass="LBLBLACK" Width="165px">Group Type</asp:Label>
                                                     </td>
@@ -93,11 +93,19 @@
                                                         <asp:DropDownList ID="ddlGroup" runat="server" class="form-control txtbox"
                                                             Height="33px" Width="180px" AutoPostBack="True"
                                                             OnSelectedIndexChanged="ddlGroup_SelectedIndexChanged">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
 
                                                         </asp:DropDownList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                                </tr>--%>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="lblHouseholdNumber" runat="server" CssClass="LBLBLACK">Household Number</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:TextBox ID="txtHouseholdNumber" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="50" OnTextChanged="txtHouseholdNumber_TextChanged" />
+                                                    </td>
                                                 </tr>
 
                                             </table>
@@ -144,15 +152,7 @@
                                                         <asp:TextBox ID="txtName" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="50" OnTextChanged="txtName_TextChanged" />
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="lblHouseholdNumber" runat="server" CssClass="LBLBLACK">Household Number</asp:Label>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px">:</td>
-                                                    <td style="padding: 5px; margin: 5px">
-                                                        <asp:TextBox ID="txtHouseholdNumber" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="50" OnTextChanged="txtHouseholdNumber_TextChanged" />
-                                                    </td>
-                                                </tr>
+                                                
 
 
                                             </table>
@@ -195,7 +195,7 @@
                                     <telerik:GridBoundColumn DataField="Component" HeaderText="Component" UniqueName="Component" />
                                     <telerik:GridTemplateColumn HeaderText="Actions" UniqueName="Actions">
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="btnDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("EnrollmentNo") %>' CssClass="btn btn-success action-button" Text="Download" />
+                                            <asp:LinkButton ID="btnDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("intBenid") %>' CssClass="btn btn-success action-button" Text="Download" />
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                 </Columns>

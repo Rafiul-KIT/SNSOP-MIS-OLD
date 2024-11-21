@@ -2008,7 +2008,7 @@ namespace SSSNP_SNSOP
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "SELECT id_card_path FROM tbl_BeneficiaryDet WHERE inBenid = @ID AND id_card_generation_status = 1";
+                string query = "SELECT id_card_path FROM tbl_BeneficiaryDet WHERE intBenid = @ID AND id_card_generation_status = 1";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@ID", benId);

@@ -22,7 +22,7 @@ namespace SSSNP.UI.Public_Works
                 if (!IsPostBack)
                 {
                     LoadStates();
-
+                    RadGrid.Visible = false;
                 }
             }
             catch (Exception ex)
@@ -90,7 +90,7 @@ namespace SSSNP.UI.Public_Works
                              ? int.Parse(ddlBoma.SelectedValue) : 0;
 
                 string enrollmentNumber = txtEnrollmentNumber.Text.Trim();
-                string groupType = ddlGroup.SelectedValue.Trim();
+                //string groupType = ddlGroup.SelectedValue.Trim();
                 string name = txtName.Text.Trim();
                 string householdNumber = txtHouseholdNumber.Text.Trim();
 
@@ -144,11 +144,11 @@ namespace SSSNP.UI.Public_Works
                     query += " AND bd.EnrollmentNo LIKE @EnrollmentNumber";
                     parameters.Add(new SqlParameter("@EnrollmentNumber", $"%{enrollmentNumber}%"));
                 }
-                if (!string.IsNullOrEmpty(groupType) && groupType != "--Select--")
+                /*if (!string.IsNullOrEmpty(groupType) && groupType != "--Select--")
                 {
                     query += " AND bd.BeneficiaryType = @GroupType";
                     parameters.Add(new SqlParameter("@GroupType", groupType));
-                }
+                }*/
                 if (!string.IsNullOrEmpty(name))
                 {
                     query += " AND bd.NameofHousehold LIKE @Name";
@@ -168,6 +168,7 @@ namespace SSSNP.UI.Public_Works
 
                 // Rebind RadGrid
                 RadGrid.Rebind();
+                RadGrid.Visible = true;
             }
             catch (Exception ex)
             {
@@ -316,8 +317,8 @@ namespace SSSNP.UI.Public_Works
                 ddlBoma.Items.Clear();
                 ddlBoma.Items.Add(new ListItem("--Select--", ""));
 
-                ddlGroup.ClearSelection();
-                ddlGroup.Items[0].Selected = true;
+                /*ddlGroup.ClearSelection();
+                ddlGroup.Items[0].Selected = true;*/
 
                 // Clear any grid data
                 RadGrid.DataSource = null;
@@ -368,11 +369,21 @@ namespace SSSNP.UI.Public_Works
             {
                 try
                 {
-                    // Get the unique identifier (intBenid) from CommandArgument
-                    int benId = int.Parse(e.CommandArgument.ToString());
+                    // Get CommandArgument as a string
+                    string commandArgument = e.CommandArgument.ToString();
 
-                    // Call the method to handle the file download
-                    DownloadIdCard(benId);
+                    // Parse the CommandArgument into an integer
+                    if (int.TryParse(commandArgument, out int benId))
+                    {
+                        // Successfully parsed, proceed with downloading
+                        DownloadIdCard(benId);
+                    }
+                    else
+                    {
+                        // Handle cases where parsing fails
+                        lblMessageError.Text = "Invalid ID value. Unable to process the download.";
+                        lblMessageError.Visible = true;
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -269,7 +269,7 @@ namespace SSSNP.Asynch
             PdfContentByte cb2 = writer.DirectContent;
             cb2.BeginText();
             cb2.SetFontAndSize(f_cn, 8);
-            cb2.SetTextMatrix(168, 123);  //(xPos, yPos)
+            cb2.SetTextMatrix(133, 123);  //(xPos, yPos)
             cb2.ShowText(cardID.BeneficiaryName);
             cb2.EndText();
 
