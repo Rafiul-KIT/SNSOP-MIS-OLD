@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -20,7 +21,7 @@ namespace SSSNP.Asynch
 {
     public class BulkIdCardGenerationAsync : IThreadable
     {
-        private const int SLEEP_TIME = 60 * 1000 * 3; // 10 minutes interval
+        private const int SLEEP_TIME = 60 * 1000 * 1; // 1 minutes interval
         private const string NAME = "bg_id_card_generation_daemon";
         private AutoResetEvent waitHandle = new AutoResetEvent(false);
         private AutoResetEvent abortHandle = new AutoResetEvent(false);
@@ -76,11 +77,15 @@ namespace SSSNP.Asynch
                         // Only when thread stop request received
                         break;
                     }
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
                     GenerateIdCardAsync();
+                    sw.Stop();
+                    Console.WriteLine("Seconds needed for 20 rows: " + sw.ElapsedMilliseconds / 1000);
 
-                    Console.WriteLine("SEND GRM NOTIFICATION: Going into sleep mode!");
+                    Console.WriteLine("id card NOTIFICATION: Going into sleep mode!");
                     GetWaitHandle().WaitOne(GetSleepTime());
-                    Console.WriteLine("SEND GRM NOTIFICATION: Woke up from sleep!");
+                    Console.WriteLine("id card NOTIFICATION: Woke up from sleep!");
                     if (GetAbortHandle().WaitOne(1))
                     {
                         Console.WriteLine("SEND GRM NOTIFICATION: Abort request received. Getting out!");
@@ -90,8 +95,7 @@ namespace SSSNP.Asynch
             }
             catch (ThreadAbortException e)
             {
-                //logger.Debug("SEND GRM NOTIFICATION: Force shutdown initiated! ThreadAbortException: " + e.Message);
-                Console.WriteLine("SEND GRM NOTIFICATION: Force shutdown initiated! ThreadAbortException: " + e.Message);
+                Console.WriteLine("id card NOTIFICATION: Force shutdown initiated! ThreadAbortException: " + e.Message);
             }
         }
 
@@ -139,8 +143,9 @@ namespace SSSNP.Asynch
                             byte[] file = GeneratePDF(dto);
                             if (file != null)
                             {
-                                string filePath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"].ToString() +
-                                    "\\" + "id_cards" + "\\" + stateId + "\\" + countyId + "\\" + payamId + "\\" + bomaId;
+                                string genericPath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"].ToString() +
+                                    "\\" + "id_cards" + "\\";
+                                string filePath = genericPath + stateId + "\\" + countyId + "\\" + payamId + "\\" + bomaId;
                                 if (!Directory.Exists(filePath))
                                 {
                                     Directory.CreateDirectory(filePath);
@@ -153,7 +158,8 @@ namespace SSSNP.Asynch
                                     Dictionary<string, object> data = new Dictionary<string, object>
                                     {
                                         { "id_card_generation_status", 1 }, 
-                                        { "id_card_path", filePath }       
+                                        { "id_card_path", filePath.Replace(genericPath,"") },
+                                        { "id_card_generated_at", DateTime.Now },
                                     };
                                     
                                     string wherePart = $"household_number = '{dto.NumberID}'";
@@ -217,26 +223,6 @@ namespace SSSNP.Asynch
             jpg2.ScaleToFit(iTextSharp.text.Utilities.MillimetersToPoints(90), iTextSharp.text.Utilities.MillimetersToPoints(60));
             jpg2.Alignment = iTextSharp.text.Image.TITLE;
             jpg2.SetAbsolutePosition(300, 35);
-
-            iTextSharp.text.Image jpg3 = iTextSharp.text.Image.GetInstance(beneficiaryPhoto);
-            jpg3.ScaleAbsoluteWidth(55f);
-            jpg3.ScaleAbsoluteHeight(80f);
-            jpg3.Alignment = iTextSharp.text.Image.TITLE;
-            jpg3.SetAbsolutePosition(52, 72);
-
-            //alternative 1
-            iTextSharp.text.Image jpg5 = iTextSharp.text.Image.GetInstance(alt1Photo);
-            jpg5.ScaleAbsoluteWidth(55f);
-            jpg5.ScaleAbsoluteHeight(80f);
-            jpg5.Alignment = iTextSharp.text.Image.TITLE;
-            jpg5.SetAbsolutePosition(320, 92);
-
-            //alternative 2
-            iTextSharp.text.Image jpg4 = iTextSharp.text.Image.GetInstance(alt2Photo);
-            jpg4.ScaleAbsoluteWidth(55f);
-            jpg4.ScaleAbsoluteHeight(80f);
-            jpg4.Alignment = iTextSharp.text.Image.TITLE;
-            jpg4.SetAbsolutePosition(390, 92);
 
             MemoryStream fs = new MemoryStream();
 
@@ -363,9 +349,50 @@ namespace SSSNP.Asynch
             document.Add(jpg);
             document.Add(jpg2);
 
-            document.Add(jpg3);
-            document.Add(jpg4);
-            document.Add(jpg5);
+            try
+            {
+                iTextSharp.text.Image jpg3 = iTextSharp.text.Image.GetInstance(beneficiaryPhoto);
+                jpg3.ScaleAbsoluteWidth(55f);
+                jpg3.ScaleAbsoluteHeight(80f);
+                jpg3.Alignment = iTextSharp.text.Image.TITLE;
+                jpg3.SetAbsolutePosition(52, 72);
+
+                document.Add(jpg3);
+            } catch (Exception e)
+            {
+                Console.WriteLine("Error trying to place beneficiary photo\n" + e.ToString());
+            }
+
+            try
+            {
+                iTextSharp.text.Image jpg4 = iTextSharp.text.Image.GetInstance(alt2Photo);
+                jpg4.ScaleAbsoluteWidth(55f);
+                jpg4.ScaleAbsoluteHeight(80f);
+                jpg4.Alignment = iTextSharp.text.Image.TITLE;
+                jpg4.SetAbsolutePosition(390, 92);
+
+                document.Add(jpg4);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error trying to place beneficiary photo\n" + e.ToString());
+            }
+
+            try
+            {
+                iTextSharp.text.Image jpg5 = iTextSharp.text.Image.GetInstance(alt1Photo);
+                jpg5.ScaleAbsoluteWidth(55f);
+                jpg5.ScaleAbsoluteHeight(80f);
+                jpg5.Alignment = iTextSharp.text.Image.TITLE;
+                jpg5.SetAbsolutePosition(320, 92);
+
+                document.Add(jpg5);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error trying to place beneficiary photo\n" + e.ToString());
+            }
+
             document.Add(img);
 
             document.Close();

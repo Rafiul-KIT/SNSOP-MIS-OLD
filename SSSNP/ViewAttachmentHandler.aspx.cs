@@ -2014,13 +2014,16 @@ namespace SSSNP_SNSOP
                     cmd.Parameters.AddWithValue("@ID", benId);
                     conn.Open();
                     string filePath = cmd.ExecuteScalar() as string;
+                    string genericPath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"].ToString() +
+                                    "\\" + "id_cards" + "\\";
+                    string fullPath = genericPath + filePath;
 
-                    if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                    if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
                     {
                         Response.Clear();
                         Response.ContentType = "application/pdf";
-                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(filePath)}");
-                        Response.TransmitFile(filePath);
+                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(fullPath)}");
+                        Response.TransmitFile(fullPath);
                         Response.End();
                     }
                     else

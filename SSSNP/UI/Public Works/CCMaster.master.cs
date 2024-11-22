@@ -36,6 +36,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         printIdCardMenu.Visible = value;
         workProgressMenu.Visible = value;
         lipwExportMenu.Visible = value;
+        BeneficiaryListMenu.Visible = value;
 
         RejectedWages.Visible = value;
         WageRequestDraft.Visible = value;
@@ -240,6 +241,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     //setAllMenuPermission(false);
                     LiIp5.Visible = true;
                     WageRequestDraft.Visible = true;
+                    LiIp8.Visible = true;
+                    LiIp9.Visible = true;
                 }
                 else
                 {
@@ -257,6 +260,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     printIdCardMenu.Visible = true;
                     workProgressMenu.Visible = true;
                     lipwExportMenu.Visible = true;
+                    BeneficiaryListMenu.Visible = true;
 
                     LiIp4.Visible = true;
 
@@ -344,6 +348,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 printIdCardMenu.Visible = true;
                 workProgressMenu.Visible = true;
                 lipwExportMenu.Visible = true;
+                BeneficiaryListMenu.Visible = true;
 
                 LiIp4.Visible = true;
                 LiIp5.Visible = false; // Apply Wage Request menus hidden for MIS user_type
