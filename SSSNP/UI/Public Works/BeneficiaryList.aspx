@@ -178,8 +178,9 @@
                                 </div>
                             </div>
                         </div>
-                        <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" OnNeedDataSource="RadGrid_NeedDataSource" OnItemCommand="RadGrid_ItemCommand">
-                            <MasterTableView AutoGenerateColumns="False" DataKeyNames="EnrollmentNo" AllowPaging="True" PagerStyle-AlwaysVisible="True" >
+                        <telerik:RadGrid ID="RadGrid" runat="server" AutoGenerateColumns="false" AllowPaging="true" PageSize="10" OnNeedDataSource="RadGrid_NeedDataSource" OnItemCommand="RadGrid_ItemCommand" >
+                            <PagerStyle Mode="NextPrevAndNumeric" />
+                            <MasterTableView AutoGenerateColumns="False" DataKeyNames="EnrollmentNo" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True" >
                                 <Columns>
                                     <telerik:GridBoundColumn DataField="intBenid" HeaderText="ID" UniqueName="intBenid" Visible="false" />
                                     <telerik:GridBoundColumn DataField="StateName" HeaderText="State Name" UniqueName="StateName" />
@@ -200,7 +201,7 @@
                                     </telerik:GridTemplateColumn>
                                 </Columns>
                             </MasterTableView>
-                            <PagerStyle Mode="NextPrevAndNumeric" />
+                            
                         </telerik:RadGrid>
 
 
@@ -212,4 +213,13 @@
 
         </ContentTemplate>
     </asp:UpdatePanel>
+    <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
+        <ProgressTemplate>
+            <div class="overlay">
+                <div style="z-index: 1000; margin-left: -210px; margin-top: 100px; opacity: 1; -moz-opacity: 1;">
+                    <img alt="" src="../../Resource/Images/Processing.gif" />
+                </div>
+            </div>
+        </ProgressTemplate>
+    </asp:UpdateProgress>
 </asp:Content>

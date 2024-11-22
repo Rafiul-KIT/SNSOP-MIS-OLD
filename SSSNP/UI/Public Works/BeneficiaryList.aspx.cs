@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace SSSNP.UI.Public_Works
 {
@@ -76,97 +77,26 @@ namespace SSSNP.UI.Public_Works
         {
             try
             {
-                // Collect filter values
-                int stateId = !string.IsNullOrEmpty(ddlState.SelectedValue) && ddlState.SelectedValue != "--Select--"
-                              ? int.Parse(ddlState.SelectedValue) : 0;
-
-                int countyId = !string.IsNullOrEmpty(ddlCounty.SelectedValue) && ddlCounty.SelectedValue != "--Select--"
-                               ? int.Parse(ddlCounty.SelectedValue) : 0;
-
-                int payamId = !string.IsNullOrEmpty(ddlPayam.SelectedValue) && ddlPayam.SelectedValue != "--Select--"
-                              ? int.Parse(ddlPayam.SelectedValue) : 0;
-
-                int bomaId = !string.IsNullOrEmpty(ddlBoma.SelectedValue) && ddlBoma.SelectedValue != "--Select--"
-                             ? int.Parse(ddlBoma.SelectedValue) : 0;
-
-                string enrollmentNumber = txtEnrollmentNumber.Text.Trim();
-                //string groupType = ddlGroup.SelectedValue.Trim();
-                string name = txtName.Text.Trim();
-                string householdNumber = txtHouseholdNumber.Text.Trim();
-
-                // Base query
-                string query = @"SELECT
-                                bd.intBenid,
-                                s.StateName,
-                                c.CountieName AS CountyName,
-                                p.PayamName,
-                                b.BomaName,
-                                bd.NameofHousehold AS Name,
-                                bd.Sex,
-                                bd.Age,
-                                bd.ContactNo,
-                                bd.Email,
-                                bd.EnrollmentNo,
-                                bd.BeneficiaryType AS Component
-                            FROM 
-                                tbl_BeneficiaryDet bd
-                            LEFT JOIN tm_States s ON bd.intStateid = s.intStateid
-                            LEFT JOIN tm_Counties c ON bd.intCountieid = c.intCountieid
-                            LEFT JOIN tm_Payams p ON bd.intPayamid = p.intPayamid
-                            LEFT JOIN tm_Bomas b ON bd.intBomasid = b.intBomasid
-                            WHERE 1=1";
-
-                // Add filters dynamically
-                var parameters = new List<SqlParameter>();
-
-                if (stateId > 0)
+                // Create and populate the filter object
+                var filters = new BeneficiaryListFilters
                 {
-                    query += " AND bd.intStateid = @StateId";
-                    parameters.Add(new SqlParameter("@StateId", stateId));
-                }
-                if (countyId > 0)
-                {
-                    query += " AND bd.intCountieid = @CountyId";
-                    parameters.Add(new SqlParameter("@CountyId", countyId));
-                }
-                if (payamId > 0)
-                {
-                    query += " AND bd.intPayamid = @PayamId";
-                    parameters.Add(new SqlParameter("@PayamId", payamId));
-                }
-                if (bomaId > 0)
-                {
-                    query += " AND bd.intBomasid = @BomaId";
-                    parameters.Add(new SqlParameter("@BomaId", bomaId));
-                }
-                if (!string.IsNullOrEmpty(enrollmentNumber))
-                {
-                    query += " AND bd.EnrollmentNo LIKE @EnrollmentNumber";
-                    parameters.Add(new SqlParameter("@EnrollmentNumber", $"%{enrollmentNumber}%"));
-                }
-                /*if (!string.IsNullOrEmpty(groupType) && groupType != "--Select--")
-                {
-                    query += " AND bd.BeneficiaryType = @GroupType";
-                    parameters.Add(new SqlParameter("@GroupType", groupType));
-                }*/
-                if (!string.IsNullOrEmpty(name))
-                {
-                    query += " AND bd.NameofHousehold LIKE @Name";
-                    parameters.Add(new SqlParameter("@Name", $"%{name}%"));
-                }
-                if (!string.IsNullOrEmpty(householdNumber))
-                {
-                    query += " AND bd.household_number LIKE @HouseholdNumber";
-                    parameters.Add(new SqlParameter("@HouseholdNumber", $"%{householdNumber}%"));
-                }
+                    StateId = !string.IsNullOrEmpty(ddlState.SelectedValue) && ddlState.SelectedValue != "--Select--"
+                              ? int.Parse(ddlState.SelectedValue) : (int?)null,
+                    CountyId = !string.IsNullOrEmpty(ddlCounty.SelectedValue) && ddlCounty.SelectedValue != "--Select--"
+                               ? int.Parse(ddlCounty.SelectedValue) : (int?)null,
+                    PayamId = !string.IsNullOrEmpty(ddlPayam.SelectedValue) && ddlPayam.SelectedValue != "--Select--"
+                              ? int.Parse(ddlPayam.SelectedValue) : (int?)null,
+                    BomaId = !string.IsNullOrEmpty(ddlBoma.SelectedValue) && ddlBoma.SelectedValue != "--Select--"
+                             ? int.Parse(ddlBoma.SelectedValue) : (int?)null,
+                    EnrollmentNumber = txtEnrollmentNumber.Text.Trim(),
+                    Name = txtName.Text.Trim(),
+                    HouseholdNumber = txtHouseholdNumber.Text.Trim()
+                };
 
-                // Execute query using _dbOperation
-                DataTable dtResults = _lookupManagerService.ExecuteQuery(query, CommandType.Text, parameters);
+                Session["BeneficiaryListFilters"] = filters;
+                ViewState["TotalRecordCount"] = GetTotalRecordCount(filters);
 
-                // Store results in session
-                Session["RadGridDataSource"] = dtResults;
-
-                // Rebind RadGrid
+                RadGrid.CurrentPageIndex = 0;
                 RadGrid.Rebind();
                 RadGrid.Visible = true;
             }
@@ -290,21 +220,17 @@ namespace SSSNP.UI.Public_Works
 
         private void LogError(string message, Exception ex)
         {
-            // Implement your error logging logic here
             System.Diagnostics.Debug.WriteLine(message);
-            // Example: ErrorLogger.LogError(ex);
         }
 
         protected void BtnClear_Click(object sender, EventArgs e)
         {
             try
             {
-                // Clear all textboxes
                 txtEnrollmentNumber.Text = string.Empty;
                 txtName.Text = string.Empty;
                 txtHouseholdNumber.Text = string.Empty;
 
-                // Reset all dropdowns to default
                 ddlState.ClearSelection();
                 ddlState.Items[0].Selected = true;
 
@@ -317,22 +243,17 @@ namespace SSSNP.UI.Public_Works
                 ddlBoma.Items.Clear();
                 ddlBoma.Items.Add(new ListItem("--Select--", ""));
 
-                /*ddlGroup.ClearSelection();
-                ddlGroup.Items[0].Selected = true;*/
-
-                // Clear any grid data
                 RadGrid.DataSource = null;
                 RadGrid.DataBind();
                 RadGrid.Visible = false;
 
-                // Optionally clear any session data for the grid
                 Session["RadGridDataSource"] = null;
+                Session["BeneficiaryListFilters"] = null;
+                ViewState["TotalRecordCount"] = null;
 
-                // Clear messages (success/error labels)
                 lblMessageSuccess.Text = string.Empty;
                 lblMessageError.Text = string.Empty;
 
-                // Optionally set focus to the first field
                 ddlState.Focus();
             }
             catch (Exception ex)
@@ -347,15 +268,89 @@ namespace SSSNP.UI.Public_Works
 
         }
 
-        protected void RadGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
+        protected void RadGrid_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
             try
             {
-                // Check if the data is already stored in the session
-                if (Session["RadGridDataSource"] != null)
+                int pageSize = RadGrid.PageSize;
+                int currentPageIndex = RadGrid.CurrentPageIndex;
+                int offset = currentPageIndex * pageSize;
+
+                var filters = Session["BeneficiaryListFilters"] as BeneficiaryListFilters;
+
+                if (filters == null)
                 {
-                    RadGrid.DataSource = Session["RadGridDataSource"] as DataTable;
+                    filters = new BeneficiaryListFilters(); 
                 }
+
+                string query = @"SELECT
+                            bd.intBenid,
+                            s.StateName,
+                            c.CountieName AS CountyName,
+                            p.PayamName,
+                            b.BomaName,
+                            bd.NameofHousehold AS Name,
+                            bd.Sex,
+                            bd.Age,
+                            bd.ContactNo,
+                            bd.Email,
+                            bd.EnrollmentNo,
+                            bd.BeneficiaryType AS Component
+                        FROM 
+                            tbl_BeneficiaryDet bd
+                        LEFT JOIN tm_States s ON bd.intStateid = s.intStateid
+                        LEFT JOIN tm_Counties c ON bd.intCountieid = c.intCountieid
+                        LEFT JOIN tm_Payams p ON bd.intPayamid = p.intPayamid
+                        LEFT JOIN tm_Bomas b ON bd.intBomasid = b.intBomasid
+                        WHERE id_card_generation_status = 1";
+
+                var parameters = new List<SqlParameter>();
+
+                if (filters.StateId.HasValue)
+                {
+                    query += " AND bd.intStateid = @StateId";
+                    parameters.Add(new SqlParameter("@StateId", filters.StateId.Value));
+                }
+                if (filters.CountyId.HasValue)
+                {
+                    query += " AND bd.intCountieid = @CountyId";
+                    parameters.Add(new SqlParameter("@CountyId", filters.CountyId.Value));
+                }
+                if (filters.PayamId.HasValue)
+                {
+                    query += " AND bd.intPayamid = @PayamId";
+                    parameters.Add(new SqlParameter("@PayamId", filters.PayamId.Value));
+                }
+                if (filters.BomaId.HasValue)
+                {
+                    query += " AND bd.intBomasid = @BomaId";
+                    parameters.Add(new SqlParameter("@BomaId", filters.BomaId.Value));
+                }
+                if (!string.IsNullOrEmpty(filters.EnrollmentNumber))
+                {
+                    query += " AND bd.EnrollmentNo LIKE @EnrollmentNumber";
+                    parameters.Add(new SqlParameter("@EnrollmentNumber", $"%{filters.EnrollmentNumber}%"));
+                }
+                if (!string.IsNullOrEmpty(filters.Name))
+                {
+                    query += " AND bd.NameofHousehold LIKE @Name";
+                    parameters.Add(new SqlParameter("@Name", $"%{filters.Name}%"));
+                }
+                if (!string.IsNullOrEmpty(filters.HouseholdNumber))
+                {
+                    query += " AND bd.household_number LIKE @HouseholdNumber";
+                    parameters.Add(new SqlParameter("@HouseholdNumber", $"%{filters.HouseholdNumber}%"));
+                }
+
+                query += " ORDER BY bd.intBenid OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+                parameters.Add(new SqlParameter("@Offset", offset));
+                parameters.Add(new SqlParameter("@PageSize", pageSize));
+
+                DataTable dtResults = _lookupManagerService.ExecuteQuery(query, CommandType.Text, parameters);
+
+                RadGrid.DataSource = dtResults;
+
+                RadGrid.VirtualItemCount = (int)ViewState["TotalRecordCount"];
             }
             catch (Exception ex)
             {
@@ -363,24 +358,21 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+
         protected void RadGrid_ItemCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
             if (e.CommandName == "Download")
             {
                 try
                 {
-                    // Get CommandArgument as a string
                     string commandArgument = e.CommandArgument.ToString();
 
-                    // Parse the CommandArgument into an integer
                     if (int.TryParse(commandArgument, out int benId))
                     {
-                        // Successfully parsed, proceed with downloading
                         DownloadIdCard(benId);
                     }
                     else
                     {
-                        // Handle cases where parsing fails
                         lblMessageError.Text = "Invalid ID value. Unable to process the download.";
                         lblMessageError.Visible = true;
                     }
@@ -392,6 +384,83 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+
+        private int GetTotalRecordCount(BeneficiaryListFilters filters)
+        {
+            try
+            {
+                string query = @"SELECT COUNT(*)
+                         FROM tbl_BeneficiaryDet bd
+      
+                         WHERE id_card_generation_status = 1";
+
+                var parameters = new List<SqlParameter>();
+
+                if (filters.StateId.HasValue)
+                {
+                    query += " AND bd.intStateid = @StateId";
+                    parameters.Add(new SqlParameter("@StateId", filters.StateId.Value));
+                }
+                if (filters.CountyId.HasValue)
+                {
+                    query += " AND bd.intCountieid = @CountyId";
+                    parameters.Add(new SqlParameter("@CountyId", filters.CountyId.Value));
+                }
+                if (filters.PayamId.HasValue)
+                {
+                    query += " AND bd.intPayamid = @PayamId";
+                    parameters.Add(new SqlParameter("@PayamId", filters.PayamId.Value));
+                }
+                if (filters.BomaId.HasValue)
+                {
+                    query += " AND bd.intBomasid = @BomaId";
+                    parameters.Add(new SqlParameter("@BomaId", filters.BomaId.Value));
+                }
+                if (!string.IsNullOrEmpty(filters.EnrollmentNumber))
+                {
+                    query += " AND bd.EnrollmentNo LIKE @EnrollmentNumber";
+                    parameters.Add(new SqlParameter("@EnrollmentNumber", $"%{filters.EnrollmentNumber}%"));
+                }
+                if (!string.IsNullOrEmpty(filters.Name))
+                {
+                    query += " AND bd.NameofHousehold LIKE @Name";
+                    parameters.Add(new SqlParameter("@Name", $"%{filters.Name}%"));
+                }
+                if (!string.IsNullOrEmpty(filters.HouseholdNumber))
+                {
+                    query += " AND bd.household_number LIKE @HouseholdNumber";
+                    parameters.Add(new SqlParameter("@HouseholdNumber", $"%{filters.HouseholdNumber}%"));
+                }
+
+
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.CommandType = CommandType.Text;
+
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        connection.Open();
+                        return (int)command.ExecuteScalar();
+                    } 
+                } 
+
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in GetTotalRecordCount: " + ex.Message, ex);
+                return 0;
+            }
+        }
+
+
+
         private void DownloadIdCard(int benId)
         {
             try
@@ -401,7 +470,6 @@ namespace SSSNP.UI.Public_Works
 
                 string redirectUrl = $"~/ViewAttachmentHandler.aspx?AttachmentType={attachmentType}&AttachmentValue={attachmentId}";
 
-                // Perform the redirect
                 Response.Redirect(redirectUrl, false);
                 HttpContext.Current.ApplicationInstance.CompleteRequest();
             }
@@ -409,9 +477,20 @@ namespace SSSNP.UI.Public_Works
             {
                 lblMessageError.Text = "An issue occurred during file download redirection.";
                 lblMessageError.Visible = true;
-                // Handle any unexpected issues gracefully
+
                 Console.WriteLine("An issue occurred during file download redirection." + ex.Message); // Replace with actual logging
             }
+        }
+
+        private class BeneficiaryListFilters
+        {
+            public int? StateId { get; set; }
+            public int? CountyId { get; set; }
+            public int? PayamId { get; set; }
+            public int? BomaId { get; set; }
+            public string EnrollmentNumber { get; set; }
+            public string Name { get; set; }
+            public string HouseholdNumber { get; set; }
         }
 
 
