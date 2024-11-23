@@ -1,3 +1,47 @@
+-- 23-11-2024
+
+alter table tbl_com2_Household_Enrollment_Data add ReasonForWhyNotEnrolled text;
+alter table tbl_com2_Household_Enrollment_Data_Audit add ReasonForWhyNotEnrolled text;
+
+alter table tbl_com2_Household_Group_View add VSLA_formed bit;
+
+alter table tbl_com2_Livelihood_Grant_Disbursement add ActualPaymentDate date;
+alter table tbl_com2_Livelihood_Grant_Disbursement_Audit add ActualPaymentDate date;
+
+create table tbl_com2_fsp_entity
+(
+    id int identity primary key,
+    name varchar(255) unique
+);
+
+alter table tbl_com2_Financial_Services_Linkage_Tracking add fsp_entity_id int references tbl_com2_fsp_entity;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add fsp_entity_id int;
+alter table tbl_com2_Financial_Services_Linkage_Tracking add fsp_connection_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add fsp_connection_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking add deposit_account_opened bit;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add deposit_account_opened bit;
+alter table tbl_com2_Financial_Services_Linkage_Tracking add deposit_account_open_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add deposit_account_open_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking add account_last_activity_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add account_last_activity_date date;
+
+create table tbl_com2_Business_Plan_Status
+(
+    id int primary key,
+    name varchar(16)
+);
+
+insert into tbl_com2_Business_Plan_Status(id,name)
+values (0,'Drafted'),(1,'Undrafted'),(2,'Approved'),(3,'Rejected');
+
+alter table tbl_com2_Business_Plan_Development drop column BusinessPlanStatus;
+alter table tbl_com2_Business_Plan_Development_Audit drop column BusinessPlanStatus;
+
+alter table tbl_com2_Business_Plan_Development add BusinessPlanStatus int references tbl_com2_Business_Plan_Status;
+alter table tbl_com2_Business_Plan_Development_Audit add BusinessPlanStatus int references tbl_com2_Business_Plan_Status;
+
+-- 23-11-2024
+
 -- 16/11/2024
 
 create procedure getReconciledUnpaidPayrollKIT

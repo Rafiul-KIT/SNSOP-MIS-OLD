@@ -104,7 +104,22 @@ namespace SSSNP.Asynch
         {
             try
             {
-                String sql1 = "select top 20 intBenid, household_number, " +
+                string sqlCount = "select count(intBenid) count from tbl_BeneficiaryDet where id_card_generation_status = 0";
+                DataTable dtCount = _dbOperation.GetDataTable(sqlCount);
+                if (dtCount != null && dtCount.Rows != null && dtCount.Rows.Count == 1)
+                {
+                    int count = dtCount.Rows[0]["count"] != null ? int.Parse(dtCount.Rows[0]["count"].ToString()) : 0;
+                    if (count == 0)
+                    {
+                        return;
+                    }
+                } 
+                else
+                {
+                    return;
+                }
+
+                String sql1 = "select top 50 intBenid, household_number, " +
                     "concat(concat(cou.CountieName, '/'), pay.PayamName) countyPayamName, boma.BomaName, " +
                     "NameofHousehold, Name1stAlternatePayee, Name2ndAlternatePayee, " +
                     "household_photo_url, alt1_photo_url, alt2_photo_url, " +
