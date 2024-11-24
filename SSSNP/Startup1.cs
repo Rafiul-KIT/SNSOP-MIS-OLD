@@ -122,6 +122,7 @@ namespace SSSNP
             //// Start grm notifocation thread
             ThreadHandler.GetInstance(new SendGrmNotificationAsynch()).StartThread();
             ThreadHandler.GetInstance(new AutoReconcilePayrollAsync()).StartThread();
+            ThreadHandler.GetInstance(new BulkIdCardGenerationAsync()).StartThread();
             //// test code for thread management: END
 
 

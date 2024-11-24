@@ -78,22 +78,22 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.TextBox txtEnrollmentNumber;
 
         /// <summary>
-        /// LabelGroup control.
+        /// lblHouseholdNumber control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelGroup;
+        protected global::System.Web.UI.WebControls.Label lblHouseholdNumber;
 
         /// <summary>
-        /// ddlGroup control.
+        /// txtHouseholdNumber control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlGroup;
+        protected global::System.Web.UI.WebControls.TextBox txtHouseholdNumber;
 
         /// <summary>
         /// LabelPayam control.
@@ -150,24 +150,6 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.TextBox txtName;
 
         /// <summary>
-        /// lblHouseholdNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblHouseholdNumber;
-
-        /// <summary>
-        /// txtHouseholdNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtHouseholdNumber;
-
-        /// <summary>
         /// BtnSearch control.
         /// </summary>
         /// <remarks>
@@ -175,6 +157,15 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnSearch;
+
+        /// <summary>
+        /// BtnClear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnClear;
 
         /// <summary>
         /// DivSuccess control.

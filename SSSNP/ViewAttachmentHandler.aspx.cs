@@ -62,6 +62,7 @@ namespace SSSNP_SNSOP
             FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21,
             ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22,
             MNE_REPORT_DOWNLOAD = 23,
+            ID_CARD_DOWNLOAD = 24,
             PAYROLL_RECONCILE = 30
         }
 
@@ -162,6 +163,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.MNE_REPORT_DOWNLOAD:
                     DownloadFile(GetAttachmentValueAsInt);
+                    return "OK";
+                case HandlerAttachment.ID_CARD_DOWNLOAD:
+                    DownloadIdCard(GetAttachmentValueAsInt);
                     return "OK";
             }
 
@@ -1816,10 +1820,19 @@ namespace SSSNP_SNSOP
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
 
-                    Response.BinaryWrite(null);
-                    Response.Flush();
-                    Response.Close();
-                    return;
+                    using (ExcelPackage package = new ExcelPackage())
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Payroll");
+
+                        Response.ClearHeaders();
+                        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                        Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
+
+                        Response.BinaryWrite(package.GetAsByteArray());
+                        Response.Flush();
+                        Response.Close();
+                        return;
+                    }
                 }
 
                 using (ExcelPackage package = new ExcelPackage())
@@ -1988,6 +2001,39 @@ namespace SSSNP_SNSOP
                 }
             }
         }
+
+        private void DownloadIdCard(int benId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT id_card_path FROM tbl_BeneficiaryDet WHERE intBenid = @ID AND id_card_generation_status = 1";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ID", benId);
+                    conn.Open();
+                    string filePath = cmd.ExecuteScalar() as string;
+                    string genericPath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"].ToString() +
+                                    "\\" + "id_cards" + "\\";
+                    string fullPath = genericPath + filePath;
+
+                    if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
+                    {
+                        Response.Clear();
+                        Response.ContentType = "application/pdf";
+                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(fullPath)}");
+                        Response.TransmitFile(fullPath);
+                        Response.End();
+                    }
+                    else
+                    {
+                        Response.Write("ID card file not found or not yet generated.");
+                    }
+                }
+            }
+        }
+
 
         private void LogError(string v, Exception ex)
         {

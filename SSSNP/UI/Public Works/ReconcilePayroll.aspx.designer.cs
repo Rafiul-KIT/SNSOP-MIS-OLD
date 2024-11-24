@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SSSNP.UI.Public_Works.Payroll
+namespace SSSNP.UI.Public_Works
 {
 
 
