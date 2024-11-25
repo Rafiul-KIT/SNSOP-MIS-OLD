@@ -86,6 +86,7 @@ namespace SSSNP_SNSOP.Core.Repository
             audit.PaymentCycle AS [Payment Cycle], 
             audit.PaymentAmount AS [Payment Amount], 
             audit.PaymentDate AS [Payment Date],
+            audit.ActualPaymentDate AS [Actual Payment Date],
             users.User_name AS [Uploaded By],
             audit.UploadDate AS [Upload Date],
             audit.Validity AS [Validity],

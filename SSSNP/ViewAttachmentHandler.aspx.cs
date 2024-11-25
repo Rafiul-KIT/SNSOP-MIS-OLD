@@ -1350,13 +1350,14 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Group Name";
                     worksheet.Cells[1, 2].Value = "Latitude";
                     worksheet.Cells[1, 3].Value = "Longitude";
+                    worksheet.Cells[1, 4].Value = "VSLA Formed";
                     /*worksheet.Cells[1, 4].Value = "Created By";
                     worksheet.Cells[1, 5].Value = "Created Date";
                     worksheet.Cells[1, 6].Value = "Modified By";
                     worksheet.Cells[1, 7].Value = "Modified Date";*/
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 3; col++)
+                    for (int col = 1; col <= 4; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -1377,6 +1378,14 @@ namespace SSSNP_SNSOP
                     longitudeValidation.Error = "Please enter a longitude between -180 and 180.";
                     longitudeValidation.Formula.Value = -180;
                     longitudeValidation.Formula2.Value = 180;
+                    
+                    // Add data validation for VSLA formed (Yes/No)
+                    var vslaFormedValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 4, 1048576, 4].Address);
+                    vslaFormedValidation.ShowErrorMessage = true;
+                    vslaFormedValidation.ErrorTitle = "Invalid Selection";
+                    vslaFormedValidation.Error = "Please select 'Yes' or 'No' from the drop-down list.";
+                    vslaFormedValidation.Formula.Values.Add("Yes");
+                    vslaFormedValidation.Formula.Values.Add("No");
 
                     worksheet.Cells.AutoFitColumns();
                     // Set the content type and headers for the download

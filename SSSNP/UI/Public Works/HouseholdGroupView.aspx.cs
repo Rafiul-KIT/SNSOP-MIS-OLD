@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
 namespace SSSNP_SNSOP.UI.Public_Works
@@ -68,7 +69,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Group Name", "Latitude", "Longitude"
+                        "Group Name", "Latitude", "Longitude", "VSLA Formed"
                     };
 
                     // Validate headers
@@ -90,7 +91,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         string groupName = worksheet.Cells[row, 1].Text;
                         decimal? latitude = null;
                         decimal? longitude = null;
-
+                        bool? VSLAformed = ParseBoolean(worksheet.Cells[row, 4].Text);
+                        
                         if (decimal.TryParse(worksheet.Cells[row, 2].Text, out decimal lat))
                         {
                             latitude = lat;
@@ -105,6 +107,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             GroupName = groupName,
                             Latitude = latitude,
                             Longitude = longitude,
+                            VSLA_formed = VSLAformed,
                             CreatedBy = userId,
                             ModifiedBy = userId
                         });
@@ -120,6 +123,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 AddErrorMessage("File upload failed: " + ex.Message);
             }
         }
+
+        private bool? ParseBoolean(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+
+            value = value.Trim().ToLower();
+
+            if (value == "yes")
+                return true;
+            else if (value == "no")
+                return false;
+            else
+                return null; // or throw an exception if you prefer
+        }
+
 
         protected void btnAnalyze_Click(object sender, EventArgs e)
         {
@@ -149,6 +168,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 dt.Columns.Add("GroupName", typeof(string));
                 dt.Columns.Add("Latitude", typeof(decimal));
                 dt.Columns.Add("Longitude", typeof(decimal));
+                dt.Columns.Add("VSLA_formed", typeof(bool));
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
                 int skipCount = 0;
@@ -159,6 +179,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     dr["GroupName"] = group.GroupName ?? (object)DBNull.Value;
                     dr["Latitude"] = group.Latitude ?? (object)DBNull.Value; // Handle null values
                     dr["Longitude"] = group.Longitude ?? (object)DBNull.Value; // Handle null values
+                    dr["VSLA_formed"] = group.VSLA_formed ?? (object)DBNull.Value;
 
                     // Check if the group is redundant
                     if (!string.IsNullOrEmpty(group.GroupName) && existingGroupNames.ContainsKey(group.GroupName))
@@ -315,7 +336,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
         }
         private DataTable GetHouseholGroupData(int pageIndex, int pageSize)
         {
-            string query = @"SELECT Id, GroupName, Latitude, Longitude
+            string query = @"SELECT Id, GroupName, Latitude, Longitude, VSLA_formed
                      FROM tbl_com2_Household_Group_View 
                      ORDER BY Id 
                      OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
@@ -385,8 +406,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
         {
             if (e.Item is GridDataItem dataItem)
             {
+                // Check if analysis is done
                 if (isAnalyzed)
                 {
+                    // Validate the ValidationStatus column
                     string validationStatus = dataItem["ValidationStatus"].Text;
 
                     if (validationStatus != "Valid")
@@ -394,8 +417,26 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         dataItem.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFB1B4");
                     }
                 }
+
+                // Convert VSLA_formed column value from true/false to Yes/No
+                TableCell vslaFormedCell = dataItem["VSLA_formed"];
+                if (vslaFormedCell != null)
+                {
+                    string cellValue = vslaFormedCell.Text.Trim();
+
+                    // Convert true/false to Yes/No
+                    if (cellValue.Equals("true", StringComparison.OrdinalIgnoreCase))
+                    {
+                        vslaFormedCell.Text = "Yes";
+                    }
+                    else if (cellValue.Equals("false", StringComparison.OrdinalIgnoreCase))
+                    {
+                        vslaFormedCell.Text = "No";
+                    }
+                }
             }
         }
+
 
         private void AddSuccessMessage(string message)
         {

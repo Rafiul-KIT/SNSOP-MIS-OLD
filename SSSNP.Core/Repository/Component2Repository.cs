@@ -134,6 +134,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("PaymentCycle", obj.PaymentCycle);
                     data.Add("PaymentAmount", obj.PaymentAmount);
                     data.Add("PaymentDate", obj.PaymentDate);
+                    data.Add("ActualPaymentDate", obj.ActualPaymentDate);
                     data.Add("StateID", denormalizedData.StateID);
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
@@ -419,7 +420,8 @@ namespace SSSNP_SNSOP.Core.Repository
                     {
                         { "GroupName", model.GroupName?.Trim() },
                         { "Latitude", model.Latitude },
-                        { "Longitude", model.Longitude }
+                        { "Longitude", model.Longitude },
+                        { "VSLA_formed", model.VSLA_formed }
                     };
 
                     // Add audit information based on whether the record is new or existing
