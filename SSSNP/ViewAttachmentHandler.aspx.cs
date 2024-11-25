@@ -1631,10 +1631,12 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 2].Value = "Payment Cycle";
                     worksheet.Cells[1, 3].Value = "Payment Amount";
                     worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(mm-dd-yyyy)";
-                    worksheet.Cells[1, 4].Style.WrapText = true; 
+                    worksheet.Cells[1, 4].Style.WrapText = true;
+                    worksheet.Cells[1, 5].Value = "Actual Payment Date" + "\n" + "(mm-dd-yyyy)";
+                    worksheet.Cells[1, 5].Style.WrapText = true;
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 4; col++)
+                    for (int col = 1; col <= 5; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -1685,12 +1687,27 @@ namespace SSSNP_SNSOP
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
 
+                    // Set the format for "Actual Payment Date" as DateTime for the actual data rows
+                    worksheet.Cells[2, 5, dataRows + 1, 5].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
+
+                    // Apply data validation for the "Actual Payment Date" column (only to the actual data rows)
+                    var actualDateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 5, dataRows + 1, 5].Address);
+                    actualDateValidation.ShowErrorMessage = true;
+                    actualDateValidation.ErrorTitle = "Invalid Date";
+                    actualDateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-mm-yyyy";
+                    actualDateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-MM-yyyy";
+                    actualDateValidation.AllowBlank = true;
+                    actualDateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
+                    actualDateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
+
                     worksheet.Protection.IsProtected = true;
                     worksheet.Cells["B2:G1000"].Style.Locked = false;
 
                     // Auto-fit columns for better appearance
                     worksheet.Cells.AutoFitColumns();
                     worksheet.Column(4).Width = 15;
+                    worksheet.Column(5).Width = 15;
+
 
                     // Set the content type and headers for the download
                     Response.ClearHeaders();

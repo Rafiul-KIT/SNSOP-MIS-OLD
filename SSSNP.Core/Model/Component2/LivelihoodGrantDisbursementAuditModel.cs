@@ -12,5 +12,6 @@ namespace SSSNP_SNSOP.Core.Model.Component2
         public string PaymentCycle { get; set; }
         public decimal? PaymentAmount { get; set; }
         public DateTime PaymentDate { get; set; }
+        public DateTime AuditActualPaymentDate { get; set; }
     }
 }
