@@ -1523,9 +1523,10 @@ namespace SSSNP_SNSOP
                     //worksheet.Cells[1, 6].Value = "Group ID";
                     worksheet.Cells[1, 6].Value = "Group Name";
                     worksheet.Cells[1, 7].Value = "Enrolled Member ID";
+                    worksheet.Cells[1, 8].Value = "Reason For Why Not Enrolled";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 7; col++)
+                    for (int col = 1; col <= 8; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -1586,12 +1587,25 @@ namespace SSSNP_SNSOP
                     validation5.PromptTitle = "Input Restriction";
                     validation5.Prompt = "Enter a whole number between 1 and 5, or leave blank.";
 
+                    // Add conditional validation for "Reason for why not" (Column 8)
+                    for (int row = 2; row <= 100; row++)
+                    {
+                        var conditionalValidation = worksheet.DataValidations.AddCustomValidation($"H{row}");
+                        conditionalValidation.Formula.ExcelFormula = $"IF(E{row}=\"No\", TRUE, ISBLANK(H{row}))";
+                        conditionalValidation.ShowErrorMessage = true;
+                        conditionalValidation.ErrorTitle = "Invalid Input";
+                        conditionalValidation.Error = "This field can only be edited if HH Enrollment Status is 'No'. It must be blank otherwise.";
+                        conditionalValidation.PromptTitle = "Input Restriction";
+                        conditionalValidation.Prompt = "Enter a reason only if HH Enrollment Status is 'No'.";
+                    }
+
                     // Protect the worksheet so that locked cells (Household Number, Group ID, Group Name) are read-only
                     worksheet.Protection.IsProtected = true;
 
                     // Unlock other cells so they can be edited by the user
                     worksheet.Cells["B2:E1000"].Style.Locked = false;
                     worksheet.Cells["G2:G1000"].Style.Locked = false; // Allow users to edit "Enrolled Member ID"
+                    worksheet.Cells["H2:H1000"].Style.Locked = false;
 
                     // Auto-fit columns to adjust the size
                     worksheet.Cells.AutoFitColumns();

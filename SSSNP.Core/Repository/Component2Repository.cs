@@ -285,7 +285,8 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("TreatmentArm", model.TreatmentArm ?? (object)DBNull.Value);
                     data.Add("HHEnrollmentStatus", model.HHEnrollmentStatus);
                     data.Add("GroupID", denormalizedData.GroupId ?? (object)DBNull.Value);
-                    data.Add("EnrolledMemberID", model.EnrolledMemberID ?? (object)DBNull.Value); 
+                    data.Add("EnrolledMemberID", model.EnrolledMemberID ?? (object)DBNull.Value);
+                    data.Add("ReasonForWhyNotEnrolled", model.ReasonForWhyNotEnrolled);
                     data.Add("StateID", denormalizedData.StateID);
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);

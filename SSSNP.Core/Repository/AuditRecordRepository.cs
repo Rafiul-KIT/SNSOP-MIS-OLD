@@ -40,6 +40,7 @@ namespace SSSNP_SNSOP.Core.Repository
             END AS [HH Enrollment Status],
             audit.GroupID AS [Group ID],
             audit.EnrolledMemberID AS [Enrolled Member ID],
+            audit.ReasonForWhyNotEnrolled AS [Reason For Why Not Enrolled],
             users.User_name AS [Uploaded By],
             audit.UploadDate AS [Upload Date],
             audit.Validity AS [Validity],

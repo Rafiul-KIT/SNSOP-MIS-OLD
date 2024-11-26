@@ -15,5 +15,6 @@ namespace SSSNP_SNSOP.Core.Model.Component2
         public bool? HHEnrollmentStatus { get; set; }
         public int? GroupID { get; set; }
         public int? EnrolledMemberID { get; set; }
+        public string ReasonForWhyNotEnrolled { get; set; }
     }
 }

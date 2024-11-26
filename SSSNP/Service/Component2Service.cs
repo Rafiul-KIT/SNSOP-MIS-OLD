@@ -545,6 +545,14 @@ namespace SSSNP.Service
             {
                 //return (false, "Enrolled Member ID is required.");
             }*/
+            if (beneficiary.HHEnrollmentStatus == true && !string.IsNullOrWhiteSpace(beneficiary.ReasonForWhyNotEnrolled))
+            {
+                return (false, "Reason for why not should be empty when HH Enrollment Status is 'Yes'.");
+            }
+            else if (beneficiary.HHEnrollmentStatus == false && string.IsNullOrWhiteSpace(beneficiary.ReasonForWhyNotEnrolled))
+            {
+                return (false, "Reason for why not is required when HH Enrollment Status is 'No'.");
+            }
 
 
             // All validations passed
