@@ -198,6 +198,7 @@ namespace SSSNP.UI.Public_Works
         {
             try
             {
+                AddSuccessMessage("");
                 if (!fileUpload.HasFile)
                 {
                     AddErrorMessage("Please select a file to upload.");
@@ -294,6 +295,9 @@ namespace SSSNP.UI.Public_Works
                         {
                             AddErrorMessage("Could not send payroll data successfully");
                         }
+                    } else
+                    {
+                        AddErrorMessage("No valid payroll data found in the file to send for reconciliation.");
                     }
                 }
             }

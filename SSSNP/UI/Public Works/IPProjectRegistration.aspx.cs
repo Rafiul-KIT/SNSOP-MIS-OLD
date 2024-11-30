@@ -171,7 +171,7 @@ public partial class IPProjectRegistration : System.Web.UI.Page
 
                 }
 
-                SendMailAnother();
+                //SendMailAnother();
 
                 lblmsg.Text = "Added Successfully..!";
                 success.Visible = true;

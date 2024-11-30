@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.IO;
 using System.Configuration;
 using SSSNP.Network;
+using System.Threading.Tasks;
 
 public partial class IPWOrkProposalsDraft : System.Web.UI.Page
 {
@@ -1040,7 +1041,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
             emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
 
-            emailService.sendEmail(ipMail, emailSubject, emailBody);
+            Task.Run(() => emailService.sendEmail(ipMail, emailSubject, emailBody));
         }
         catch (Exception ex)
         {
