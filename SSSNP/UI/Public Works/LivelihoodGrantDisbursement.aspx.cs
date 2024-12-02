@@ -91,7 +91,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     {
                         var paymentAmount = decimal.TryParse(worksheet.Cells[row, 3].Text, out decimal amount) ? amount : 0m; // Default to 0 if null or invalid
                         var paymentDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime date) ? date : DateTime.MinValue; // Default to DateTime.MinValue if null or invalid
-                        var actualpaymentDate = DateTime.TryParse(worksheet.Cells[row, 5].Text, out DateTime actualdate) ? actualdate: DateTime.MinValue;
+                        var actualPaymentDate = DateTime.TryParse(worksheet.Cells[row, 5].Text, out DateTime actualdate) ? actualdate : DateTime.MinValue; // Default to DateTime.MinValue if null or invalid
+
+
+
 
 
                         if (string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) && paymentAmount == 0m && paymentDate == DateTime.MinValue)
@@ -105,10 +108,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             PaymentCycle = worksheet.Cells[row, 2].Text,
                             PaymentAmount = paymentAmount,
                             PaymentDate = paymentDate,
-                            
-                        ActualPaymentDate = actualpaymentDate,
-
-                        CreatedBy = userId,
+                            ActualPaymentDate = actualPaymentDate,
+                            CreatedBy = userId,
                             ModifiedBy = userId
                         };
 
@@ -184,7 +185,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     auditEntityObj.PaymentCycle = grant.PaymentCycle;
                     auditEntityObj.PaymentAmount = grant.PaymentAmount;
                     auditEntityObj.PaymentDate = grant.PaymentDate.Value;
-                    //auditEntityObj.AuditActualPaymentDate = grant.ActualPaymentDate.Value;
+                    auditEntityObj.ActualPaymentDate = grant.ActualPaymentDate.Value;
                     if (!validationResult.isValid)
                     {
                         auditEntityObj.Validity = false;

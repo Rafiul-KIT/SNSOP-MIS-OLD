@@ -62,7 +62,7 @@ namespace SSSNP.UI.Public_Works
                 List<string> expectedHeaders = new List<string>
                     {
                         "Household Number", "Interested In Participating", "Survives Targeting", "Treatment Arm",
-                        "HH Enrollment Status", "Group Name", "Enrolled Member ID"
+                        "HH Enrollment Status", "Group Name", "Enrolled Member ID", "Reason For Why Not Enrolled"
                     };
 
                 using (var package = new ExcelPackage(fileUpload.PostedFile.InputStream))
@@ -112,6 +112,8 @@ namespace SSSNP.UI.Public_Works
                             enrolledMemberID = parsedEnrolledMemberID;
                         }
 
+                        string reasonForWhyNotEnrolled = worksheet.Cells[row, 8].Text;
+
                         if (interestedInParticipating == null &&
                             survivesTargeting == null &&
                             treatmentArm == null &&
@@ -137,6 +139,7 @@ namespace SSSNP.UI.Public_Works
                             HHEnrollmentStatus = hHEnrollmentStatus,
                             //GroupID = groupID,
                             EnrolledMemberID = enrolledMemberID,
+                            ReasonForWhyNotEnrolled = reasonForWhyNotEnrolled,
                             CreatedBy = userId,
                             ModifiedBy = userId
                             
@@ -185,6 +188,7 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("HHEnrollmentStatus", typeof(bool));
                 //dt.Columns.Add("GroupID", typeof(int));  // Add GroupID
                 dt.Columns.Add("EnrolledMemberID", typeof(int));  // Add EnrolledMemberID
+                dt.Columns.Add("ReasonForWhyNotEnrolled", typeof(string));
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
                 //var validHouseholdNumbers = _component2Service.GetValidHouseholdNumberValues();
@@ -209,6 +213,8 @@ namespace SSSNP.UI.Public_Works
                     dr["HHEnrollmentStatus"] = beneficiary.HHEnrollmentStatus.HasValue ? (object)beneficiary.HHEnrollmentStatus.Value : DBNull.Value;
                     //dr["GroupID"] = beneficiary.GroupID.HasValue ? (object)beneficiary.GroupID.Value : DBNull.Value;
                     dr["EnrolledMemberID"] = beneficiary.EnrolledMemberID.HasValue ? (object)beneficiary.EnrolledMemberID.Value : DBNull.Value;
+                    dr["ReasonForWhyNotEnrolled"] = beneficiary.ReasonForWhyNotEnrolled ?? (object)DBNull.Value;
+
 
                     auditEntityObj.FileId = FileId;
                     auditEntityObj.HouseholdNumber = beneficiary.HouseholdNumber;
@@ -218,6 +224,7 @@ namespace SSSNP.UI.Public_Works
                     auditEntityObj.HHEnrollmentStatus = beneficiary.HHEnrollmentStatus;
                     //auditEntityObj.GroupID = beneficiary.GroupID;
                     auditEntityObj.EnrolledMemberID = beneficiary.EnrolledMemberID;
+                    auditEntityObj.ReasonForWhyNotEnrolled = beneficiary.ReasonForWhyNotEnrolled;
 
                     // Check if the household is redundant
                     if (!string.IsNullOrEmpty(beneficiary.HouseholdNumber) && existingHouseholds.ContainsKey(beneficiary.HouseholdNumber))
@@ -394,6 +401,7 @@ namespace SSSNP.UI.Public_Works
                         e.HHEnrollmentStatus,
                         g.GroupName,
                         e.EnrolledMemberID,
+                        e.ReasonForWhyNotEnrolled,
                         NomineeCTE.NomineeName
                     FROM 
                         tbl_com2_Household_Enrollment_Data e

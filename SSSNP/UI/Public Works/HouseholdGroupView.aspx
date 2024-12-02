@@ -145,6 +145,7 @@
                                             <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name" />
                                             <telerik:GridBoundColumn DataField="Latitude" HeaderText="Latitude" DataFormatString="{0:N7}" />
                                             <telerik:GridBoundColumn DataField="Longitude" HeaderText="Longitude" DataFormatString="{0:N7}" />
+                                            <telerik:GridBoundColumn DataField="VSLA_formed" HeaderText="VSLA Formed" UniqueName="VSLA_formed" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" Visible="false" />
                                         </Columns>
                                     </MasterTableView>

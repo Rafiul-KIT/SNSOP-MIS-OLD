@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS0117: 'LivelihoodGrantDisbursementModel' does not contain a definition for 'ActualPayment'
+dotnet_diagnostic.CS0117.severity = none

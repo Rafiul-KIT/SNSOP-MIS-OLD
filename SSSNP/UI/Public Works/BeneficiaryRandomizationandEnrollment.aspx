@@ -148,9 +148,10 @@
                                             <telerik:GridBoundColumn DataField="InterestedInParticipating" HeaderText="Interested In Participating" UniqueName="InterestedInParticipating" />
                                             <telerik:GridBoundColumn DataField="SurvivesTargeting" HeaderText="Survives Targeting" UniqueName="SurvivesTargeting" />
                                             <telerik:GridBoundColumn DataField="TreatmentArm" HeaderText="Treatment Arm" UniqueName="TreatmentArm" />
-                                            <telerik:GridBoundColumn DataField="HHEnrollmentStatus" HeaderText="Enrollment Status" UniqueName="HHEnrollmentStatus" />
+                                            <telerik:GridBoundColumn DataField="HHEnrollmentStatus" HeaderText="HH Enrollment Status" UniqueName="HHEnrollmentStatus" />
                                             <telerik:GridBoundColumn DataField="GroupName" HeaderText="Group Name"  Visible="false" />
                                             <telerik:GridBoundColumn DataField="EnrolledMemberID" HeaderText="Enrolled Member ID" UniqueName="EnrolledMemberID" />
+                                            <telerik:GridBoundColumn DataField="ReasonForWhyNotEnrolled" HeaderText="Reason For Why Not Enrolled" UniqueName="ReasonForWhyNotEnrolled" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                             <telerik:GridBoundColumn DataField="NomineeName" HeaderText="Nominee Name" UniqueName="NomineeName" Visible="false" />
                                         </Columns>
