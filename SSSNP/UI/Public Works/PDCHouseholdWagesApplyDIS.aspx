@@ -125,16 +125,16 @@
     </script>
     <script type="text/javascript">
         function confirm_meth() {
-
-            var value = document.getElementById("txtDaysToBePaid").value;
-            if (value != "20") {
-                if (confirm("The specified value for 'Days to be Paid' is different from 20. Do you confirm?") == true) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
+            return true;
+            //var value = document.getElementById("txtDaysToBePaid").value;
+            //if (value != "20") {
+            //    if (confirm("The specified value for 'Days to be Paid' is different from 20. Do you confirm?") == true) {
+            //        return true;
+            //    }
+            //    else {
+            //        return false;
+            //    }
+            //}
         }
 
 
@@ -324,7 +324,7 @@
                                                                 </td>
                                                                 <td style="padding: 5px; margin: 5px; width: 10px;">: </td>
                                                                 <td style="padding: 5px; margin: 5px; width: 10px;">
-                                                                    <asp:TextBox ID="txtDaysToBePaid" runat="server" AutoPostBack="True" class="form-control txtbox" ClientIDMode="Static" Height="28px" MaxLength="4" onkeypress="NumberOnly()" TabIndex="1" ValidationGroup="group" Width="180px">20</asp:TextBox>
+                                                                    <asp:TextBox ID="txtDaysToBePaid" runat="server" AutoPostBack="True" class="form-control txtbox" ClientIDMode="Static" Height="28px" MaxLength="4" onkeypress="NumberOnly()" TabIndex="1" ValidationGroup="group" Width="180px"></asp:TextBox>
                                                                 </td>
                                                                 <td style="padding: 5px; margin: 5px; width: 10px;">
                                                                     <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator15" runat="server" ControlToValidate="txtWageRate" ErrorMessage="Please Enter Wage Rate" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>--%>

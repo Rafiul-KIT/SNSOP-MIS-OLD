@@ -154,6 +154,14 @@ public partial class PDCHouseholdWagesApplyDIS : System.Web.UI.Page
 
     protected void btnApplyforWage_Click(object sender, EventArgs e)
     {
+        if (string.IsNullOrEmpty(txtDaysToBePaid.Text))
+        {
+            lblmsg0.Text = "Please input Days to be Paid";
+            Failure.Visible = true;
+            ScriptManager.RegisterClientScriptBlock((sender as Control), this.GetType(), "alert", lblmsg0.Text, true);
+            return;
+        }
+
         // 999 >>> Dummy Work ID for DIS
         string strWorkIdDIS = "999";
         int count = 0;

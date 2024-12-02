@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace SSSNP.Network
@@ -67,8 +68,13 @@ namespace SSSNP.Network
 
         public void sendEmailToUserType(string emailSubject, string emailBody, string userType)
         {
-            String sql3 = "select Email from tbl_Users where 1=1 " +
-                    " and User_type='"+userType+ "' and Status='Y' and Email is not null and email_receiver=1";
+            Task.Run(() => AsyncSendEmailToUserType(emailSubject, emailBody, userType));
+        }
+
+        private void AsyncSendEmailToUserType(string emailSubject, string emailBody, string userType)
+        {
+            string sql3 = "select Email from tbl_Users where 1=1 " +
+                    " and User_type='" + userType + "' and Status='Y' and Email is not null and email_receiver=1";
             DataTable dt3 = _dbOperation.GetDataTable(sql3);
             if (dt3 != null && dt3.Rows != null && dt3.Rows.Count > 0)
             {
@@ -85,7 +91,12 @@ namespace SSSNP.Network
 
         public void sendEmailToIpApprover(string emailSubject, string emailBody)
         {
-            String sql3 = "select Email from tbl_Users where 1=1 " +
+            Task.Run(() => AsyncSendEmailToIpApprover(emailSubject, emailBody));
+        }
+
+        private void AsyncSendEmailToIpApprover(string emailSubject, string emailBody)
+        {
+            string sql3 = "select Email from tbl_Users where 1=1 " +
                     " and User_type='IP' and IP_Approver=1 and Status='Y' and Email is not null and email_receiver=1";
             DataTable dt3 = _dbOperation.GetDataTable(sql3);
             if (dt3 != null && dt3.Rows != null && dt3.Rows.Count > 0)
@@ -102,6 +113,11 @@ namespace SSSNP.Network
         }
 
         public void sendEmailForWageRequest(string intWagePaymentReqid, string userType, string emailSubject, string emailBody)
+        {
+            Task.Run(() => AsyncSendEmailForWageRequest(intWagePaymentReqid, userType, emailSubject, emailBody));
+        }
+
+        private void AsyncSendEmailForWageRequest(string intWagePaymentReqid, string userType, string emailSubject, string emailBody)
         {
             string sql = "select tu.Email from td_WorkWageRequest t left join tbl_Users tu";
             if (userType == "Cordinator")

@@ -461,7 +461,7 @@ public partial class PDCWorkProgress : System.Web.UI.Page
             }
 
 
-             SendMailAnother();
+             //SendMailAnother();
             lblmsg.Text = "Submited Successfully..!";
             success.Visible = true;
             Failure.Visible = false;
