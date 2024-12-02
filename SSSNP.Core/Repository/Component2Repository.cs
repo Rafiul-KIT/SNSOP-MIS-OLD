@@ -145,7 +145,6 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("LastName", denormalizedData.LastName ?? (object)DBNull.Value);
                     data.Add("Gender", denormalizedData.Gender ?? (object)DBNull.Value);
                     data.Add("Age", denormalizedData.Age);
-                    data.Add("ActualPaymentDate", obj.ActualPaymentDate);
 
                     if (!isExist)
                     {

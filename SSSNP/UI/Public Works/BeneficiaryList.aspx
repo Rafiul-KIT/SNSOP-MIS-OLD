@@ -208,10 +208,11 @@
                     </div>
                 </div>
             </div>
-
-
-
         </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="RadGrid" />
+        </Triggers>
+
     </asp:UpdatePanel>
     <asp:UpdateProgress ID="UpdateProgress" runat="server" AssociatedUpdatePanelID="upd1">
         <ProgressTemplate>
