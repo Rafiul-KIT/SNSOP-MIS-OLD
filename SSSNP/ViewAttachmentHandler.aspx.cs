@@ -1350,13 +1350,14 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Group Name";
                     worksheet.Cells[1, 2].Value = "Latitude";
                     worksheet.Cells[1, 3].Value = "Longitude";
+                    worksheet.Cells[1, 4].Value = "VSLA Formed";
                     /*worksheet.Cells[1, 4].Value = "Created By";
                     worksheet.Cells[1, 5].Value = "Created Date";
                     worksheet.Cells[1, 6].Value = "Modified By";
                     worksheet.Cells[1, 7].Value = "Modified Date";*/
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 3; col++)
+                    for (int col = 1; col <= 4; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -1377,6 +1378,14 @@ namespace SSSNP_SNSOP
                     longitudeValidation.Error = "Please enter a longitude between -180 and 180.";
                     longitudeValidation.Formula.Value = -180;
                     longitudeValidation.Formula2.Value = 180;
+                    
+                    // Add data validation for VSLA formed (Yes/No)
+                    var vslaFormedValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 4, 1048576, 4].Address);
+                    vslaFormedValidation.ShowErrorMessage = true;
+                    vslaFormedValidation.ErrorTitle = "Invalid Selection";
+                    vslaFormedValidation.Error = "Please select 'Yes' or 'No' from the drop-down list.";
+                    vslaFormedValidation.Formula.Values.Add("Yes");
+                    vslaFormedValidation.Formula.Values.Add("No");
 
                     worksheet.Cells.AutoFitColumns();
                     // Set the content type and headers for the download
@@ -1514,9 +1523,10 @@ namespace SSSNP_SNSOP
                     //worksheet.Cells[1, 6].Value = "Group ID";
                     worksheet.Cells[1, 6].Value = "Group Name";
                     worksheet.Cells[1, 7].Value = "Enrolled Member ID";
+                    worksheet.Cells[1, 8].Value = "Reason For Why Not Enrolled";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 7; col++)
+                    for (int col = 1; col <= 8; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -1577,12 +1587,25 @@ namespace SSSNP_SNSOP
                     validation5.PromptTitle = "Input Restriction";
                     validation5.Prompt = "Enter a whole number between 1 and 5, or leave blank.";
 
+                    // Add conditional validation for "Reason for why not" (Column 8)
+                    for (int row = 2; row <= 100; row++)
+                    {
+                        var conditionalValidation = worksheet.DataValidations.AddCustomValidation($"H{row}");
+                        conditionalValidation.Formula.ExcelFormula = $"IF(E{row}=\"No\", TRUE, ISBLANK(H{row}))";
+                        conditionalValidation.ShowErrorMessage = true;
+                        conditionalValidation.ErrorTitle = "Invalid Input";
+                        conditionalValidation.Error = "This field can only be edited if HH Enrollment Status is 'No'. It must be blank otherwise.";
+                        conditionalValidation.PromptTitle = "Input Restriction";
+                        conditionalValidation.Prompt = "Enter a reason only if HH Enrollment Status is 'No'.";
+                    }
+
                     // Protect the worksheet so that locked cells (Household Number, Group ID, Group Name) are read-only
                     worksheet.Protection.IsProtected = true;
 
                     // Unlock other cells so they can be edited by the user
                     worksheet.Cells["B2:E1000"].Style.Locked = false;
                     worksheet.Cells["G2:G1000"].Style.Locked = false; // Allow users to edit "Enrolled Member ID"
+                    worksheet.Cells["H2:H1000"].Style.Locked = false;
 
                     // Auto-fit columns to adjust the size
                     worksheet.Cells.AutoFitColumns();
@@ -1631,10 +1654,12 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 2].Value = "Payment Cycle";
                     worksheet.Cells[1, 3].Value = "Payment Amount";
                     worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(mm-dd-yyyy)";
-                    worksheet.Cells[1, 4].Style.WrapText = true; 
+                    worksheet.Cells[1, 4].Style.WrapText = true;
+                    worksheet.Cells[1, 5].Value = "Actual Payment Date" + "\n" + "(mm-dd-yyyy)";
+                    worksheet.Cells[1, 5].Style.WrapText = true;
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 4; col++)
+                    for (int col = 1; col <= 5; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -1685,12 +1710,27 @@ namespace SSSNP_SNSOP
                     dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
                     dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
 
+                    // Set the format for "Actual Payment Date" as DateTime for the actual data rows
+                    worksheet.Cells[2, 5, dataRows + 1, 5].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
+
+                    // Apply data validation for the "Actual Payment Date" column (only to the actual data rows)
+                    var actualDateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 5, dataRows + 1, 5].Address);
+                    actualDateValidation.ShowErrorMessage = true;
+                    actualDateValidation.ErrorTitle = "Invalid Date";
+                    actualDateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-mm-yyyy";
+                    actualDateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-MM-yyyy";
+                    actualDateValidation.AllowBlank = true;
+                    actualDateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
+                    actualDateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
+
                     worksheet.Protection.IsProtected = true;
                     worksheet.Cells["B2:G1000"].Style.Locked = false;
 
                     // Auto-fit columns for better appearance
                     worksheet.Cells.AutoFitColumns();
                     worksheet.Column(4).Width = 15;
+                    worksheet.Column(5).Width = 15;
+
 
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
@@ -2014,13 +2054,16 @@ namespace SSSNP_SNSOP
                     cmd.Parameters.AddWithValue("@ID", benId);
                     conn.Open();
                     string filePath = cmd.ExecuteScalar() as string;
+                    string genericPath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"].ToString() +
+                                    "\\" + "id_cards" + "\\";
+                    string fullPath = genericPath + filePath;
 
-                    if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                    if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
                     {
                         Response.Clear();
                         Response.ContentType = "application/pdf";
-                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(filePath)}");
-                        Response.TransmitFile(filePath);
+                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(fullPath)}");
+                        Response.TransmitFile(fullPath);
                         Response.End();
                     }
                     else

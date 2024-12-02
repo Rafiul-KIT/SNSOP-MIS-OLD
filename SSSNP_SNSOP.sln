@@ -17,6 +17,11 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SSSNP_SNSOP.Database", "SSS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSSNP_SNSOP.API", "SSSNP.API\SSSNP_SNSOP.API.csproj", "{6D2B7719-789A-4318-A78E-A6D07DD5BD76}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0A53A753-EABA-4374-9AF0-D2A4E8C185EB}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		BLUE|Any CPU = BLUE|Any CPU

@@ -1,5 +1,5 @@
 ﻿using SSSNP.Service;
-using SSSNP_SNSOP.Core.Model.Component2;
+// using SSSNP_SNSOP.Core.Model.Component2;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,7 +10,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using SSSNP_SNSOP.Core.Model.Component2;
 using Telerik.Web.UI;
+using System.Globalization;
 
 namespace SSSNP_SNSOP.UI.Public_Works
 {
@@ -69,7 +71,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Household Number", "Payment Cycle", "Payment Amount", "Payment Date" + "\n" + "(mm-dd-yyyy)",
+                        "Household Number", "Payment Cycle", "Payment Amount", "Payment Date" + "\n" + "(mm-dd-yyyy)", "Actual Payment Date" + "\n" + "(mm-dd-yyyy)",
                     };
 
                     // Validate headers
@@ -89,6 +91,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     {
                         var paymentAmount = decimal.TryParse(worksheet.Cells[row, 3].Text, out decimal amount) ? amount : 0m; // Default to 0 if null or invalid
                         var paymentDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime date) ? date : DateTime.MinValue; // Default to DateTime.MinValue if null or invalid
+                        var actualPaymentDate = DateTime.TryParse(worksheet.Cells[row, 5].Text, out DateTime actualdate) ? actualdate : DateTime.MinValue; // Default to DateTime.MinValue if null or invalid
+
+
+
+
 
                         if (string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) && paymentAmount == 0m && paymentDate == DateTime.MinValue)
                         {
@@ -101,6 +108,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             PaymentCycle = worksheet.Cells[row, 2].Text,
                             PaymentAmount = paymentAmount,
                             PaymentDate = paymentDate,
+                            ActualPaymentDate = actualPaymentDate,
                             CreatedBy = userId,
                             ModifiedBy = userId
                         };
@@ -142,6 +150,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 dt.Columns.Add("PaymentCycle", typeof(string));
                 dt.Columns.Add("PaymentAmount", typeof(object));
                 dt.Columns.Add("PaymentDate", typeof(object));
+                dt.Columns.Add("ActualPaymentDate", typeof(object));
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
                 int serial = 1;
@@ -166,6 +175,9 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     dr["PaymentDate"] = grant.PaymentDate.HasValue && grant.PaymentDate.Value != DateTime.MinValue
                                         ? grant.PaymentDate.Value.ToString("dd-MM-yyyy")
                                         : "N/A";
+                    dr["ActualPaymentDate"] = grant.ActualPaymentDate.HasValue && grant.ActualPaymentDate.Value != DateTime.MinValue
+                                        ? grant.ActualPaymentDate.Value.ToString("dd-MM-yyyy")
+                                        : "N/A";
 
                     LivelihoodGrantDisbursementAuditModel auditEntityObj = new LivelihoodGrantDisbursementAuditModel();
                     auditEntityObj.FileId = FileId;
@@ -173,7 +185,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     auditEntityObj.PaymentCycle = grant.PaymentCycle;
                     auditEntityObj.PaymentAmount = grant.PaymentAmount;
                     auditEntityObj.PaymentDate = grant.PaymentDate.Value;
-
+                    auditEntityObj.ActualPaymentDate = grant.ActualPaymentDate.Value;
                     if (!validationResult.isValid)
                     {
                         auditEntityObj.Validity = false;
@@ -379,7 +391,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
             try
             {
-                string query = @"SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate 
+                string query = @"SELECT Id, HouseholdNumber, PaymentCycle, PaymentAmount, PaymentDate, ActualPaymentDate 
                          FROM tbl_com2_Livelihood_Grant_Disbursement 
                          ORDER BY Id 
                          OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
