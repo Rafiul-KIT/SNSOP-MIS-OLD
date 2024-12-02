@@ -258,7 +258,7 @@ public partial class APIDashboardDrillDown : System.Web.UI.Page
                 }
                 else if (strComponent.Contains("2"))
                 {
-                    ddlComponent.SelectedValue = "Component 2 (Direct Income Support)";
+                    ddlComponent.SelectedValue = "Component 1 (Direct Income Support)";
                 }
                 else
                 {

@@ -546,7 +546,7 @@ public partial class IPBeneficiaryRegistration1 : System.Web.UI.Page
                 }
                 else if (ds.Tables[0].Rows[0]["SelectionCriteria"].ToString().Contains("2"))
                 {
-                    ddlComponent.SelectedValue = "Component 2 (Direct Income Support)";
+                    ddlComponent.SelectedValue = "Component 1 (Direct Income Support)";
                 }
                 else
                 {

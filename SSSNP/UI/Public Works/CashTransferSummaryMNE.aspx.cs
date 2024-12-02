@@ -75,7 +75,7 @@ public partial class CashTransferSummaryMNE : Page
 
         ddlComponent.Items.Add(new ListItem("--Select--", ""));
         ddlComponent.Items.Add(new ListItem("LIPW", "Component 1 (Public Works)"));
-        ddlComponent.Items.Add(new ListItem("DIS", "Component 2 (Direct Income Support)"));
+        ddlComponent.Items.Add(new ListItem("DIS", "Component 1 (Direct Income Support)"));
 
         ddlPaidStatus.Items.Add(new ListItem("--Select--", ""));
         ddlPaidStatus.Items.Add(new ListItem("Paid", "Paid"));

@@ -263,7 +263,7 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
                 }
             }
 
-            int resultwage = Gen.insertWageRequestDraft(hdfID.Value.ToString(), txtAmount.Text, TxtFromDate.Text, TxtToDate.Text, System.DateTime.Now.Year.ToString(), System.DateTime.Now.Month.ToString(), ddlPaymentCycle.SelectedValue.ToString(), txtExchangerate.Text, Session["uid"].ToString().Trim(), "Component 2 (Direct Income Support)");
+            int resultwage = Gen.insertWageRequestDraft(hdfID.Value.ToString(), txtAmount.Text, TxtFromDate.Text, TxtToDate.Text, System.DateTime.Now.Year.ToString(), System.DateTime.Now.Month.ToString(), ddlPaymentCycle.SelectedValue.ToString(), txtExchangerate.Text, Session["uid"].ToString().Trim(), "Component 1 (Public Works)");
 
             if (resultwage > 0)
             {
