@@ -60,7 +60,7 @@
 				inner join td_WorkWageRequest c on c.intWagePaymentReqid= a.intWagePaymentReqid
 				where a.intworkid=999 and c.PaymentCycle = @PaymentCycle
 				)
-				and B.SelectionCriteria = 'Component 2 (Direct Income Support)'
+				and B.SelectionCriteria = 'Component 1 (Direct Income Support)'
 
 			</query>
 		</operation>
