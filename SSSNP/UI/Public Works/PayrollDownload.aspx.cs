@@ -277,10 +277,10 @@ public partial class PayrollDownload : System.Web.UI.Page
         String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
         uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
-        /*if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
         {
             uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
-        }*/
+        }
         Uri urlCheck = new Uri(uri);
         HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
         httpWReq.PreAuthenticate = true;
