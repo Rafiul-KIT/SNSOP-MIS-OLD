@@ -123,6 +123,13 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
 
         if (ds.Tables[0].Rows.Count > 0)
         {
+            if (ds.Tables[0].Rows[0]["PDC_ApprvDate"] == DBNull.Value)
+            {
+                lblmsg0.Text = ds.Tables[0].Rows[0]["workcode"]?.ToString() + " work proposal has not been approved by TST yet";
+                Failure.Visible = true;
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alert", lblmsg0.Text, true);
+                return;
+            }
             //rgAttendances.DataSource = ds.Tables[0];
             //rgAttendances.DataBind();
             lblProject.Text = ds.Tables[0].Rows[0]["PrjName"].ToString();
