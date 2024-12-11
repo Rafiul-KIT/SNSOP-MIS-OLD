@@ -236,7 +236,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
             if (Session["user_type"].ToString() == "IP")
             {
-                if (Gen.CheckIsIPApprover(Session["uid"].ToString().Trim()).Tables[0].Rows.Count > 0)
+                if (Session["ip_approver"]?.ToString() == "1")
                 {
                     //setAllMenuPermission(false);
                     LiIp5.Visible = true;
