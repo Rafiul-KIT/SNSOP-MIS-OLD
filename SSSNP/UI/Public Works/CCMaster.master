@@ -297,7 +297,7 @@
                                                     <li id="workProposalMenu" visible="false" runat="server"><a href="IPWOrkProposals.aspx">Work Proposals</a> </li>
 
                                                     <li id="beneficiaryRegistrationMenu" visible="false" runat="server"><a href="IPBeneficiaryRegistration.aspx">Beneficiary Enrollment</a> </li>
-                                                    <li id="BeneficiaryListMenu" visible="false" runat="server"><a href="BeneficiaryList.aspx">Beneficiary ID List</a> </li>
+                                                    <li id="BeneficiaryListMenu" visible="false" runat="server"><a href="BeneficiaryList.aspx">Beneficiary ID Cards</a> </li>
                                                     <li id="jobCardMenu" visible="false" runat="server"><a href="IPJobCard.aspx">Job Card</a> </li>
                                                     <li id="printIdCardMenu" visible="false" runat="server"><a href="IPPrintCardID.aspx">Print ID Card</a> </li>
                                                     <li id="workProgressMenu" visible="false" runat="server"><a href="PDCWorkProgress.aspx">Work Progress</a> </li>

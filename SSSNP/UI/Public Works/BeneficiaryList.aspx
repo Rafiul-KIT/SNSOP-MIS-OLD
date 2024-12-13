@@ -16,7 +16,7 @@
                         <i class="fa fa-fw fa-desktop"></i>
                     </li>
                     <li class="active">
-                        <i class="fa fa-edit"></i><a href="#">Beneficiary ID List</a>
+                        <i class="fa fa-edit"></i><a href="#">Beneficiary ID Cards</a>
                     </li>
                 </ol>
             </div>
@@ -34,7 +34,7 @@
                     <div class="col-lg-11" style="padding-left: 0px">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Beneficiary ID List</h3>
+                                <h3 class="panel-title">Beneficiary ID Cards</h3>
                             </div>
                             <div class="panel-body">
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 90%">
