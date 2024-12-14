@@ -252,11 +252,11 @@ public partial class APIDashboardDrillDown : System.Web.UI.Page
             {
                 DropDownList ddlComponent = e.Item.FindControl("ddlRgComponent") as DropDownList;
                 string strComponent = ((System.Data.DataRowView)e.Item.DataItem).Row["SelectionCriteria"].ToString();
-                if (strComponent.Contains("1"))
+                if (strComponent.Contains("Public"))
                 {
                     ddlComponent.SelectedValue = "Component 1 (Public Works)";
                 }
-                else if (strComponent.Contains("2"))
+                else if (strComponent.Contains("Direct"))
                 {
                     ddlComponent.SelectedValue = "Component 1 (Direct Income Support)";
                 }

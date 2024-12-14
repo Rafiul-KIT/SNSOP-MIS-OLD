@@ -540,11 +540,11 @@ public partial class IPBeneficiaryRegistration1 : System.Web.UI.Page
             
             if (ds.Tables[0].Rows[0]["SelectionCriteria"] != null)
             {
-                if (ds.Tables[0].Rows[0]["SelectionCriteria"].ToString().Contains("1"))
+                if (ds.Tables[0].Rows[0]["SelectionCriteria"].ToString().Contains("Public"))
                 {
                     ddlComponent.SelectedValue = "Component 1 (Public Works)";
                 }
-                else if (ds.Tables[0].Rows[0]["SelectionCriteria"].ToString().Contains("2"))
+                else if (ds.Tables[0].Rows[0]["SelectionCriteria"].ToString().Contains("Direct"))
                 {
                     ddlComponent.SelectedValue = "Component 1 (Direct Income Support)";
                 }
