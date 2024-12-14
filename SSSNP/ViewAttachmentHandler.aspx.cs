@@ -724,7 +724,11 @@ namespace SSSNP_SNSOP
             using (MemoryStream ms = new MemoryStream())
             {
                 Document document = new Document(customPageSize.Rotate(), 25, 25, 30, 30); // Increased width and rotated to landscape
-                PdfWriter.GetInstance(document, ms);
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+
+                // Attach the custom PageNumberHelper to the writer
+                writer.PageEvent = new PageNumberHelper();
+
                 document.Open();
 
                 // Create a font for the title with size 16 and bold
@@ -752,21 +756,20 @@ namespace SSSNP_SNSOP
                 // Add space before main table
                 document.Add(new Paragraph(" "));
 
-                // Create table with 24 columns for payroll details
+                // Create table with 19 columns for payroll details
                 PdfPTable table = new PdfPTable(19)
                 {
                     WidthPercentage = 100
                 };
 
-                // Set widths for each column to match the section sizes
+                // Adjust column widths: ID and Age reduced, Signature increased
                 table.SetWidths(new float[] {
-            1f, 1.5f, 2f, 1f, 1f,            // Beneficiary (5 columns: Photo, ID, Name, Gender, Age)
-            1f, 1.5f, 2f, 1f, 1f,            // First Alternate (5 columns: Photo, ID, Name, Gender, Age)
-            1f, 1.5f, 2f, 1f, 1f,            // Second Alternate (5 columns: Photo, ID, Name, Gender, Age)
-            1f, 1.5f, 1.5f,                  // Payment (3 columns: Cycle, Support Type, Wage Total)
-            1.5f                               // Signature (1 column)
+            1f, 1.5f, 1.5f, 1f, 1f,          // Beneficiary (5 columns: Photo, ID, Name, Gender, Age)
+            1f, 1.5f, 1.5f, 1f, 1f,          // First Alternate (5 columns: Photo, ID, Name, Gender, Age)
+            1f, 1.5f, 1.5f, 1f, 1f,          // Second Alternate (5 columns: Photo, ID, Name, Gender, Age)
+            1.2f, 1f, 1f,                    // Payment (3 columns: Cycle, Support Type, Wage Total)
+            2f                                 // Signature (1 column)
         });
-
                 // Add section headers
                 AddSectionHeaderToPdfTable(table, "Beneficiary", 5);
                 AddSectionHeaderToPdfTable(table, "First Alternate", 5);
@@ -799,63 +802,78 @@ namespace SSSNP_SNSOP
 
                 AddCellToPdfTableHeader(table, "Sign");
 
+                table.HeaderRows = 2;
+
+                // Combine all payroll data from all containers and sort by beneficiary name
+                List<PDPayrollDataDto> sortedPayrollData = apiResponse.data
+                    .SelectMany(container => container.payrollData)
+                    .OrderBy(payroll => payroll.houseHoldDetail.firstName +
+                                        payroll.houseHoldDetail.middleName +
+                                        payroll.houseHoldDetail.lastName)
+                    .ToList();
+
                 // Iterate through payroll data in the container and add rows
-                foreach (var container in apiResponse.data)
+                foreach (var payroll in sortedPayrollData)
                 {
-                    foreach (var payroll in container.payrollData)
+                    // Beneficiary Details
+                    AddCellToPdfTableBody(table, payroll.intBenid.ToString());
+                    string beneficiaryPhoto = payroll.houseHoldDetail.biometric != null ? payroll.houseHoldDetail.biometric.Photo : null;
+                    AddPhotoToPdfTable(table, beneficiaryPhoto);
+                    AddCellToPdfTableBody(table, $"{payroll.houseHoldDetail.firstName}\n{payroll.houseHoldDetail.middleName}\n{payroll.houseHoldDetail.lastName}", true);
+                    AddCellToPdfTableBody(table, GetGenderString(payroll.houseHoldDetail.gender));
+                    AddCellToPdfTableBody(table, payroll.houseHoldDetail.age.ToString());
+
+                    // First Alternate
+                    if (payroll.alternates.Count > 0)
                     {
-                        // Beneficiary Details
-                        AddCellToPdfTableBody(table, payroll.intBenid.ToString());
-                        string beneficiaryPhoto = payroll.houseHoldDetail.biometric != null ? payroll.houseHoldDetail.biometric.Photo : null;
-                        AddPhotoToPdfTable(table, beneficiaryPhoto);
-                        AddCellToPdfTableBody(table, $"{payroll.houseHoldDetail.firstName} {payroll.houseHoldDetail.middleName} {payroll.houseHoldDetail.lastName}");
-                        AddCellToPdfTableBody(table, GetGenderString(payroll.houseHoldDetail.gender)); // Updated gender logic
-                        AddCellToPdfTableBody(table, payroll.houseHoldDetail.age.ToString());
-
-                        // First Alternate
-                        if (payroll.alternates.Count > 0)
-                        {
-                            var firstAlternate = payroll.alternates[0];
-                            AddCellToPdfTableBody(table, firstAlternate.id.ToString());  // ID for the first alternate
-                            string firstAlternatePhoto = firstAlternate.biometric != null ? firstAlternate.biometric.Photo : null;
-                            AddPhotoToPdfTable(table, firstAlternatePhoto);
-                            AddCellToPdfTableBody(table, $"{firstAlternate.firstName} {firstAlternate.middleName} {firstAlternate.lastName}");
-                            AddCellToPdfTableBody(table, GetGenderString(firstAlternate.gender)); // Updated gender logic
-                            AddCellToPdfTableBody(table, firstAlternate.age.ToString());
-                        }
-                        else
-                        {
-                            for (int j = 0; j < 5; j++)
-                            {
-                                AddCellToPdfTableBody(table, string.Empty);
-                            }
-                        }
-
-                        // Second Alternate
-                        if (payroll.alternates.Count > 1)
-                        {
-                            var secondAlternate = payroll.alternates[1];
-                            AddCellToPdfTableBody(table, secondAlternate.id.ToString());  // ID for the second alternate
-                            string secondAlternatePhoto = secondAlternate.biometric != null ? secondAlternate.biometric.Photo : null;
-                            AddPhotoToPdfTable(table, secondAlternatePhoto);
-                            AddCellToPdfTableBody(table, $"{secondAlternate.firstName} {secondAlternate.middleName} {secondAlternate.lastName}");
-                            AddCellToPdfTableBody(table, GetGenderString(secondAlternate.gender)); // Updated gender logic
-                            AddCellToPdfTableBody(table, secondAlternate.age.ToString());
-                        }
-                        else
-                        {
-                            for (int j = 0; j < 5; j++)
-                            {
-                                AddCellToPdfTableBody(table, string.Empty);
-                            }
-                        }
-
-                        // Payment and Signature
-                        AddCellToPdfTableBody(table, payroll.paymentCycle);
-                        AddCellToPdfTableBody(table, payroll.supportType);
-                        AddCellToPdfTableBody(table, payroll.wageRateUSDTotal.ToString("F2"));
-                        AddCellToPdfTableBody(table, string.Empty); // Sign - can be left blank or populated as needed
+                        var firstAlternate = payroll.alternates[0];
+                        AddCellToPdfTableBody(table, firstAlternate.id.ToString());
+                        string firstAlternatePhoto = firstAlternate.biometric != null ? firstAlternate.biometric.Photo : null;
+                        AddPhotoToPdfTable(table, firstAlternatePhoto);
+                        AddCellToPdfTableBody(table, $"{firstAlternate.firstName}\n{firstAlternate.middleName}\n{firstAlternate.lastName}", true);
+                        AddCellToPdfTableBody(table, GetGenderString(firstAlternate.gender));
+                        AddCellToPdfTableBody(table, firstAlternate.age.ToString());
                     }
+                    else
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            AddCellToPdfTableBody(table, string.Empty);
+                        }
+                    }
+
+                    // Second Alternate
+                    if (payroll.alternates.Count > 1)
+                    {
+                        var secondAlternate = payroll.alternates[1];
+                        AddCellToPdfTableBody(table, secondAlternate.id.ToString());
+                        string secondAlternatePhoto = secondAlternate.biometric != null ? secondAlternate.biometric.Photo : null;
+                        AddPhotoToPdfTable(table, secondAlternatePhoto);
+                        AddCellToPdfTableBody(table, $"{secondAlternate.firstName}\n{secondAlternate.middleName}\n{secondAlternate.lastName}", true);
+                        AddCellToPdfTableBody(table, GetGenderString(secondAlternate.gender));
+                        AddCellToPdfTableBody(table, secondAlternate.age.ToString());
+                    }
+                    else
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            AddCellToPdfTableBody(table, string.Empty);
+                        }
+                    }
+
+                    // Payment and Signature
+                    AddCellToPdfTableBody(table, payroll.paymentCycle);
+                    AddCellToPdfTableBody(table, payroll.supportType);
+                    AddCellToPdfTableBody(table, payroll.wageRateUSDTotal.ToString("F2"));
+
+                    // Signature with increased height
+                    PdfPCell signatureCell = new PdfPCell(new Phrase(string.Empty))
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        FixedHeight = 100f // Increased height for thumbprint accommodation
+                    };
+                    table.AddCell(signatureCell);
                 }
 
                 // Add the table to the document
@@ -876,7 +894,8 @@ namespace SSSNP_SNSOP
         // Helper methods remain unchanged
         private void AddPhotoToPdfTable(PdfPTable table, string base64Photo)
         {
-            // Check if the base64Photo is null or empty
+            string emptyPhoto = "C:/mis_published_folder/SNSOP/Resource/Images/not-available-2.jpg";
+
             if (!string.IsNullOrEmpty(base64Photo))
             {
                 try
@@ -894,75 +913,125 @@ namespace SSSNP_SNSOP
                     };
                     table.AddCell(imageCell);
                 }
-                catch (FormatException)
+                catch (Exception)
                 {
-                    // Handle invalid base64 strings by adding an empty cell
-                    PdfPCell emptyCell = new PdfPCell(new Phrase("No Image"))
-                    {
-                        HorizontalAlignment = Element.ALIGN_CENTER,
-                        VerticalAlignment = Element.ALIGN_MIDDLE,
-                        FixedHeight = 50f
-                    };
-                    table.AddCell(emptyCell);
+                    // If base64 string is invalid, use the empty photo image
+                    AddEmptyPhotoToPdfTable(table, emptyPhoto);
                 }
             }
             else
             {
-                // Add an empty cell if the photo data is missing
-                PdfPCell emptyCell = new PdfPCell(new Phrase("No Image"))
+                // If no base64 photo is provided, use the empty photo image
+                AddEmptyPhotoToPdfTable(table, emptyPhoto);
+            }
+        }
+
+        private void AddEmptyPhotoToPdfTable(PdfPTable table, string emptyPhotoPath)
+        {
+            try
+            {
+                Image emptyImg = Image.GetInstance(emptyPhotoPath);
+                emptyImg.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
+
+                PdfPCell emptyCell = new PdfPCell(emptyImg, true)
+                {
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_MIDDLE,
+                    Padding = 2f,
+                    FixedHeight = 50f
+                };
+                table.AddCell(emptyCell);
+            }
+            catch (Exception)
+            {
+                // Fallback in case the empty photo file is missing or invalid
+                Font fallbackFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                PdfPCell fallbackCell = new PdfPCell(new Phrase("No Image", fallbackFont))
                 {
                     HorizontalAlignment = Element.ALIGN_CENTER,
                     VerticalAlignment = Element.ALIGN_MIDDLE,
                     FixedHeight = 50f
                 };
-                table.AddCell(emptyCell);
+                table.AddCell(fallbackCell);
             }
         }
 
 
         private void AddSectionHeaderToPdfTable(PdfPTable table, string headerText, int colspan)
         {
-            PdfPCell headerCell = new PdfPCell(new Phrase(headerText, FontFactory.GetFont(FontFactory.HELVETICA, 8, Font.BOLD)))
+            PdfPCell headerCell = new PdfPCell(new Phrase(headerText, FontFactory.GetFont(FontFactory.HELVETICA, 10, Font.BOLD)))
             {
                 Colspan = colspan,
                 BackgroundColor = BaseColor.LIGHT_GRAY,
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 VerticalAlignment = Element.ALIGN_MIDDLE,
-                FixedHeight = 30f // Set a fixed height of 50 points for section cells
+                FixedHeight = 30f
             };
             table.AddCell(headerCell);
         }
 
         private void AddCellToPdfTableHeader(PdfPTable table, string text)
         {
-            PdfPCell cell = new PdfPCell(new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA, 8, Font.BOLD)))
+            PdfPCell cell = new PdfPCell(new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA, 10, Font.BOLD)))
             {
                 BackgroundColor = BaseColor.LIGHT_GRAY,
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 VerticalAlignment = Element.ALIGN_MIDDLE,
-                FixedHeight = 30f // Set a fixed height of 50 points for body cells
+                FixedHeight = 30f
             };
             table.AddCell(cell);
         }
 
-        private void AddCellToPdfTableBody(PdfPTable table, string text)
+        private void AddCellToPdfTableBody(PdfPTable table, string text, bool isNameCell = false)
         {
-            PdfPCell cell = new PdfPCell(new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA, 8)))
+            Phrase content;
+            if (isNameCell && !string.IsNullOrEmpty(text))
+            {
+                string[] nameParts = text.Split(' ');
+                content = new Phrase(string.Join("\n", nameParts), FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            }
+            else
+            {
+                content = new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            }
+
+            PdfPCell cell = new PdfPCell(content)
             {
                 HorizontalAlignment = Element.ALIGN_CENTER,
-                VerticalAlignment = Element.ALIGN_MIDDLE
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                FixedHeight = 50f
             };
             table.AddCell(cell);
         }
 
-        // Helper method to handle gender logic
+        public class PageNumberHelper : PdfPageEventHelper
+        {
+            private Font footerFont = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+
+            public override void OnEndPage(PdfWriter writer, Document document)
+            {
+                // Create a footer paragraph with the page number
+                Paragraph footer = new Paragraph("Page " + writer.PageNumber, footerFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                };
+
+                // Set the footer position
+                float x = document.PageSize.Width / 2;
+                float y = document.BottomMargin / 2;
+
+                // Write the footer at the bottom center
+                ColumnText.ShowTextAligned(writer.DirectContent, Element.ALIGN_CENTER, new Phrase(footer), x, y, 0);
+            }
+        }
+
+
         private string GetGenderString(int genderValue)
         {
             return genderValue == 0 ? "Male" : genderValue == 1 ? "Female" : "N/A";
         }
-
-
         //download payroll data in pdf end
+
 
         // MNE module pdf started
         private void MNEModulePdfHandler()
