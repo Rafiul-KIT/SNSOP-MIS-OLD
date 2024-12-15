@@ -138,7 +138,7 @@
 			<query>
 				with CTE(program, status, countValue)
 				as (
-				select 'SSSNP',status, count(*) as [Count] from
+				select 'SNSOP',status, count(*) as [Count] from
 				(
 				select NEWID() as id, status from GBVMain where deleted = 0
 				) as tmp

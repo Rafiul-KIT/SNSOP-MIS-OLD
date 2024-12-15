@@ -59,7 +59,13 @@ namespace SSSNP_SNSOP
                         Session["password"] = dv.Table.Rows[0]["password"].ToString();
                         Session["userlevel"] = dv.Table.Rows[0]["User_level"].ToString();
                         Session["user_type"] = dv.Table.Rows[0]["User_type"].ToString();
-
+                        if (Session["user_type"].ToString() == "IP")
+                        {
+                            if (clsGeneral.CheckIsIPApprover(Session["uid"].ToString().Trim()).Tables[0].Rows.Count > 0)
+                            {
+                                Session["ip_approver"] = "1";
+                            }
+                        }
                         int userID = SSSNPHelper.TryParseInt(dv.Table.Rows[0]["intUserid"].ToString());
                         if (userID != 0)
                         {

@@ -84,7 +84,7 @@ public partial class BeneficiaryEnrollmentSummaryMNE : Page
         try
         {
             ddlComponent.Items.Add(new ListItem("LIPW", "Component 1 (Public Works)"));
-            ddlComponent.Items.Add(new ListItem("DIS", "Component 2 (Direct Income Support)"));
+            ddlComponent.Items.Add(new ListItem("DIS", "Component 1 (Direct Income Support)"));
             ddlComponent.Items.Insert(0, new ListItem("--Select--", ""));
         }
         catch (Exception ex)

@@ -237,7 +237,7 @@ public partial class PDCHouseholdWagesApplyDIS : System.Web.UI.Page
         //else GO on with creation
         #endregion
 
-        int resultwage = Gen.insertWageRequestDraft(strWorkIdDIS, txtWageRate.Text, strFromDateDummy, strToDateDummy, ddlYear.SelectedValue, ddlMonth.SelectedValue, ddlPaymentCycle.SelectedValue.ToString(), txtExchangerate.Text, Session["uid"].ToString().Trim(), "Component 1 (Public Works)");
+        int resultwage = Gen.insertWageRequestDraft(strWorkIdDIS, txtWageRate.Text, strFromDateDummy, strToDateDummy, ddlYear.SelectedValue, ddlMonth.SelectedValue, ddlPaymentCycle.SelectedValue.ToString(), txtExchangerate.Text, Session["uid"].ToString().Trim(), "Component 1 (Direct Income Support)");
 
         if (resultwage > 0)
         {

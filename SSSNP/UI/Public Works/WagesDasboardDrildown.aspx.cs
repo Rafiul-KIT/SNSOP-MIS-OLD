@@ -75,9 +75,7 @@ public partial class WagesDasboardDrildown : System.Web.UI.Page
         if (Request.QueryString[0].ToString().Trim() == "0")
         {
             //check if the IP is IP_approver
-            DataSet dsIsApprover = new DataSet();
-            dsIsApprover = Gen.CheckIsIPApprover(Session["uid"].ToString().Trim());
-            if (dsIsApprover.Tables[0].Rows.Count > 0)
+            if (Session["ip_approver"]?.ToString() == "1")
             {
                 ds = clsGeneral.GetWagesdashboarddrildownDet(Session["uid"].ToString().Trim(), Session["user_type"].ToString().Trim(), Request.QueryString[0].ToString().Trim(), ddlIP.SelectedValue, ddlState.SelectedValue, ddlCounties.SelectedValue, ddlProject.SelectedValue, "", ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, txtWorkcode0.Text);
             }
