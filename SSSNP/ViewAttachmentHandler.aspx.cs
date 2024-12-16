@@ -767,7 +767,7 @@ namespace SSSNP_SNSOP
             1f, 1.5f, 1.5f, 1f, 1f,          // Beneficiary (5 columns: Photo, ID, Name, Gender, Age)
             1f, 1.5f, 1.5f, 1f, 1f,          // First Alternate (5 columns: Photo, ID, Name, Gender, Age)
             1f, 1.5f, 1.5f, 1f, 1f,          // Second Alternate (5 columns: Photo, ID, Name, Gender, Age)
-            1.2f, 1f, 1f,                    // Payment (3 columns: Cycle, Support Type, Wage Total)
+            1.2f, 1.2f, 1f,                    // Payment (3 columns: Cycle, Support Type, Wage Total)
             2f                                 // Signature (1 column)
         });
                 // Add section headers
