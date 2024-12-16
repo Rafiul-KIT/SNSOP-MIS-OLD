@@ -74,7 +74,7 @@
             font-size: 14px;
             position: absolute;
             background-color: #FFF /*#009EDB;*/;
-            background-image: url('Resource/Images/Background_cover.png');
+            background-image: url('Resource/Images/Background_cover_1.png');
             background-size: cover;
             background-position: center top;
             background-attachment: inherit;
