@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -71,9 +72,15 @@ namespace SSSNP.UI.Public_Works
                     //for checking header
                     List<string> expectedHeaders = new List<string>
                     {
-                      "Household Number", "Connected Financial Services", "Entity Name"
+                        "Household Number",
+                        "Connected Financial Services",
+                        "Entity Name",
+                        "Financial Service Connection Date",
+                        "Deposit Account Opened",
+                        "Deposit Account Opening Date",
+                        "Account Last Activity (Deposit/Withdraw) Date"
                     };
-                    
+
                     for (int col = 1; col <= expectedHeaders.Count; col++)
                     {
                         var header = worksheet.Cells[1, col].Text.Trim();
@@ -99,18 +106,36 @@ namespace SSSNP.UI.Public_Works
                                 continue;
                             }
 
-                            if (string.IsNullOrEmpty(worksheet.Cells[row, 2].Text) && string.IsNullOrEmpty(worksheet.Cells[row, 3].Text))
+                            // Check if core columns are empty
+                            if (string.IsNullOrEmpty(worksheet.Cells[row, 2].Text) &&
+                                string.IsNullOrEmpty(worksheet.Cells[row, 3].Text) &&
+                                string.IsNullOrEmpty(worksheet.Cells[row, 4].Text) &&
+                                string.IsNullOrEmpty(worksheet.Cells[row, 5].Text) &&
+                                string.IsNullOrEmpty(worksheet.Cells[row, 6].Text) &&
+                                string.IsNullOrEmpty(worksheet.Cells[row, 7].Text))
                             {
-                                continue; // Skip the row if columns 2 and 3 are empty
+                                continue; // Skip the row if all relevant fields are empty
                             }
 
                             uniqueHHNumber.Add(worksheet.Cells[row, 1].Text);
+
+                            // Parse boolean and date fields
+                            bool connectedFinancialServices = worksheet.Cells[row, 2].Text?.ToLower() == "yes";
+                            bool depositAccountOpened = worksheet.Cells[row, 5].Text?.ToLower() == "yes";
+
+                            DateTime? financialServiceConnectionDate = ParseDate(worksheet.Cells[row, 4].Text);
+                            DateTime? depositAccountOpeningDate = ParseDate(worksheet.Cells[row, 6].Text);
+                            DateTime? accountLastActivityDate = ParseDate(worksheet.Cells[row, 7].Text);
+
                             FinancialServiceLinkageTrackingModel finServiceObj = new FinancialServiceLinkageTrackingModel
                             {
                                 HouseholdNumber = worksheet.Cells[row, 1].Text,
-                                ConnectedFinancialServices = (worksheet.Cells[row, 2].Text != null
-                                && (worksheet.Cells[row, 2].Text.ToLower().Equals("yes"))) ? true : false,
+                                ConnectedFinancialServices = connectedFinancialServices,
                                 EntityName = worksheet.Cells[row, 3].Text,
+                                FinancialServiceConnectionDate = financialServiceConnectionDate,
+                                DepositAccountOpened = depositAccountOpened,
+                                DepositAccountOpeningDate = depositAccountOpeningDate,
+                                AccountLastActivityDate = accountLastActivityDate,
                                 CreatedBy = userId,
                                 ModifiedBy = userId
                             };
@@ -150,6 +175,10 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("HouseholdNumber", typeof(string));
                 dt.Columns.Add("ConnectedFinancialServices", typeof(string));
                 dt.Columns.Add("EntityName", typeof(string));
+                dt.Columns.Add("FinancialServiceConnectionDate", typeof(string));
+                dt.Columns.Add("DepositAccountOpened", typeof(string));
+                dt.Columns.Add("DepositAccountOpeningDate", typeof(string));
+                dt.Columns.Add("AccountLastActivityDate", typeof(string));
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
                 // Populate DataTable with the data from the list
@@ -176,11 +205,21 @@ namespace SSSNP.UI.Public_Works
                         dr["HouseholdNumber"] = obj.HouseholdNumber;
                         dr["ConnectedFinancialServices"] = (obj.ConnectedFinancialServices == true) ? "YES" : "NO";
                         dr["EntityName"] = obj.EntityName;
+                        dr["FinancialServiceConnectionDate"] = obj.FinancialServiceConnectionDate?.ToString("MM-dd-yyyy") ?? "";
+                        dr["DepositAccountOpened"] = obj.DepositAccountOpened.HasValue ? (obj.DepositAccountOpened.Value ? "YES" : "NO") : "N/A";
+                        dr["DepositAccountOpeningDate"] = obj.DepositAccountOpeningDate?.ToString("MM-dd-yyyy") ?? "";
+                        dr["AccountLastActivityDate"] = obj.AccountLastActivityDate?.ToString("MM-dd-yyyy") ?? "";
+
 
                         auditEntityObj.FileId = FileId;
                         auditEntityObj.HouseholdNumber = obj.HouseholdNumber;
                         auditEntityObj.ConnectedFinancialServices = obj.ConnectedFinancialServices;
                         auditEntityObj.EntityName = obj.EntityName;
+                        auditEntityObj.FinancialServiceConnectionDate = obj.FinancialServiceConnectionDate;
+                        auditEntityObj.DepositAccountOpened = obj.DepositAccountOpened;
+                        auditEntityObj.DepositAccountOpeningDate = obj.DepositAccountOpeningDate;
+                        auditEntityObj.AccountLastActivityDate = obj.AccountLastActivityDate;
+
 
                         if (!validationResult.isValid)
                         {
@@ -345,7 +384,11 @@ namespace SSSNP.UI.Public_Works
         {
             string query = @"SELECT Id, HouseholdNumber, 
             case when ConnectedFinancialServices = 1 then 'YES' else 'NO' end as ConnectedFinancialServices,
-            EntityName 
+            EntityName,
+            FORMAT(fsp_connection_date, 'MM-dd-yyyy') AS FinancialServiceConnectionDate,
+            CASE WHEN deposit_account_opened = 1 THEN 'YES' ELSE 'NO' END AS DepositAccountOpened,
+            FORMAT(deposit_account_open_date, 'MM-dd-yyyy') AS DepositAccountOpeningDate,
+            FORMAT(account_last_activity_date, 'MM-dd-yyyy') AS AccountLastActivityDate 
             FROM tbl_com2_Financial_Services_Linkage_Tracking ORDER BY Id 
             OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
@@ -398,6 +441,15 @@ namespace SSSNP.UI.Public_Works
             DivFailure.Visible = false;
             lblMessageSuccess.Text = string.Empty;
             lblMessageError.Text = string.Empty;
+        }
+
+        private DateTime? ParseDate(string dateText)
+        {
+            if (DateTime.TryParseExact(dateText, "MM-dd-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+            {
+                return parsedDate;
+            }
+            return null;
         }
     }
 }

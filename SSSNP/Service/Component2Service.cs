@@ -421,6 +421,22 @@ namespace SSSNP.Service
             {
                 return (false, "Connected Financial Service is required");
             }
+            if (obj?.FinancialServiceConnectionDate == null)
+            {
+                return (false, "Financial Service Connection Date is required");
+            }
+            if (obj.DepositAccountOpened == null)
+            {
+                return (false, "Deposit Account Opened is required");
+            }
+            if (obj.DepositAccountOpened == true && obj.DepositAccountOpeningDate == null)
+            {
+                return (false, "Deposit Account Opening Date is required if Deposit Account is opened");
+            }
+            if (obj.AccountLastActivityDate != null && obj.AccountLastActivityDate > DateTime.Now)
+            {
+                return (false, "Account Last Activity Date cannot be in the future");
+            }
             return (true, null);
         }
 

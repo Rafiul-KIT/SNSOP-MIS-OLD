@@ -661,6 +661,10 @@ namespace SSSNP_SNSOP.Core.Repository
                         data.Add("LastName", denormalizedData.LastName);
                         data.Add("Gender", denormalizedData.Gender);
                         data.Add("Age", denormalizedData.Age);
+                        data.Add("FinancialServiceConnectionDate", obj.FinancialServiceConnectionDate ?? (object)DBNull.Value);
+                        data.Add("DepositAccountOpened", obj.DepositAccountOpened ?? (object)DBNull.Value);
+                        data.Add("DepositAccountOpeningDate", obj.DepositAccountOpeningDate ?? (object)DBNull.Value);
+                        data.Add("AccountLastActivityDate", obj.AccountLastActivityDate ?? (object)DBNull.Value);
                         if (!isExist)
                         {
                             data.Add("CreatedBy", obj.CreatedBy);

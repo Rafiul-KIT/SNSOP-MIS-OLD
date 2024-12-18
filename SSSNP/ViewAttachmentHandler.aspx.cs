@@ -281,9 +281,13 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Connected Financial Services";
                     worksheet.Cells[1, 3].Value = "Entity Name";
+                    worksheet.Cells[1, 4].Value = "Financial Service Connection Date";
+                    worksheet.Cells[1, 5].Value = "Deposit Account Opened";
+                    worksheet.Cells[1, 6].Value = "Deposit Account Opening Date";
+                    worksheet.Cells[1, 7].Value = "Account Last Activity (Deposit/Withdraw) Date";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 3; col++)
+                    for (int col = 1; col <= 7; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -311,11 +315,23 @@ namespace SSSNP_SNSOP
                         connectedFinancialServicesValidation.Formula.Values.Add(option);
                     }
 
+                    // Add drop-down for the Deposit Account Opened field (Column 5)
+                    var depositAccountOpenedValidation = worksheet.DataValidations.AddListValidation("E2:E1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        depositAccountOpenedValidation.Formula.Values.Add(option);
+                    }
+
+                    // Format date columns for consistency (Columns 4, 6, and 7)
+                    worksheet.Cells["D2:D1000"].Style.Numberformat.Format = "mm-dd-yyyy";
+                    worksheet.Cells["F2:F1000"].Style.Numberformat.Format = "mm-dd-yyyy";
+                    worksheet.Cells["G2:G1000"].Style.Numberformat.Format = "mm-dd-yyyy";
+
                     // Protect the worksheet so that locked cells (Household Number) are read-only
                     worksheet.Protection.IsProtected = true;
 
                     // Unlock other cells so they can be edited by the user
-                    worksheet.Cells["B2:C1000"].Style.Locked = false;
+                    worksheet.Cells["B2:G1000"].Style.Locked = false;
 
                     // Auto-fit columns to adjust the size
                     worksheet.Cells.AutoFitColumns();

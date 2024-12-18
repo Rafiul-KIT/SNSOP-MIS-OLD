@@ -117,7 +117,11 @@
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
                                             <telerik:GridBoundColumn DataField="ConnectedFinancialServices" HeaderText="Connected Financial Service" />
-                                            <telerik:GridBoundColumn DataField="EntityName" HeaderText="Entity Name" />
+                                            <telerik:GridBoundColumn DataField="EntityName" HeaderText="Entity Name" />                                            
+                                            <telerik:GridBoundColumn DataField="FinancialServiceConnectionDate" HeaderText="Financial Service Connection Date" UniqueName="FinancialServiceConnectionDate" />
+                                            <telerik:GridBoundColumn DataField="DepositAccountOpened" HeaderText="Deposit Account Opened" UniqueName="DepositAccountOpened" />
+                                            <telerik:GridBoundColumn DataField="DepositAccountOpeningDate" HeaderText="Deposit Account Opening Date" UniqueName="DepositAccountOpeningDate" />
+                                            <telerik:GridBoundColumn DataField="AccountLastActivityDate" HeaderText="Account Last Activity Date" UniqueName="AccountLastActivityDate" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>
