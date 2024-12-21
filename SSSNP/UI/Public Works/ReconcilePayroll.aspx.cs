@@ -173,16 +173,18 @@ namespace SSSNP.UI.Public_Works
             
             LblWarning.Text = "";
 
-            GeoLocationDto geoLocation = new GeoLocationDto
+            PayrollReconcileRequestDto payrollReconcileRequest = new PayrollReconcileRequestDto
             {
                 StateId = int.TryParse(ddlState.SelectedValue, out int stateIdValue) ? (int?)stateIdValue : null,
                 CountyId = int.TryParse(ddlCounty.SelectedValue, out int countyIdValue) ? (int?)countyIdValue : null,
                 PayamId = int.TryParse(ddlPayam.SelectedValue, out int payamIdValue) ? (int?)payamIdValue : null,
-                BomaId = int.TryParse(ddlBoma.SelectedValue, out int bomaIdValue) ? (int?)bomaIdValue : null
+                BomaId = int.TryParse(ddlBoma.SelectedValue, out int bomaIdValue) ? (int?)bomaIdValue : null,
+                ReqNo = string.IsNullOrEmpty(txtReqNo?.Text?.Trim()) ? txtReqNo?.Text?.Trim() : null,
+                WorkCode = string.IsNullOrEmpty(txtWorkCode?.Text?.Trim()) ? txtWorkCode?.Text?.Trim() : null
             };
 
             // Save the GeoLocationDto object in the session
-            Session["GeoLocation"] = geoLocation;
+            Session["PayrollReconcileRequest"] = payrollReconcileRequest;
 
             int attachmentType = 30;
 
@@ -249,7 +251,7 @@ namespace SSSNP.UI.Public_Works
                         string latitude = worksheet.Cells[row, 21].Text;
                         string longitude = worksheet.Cells[row, 22].Text;
 
-                        if (string.IsNullOrEmpty(household_number) || string.IsNullOrEmpty(trans_id) || !status.Equals("PAID"))
+                        if (string.IsNullOrEmpty(household_number) || string.IsNullOrEmpty(trans_id))
                         {
                             continue;
                         }

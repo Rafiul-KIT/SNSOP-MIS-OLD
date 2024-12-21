@@ -106,7 +106,16 @@
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
-                                                
+                                                <tr>
+                                                    <td style="padding: 5px;">
+                                                        <asp:Label ID="LabelReqNo" runat="server" CssClass="LBLBLACK" Width="165px">Request No</asp:Label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <asp:TextBox ID="txtReqNo" runat="server" AutoPostBack="True" class="form-control txtbox"
+                                                            Height="28px" MaxLength="16" TabIndex="1" Width="180px"></asp:TextBox>
+                                                    </td>
+                                                </tr>
                                             </table>
                                         </td>
                                         <td style="vertical-align: top; width: 35%;">
@@ -132,6 +141,16 @@
                                                         <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 5px;">
+                                                        <asp:Label ID="LabelWorkCode" runat="server" CssClass="LBLBLACK" Width="165px">Work Code</asp:Label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <asp:TextBox ID="txtWorkCode" runat="server" AutoPostBack="True" class="form-control txtbox"
+                                                            Height="28px" MaxLength="16" TabIndex="1" Width="180px"></asp:TextBox>
                                                     </td>
                                                 </tr>
                                             </table>

@@ -60,6 +60,24 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.DropDownList ddlCounty;
 
         /// <summary>
+        /// LabelReqNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelReqNo;
+
+        /// <summary>
+        /// txtReqNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtReqNo;
+
+        /// <summary>
         /// LabelPayam control.
         /// </summary>
         /// <remarks>
@@ -94,6 +112,24 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlBoma;
+
+        /// <summary>
+        /// LabelWorkCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelWorkCode;
+
+        /// <summary>
+        /// txtWorkCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtWorkCode;
 
         /// <summary>
         /// BtnDownload control.
