@@ -114,6 +114,10 @@ namespace SSSNP_SNSOP.Core.Repository
             audit.EntityName AS [Entity Name],
             users.User_name AS [Uploaded By],
             audit.UploadDate AS [Upload Date],
+            audit.fsp_connection_date AS [FSP Connection Date],
+            audit.deposit_account_opened AS [Deposit Account Opened],
+            audit.deposit_account_open_date AS [Deposit Account Open Date],
+            audit.account_last_activity_date AS [Account Last Activity Date],
             audit.Validity AS [Validity],
             audit.InvalidReason AS [Invalid Reason]
         FROM tbl_com2_Financial_Services_Linkage_Tracking_Audit AS audit

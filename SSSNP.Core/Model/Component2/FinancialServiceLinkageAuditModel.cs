@@ -11,9 +11,9 @@ namespace SSSNP_SNSOP.Core.Model.Component2
         public string HouseholdNumber { get; set; }
         public Boolean ConnectedFinancialServices { get; set; }
         public string EntityName { get; set; }
-        public DateTime? FinancialServiceConnectionDate { get; set; }
-        public bool? DepositAccountOpened { get; set; }
-        public DateTime? DepositAccountOpeningDate { get; set; }
-        public DateTime? AccountLastActivityDate { get; set; }
+        public DateTime? fsp_connection_date { get; set; }
+        public bool? deposit_account_opened { get; set; }
+        public DateTime? deposit_account_open_date { get; set; }
+        public DateTime? account_last_activity_date { get; set; }
     }
 }

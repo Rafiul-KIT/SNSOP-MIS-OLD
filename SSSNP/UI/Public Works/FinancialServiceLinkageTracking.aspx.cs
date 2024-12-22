@@ -215,10 +215,10 @@ namespace SSSNP.UI.Public_Works
                         auditEntityObj.HouseholdNumber = obj.HouseholdNumber;
                         auditEntityObj.ConnectedFinancialServices = obj.ConnectedFinancialServices;
                         auditEntityObj.EntityName = obj.EntityName;
-                        auditEntityObj.FinancialServiceConnectionDate = obj.FinancialServiceConnectionDate;
-                        auditEntityObj.DepositAccountOpened = obj.DepositAccountOpened;
-                        auditEntityObj.DepositAccountOpeningDate = obj.DepositAccountOpeningDate;
-                        auditEntityObj.AccountLastActivityDate = obj.AccountLastActivityDate;
+                        auditEntityObj.fsp_connection_date = obj.FinancialServiceConnectionDate;
+                        auditEntityObj.deposit_account_opened = obj.DepositAccountOpened;
+                        auditEntityObj.deposit_account_open_date = obj.DepositAccountOpeningDate;
+                        auditEntityObj.account_last_activity_date = obj.AccountLastActivityDate;
 
 
                         if (!validationResult.isValid)
