@@ -382,15 +382,31 @@ namespace SSSNP.UI.Public_Works
 
         private DataTable GetBusinessPlanDevelopmentData(int pageIndex, int pageSize)
         {
-            string query = @"SELECT Id, HouseholdNumber, 
-            case when ConnectedFinancialServices = 1 then 'YES' else 'NO' end as ConnectedFinancialServices,
-            EntityName,
-            FORMAT(fsp_connection_date, 'MM-dd-yyyy') AS FinancialServiceConnectionDate,
-            CASE WHEN deposit_account_opened = 1 THEN 'YES' ELSE 'NO' END AS DepositAccountOpened,
-            FORMAT(deposit_account_open_date, 'MM-dd-yyyy') AS DepositAccountOpeningDate,
-            FORMAT(account_last_activity_date, 'MM-dd-yyyy') AS AccountLastActivityDate 
-            FROM tbl_com2_Financial_Services_Linkage_Tracking ORDER BY Id 
-            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+            string query = @"
+                            SELECT 
+                                Id, 
+                                HouseholdNumber, 
+                                CASE 
+                                    WHEN ConnectedFinancialServices = 1 THEN 'YES' 
+                                    WHEN ConnectedFinancialServices = 0 THEN 'NO' 
+                                    ELSE '' 
+                                END AS ConnectedFinancialServices,
+                                EntityName,
+                                FORMAT(fsp_connection_date, 'MM-dd-yyyy') AS FinancialServiceConnectionDate,
+                                CASE 
+                                    WHEN deposit_account_opened = 1 THEN 'YES' 
+                                    WHEN deposit_account_opened = 0 THEN 'NO' 
+                                    ELSE '' 
+                                END AS DepositAccountOpened,
+                                FORMAT(deposit_account_open_date, 'MM-dd-yyyy') AS DepositAccountOpeningDate,
+                                FORMAT(account_last_activity_date, 'MM-dd-yyyy') AS AccountLastActivityDate 
+                            FROM 
+                                tbl_com2_Financial_Services_Linkage_Tracking 
+                            ORDER BY 
+                                Id 
+                            OFFSET 
+                                @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+
 
             DataTable dt = new DataTable();
             string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
