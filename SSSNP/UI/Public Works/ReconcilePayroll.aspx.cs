@@ -169,9 +169,17 @@ namespace SSSNP.UI.Public_Works
 
         protected void BtnDownload_Click(object sender, EventArgs e)
         {
-            LblWarning.Visible = false;
-            
-            LblWarning.Text = "";
+            if (string.IsNullOrEmpty(ddlState.SelectedValue) || string.IsNullOrEmpty(ddlCounty.SelectedValue)
+                || string.IsNullOrEmpty(ddlPayam.SelectedValue) || string.IsNullOrEmpty(ddlBoma.SelectedValue))
+            {
+                LblWarning.Visible = true;
+                LblWarning.Text = "Need to select state, county, payam and boma";
+                return;
+            } else
+            {
+                LblWarning.Visible = false;
+                LblWarning.Text = "";
+            }
 
             PayrollReconcileRequestDto payrollReconcileRequest = new PayrollReconcileRequestDto
             {
