@@ -86,9 +86,9 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
         LiIp8.Visible = value;
 
-        LiIp11.Visible = value;
+        setLiPaymentReportsPermission(value);
 
-        LiIp9.Visible = value;
+        LiIp11.Visible = value;
 
         LiTST1.Visible = value;
         TSTDashboard.Visible = value;
@@ -131,6 +131,31 @@ public partial class CCMaster : System.Web.UI.MasterPage
         Li1.Visible = value;
     }
 
+    private void setLiPaymentReportsPermission(bool value)
+    {
+        LiPaymentReports.Visible = value;
+        WageRequestAbstractReportMenu.Visible = value;
+        WageRequestAbstractLIPWReportMenu.Visible = value;
+        WageRequestAbstractDISReportMenu.Visible = value;
+        UnpaidWageRequestAbstractReportMenu.Visible = value;
+        UnpaidWageRequestAbstractLIPWReportMenu.Visible = value;
+        UnpaidWageRequestAbstractDISReportMenu.Visible = value;
+        PaidWageRequestAbstractReportMenu.Visible = value;
+        PaidWageRequestAbstractLIPWReportMenu.Visible = value;
+        PaidWageRequestAbstractDISReportMenu.Visible = value;
+        WagePaidAbstractReportMenu.Visible = value;
+        WagePaidAbstractLIPWReportMenu.Visible = value;
+        WagePaidAbstractDISReportMenu.Visible = value;
+        WagePaidAbstractBiometricReportMenu.Visible = value;
+        WageDetailsFromPayconnectReportMenu.Visible = value;
+        UnpaidWageDetailsFromPayconnectReportMenu.Visible = value;
+        PaidWageDetailsFromPayconnectReportMenu.Visible = value;
+        TotalBeneficiryPaymentDetailsReportMenu.Visible = value;
+        MultipleWagesReportMenu.Visible = value;
+        WagePaidCycleWiseReportMenu.Visible = value;
+        PaidAlternateNotInMISReportMenu.Visible = value;
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session.Count <= 0)
@@ -155,7 +180,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         LiIp6.Visible = false;
         LiIp7.Visible = false;
         LiIp8.Visible = false;
-        LiIp9.Visible = false;
+        LiPaymentReports.Visible = false;
         LiIp10.Visible = false;
         LiIp11.Visible = false;
         LiTST1.Visible = false;
@@ -242,7 +267,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiIp5.Visible = true;
                     WageRequestDraft.Visible = true;
                     LiIp8.Visible = true;
-                    LiIp9.Visible = true;
+                    setLiPaymentReportsPermission(true);
                 }
                 else
                 {
@@ -281,7 +306,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
                     LiIp8.Visible = true;
 
-                    LiIp9.Visible = true;
+                    setLiPaymentReportsPermission(true);
 
                     LiIp10.Visible = true;
 
@@ -331,6 +356,11 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiPaymentCycleDocument.Visible = true;
                 liUploadPaymentCycleDoc.Visible = false;
                 liViewPaymentCycleDoc.Visible = true;
+
+                LiPaymentReports.Visible = true;
+                PaidWageRequestAbstractReportMenu.Visible = true;
+                PaidWageRequestAbstractLIPWReportMenu.Visible = true;
+                PaidWageRequestAbstractDISReportMenu.Visible = true;
             }
             if (Session["user_type"].ToString() == "MIS")
             {
@@ -364,7 +394,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
                 LiIp7.Visible = true;
                 LiIp8.Visible = true;
-                LiIp9.Visible = true;
+                LiPaymentReports.Visible = true;
                 LiIp10.Visible = true;
                 LiIp11.Visible = true;
                 LiPayroll.Visible = true;
@@ -395,7 +425,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
             if (Session["user_type"].ToString() == "Report")
             {
                 LiIp8.Visible = true;
-                LiIp9.Visible = true;
+                setLiPaymentReportsPermission(true);
                 Li1.Visible = false;
 
             }
