@@ -332,6 +332,8 @@
                                                      <li id="HouseholdGroupView" runat="server"><a href="HouseholdGroupView.aspx">Household Group View</a></li>
                                                      <li id="HouseholdAndGroupIdMapping" runat="server"><a href="HouseholdAndGroupIdMapping.aspx">Household And Group Mapping</a></li>                                                     
                                                      <li id="BeneficiaryRandomizationandEnrollment" runat="server"><a href="BeneficiaryRandomizationandEnrollment.aspx">Beneficiary Randomization and Enrollment</a></li>
+                                                     <li id ="CourseEntity" runat ="server"><a href ="CourseEntity.aspx">Course Entity</a></li>
+                                                     <li id ="CourseDetails" runat ="server"><a href ="CourseDetails.aspx">Course Details</a></li>
                                                      <li id="TrainingandAttendanceTracking" runat="server"><a href="TrainingandAttendanceTracking.aspx">Training and Attendance Tracking</a></li>
                                                      <li id="BusinessPlanDevelopment" runat="server"><a href="BusinessPlanDevelopment.aspx">Business Plan Development</a></li>
                                                      <li id="LivelihoodGrantDisbursement" runat="server"><a href="LivelihoodGrantDisbursement.aspx">Livelihood Grant Disbursement</a></li>
