@@ -85,19 +85,18 @@
                                             <table cellpadding="10" cellspacing="5" style="width: 100%;">
                                                 <tr>
                                                     <td style="padding: 5px; width: 66px;">
-                                                        <asp:Label ID="LabelState" runat="server" CssClass="LBLBLACK" Width="165px">State Name</asp:Label>
+                                                        <asp:Label ID="LabelState" runat="server" CssClass="LBLBLACK" Width="165px">State Name *</asp:Label>
                                                     </td>
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlState" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True" OnSelectedIndexChanged="ddlState_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
-
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; width: 66px;">
-                                                        <asp:Label ID="LabelCounty" runat="server" CssClass="LBLBLACK" Width="165px">County / Municipality Name</asp:Label>
+                                                        <asp:Label ID="LabelCounty" runat="server" CssClass="LBLBLACK" Width="165px">County Name *</asp:Label>
                                                     </td>
                                                     <td>:</td>
                                                     <td>
@@ -106,7 +105,16 @@
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
-                                                
+                                                <tr>
+                                                    <td style="padding: 5px;">
+                                                        <asp:Label ID="LabelReqNo" runat="server" CssClass="LBLBLACK" Width="165px">Request No</asp:Label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <asp:TextBox ID="txtReqNo" runat="server" AutoPostBack="True" class="form-control txtbox"
+                                                            Height="28px" MaxLength="16" TabIndex="1" Width="180px"></asp:TextBox>
+                                                    </td>
+                                                </tr>
                                             </table>
                                         </td>
                                         <td style="vertical-align: top; width: 35%;">
@@ -114,7 +122,7 @@
                                             <table cellpadding="10" cellspacing="5" style="width: 100%;">                                                
                                                 <tr>
                                                     <td style="padding: 5px;">
-                                                        <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
+                                                        <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name *</asp:Label>
                                                     </td>
                                                     <td>:</td>
                                                     <td>
@@ -125,7 +133,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px;">
-                                                        <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name</asp:Label>
+                                                        <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma Name *</asp:Label>
                                                     </td>
                                                     <td>:</td>
                                                     <td>
@@ -134,13 +142,23 @@
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td style="padding: 5px;">
+                                                        <asp:Label ID="LabelWorkCode" runat="server" CssClass="LBLBLACK" Width="165px">Work Code</asp:Label>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <asp:TextBox ID="txtWorkCode" runat="server" AutoPostBack="True" class="form-control txtbox"
+                                                            Height="28px" MaxLength="16" TabIndex="1" Width="180px"></asp:TextBox>
+                                                    </td>
+                                                </tr>
                                             </table>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" align="center">
                                             <!-- Download Button -->
-                                            <asp:Button ID="BtnDownload" runat="server" CssClass="btn btn-primary" Text="Download" OnClick="BtnDownload_Click" />
+                                            <asp:Button ID="BtnDownload" runat="server" CssClass="btn btn-primary" Text="Download" OnClientClick="hideWarning()" OnClick="BtnDownload_Click" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -163,7 +181,7 @@
                                     <tr>
                                         <td colspan="2" align="center">
                                             <!-- Warning Label -->
-                                            <asp:Label ID="LblWarning" runat="server" ForeColor="Red" Visible="False" ></asp:Label>
+                                            <asp:Label ID="LblWarning" runat="server" ForeColor="Red" Visible="False"></asp:Label>
                                         </td>
                                     </tr>
                                 </table>
@@ -178,7 +196,12 @@
                                         var fileSize = input.files[0] ? (input.files[0].size / 1024).toFixed(2) + " KB" : "";
                                         var fileInfo = document.getElementById('fileInfo');
                                         fileInfo.innerText = fileName + (fileSize ? " (" + fileSize + ")" : "");
-                                    }
+                }
+                function hideWarning() {
+                    var label = document.getElementById('<%= LblWarning.ClientID %>');
+                    label.style.display = 'none';
+                    console.log("Hidden");
+                }
             </script>
         </ContentTemplate>
         <Triggers>

@@ -26460,14 +26460,14 @@ public class General
         return value;
     }
 
-    public DataSet GetReconciledUnpaidPayrollKIT(int? stateId, int? countyId, int? payamId, int? bomaId)
+    public DataSet GetReconciledUnpaidPayrollKIT(int? stateId, int? countyId, int? payamId, int? bomaId, string ReqNo, string WorkCode)
     {
         con.OpenConnection();
         SqlDataAdapter da;
         DataSet ds = new DataSet();
         try
         {
-            da = new SqlDataAdapter("getReconciledUnpaidPayrollKIT", con.GetConnection);
+            da = new SqlDataAdapter("getPayrollToReconcileKIT", con.GetConnection);
             da.SelectCommand.CommandType = CommandType.StoredProcedure;
 
 
@@ -26490,6 +26490,16 @@ public class General
                 da.SelectCommand.Parameters.Add("@intBomaId", SqlDbType.Int).Value = DBNull.Value;
             else
                 da.SelectCommand.Parameters.Add("@intBomaId", SqlDbType.Int).Value = bomaId;
+
+            if (ReqNo == null || ReqNo.Trim() == "")
+                da.SelectCommand.Parameters.Add("@ReqNo", SqlDbType.VarChar).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@ReqNo", SqlDbType.VarChar).Value = ReqNo;
+
+            if (WorkCode == null || WorkCode.Trim() == "")
+                da.SelectCommand.Parameters.Add("@WorkCode", SqlDbType.VarChar).Value = DBNull.Value;
+            else
+                da.SelectCommand.Parameters.Add("@WorkCode", SqlDbType.VarChar).Value = WorkCode;
 
 
             da.Fill(ds);
