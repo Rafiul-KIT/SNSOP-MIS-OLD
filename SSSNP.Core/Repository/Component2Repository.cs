@@ -17,7 +17,7 @@ namespace SSSNP_SNSOP.Core.Repository
     {
         private readonly IDbOperation _dbOperation;
         private static readonly object _locker = new object();
-        
+
         string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
         public Component2Repository(string connectionString)
         {
@@ -91,7 +91,7 @@ namespace SSSNP_SNSOP.Core.Repository
                 };
             }
         }
-        
+
         private bool IsRecordExistInTrainingAndAttendence(string householdNumber)
         {
             try
@@ -965,7 +965,7 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw;
             }
         }
-		
+
         public HashSet<string> GetValidHouseholdNumberValues(int? stateId, int? countyId, int? payamId, int? bomaId)
         {
             var householdNumbers = new HashSet<string>();
@@ -1001,7 +1001,7 @@ namespace SSSNP_SNSOP.Core.Repository
             }
 
             return householdNumbers;
-        }      
+        }
 
         public List<SSSNP_SNSOP.Core.Model.HouseholdGroupLinkageModel> GetMappedHouseholdNumberWithGroupValues(int? stateId, int? countyId, int? payamId, int? bomaId)
         {
@@ -1047,6 +1047,114 @@ namespace SSSNP_SNSOP.Core.Repository
             }
 
             return householdGroupLinkageList;
+        }
+
+        public Dictionary<string, int> GetExistingCourseCode()
+        {
+            Dictionary<string, int> CourseCode = new Dictionary<string, int>();
+            try
+            {
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CourseName FROM tbl_com2_course", CommandType.Text);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string courseCode = row["CourseCode"].ToString();
+                        int Id = Convert.ToInt32(row["Id"]);
+                        CourseCode.Add(courseCode, Id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching group names: " + ex.Message);
+            }
+
+            return CourseCode;
+        }
+
+
+        public ResponseModel SaveCourseEntity(CourseEntityModel course)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0;  // Counter for successfully inserted records
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if the record already exists
+                    var isExist = IsRecordExist_CourseCode(course.CourseCode?.Trim());
+
+                    // Prepare data to insert/update
+                    Dictionary<string, object> data = new Dictionary<string, object>
+                    {
+                        { "CousreName", course.CourseName?.Trim() },
+                        { "CousreName", course.CourseCode },
+                        { "CousreDuration", course.CourseDuration }
+                    };
+
+                    // Add audit information based on whether the record is new or existing
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", course.CreatedBy);
+                        data.Add("CreatedDate", course.CreatedDate);
+                    }
+                    else
+                    {
+                        data.Add("ModifiedBy", course.ModifiedBy);
+                        data.Add("ModifiedDate", course.ModifiedDate);
+                    }
+
+                    // Insert or update the data
+                    if (isExist)
+                    {
+                        _dbOperation.UpdateData("tbl_com2_course", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
+                    }
+                    else
+                    {
+                        _dbOperation.InsertData("tbl_com2_course", data);
+                        insertCount++; // Increment the counter for successful insertion
+                    }
+
+                    // Include insert count in the success message if insertions were made
+                    if (insertCount > 0)
+                    {
+                        response.Message = $"Course Entity data saved successfully. {insertCount} new records were inserted.";
+                    }
+                    else
+                    {
+                        response.Message = "Course Entity data updated successfully.";
+                    }
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error when saving Course Entity data: " + ex.Message;
+                return response;
+            }
+        }
+
+        public bool IsRecordExist_CourseCode(string courseCode)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@courseCode", courseCode);
+                var dt = _dbOperation.ExecuteDataTable(
+                    "SELECT CourseCode FROM tbl_com2_course WHERE CourseCode = @courseCode",
+                    CommandType.Text, param);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true; // The record exists
+                }
+                return false; // No matching record
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if Course Entity exists: " + ex.Message);
+            }
         }
     }
 

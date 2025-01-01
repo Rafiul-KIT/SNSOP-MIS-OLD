@@ -83,10 +83,10 @@ namespace SSSNP.Service
                 throw new Exception("Error when saving Training and Attendance Tracking data. Error: " + ex.ToString());
             }
         }
-       
-        
-       
-       
+
+
+
+
         public (bool isValid, string errorMessage) IsValidData(TrainingAndAttendanceModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
         {
             // Predefined valid course codes
@@ -198,9 +198,9 @@ namespace SSSNP.Service
             }
 
             // Validate the PaymentCycle (for example, if you want to ensure valid cycles)
-            var validPaymentCycles = new List<string> 
-            { 
-                "Installment 1", 
+            var validPaymentCycles = new List<string>
+            {
+                "Installment 1",
                 "Installment 2",
                 "Installment 3",
                 "Installment 4",
@@ -658,6 +658,74 @@ namespace SSSNP.Service
                 // Handle any potential errors here (e.g., logging, throwing)
                 Debug.WriteLine($"Error in service method GetMappedHouseholdNumberValues: {ex.Message}");
                 return new List<SSSNP_SNSOP.Core.Model.HouseholdGroupLinkageModel>(); // Return an empty list in case of error
+            }
+        }
+
+        public Dictionary<string, int> GetExistingCourseCode()
+        {
+            return _component2Repository.GetExistingCourseCode();
+        }
+
+        public (bool isValid, string errorMessage) IsValidData(CourseEntityModel course)
+        {
+            if (string.IsNullOrWhiteSpace(course?.CourseName?.Trim()))
+            {
+                return (false, "Course Name is not valid.");
+            }
+
+            if (string.IsNullOrWhiteSpace(course?.CourseCode?.Trim()))
+            {
+                return (false, "Course Code is not valid.");
+            }
+
+            if (course.CourseDuration == 0)
+            {
+                return (false, "Course Duration is missing.");
+            }
+
+
+            return (true, "Valid");
+        }
+
+        public ResponseModel SaveCourseEntity(List<CourseEntityModel> Course)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0;
+            int skipCount = 0;
+
+            try
+            {
+                foreach (var course in Course)
+                {
+
+                    bool isValid = IsValidData(course).isValid;
+                    if (!isValid)
+                    {
+                        skipCount++;
+                        continue;
+                    }
+
+                    response = _component2Repository.SaveCourseEntity(course);
+
+                    if (response.IsSuccess)
+                    {
+                        insertCount++;
+                    }
+                }
+
+                response.Message = $"{insertCount} records inserted/updated successfully.";
+                if (skipCount > 0)
+                {
+                    response.Message += $" {skipCount} records were skipped due to incomplete data.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error saving Course Entity data: " + ex.Message;
+                return response;
             }
         }
     }
