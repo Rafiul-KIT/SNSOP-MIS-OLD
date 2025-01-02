@@ -728,5 +728,39 @@ namespace SSSNP.Service
                 return response;
             }
         }
+
+        public (bool isValid, string errorMessage) IsValidData(CourseDetailsModel obj, List<CourseDetailsModel> validCourseCode)
+        {
+            
+            if (string.IsNullOrWhiteSpace(obj?.CourseCode?.Trim()))
+            {
+                return (false, "Course Code is required.");
+            }
+
+            if (!validCourseCode.Any(hh => hh.CourseCode.Equals(obj.CourseCode?.Trim(), StringComparison.OrdinalIgnoreCase)))
+            {
+                return (false, "Course Code is not valid.");
+            }
+
+            if (obj?.ClassHoldingDate == null)
+            {
+                return (false, "Class Holding Date is required.");
+            }
+
+            if (obj?.ClassDurationMinutes == null)
+            {
+                return (false, "Class Duration Minutes is required.");
+            }
+
+            int classDurationMinutes = obj.ClassDurationMinutes.Value;
+
+            if (classDurationMinutes <= 0)
+            {
+                return (false, "Class Duration Minutes must be greater than zero.");
+            }
+
+            // Add more validation as needed
+            return (true, string.Empty);
+        }
     }
 }

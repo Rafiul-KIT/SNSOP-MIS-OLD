@@ -172,6 +172,9 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.COURSE_ENTITY_TEMPLATE:
                     CourseEntityTemplate();
                     return "OK";
+                case HandlerAttachment.COURSE_DETAILS_TEMPLATE:
+                    CourseDetailsTemplate();
+                    return "OK";
             }
 
             return "";
@@ -2177,6 +2180,46 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Course Code";
                     worksheet.Cells[1, 2].Value = "Course Name";
                     worksheet.Cells[1, 3].Value = "Course Duration";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    worksheet.Cells.AutoFitColumns();
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=CourseEntityTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+
+        }
+
+        private void CourseDetailsTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Household Group Template");
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Course Code";
+                    worksheet.Cells[1, 2].Value = "Class Holding Date";
+                    worksheet.Cells[1, 3].Value = "Duration of held class (Minutes)";
 
                     // Set headers to be bold
                     for (int col = 1; col <= 3; col++)

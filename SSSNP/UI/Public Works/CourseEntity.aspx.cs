@@ -91,7 +91,7 @@ namespace SSSNP.UI.Public_Works
                         string courseCode = worksheet.Cells[row, 1].Text;
                         string courseName = worksheet.Cells[row, 2].Text;
                         int courseDuration;
-                        if (!int.TryParse(worksheet.Cells[row, 4].Text, out courseDuration))
+                        if (!int.TryParse(worksheet.Cells[row, 3].Text, out courseDuration))
                         {
                             courseDuration = 0; 
                         }
