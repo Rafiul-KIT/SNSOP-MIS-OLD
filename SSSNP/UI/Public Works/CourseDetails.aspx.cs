@@ -128,7 +128,6 @@ namespace SSSNP.UI.Public_Works
             {
                 Component2Service service = new Component2Service();
 
-                // Retrieve the list of household groups from session
                 List<CourseDetailsModel> Course = Session["CourseDetails"] as List<CourseDetailsModel>;
                 if (Course == null || Course.Count == 0)
                 {
@@ -136,7 +135,6 @@ namespace SSSNP.UI.Public_Works
                     return;
                 }
 
-                // Fetch existing GroupNames from the service to check for redundancy
                 Dictionary<string, int> existingCourseCode = service.GetExistingCourseCode();
                 List<CourseDetailsModel> courseCodeList = existingCourseCode
                     .Select(kvp => new CourseDetailsModel
@@ -186,10 +184,10 @@ namespace SSSNP.UI.Public_Works
                     {
                         dr["ValidationStatus"] = validationResult.errorMessage; // No error
                     }
-
+                    validCourse.Add(course);
                     dt.Rows.Add(dr);
 
-                    if (uniqueCourseCode.Contains(course.CourseCode))
+                    /*if (uniqueCourseCode.Contains(course.CourseCode))
                     {
                         // Skip this group because it's a duplicate in the uploaded Excel file
                         skipCount++;
@@ -200,7 +198,7 @@ namespace SSSNP.UI.Public_Works
                         // Add the groupName to the HashSet to track it as already added
                         uniqueCourseCode.Add(course.CourseCode);
                         validCourse.Add(course);
-                    }
+                    }*/
 
                     // dt.Rows.Add(dr);
                 }
@@ -241,7 +239,7 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 Component2Service service = new Component2Service();
-                List<CourseEntityModel> Course = Session["ValidCourse"] as List<CourseEntityModel>;
+                List<CourseDetailsModel> Course = Session["ValidCourse"] as List<CourseDetailsModel>;
 
                 if (Course == null || Course.Count == 0)
                 {
@@ -249,10 +247,18 @@ namespace SSSNP.UI.Public_Works
                     return;
                 }
 
+                Dictionary<string, int> existingCourseCode = service.GetExistingCourseCode();
+                List<CourseDetailsModel> courseCodeList = existingCourseCode
+                    .Select(kvp => new CourseDetailsModel
+                    {
+                        CourseCode = kvp.Key
+                    })
+                    .ToList();
+
                 int skipCount = Session["skipCount"] != null ? (int)Session["skipCount"] : 0;
 
                 // Pass the entire list to the service for processing
-                var response = service.SaveCourseEntity(Course);
+                var response = service.SaveCourseDetails(Course, courseCodeList);
                 if (!response.IsSuccess)
                 {
                     AddErrorMessage(response.Message);
@@ -277,7 +283,7 @@ namespace SSSNP.UI.Public_Works
             RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
             try
             {
-                int totalRecordCount = GetCourseEntityCount();
+                int totalRecordCount = GetCourseDetailsCount();
                 Session["TotalRecordCount"] = totalRecordCount;
                 RadGrid.CurrentPageIndex = 0;
                 RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
@@ -292,7 +298,7 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-        private int GetCourseEntityCount()
+        private int GetCourseDetailsCount()
         {
             int totalRecords = 0;
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -303,7 +309,7 @@ namespace SSSNP.UI.Public_Works
                 {
                     conn.Open(); // Ensure the connection is opened
 
-                    string query = @"SELECT COUNT(*) FROM tbl_com2_course WHERE 1=1;";
+                    string query = @"SELECT COUNT(*) FROM tbl_com2_Course_Details WHERE 1=1;";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {

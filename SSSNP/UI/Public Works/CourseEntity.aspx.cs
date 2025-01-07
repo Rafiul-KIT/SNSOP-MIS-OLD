@@ -128,7 +128,6 @@ namespace SSSNP.UI.Public_Works
             {
                 Component2Service service = new Component2Service();
 
-                // Retrieve the list of household groups from session
                 List<CourseEntityModel> Course = Session["CourseEntity"] as List<CourseEntityModel>;
                 if (Course == null || Course.Count == 0)
                 {
@@ -136,7 +135,6 @@ namespace SSSNP.UI.Public_Works
                     return;
                 }
 
-                // Fetch existing GroupNames from the service to check for redundancy
                 Dictionary<string, int> existingCourseCode = service.GetExistingCourseCode();
 
                 HashSet<string> uniqueCourseCode = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

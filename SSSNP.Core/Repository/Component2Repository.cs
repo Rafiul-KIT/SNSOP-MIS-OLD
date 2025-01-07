@@ -1089,7 +1089,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     Dictionary<string, object> data = new Dictionary<string, object>
                     {
                         { "CousreName", course.CourseName?.Trim() },
-                        { "CousreName", course.CourseCode },
+                        { "CousreCode", course.CourseCode },
                         { "CousreDuration", course.CourseDuration }
                     };
 
@@ -1154,6 +1154,68 @@ namespace SSSNP_SNSOP.Core.Repository
             catch (Exception ex)
             {
                 throw new Exception("Error checking if Course Entity exists: " + ex.Message);
+            }
+        }
+
+        public ResponseModel SaveCourseDetails(CourseDetailsModel course)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0;  // Counter for successfully inserted records
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if the record already exists
+                    var isExist = IsRecordExist_CourseCode(course.CourseCode?.Trim());
+
+                    // Prepare data to insert/update
+                    Dictionary<string, object> data = new Dictionary<string, object>
+                    {
+                        { "CousreCode", course.CourseCode },
+                        { "ClassDurationMinutes", course.ClassDurationMinutes },
+                        { "ClassHoldingDate", course.ClassHoldingDate}
+                    };
+
+                    // Add audit information based on whether the record is new or existing
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", course.CreatedBy);
+                        data.Add("CreatedDate", course.CreatedDate);
+                    }
+                    else
+                    {
+                        data.Add("ModifiedBy", course.ModifiedBy);
+                        data.Add("ModifiedDate", course.ModifiedDate);
+                    }
+
+                    // Insert or update the data
+                    if (isExist)
+                    {
+                        _dbOperation.UpdateData("tbl_com2_course", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
+                    }
+                    else
+                    {
+                        _dbOperation.InsertData("tbl_com2_course", data);
+                        insertCount++; // Increment the counter for successful insertion
+                    }
+
+                    // Include insert count in the success message if insertions were made
+                    if (insertCount > 0)
+                    {
+                        response.Message = $"Course Entity data saved successfully. {insertCount} new records were inserted.";
+                    }
+                    else
+                    {
+                        response.Message = "Course Entity data updated successfully.";
+                    }
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error when saving Course Entity data: " + ex.Message;
+                return response;
             }
         }
     }

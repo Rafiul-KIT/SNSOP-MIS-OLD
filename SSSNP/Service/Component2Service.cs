@@ -731,7 +731,7 @@ namespace SSSNP.Service
 
         public (bool isValid, string errorMessage) IsValidData(CourseDetailsModel obj, List<CourseDetailsModel> validCourseCode)
         {
-            
+
             if (string.IsNullOrWhiteSpace(obj?.CourseCode?.Trim()))
             {
                 return (false, "Course Code is required.");
@@ -761,6 +761,48 @@ namespace SSSNP.Service
 
             // Add more validation as needed
             return (true, string.Empty);
+        }
+
+        public ResponseModel SaveCourseDetails(List<CourseDetailsModel> Course, List<CourseDetailsModel> validCourseCode)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0;
+            int skipCount = 0;
+
+            try
+            {
+                foreach (var course in Course)
+                {
+
+                    bool isValid = IsValidData(course, validCourseCode).isValid;
+                    if (!isValid)
+                    {
+                        skipCount++;
+                        continue;
+                    }
+
+                    response = _component2Repository.SaveCourseDetails(course);
+
+                    if (response.IsSuccess)
+                    {
+                        insertCount++;
+                    }
+                }
+
+                response.Message = $"{insertCount} records inserted/updated successfully.";
+                if (skipCount > 0)
+                {
+                    response.Message += $" {skipCount} records were skipped due to incomplete data.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error saving Course Entity data: " + ex.Message;
+                return response;
+            }
         }
     }
 }
