@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Data.SqlClient;
 using SSSNP_SNSOP.Core.Model;
 using System.Configuration;
+using SSSNP_SNSOP.Core.Model.Component2;
 
 namespace SSSNP_SNSOP
 {
@@ -1600,7 +1601,7 @@ namespace SSSNP_SNSOP
                 Component2Service service = new Component2Service();
 
                 // Call the new method to get household numbers along with group info
-                List<HouseholdGroupLinkageModel> householdGroupData = service.GetMappedHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+                List<Core.Model.HouseholdGroupLinkageModel> householdGroupData = service.GetMappedHouseholdNumberValues(stateId, countyId, payamId, bomaId);
 
                 using (ExcelPackage package = new ExcelPackage())
                 {
@@ -2174,7 +2175,7 @@ namespace SSSNP_SNSOP
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Create a new worksheet
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Household Group Template");
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Course Entity Template");
 
                     // Add headers to the worksheet (reflecting your table schema)
                     worksheet.Cells[1, 1].Value = "Course Code";
@@ -2214,7 +2215,22 @@ namespace SSSNP_SNSOP
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Create a new worksheet
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Household Group Template");
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Course Details Template");
+
+                    Component2Service service = new Component2Service();
+                    Dictionary<string, int> existingCourseCode = service.GetExistingCourseCode();
+                    List<CourseDetailsModel> courseCodeList = existingCourseCode
+                        .Select(kvp => new CourseDetailsModel
+                        {
+                            CourseCode = kvp.Key
+                        })
+                        .ToList();
+                    var validation = worksheet.DataValidations.AddListValidation("A2:A1000"); // Adjust the range as needed
+
+                    foreach (var course in courseCodeList)
+                    {
+                        validation.Formula.Values.Add(course.CourseCode);
+                    }
 
                     // Add headers to the worksheet (reflecting your table schema)
                     worksheet.Cells[1, 1].Value = "Course Code";
@@ -2231,7 +2247,7 @@ namespace SSSNP_SNSOP
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("Content-Disposition", "attachment; filename=CourseEntityTemplate.xlsx");
+                    Response.AddHeader("Content-Disposition", "attachment; filename=CourseDetailsTemplate.xlsx");
 
                     // Write the file to the response stream
                     Response.BinaryWrite(package.GetAsByteArray());

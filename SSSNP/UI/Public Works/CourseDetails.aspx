@@ -135,8 +135,8 @@
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
                                             <telerik:GridBoundColumn DataField="CourseCode" HeaderText="Course Code" />
-                                            <telerik:GridBoundColumn DataField="CourseName" HeaderText="Course Name" />
-                                            <telerik:GridBoundColumn DataField="CourseDuration" HeaderText="Course Duration" />
+                                            <telerik:GridBoundColumn DataField="ClassHoldingDate" HeaderText="Class Holding Date" />
+                                            <telerik:GridBoundColumn DataField="ClassDurationMinutes" HeaderText="Class Duration Minutes" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" Visible="false" />
                                         </Columns>
                                     </MasterTableView>

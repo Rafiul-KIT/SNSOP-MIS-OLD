@@ -1054,7 +1054,7 @@ namespace SSSNP_SNSOP.Core.Repository
             Dictionary<string, int> CourseCode = new Dictionary<string, int>();
             try
             {
-                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CourseName FROM tbl_com2_course", CommandType.Text);
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CourseCode FROM tbl_com2_course", CommandType.Text);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
@@ -1067,7 +1067,7 @@ namespace SSSNP_SNSOP.Core.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching group names: " + ex.Message);
+                throw new Exception("Error fetching Course Code: " + ex.Message);
             }
 
             return CourseCode;

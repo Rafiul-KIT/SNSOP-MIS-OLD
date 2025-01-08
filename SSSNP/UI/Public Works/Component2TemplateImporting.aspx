@@ -38,6 +38,8 @@
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                             <asp:ListItem Value="16">Household Group View Template</asp:ListItem>
                                                             <asp:ListItem Value="20">Beneficiary Randomization Enrollment Template</asp:ListItem>
+                                                            <asp:ListItem Value="31">Course Entity Template</asp:ListItem>
+                                                            <asp:ListItem Value="32">Course Details Template</asp:ListItem>
                                                             <asp:ListItem Value="17">Training Attendance Tracking Template</asp:ListItem>
                                                             <asp:ListItem Value="18">Business Plan Development Template</asp:ListItem>
                                                             <asp:ListItem Value="19">Livelihood Grant Disbursement Template</asp:ListItem>

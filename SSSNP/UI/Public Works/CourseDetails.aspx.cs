@@ -12,6 +12,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
+
 namespace SSSNP.UI.Public_Works
 {
     public partial class CourseDetails : System.Web.UI.Page
@@ -324,10 +325,10 @@ namespace SSSNP.UI.Public_Works
 
             return totalRecords;
         }
-        private DataTable GetCourseEntityData(int pageIndex, int pageSize)
+        private DataTable GetCourseDetailsData(int pageIndex, int pageSize)
         {
-            string query = @"SELECT Id, CourseCode, CourseName, CourseDuration
-                     FROM tbl_com2_course 
+            string query = @"SELECT Id, CourseCode, ClassHoldingDate, ClassDurationMinutes
+                     FROM tbl_com2_Course_Details
                      ORDER BY Id 
                      OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
@@ -371,7 +372,7 @@ namespace SSSNP.UI.Public_Works
                 else
                 {
                     // Fetch the data for search result
-                    dt = GetCourseEntityData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                    dt = GetCourseDetailsData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
                 }
 
                 RadGrid.DataSource = dt;
