@@ -760,7 +760,7 @@ namespace SSSNP.Service
             }
 
             // Add more validation as needed
-            return (true, string.Empty);
+            return (true, "Valid");
         }
 
         public ResponseModel SaveCourseDetails(List<CourseDetailsModel> Course, List<CourseDetailsModel> validCourseCode)

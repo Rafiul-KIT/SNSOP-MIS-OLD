@@ -45,10 +45,19 @@ namespace SSSNP.UI.Public_Works
             ClearMessages();
             try
             {
-                if (!fileUpload.HasFile)
+                try
                 {
-                    AddErrorMessage("Please select a file to upload.");
-                    return;
+                    if (!fileUpload.HasFile)
+                    {
+                        AddErrorMessage("Please select a file to upload.");
+                        return;
+                    }
+
+                    //AddSuccessMessage($"File uploaded: {fileUpload.FileName}");
+                }
+                catch (Exception ex)
+                {
+                    AddErrorMessage("An error occurred: " + ex.Message);
                 }
 
                 string extension = Path.GetExtension(fileUpload.FileName);

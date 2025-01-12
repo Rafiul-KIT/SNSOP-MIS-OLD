@@ -1166,12 +1166,12 @@ namespace SSSNP_SNSOP.Core.Repository
                 lock (_locker)
                 {
                     // Check if the record already exists
-                    var isExist = IsRecordExist_CourseCode(course.CourseCode?.Trim());
+                    var isExist = IsRecordExist_CourseDetails(course.CourseCode?.Trim(), course.ClassHoldingDate);
 
                     // Prepare data to insert/update
                     Dictionary<string, object> data = new Dictionary<string, object>
                     {
-                        { "CousreCode", course.CourseCode },
+                        { "CourseCode", course.CourseCode },
                         { "ClassDurationMinutes", course.ClassDurationMinutes },
                         { "ClassHoldingDate", course.ClassHoldingDate}
                     };
@@ -1188,16 +1188,41 @@ namespace SSSNP_SNSOP.Core.Repository
                         data.Add("ModifiedDate", course.ModifiedDate);
                     }
 
-                    // Insert or update the data
-                    if (isExist)
+                    try
                     {
-                        _dbOperation.UpdateData("tbl_com2_course", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
+                        // Insert or update the data
+                        if (isExist)
+                        {
+                            try
+                            {
+                                _dbOperation.UpdateData("tbl_com2_Course_Details", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("Error updating the course details: " + ex.Message);
+                                throw new Exception("Error updating the course details: " + ex.Message);
+                                
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                _dbOperation.InsertData("tbl_com2_Course_Details", data);
+                                insertCount++; // Increment the counter for successful insertion
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("Error inserting the course details: " + ex.Message);
+                                throw new Exception("Error inserting the course details: " + ex.Message);
+                            }
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        _dbOperation.InsertData("tbl_com2_course", data);
-                        insertCount++; // Increment the counter for successful insertion
+                        throw new Exception("Error during database operation (Insert/Update): " + ex.Message);
                     }
+
 
                     // Include insert count in the success message if insertions were made
                     if (insertCount > 0)
@@ -1218,6 +1243,39 @@ namespace SSSNP_SNSOP.Core.Repository
                 return response;
             }
         }
+
+        public bool IsRecordExist_CourseDetails(string courseCode, DateTime classHoldingDate)
+        {
+            try
+            {
+                // Create a list of SqlParameter objects
+                var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@courseCode", courseCode),
+                    new SqlParameter("@classHoldingDate", classHoldingDate)
+                };
+
+                // Use the ExecuteDataTable method with List<SqlParameter>
+                var dt = _dbOperation.ExecuteDataTable(
+                    @"SELECT CourseCode, ClassHoldingDate 
+                      FROM tbl_com2_Course_Details 
+                      WHERE CourseCode = @courseCode AND ClassHoldingDate = @classHoldingDate",
+                    CommandType.Text,
+                    parameters);
+
+                // Check if the DataTable has rows (record exists)
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true; // Record exists
+                }
+                return false; // No matching record
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if Course Code and Class Holding Date exist: " + ex.Message);
+            }
+        }
+
     }
 
 }
