@@ -165,23 +165,23 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
                 int skipCount = 0;
-                // Loop through the list and dynamically check for redundancy
+                Dictionary<string, int> existingCourseDetails = service.GetExistingCourseDetails();
                 foreach (var course in Course)
                 {
                     DataRow dr = dt.NewRow();
-                    dr["Id"] = DBNull.Value;
                     dr["CourseCode"] = course.CourseCode;
                     dr["ClassHoldingDate"] = course.ClassHoldingDate;
                     dr["ClassDurationMinutes"] = course.ClassDurationMinutes;
 
-                    /*if (!string.IsNullOrEmpty(course.CourseCode) && existingCourseCode.ContainsKey(course.CourseCode))
+                    if (!string.IsNullOrEmpty(course.CourseCode) && service.IsRecordExist_CourseDetails(course.CourseCode, course.ClassHoldingDate))
                     {
-                        dr["Id"] = existingCourseCode[course.CourseCode]; // Set the GroupId for redundant groups
+                        dr["Id"] = existingCourseDetails[course.CourseCode];
                     }
                     else
                     {
-                        dr["Id"] = DBNull.Value; // Not redundant, no GroupId
-                    }*/
+                        dr["Id"] = DBNull.Value; 
+                    }
+
 
                     var validationResult = service.IsValidData(course, courseCodeList);
 
@@ -406,10 +406,8 @@ namespace SSSNP.UI.Public_Works
         {
             if (e.Item is GridDataItem dataItem)
             {
-                // Check if analysis is done
                 if (isAnalyzed)
                 {
-                    // Validate the ValidationStatus column
                     string validationStatus = dataItem["ValidationStatus"].Text;
 
                     if (validationStatus != "Valid")

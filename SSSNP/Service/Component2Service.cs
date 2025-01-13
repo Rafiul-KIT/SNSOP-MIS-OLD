@@ -804,5 +804,16 @@ namespace SSSNP.Service
                 return response;
             }
         }
+        public bool IsRecordExist_CourseDetails(string courseCode, DateTime classHoldingDate)
+        {
+
+            return _component2Repository.IsRecordExist_CourseDetails(courseCode, classHoldingDate);
+
+        }
+
+        public Dictionary<string, int> GetExistingCourseDetails()
+        {
+            return _component2Repository.GetExistingCourseDetails();
+        }
     }
 }

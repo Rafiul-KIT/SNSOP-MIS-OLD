@@ -1088,9 +1088,9 @@ namespace SSSNP_SNSOP.Core.Repository
                     // Prepare data to insert/update
                     Dictionary<string, object> data = new Dictionary<string, object>
                     {
-                        { "CousreName", course.CourseName?.Trim() },
-                        { "CousreCode", course.CourseCode },
-                        { "CousreDuration", course.CourseDuration }
+                        { "CourseName", course.CourseName?.Trim() },
+                        { "CourseCode", course.CourseCode },
+                        { "CourseDuration", course.CourseDuration }
                     };
 
                     // Add audit information based on whether the record is new or existing
@@ -1105,18 +1105,24 @@ namespace SSSNP_SNSOP.Core.Repository
                         data.Add("ModifiedDate", course.ModifiedDate);
                     }
 
-                    // Insert or update the data
-                    if (isExist)
+                    try
                     {
-                        _dbOperation.UpdateData("tbl_com2_course", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
+                        if (isExist)
+                        {
+                            _dbOperation.UpdateData("tbl_com2_course", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
+                        }
+                        else
+                        {
+                            _dbOperation.InsertData("tbl_com2_course", data);
+                            insertCount++; 
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        _dbOperation.InsertData("tbl_com2_course", data);
-                        insertCount++; // Increment the counter for successful insertion
+                        Debug.WriteLine("Error occurred while processing the course data: " + ex.Message);
+                        throw;
                     }
 
-                    // Include insert count in the success message if insertions were made
                     if (insertCount > 0)
                     {
                         response.Message = $"Course Entity data saved successfully. {insertCount} new records were inserted.";
@@ -1190,32 +1196,15 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     try
                     {
-                        // Insert or update the data
+                        
                         if (isExist)
-                        {
-                            try
-                            {
+                        {                            
                                 _dbOperation.UpdateData("tbl_com2_Course_Details", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine("Error updating the course details: " + ex.Message);
-                                throw new Exception("Error updating the course details: " + ex.Message);
-                                
-                            }
                         }
                         else
-                        {
-                            try
-                            {
+                        {                          
                                 _dbOperation.InsertData("tbl_com2_Course_Details", data);
-                                insertCount++; // Increment the counter for successful insertion
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine("Error inserting the course details: " + ex.Message);
-                                throw new Exception("Error inserting the course details: " + ex.Message);
-                            }
+                                insertCount++; 
                         }
                     }
                     catch (Exception ex)
@@ -1223,8 +1212,6 @@ namespace SSSNP_SNSOP.Core.Repository
                         throw new Exception("Error during database operation (Insert/Update): " + ex.Message);
                     }
 
-
-                    // Include insert count in the success message if insertions were made
                     if (insertCount > 0)
                     {
                         response.Message = $"Course Entity data saved successfully. {insertCount} new records were inserted.";
@@ -1274,6 +1261,30 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 throw new Exception("Error checking if Course Code and Class Holding Date exist: " + ex.Message);
             }
+        }
+
+        public Dictionary<string, int> GetExistingCourseDetails()
+        {
+            Dictionary<string, int> CourseDetails = new Dictionary<string, int>();
+            try
+            {
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CourseCode FROM tbl_com2_Course_Details", CommandType.Text);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string courseCode = row["CourseCode"].ToString();
+                        int Id = Convert.ToInt32(row["Id"]);
+                        CourseDetails.Add(courseCode, Id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching Course Code: " + ex.Message);
+            }
+
+            return CourseDetails;
         }
 
     }
