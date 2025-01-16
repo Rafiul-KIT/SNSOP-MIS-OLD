@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.34902.97
+VisualStudioVersion = 16.0.35229.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSSNP_SNSOP", "SSSNP\SSSNP_SNSOP.csproj", "{37137B46-4B7D-428E-BB23-6B5B12DAA766}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -16,6 +16,11 @@ EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SSSNP_SNSOP.Database", "SSSNP.Database\SSSNP_SNSOP.Database.sqlproj", "{67D10956-DB69-4DAE-9122-3EDC46263A5C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSSNP_SNSOP.API", "SSSNP.API\SSSNP_SNSOP.API.csproj", "{6D2B7719-789A-4318-A78E-A6D07DD5BD76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0A53A753-EABA-4374-9AF0-D2A4E8C185EB}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,7 +78,6 @@ Global
 		{FC1B95D4-9EA6-484B-9D07-406F0C1CFDE9}.BLUE|x86.ActiveCfg = BLUE|x86
 		{FC1B95D4-9EA6-484B-9D07-406F0C1CFDE9}.BLUE|x86.Build.0 = BLUE|x86
 		{FC1B95D4-9EA6-484B-9D07-406F0C1CFDE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC1B95D4-9EA6-484B-9D07-406F0C1CFDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC1B95D4-9EA6-484B-9D07-406F0C1CFDE9}.Debug|x64.ActiveCfg = Debug|x64
 		{FC1B95D4-9EA6-484B-9D07-406F0C1CFDE9}.Debug|x64.Build.0 = Debug|x64
 		{FC1B95D4-9EA6-484B-9D07-406F0C1CFDE9}.Debug|x86.ActiveCfg = Debug|x86
@@ -103,7 +107,6 @@ Global
 		{F29F58EB-E5B1-4D4A-8CFB-BA46DE1FDFCA}.BLUE|x86.ActiveCfg = BLUE|x86
 		{F29F58EB-E5B1-4D4A-8CFB-BA46DE1FDFCA}.BLUE|x86.Build.0 = BLUE|x86
 		{F29F58EB-E5B1-4D4A-8CFB-BA46DE1FDFCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F29F58EB-E5B1-4D4A-8CFB-BA46DE1FDFCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F29F58EB-E5B1-4D4A-8CFB-BA46DE1FDFCA}.Debug|x64.ActiveCfg = Debug|x64
 		{F29F58EB-E5B1-4D4A-8CFB-BA46DE1FDFCA}.Debug|x64.Build.0 = Debug|x64
 		{F29F58EB-E5B1-4D4A-8CFB-BA46DE1FDFCA}.Debug|x86.ActiveCfg = Debug|x86
@@ -136,7 +139,6 @@ Global
 		{67D10956-DB69-4DAE-9122-3EDC46263A5C}.BLUE|x86.Build.0 = Release|Any CPU
 		{67D10956-DB69-4DAE-9122-3EDC46263A5C}.BLUE|x86.Deploy.0 = Release|Any CPU
 		{67D10956-DB69-4DAE-9122-3EDC46263A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67D10956-DB69-4DAE-9122-3EDC46263A5C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{67D10956-DB69-4DAE-9122-3EDC46263A5C}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{67D10956-DB69-4DAE-9122-3EDC46263A5C}.Debug|x64.Build.0 = Debug|Any CPU
 		{67D10956-DB69-4DAE-9122-3EDC46263A5C}.Debug|x64.Deploy.0 = Debug|Any CPU

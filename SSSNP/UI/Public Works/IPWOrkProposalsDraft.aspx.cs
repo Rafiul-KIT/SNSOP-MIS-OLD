@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.IO;
 using System.Configuration;
 using SSSNP.Network;
+using System.Threading.Tasks;
 
 public partial class IPWOrkProposalsDraft : System.Web.UI.Page
 {
@@ -509,11 +510,57 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             gvWorkProposalAttachments.DataSource = null;
             gvWorkProposalAttachments.DataBind();
         }
+
+        if (ds.Tables[1].Rows.Count > 0)
+        {
+            try
+            {
+                txtWorkName.Text = ds.Tables[1].Rows[0]["WorkName"].ToString();
+                txtWorkCode.Text = ds.Tables[1].Rows[0]["WorkCode"].ToString();
+                ddlAreaofWork.SelectedValue = ds.Tables[1].Rows[0]["intAreaofWork"].ToString();
+                ddlAreasofWork_SelectedIndexChanged(null, null);
+                ddlWorkActivity.SelectedValue = ds.Tables[1].Rows[0]["intWorkActivity"].ToString();
+                txtManpower.Text = ds.Tables[1].Rows[0]["EstManPower"].ToString();
+                txtEstDays.Text = ds.Tables[1].Rows[0]["EstDays"].ToString();
+                txtEstquantity1.Text = ds.Tables[1].Rows[0]["EquipmntQuantity"].ToString();
+                txtEstquantity2.Text = ds.Tables[1].Rows[0]["MaterialQuantity"].ToString();
+                txtSkillLabour.Text = ds.Tables[1].Rows[0]["EstSkilLabour"].ToString();
+                txtWorkStartDate.Text = ds.Tables[1].Rows[0]["EstWorkStartDate"].ToString();
+                txtEndDate.Text = ds.Tables[1].Rows[0]["EstWorkEndDate"].ToString();
+                txtLatitude.Text = ds.Tables[1].Rows[0]["Latitude"].ToString();
+                txtLongitude.Text = ds.Tables[1].Rows[0]["Longitude"].ToString();
+                txtEstCost.Text = ds.Tables[1].Rows[0]["EstCost"].ToString();
+            } catch (Exception e)
+            {
+                
+            }
+        }
     }
     #endregion
 
     private void GetFileAttch()
     {
+    }
+
+    protected void gvpractical0_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        string filePath = e.CommandArgument.ToString();
+        string physicalPath = Server.MapPath(filePath); // Ensure this path is safe
+
+        if (File.Exists(physicalPath))
+        {
+            string fileName = Path.GetFileName(physicalPath);
+            Response.Clear();
+            Response.ContentType = "application/octet-stream"; // Change as necessary
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + fileName);
+            Response.TransmitFile(physicalPath);
+            Response.End();
+        }
+        else
+        {
+            // Handle file not found case
+            Response.Write("<script>alert('File not found.');</script>");
+        }
     }
 
     #region Gridview Events
@@ -994,7 +1041,7 @@ public partial class IPWOrkProposalsDraft : System.Web.UI.Page
             emailBody += ConfigurationManager.AppSettings["SSSNPWEB"].ToString();
             emailBody += "<br>Please login by clicking the above link<br>Thanks and regards.";
 
-            emailService.sendEmail(ipMail, emailSubject, emailBody);
+            Task.Run(() => emailService.sendEmail(ipMail, emailSubject, emailBody));
         }
         catch (Exception ex)
         {

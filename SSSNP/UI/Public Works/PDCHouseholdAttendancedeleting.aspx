@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Beneficiary Attendance " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="PDCHouseholdAttendancedeleting" CodeBehind="PDCHouseholdAttendancedeleting.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Beneficiary Attendance " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="PDCHouseholdAttendancedeleting" CodeBehind="PDCHouseholdAttendancedeleting.aspx.cs" %>
 
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
@@ -237,7 +237,9 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="Label410" runat="server" CssClass="LBLBLACK" Width="128px">Attendance Date</asp:Label>
+                                                        <asp:Label ID="Label410" runat="server" CssClass="LBLBLACK" Width="128px">Attendance Date
+                                                            
+                                                        </asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
@@ -249,11 +251,10 @@
                                                          <cc1:FilteredTextBoxExtender ID="filterStartDate" runat="server" Enabled="True" TargetControlID="txtStartDate" FilterType="Numbers, Custom" ValidChars="/" FilterMode="ValidChars">
 
                                                          </cc1:FilteredTextBoxExtender>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator10" runat="server"
                                                             ControlToValidate="txtStartDate" ErrorMessage="Please Enter Attendance Date"
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                             </table>

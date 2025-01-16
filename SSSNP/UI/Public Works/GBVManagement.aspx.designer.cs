@@ -474,13 +474,58 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Label Label13;
 
         /// <summary>
-        /// ddlSSSNPBeneficiary control.
+        /// ddlSNSOPBeneficiary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlSSSNPBeneficiary;
+        protected global::System.Web.UI.WebControls.DropDownList ddlSNSOPBeneficiary;
+
+        /// <summary>
+        /// Label16 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label16;
+
+        /// <summary>
+        /// ddlSuspectKnown control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSuspectKnown;
+
+        /// <summary>
+        /// supportTypeLbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableCell supportTypeLbl;
+
+        /// <summary>
+        /// supportTypeColonLbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableCell supportTypeColonLbl;
+
+        /// <summary>
+        /// ddlSupportType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSupportType;
 
         /// <summary>
         /// Label14 control.
@@ -510,22 +555,22 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected global::System.Web.UI.WebControls.TextBox txtSuspectNotes;
 
         /// <summary>
-        /// Label16 control.
+        /// Label15 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label16;
+        protected global::System.Web.UI.WebControls.Label Label15;
 
         /// <summary>
-        /// ddlSuspectKnown control.
+        /// ddlReferralServiceRecommended control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlSuspectKnown;
+        protected global::System.Web.UI.WebControls.DropDownList ddlReferralServiceRecommended;
 
         /// <summary>
         /// Label17 control.
@@ -546,33 +591,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
         protected global::System.Web.UI.WebControls.TextBox txtSuspectDetails;
 
         /// <summary>
-        /// Label15 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label15;
-
-        /// <summary>
-        /// ddlReferralServiceRecommended control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlReferralServiceRecommended;
-
-        /// <summary>
-        /// txtRecommendedDetails control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRecommendedDetails;
-
-        /// <summary>
         /// Label19 control.
         /// </summary>
         /// <remarks>
@@ -589,6 +607,15 @@ namespace SSSNP_SNSOP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtStatusAfterReferral;
+
+        /// <summary>
+        /// txtRecommendedDetails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRecommendedDetails;
 
         /// <summary>
         /// Label21 control.

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/UI/Public Works/TstMaster.master" AutoEventWireup="true" Inherits="Review_Invoice" Codebehind="Review_Invoice.aspx.cs" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="Review_Invoice" Codebehind="Review_Invoice.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

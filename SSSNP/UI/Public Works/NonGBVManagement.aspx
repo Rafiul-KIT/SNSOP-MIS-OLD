@@ -144,40 +144,6 @@
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px; margin: 5px">
-                                            <asp:Label ID="Label6" runat="server" CssClass="LBLBLACK" Width="128px">Date Complaint</asp:Label>
-                                            <span style="color: red;">*</span></td>
-                                        <td style="padding: 5px; margin: 5px">:</td>
-                                        <td style="padding: 5px; margin: 5px">
-                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="180px" runat="server" placeholder="mm/DD/yyyy" ID="txtDateCompliant" Text=""></asp:TextBox>
-                                            <cc1:CalendarExtender ID="txtDateCompliant_CalendarExtender" runat="server"
-                                                Format="dd/MM/yyyy" PopupButtonID="txtStartDate" TargetControlID="txtDateCompliant" OnPreRender="txtDateCompliant_CalendarExtender_PreRender"></cc1:CalendarExtender>
-                                            <cc1:FilteredTextBoxExtender ID="filterDateCompliant" runat="server" Enabled="True" TargetControlID="txtDateCompliant" FilterType="Numbers, Custom" ValidChars="/" FilterMode="ValidChars"></cc1:FilteredTextBoxExtender>
-                                        </td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                    </tr>
-                                    <%--    <tr>
-                                        <td style="padding: 5px; margin: 5px">
-                                            <asp:Label ID="Label12" runat="server" CssClass="LBLBLACK" Width="128px">Type of complaint</asp:Label>
-                                             <span style="color: red;">*</span></td>
-                                        <td style="padding: 5px; margin: 5px">:</td>
-                                        <td style="padding: 5px; margin: 5px">
-                                             <asp:DropDownList class="form-control dropdown" Visible="true" Height="33px" Width="250px" runat="server" ID="ddlTypeOfComplaint" AutoPostBack="True">
-                                                  <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
-                                             </asp:DropDownList>
-                                        </td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                    </tr>--%>
-
-                                    <tr>
-                                        <td style="padding: 5px; margin: 5px">
                                             <asp:Label ID="Label11" runat="server" CssClass="LBLBLACK" Width="128px">Description of Complaint / Allegation / Issue</asp:Label>
 
                                             <span style="text-align: left; color: red;">*</span>
@@ -212,13 +178,8 @@
                                                          <br />
                                                          <asp:Label runat="server" ID="lblDescriptionCompliantFilename" Text="" ForeColor="Red"></asp:Label>
                                                      </asp:Panel>
-
                                                  </div>
-
-
                                         </td>
-
-
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px; margin: 5px">
@@ -247,15 +208,16 @@
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                     </tr>
-
                                     <tr>
                                         <td style="padding: 5px; margin: 5px">
-                                            <asp:Label ID="Label8" runat="server" CssClass="LBLBLACK" Width="128px">Complainant&#39;s Name</asp:Label>
-                                            <%--<span style="color: red;">*</span>--%>
-                                        </td>
+                                            <asp:Label ID="Label6" runat="server" CssClass="LBLBLACK" Width="128px">Date Complaint</asp:Label>
+                                            <span style="color: red;">*</span></td>
                                         <td style="padding: 5px; margin: 5px">:</td>
                                         <td style="padding: 5px; margin: 5px">
-                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="txtComplaiantName" Text=""></asp:TextBox>
+                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="180px" runat="server" placeholder="mm/DD/yyyy" ID="txtDateCompliant" Text=""></asp:TextBox>
+                                            <cc1:CalendarExtender ID="txtDateCompliant_CalendarExtender" runat="server"
+                                                Format="dd/MM/yyyy" PopupButtonID="txtStartDate" TargetControlID="txtDateCompliant" OnPreRender="txtDateCompliant_CalendarExtender_PreRender"></cc1:CalendarExtender>
+                                            <cc1:FilteredTextBoxExtender ID="filterDateCompliant" runat="server" Enabled="True" TargetControlID="txtDateCompliant" FilterType="Numbers, Custom" ValidChars="/" FilterMode="ValidChars"></cc1:FilteredTextBoxExtender>
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                         <td style="padding: 5px; margin: 5px">
@@ -268,11 +230,31 @@
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                     </tr>
-                                    <tr>
-                                        <td style="padding: 5px; margin: 5px">Physical Address</td>
+                                    <%--    <tr>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:Label ID="Label12" runat="server" CssClass="LBLBLACK" Width="128px">Type of complaint</asp:Label>
+                                             <span style="color: red;">*</span></td>
                                         <td style="padding: 5px; margin: 5px">:</td>
                                         <td style="padding: 5px; margin: 5px">
-                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="txtPhysicalAddress" Text=""></asp:TextBox>
+                                             <asp:DropDownList class="form-control dropdown" Visible="true" Height="33px" Width="250px" runat="server" ID="ddlTypeOfComplaint" AutoPostBack="True">
+                                                  <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
+                                             </asp:DropDownList>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                    </tr>--%>
+
+                                    <tr>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:Label ID="Label8" runat="server" CssClass="LBLBLACK" Width="128px">Complainant&#39;s Name</asp:Label>
+                                            <%--<span style="color: red;">*</span>--%>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px">:</td>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="txtComplaiantName" Text=""></asp:TextBox>
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                         <td style="padding: 5px; margin: 5px">Gender</td>
@@ -282,6 +264,23 @@
                                                 <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
                                                 <asp:ListItem Text="Male" Value="Male"></asp:ListItem>
                                                 <asp:ListItem Text="Female" Value="Female"></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px; margin: 5px">Physical Address</td>
+                                        <td style="padding: 5px; margin: 5px">:</td>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:TextBox class="form-control txtbox" Height="33px" Width="180px" runat="server" ID="txtPhysicalAddress" Text=""></asp:TextBox>
+                                        </td>
+                                        <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                        <td style="padding: 5px; margin: 5px">SNSOP Beneficiary</td>
+                                        <td style="padding: 5px; margin: 5px">:</td>
+                                        <td style="padding: 5px; margin: 5px">
+                                            <asp:DropDownList class="form-control dropdown" Height="33px" Width="180px" runat="server" ID="ddlSNSOPBeneficiary" AutoPostBack="True" OnSelectedIndexChanged="ddlSNSOPBeneficiary_SelectedIndexChanged">
+                                                <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                                <asp:ListItem Text="No" Value="2"></asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
@@ -299,15 +298,13 @@
 
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>
-                                        <td style="padding: 5px; margin: 5px">SNSOP Beneficiary</td>
-                                        <td style="padding: 5px; margin: 5px">:</td>
+                                        <td style="padding: 5px; margin: 5px" id="supportTypeLbl">Support Type</td>
+                                        <td style="padding: 5px; margin: 5px" id="supportTypeColonLbl">:</td>
                                         <td style="padding: 5px; margin: 5px">
-                                            <asp:DropDownList class="form-control dropdown" Height="33px" Width="180px" runat="server" ID="ddlSSSNPBeneficiary">
+                                            <asp:DropDownList class="form-control dropdown" Height="33px" Width="180px" runat="server" ID="ddlSupportType">
                                                 <asp:ListItem Text="--Select--" Value="0"></asp:ListItem>
-                                                <%--<asp:ListItem Text="NO" Value="NO"></asp:ListItem>--%>
                                                 <asp:ListItem Text="LIPW" Value="LIPW"></asp:ListItem>
                                                 <asp:ListItem Text="DIS" Value="DIS"></asp:ListItem>
-                                                <%--<asp:ListItem Text="SSSNP" Value="SSSNP"></asp:ListItem>--%>
                                             </asp:DropDownList>
                                         </td>
                                         <td style="padding: 5px; margin: 5px">&nbsp;</td>

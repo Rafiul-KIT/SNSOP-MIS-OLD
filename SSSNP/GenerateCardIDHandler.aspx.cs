@@ -67,15 +67,21 @@ namespace SSSNP
         }
         private byte[] GeneratePDF(GenerateCardID cardID)
         {
-            string imageFilePath = Server.MapPath("~/Resource/Images/snsop-id-card-bg1.png");
-            string imageFilePath2 = Server.MapPath("~/Resource/Images/snsop-id-card-bg2.png");
+            /*string imageFilePath = Server.MapPath("~/Resource/Images/SNSOP_Beneficiary_ID_Proposed_Design_front.jpg");
+            string imageFilePath2 = Server.MapPath("~/Resource/Images/SNSOP_Beneficiary_ID_Proposed Design_back.jpg");*/
+            string imageFilePath = Server.MapPath("~/Resource/Images/ID_front.jpg");
+            string imageFilePath2 = Server.MapPath("~/Resource/Images/ID_back.jpg");
 
-            string emptyPhoto = Server.MapPath("~/Resource/Images/not-available.jpg");
+
+            string emptyPhoto = Server.MapPath("~/Resource/Images/not-available-2.jpg");
             // string emptyPhoto = Server.MapPath("~/Photo/testO1.png");
 
             string photoBeneficiary = (!string.IsNullOrEmpty(cardID.BeneficiaryPhoto) ? Server.MapPath(cardID.BeneficiaryPhoto) : emptyPhoto);
             string photoAnternate1 = (!string.IsNullOrEmpty(cardID.AlternatePhoto1) ? Server.MapPath(cardID.AlternatePhoto1) : emptyPhoto);
             string photoAnternate2 = (!string.IsNullOrEmpty(cardID.AlternatePhoto2) ? Server.MapPath(cardID.AlternatePhoto2) : emptyPhoto);
+
+
+
 
             iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(imageFilePath);
             jpg.ScaleToFit(iTextSharp.text.Utilities.MillimetersToPoints(90), iTextSharp.text.Utilities.MillimetersToPoints(60));
@@ -99,28 +105,29 @@ namespace SSSNP
             jpg2.SetAbsolutePosition(300, 35);
 
             iTextSharp.text.Image jpg3 = iTextSharp.text.Image.GetInstance(photoBeneficiary); 
-            jpg3.ScaleAbsoluteWidth(90f);
-            jpg3.ScaleAbsoluteHeight(116f);
+            jpg3.ScaleAbsoluteWidth(55f);
+            jpg3.ScaleAbsoluteHeight(80f);
             //jpg3.ScaleToFit(94f, 120f);
             jpg3.Alignment = iTextSharp.text.Image.TITLE;
-            jpg3.SetAbsolutePosition(47, 54);
+            jpg3.SetAbsolutePosition(52, 72);
             // jpg3.SetAbsolutePosition(43, 76);
 
             //alternative 1
             iTextSharp.text.Image jpg5 = iTextSharp.text.Image.GetInstance(photoAnternate1);
-            jpg5.ScaleAbsoluteWidth(50f);
-            jpg5.ScaleAbsoluteHeight(90f);
+            jpg5.ScaleAbsoluteWidth(55f);
+            jpg5.ScaleAbsoluteHeight(80f);
             //jpg5.ScaleToFit(iTextSharp.text.Utilities.MillimetersToPoints(15), iTextSharp.text.Utilities.MillimetersToPoints(15));
             jpg5.Alignment = iTextSharp.text.Image.TITLE;
-            jpg5.SetAbsolutePosition(315, 80);
+            jpg5.SetAbsolutePosition(320, 92);
 
             //alternative 2
             iTextSharp.text.Image jpg4 = iTextSharp.text.Image.GetInstance(photoAnternate2);
             // jpg4.ScaleToFit(iTextSharp.text.Utilities.MillimetersToPoints(15), iTextSharp.text.Utilities.MillimetersToPoints(15));
-            jpg4.ScaleAbsoluteWidth(50f);
-            jpg4.ScaleAbsoluteHeight(90f);
+            jpg4.ScaleAbsoluteWidth(55f);
+            jpg4.ScaleAbsoluteHeight(80f);
             jpg4.Alignment = iTextSharp.text.Image.TITLE;
-            jpg4.SetAbsolutePosition(390, 80);
+            jpg4.SetAbsolutePosition(390, 92);
+
 
             MemoryStream fs = new MemoryStream();
 
@@ -139,8 +146,8 @@ namespace SSSNP
             PdfContentByte cb = writer.DirectContent;
             cb.BeginText();
             BaseFont f_cn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            cb.SetFontAndSize(f_cn, 10);
-            cb.SetTextMatrix(147, 90);  //(xPos, yPos)
+            cb.SetFontAndSize(f_cn, 8);
+            cb.SetTextMatrix(147, 85);  //(xPos, yPos)
             cb.ShowText( cardID.ValidTo  );
             cb.EndText();
 
@@ -149,7 +156,7 @@ namespace SSSNP
             cb1.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             cb1.SetFontAndSize(f_cn, 7);
-            cb1.SetTextMatrix(147, 157);  //(xPos, yPos)
+            cb1.SetTextMatrix(148, 135);  //(xPos, yPos)
             cb1.ShowText(cardID.NumberID);
             cb1.EndText();
 
@@ -157,8 +164,8 @@ namespace SSSNP
             PdfContentByte cb2 = writer.DirectContent;
             cb2.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            cb2.SetFontAndSize(f_cn, 10);
-            cb2.SetTextMatrix(147, 133);  //(xPos, yPos)
+            cb2.SetFontAndSize(f_cn, 8);
+            cb2.SetTextMatrix(133, 123);  //(xPos, yPos)
             cb2.ShowText(cardID.BeneficiaryName);
             cb2.EndText();
 
@@ -166,8 +173,8 @@ namespace SSSNP
             PdfContentByte cb3 = writer.DirectContent;
             cb3.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            cb3.SetFontAndSize(f_cn, 10);
-            cb3.SetTextMatrix(147, 111);  //(xPos, yPos)
+            cb3.SetFontAndSize(f_cn, 8);
+            cb3.SetTextMatrix(159, 110);  //(xPos, yPos)
             cb3.ShowText(cardID.CountryName );
             cb3.EndText();
 
@@ -175,8 +182,8 @@ namespace SSSNP
             PdfContentByte cb4 = writer.DirectContent;
             cb4.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            cb4.SetFontAndSize(f_cn, 10);
-            cb4.SetTextMatrix(312, 61);  //(xPos, yPos)
+            cb4.SetFontAndSize(f_cn, 8);
+            cb4.SetTextMatrix(320, 80);  //(xPos, yPos)
             cb4.ShowText( "1. " + cardID.AlternateName1);
             cb4.EndText();
 
@@ -184,10 +191,52 @@ namespace SSSNP
             PdfContentByte cb5 = writer.DirectContent;
             cb5.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            cb5.SetFontAndSize(f_cn, 10);
-            cb5.SetTextMatrix(312, 46);  //(xPos, yPos)
+            cb5.SetFontAndSize(f_cn, 8);
+            cb5.SetTextMatrix(320, 68);  //(xPos, yPos)
             cb5.ShowText("2. " + cardID.AlternateName2);
             cb5.EndText();
+
+            // BOMA
+            PdfContentByte cb6 = writer.DirectContent;
+            cb6.BeginText();
+            //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+            cb6.SetFontAndSize(f_cn, 8);
+            cb6.SetTextMatrix(134, 98);  //(xPos, yPos)
+            cb6.ShowText(cardID.BomaName);
+            cb6.EndText();
+
+            cb.SetLineWidth(0.3); // Border thickness
+            cb.SetColorStroke(BaseColor.BLACK); // Border color
+            cb.Rectangle(35, 35, iTextSharp.text.Utilities.MillimetersToPoints(90), iTextSharp.text.Utilities.MillimetersToPoints(58)); // Front template
+            cb.Stroke();
+            cb.Rectangle(300, 35, iTextSharp.text.Utilities.MillimetersToPoints(90), iTextSharp.text.Utilities.MillimetersToPoints(58)); // Back template
+            cb.Stroke();
+
+            // Add borders conditionally around beneficiary photos
+            cb.SetLineWidth(0.1); // Border thickness
+            cb.SetColorStroke(BaseColor.BLACK); // Border color
+
+            // Border around the main beneficiary photo
+            if (!string.IsNullOrEmpty(cardID.BeneficiaryPhoto))
+            {
+                cb.Rectangle(52, 72, 55, 80); // x, y, width, height
+                cb.Stroke();
+            }
+
+            // Border around Alternate Photo 1
+            if (!string.IsNullOrEmpty(cardID.AlternatePhoto1))
+            {
+                cb.Rectangle(320, 92, 55, 80);
+                cb.Stroke();
+            }
+
+            // Border around Alternate Photo 2
+            if (!string.IsNullOrEmpty(cardID.AlternatePhoto2))
+            {
+                cb.Rectangle(390, 92, 55, 80);
+                cb.Stroke();
+            }
+
 
             var qrData = "QrCodeData:\n";
             //var qrData = "";
@@ -274,7 +323,7 @@ namespace SSSNP
             iTextSharp.text.Image img = Qr.GetImage();
             img.ScaleAbsoluteWidth(50);
             img.ScaleAbsoluteHeight(50);
-            img.SetAbsolutePosition(495, 135);
+            img.SetAbsolutePosition(490, 130);
             img.Alignment = iTextSharp.text.Image.ALIGN_CENTER;
 
             document.Add(jpg);

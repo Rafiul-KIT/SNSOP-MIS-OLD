@@ -59,30 +59,34 @@ namespace SSSNP_SNSOP
                         Session["password"] = dv.Table.Rows[0]["password"].ToString();
                         Session["userlevel"] = dv.Table.Rows[0]["User_level"].ToString();
                         Session["user_type"] = dv.Table.Rows[0]["User_type"].ToString();
-
+                        if (Session["user_type"].ToString() == "IP")
+                        {
+                            if (clsGeneral.CheckIsIPApprover(Session["uid"].ToString().Trim()).Tables[0].Rows.Count > 0)
+                            {
+                                Session["ip_approver"] = "1";
+                            }
+                        }
                         int userID = SSSNPHelper.TryParseInt(dv.Table.Rows[0]["intUserid"].ToString());
                         if (userID != 0)
                         {
                             try
                             {
                                 tblUser user = SSSNPContext.SSSNPManager.GetUser(userID);
-                                if (user !=null && user.GBVUser)
+                                if (user != null && user.GBVUser)
                                 {
                                     Session["GBVUser"] = "1";
-                                }else
+                                }
+                                else
                                 {
                                     Session["GBVUser"] = "0";
                                 }
-                                                                
                             }
                             catch (Exception ex)
                             {
                                 Session["GBVUser"] = "0";
-
-
                             }
                         }
-                        
+
 
                         Session["User_Code"] = dv.Table.Rows[0]["User_code"].ToString();
                         Session["Desgid"] = "0";
@@ -108,15 +112,18 @@ namespace SSSNP_SNSOP
                         }
                         else if (usert_type == "Cordinator")
                         {
-                            Response.Redirect("UI/Public Works/CoordinatorInvoiceDashboard.aspx", false);
+                            //Response.Redirect("UI/Public Works/CoordinatorInvoiceDashboard.aspx", false);
+                            Response.Redirect("UI/Public Works/Home.aspx", false);
                         }
                         else if (usert_type == "Specialist")
                         {
-                            Response.Redirect("UI/Public Works/SpecialistInvoiceDashboard.aspx", false);
+                            //Response.Redirect("UI/Public Works/SpecialistInvoiceDashboard.aspx", false);
+                            Response.Redirect("UI/Public Works/Home.aspx", false);
                         }
                         else if (usert_type == "Manager")
                         {
-                            Response.Redirect("UI/Public Works/ManagerInvoiceDashboard.aspx", false);
+                            //Response.Redirect("UI/Public Works/ManagerInvoiceDashboard.aspx", false);
+                            Response.Redirect("UI/Public Works/Home.aspx", false);
                         }
                         else if (usert_type == "Admin")
                         {
@@ -126,15 +133,9 @@ namespace SSSNP_SNSOP
                         {
                             Response.Redirect("UI/Public Works/Home.aspx", false);
                         }
-
-
-
-
-
                     }
                     else
                     {
-
                         throw new Exception("Token Access Exception ValidateAuthentication - Username=" + preferred_user);
                         //return;
                     }
@@ -142,12 +143,8 @@ namespace SSSNP_SNSOP
             }
             catch (Exception ex)
             {
-
-                throw new Exception ("TokenAccess General Exception", ex);
+                throw new Exception("TokenAccess General Exception", ex);
             }
-            
-
         }
-                
     }
 }

@@ -42,10 +42,81 @@ public partial class Home : System.Web.UI.Page
     void FillDetails()
     {
         hasflash.Value = ddlYear.SelectedValue;
-        DataSet ds = Gen.GetGenericDashboardKIT(Convert.ToString(ddlYear.SelectedValue), Session["User_Code"].ToString().Trim());
+        string UserCode = ""; // Session["User_Code"].ToString().Trim()
+        UserCode = "1001";
+        DataSet ds = Gen.GetGenericDashboardKIT(Convert.ToString(ddlYear.SelectedValue), UserCode);
         if (ds != null && ds.Tables != null && ds.Tables.Count > 0)
         {
-            lblNameOfIP.Text = ds.Tables[0].Rows[0]["cnt"].ToString();
+            //if (ds.Tables[0].Rows != null && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    lblNameOfIP.Text = ds.Tables[0].Rows[0]["cnt"].ToString();
+            //} else
+            //{
+            //    lblNameOfIP.Text = "UNOPS Field Office";
+            //}
+
+            string user_type = Convert.ToString(Session["user_type"]);
+            switch(user_type)
+            {
+                case "IP":
+                    lblNameOfIP.Text = "Implementing Partner (IP)";
+                    break;
+                case "TST":
+                    lblNameOfIP.Text = "Technical Support Team (TST)";
+                    break;
+                case "Cordinator":
+                    lblNameOfIP.Text = "Initial Reviewer (Co-ordinator)";
+                    break;
+                case "Specialist":
+                    lblNameOfIP.Text = "Financial Approver (Specialist)";
+                    break;
+                case "Manager":
+                    lblNameOfIP.Text = "Final Payment Authorizer (Manager)";
+                    break;
+                case "QualEng":
+                    lblNameOfIP.Text = "Quality Engineer (QualEng)";
+                    break;
+                case "EnvSpec":
+                    lblNameOfIP.Text = "Environment Specialist (EnvSpec)";
+                    break;
+                case "WB":
+                    lblNameOfIP.Text = "World Bank (WB)";
+                    break;
+                case "Adm":
+                    lblNameOfIP.Text = "Admin (Adm)";
+                    break;
+                case "Superadm":
+                    lblNameOfIP.Text = "Superadmin (Superadm)";
+                    break;
+                case "FSP":
+                    lblNameOfIP.Text = "Financial Service Provider (FSP)";
+                    break;
+                case "ManagerGRM":
+                    lblNameOfIP.Text = "GRM Manager (ManagerGRM)";
+                    break;
+                case "EntryGRM":
+                    lblNameOfIP.Text = "GRM Entry User (EntryGRM)";
+                    break;
+                case "MIS":
+                    lblNameOfIP.Text = "MIS";
+                    break;
+                case "PcuSpec":
+                    lblNameOfIP.Text = "PCU Specialist";
+                    break;
+                case "GenderSpec":
+                    lblNameOfIP.Text = "Gender Specialist (GenderSpec)";
+                    break;
+                case "SocDevSpec":
+                    lblNameOfIP.Text = "Social Development Specialist";
+                    break;
+                case "Report":
+                    lblNameOfIP.Text = "Report";
+                    break;
+                case "WBGBVMgr":
+                    lblNameOfIP.Text = "World Bank GRM Manager (WBGBVMgr)";
+                    break;
+            }
+
             if (ds.Tables.Count > 1)
             {
                 ImplementingStateCount.Text = ds.Tables[1].Rows[0]["state_count"].ToString();

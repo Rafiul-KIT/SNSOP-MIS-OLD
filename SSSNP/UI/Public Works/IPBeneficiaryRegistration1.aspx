@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="IPBeneficiaryRegistration1"
-    Title=":: :: SSSNP : ::" Codebehind="IPBeneficiaryRegistration1.aspx.cs" %>
+    Title=":: :: SNSOP : ::" Codebehind="IPBeneficiaryRegistration1.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -757,7 +757,7 @@
                                                             runat="server" class="form-control txtbox" Height="36px">
                                                             <asp:ListItem Value="Select">--- Select ---</asp:ListItem>
                                                             <asp:ListItem Value="Component 1 (Public Works)">Component 1 (LIPW)</asp:ListItem>
-                                                            <asp:ListItem Value="Component 2 (Direct Income Support)">Component 2 (DIS)</asp:ListItem>
+                                                            <asp:ListItem Value="Component 1 (Direct Income Support)">Component 2 (DIS)</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
 

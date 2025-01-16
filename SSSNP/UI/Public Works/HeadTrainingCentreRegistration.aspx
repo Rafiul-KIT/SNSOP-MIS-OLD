@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Training Centre Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="HeadTrainingCentreRegistration" Codebehind="HeadTrainingCentreRegistration.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Training Centre Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="HeadTrainingCentreRegistration" Codebehind="HeadTrainingCentreRegistration.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

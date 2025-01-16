@@ -223,6 +223,9 @@
     <Content Include="Alternatetwo\readme.txt" />
     <Content Include="assets\Background.png" />
     <Content Include="assets\Loading.gif" />
+    <Content Include="Resource\Images\ID_back.jpg" />
+    <Content Include="Resource\Images\ID_front.jpg" />
+    <Content Include="Resource\Images\not-available-2.jpg" />
     <Content Include="Resource\Images\snsop-id-card-bg2.png" />
     <Content Include="Resource\Images\snsop-id-card-bg1.png" />
     <Content Include="Resource\Styles\css\payroll-download-style.css" />
@@ -376,10 +379,17 @@
     <Content Include="Resource\Styles\Site\responsiveslides.min.js" />
     <Content Include="Resource\Styles\Site\style.css" />
     <Content Include="TokenAccess.aspx" />
+    <Content Include="UI\Public Works\AuditRecordDownload.aspx" />
     <Content Include="UI\Public Works\BeneficiaryEnrollmentSummaryMNE.aspx" />
+    <Content Include="UI\Public Works\BeneficiaryList.aspx" />
+    <Content Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrint.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx" />
+    <Content Include="UI\Public Works\EconomicOpportunitiesDashboard.aspx" />
+    <Content Include="UI\Public Works\FinancialServiceLinkageTracking.aspx" />
+    <Content Include="UI\Public Works\BusinessPlanDevelopment.aspx" />
     <Content Include="UI\Public Works\CashTransferSummaryMNE.aspx" />
+    <Content Include="UI\Public Works\CoachingSessionTracking.aspx" />
     <Content Include="UI\Public Works\frmBenInvoice_LOC.aspx" />
     <Content Include="UI\Public Works\GBVDashboard.aspx" />
     <Content Include="UI\Public Works\GBVDetailManagement.aspx" />
@@ -387,6 +397,8 @@
     <Content Include="UI\Public Works\GBVLanding.aspx" />
     <Content Include="UI\Public Works\GBVManagement.aspx" />
     <Content Include="UI\Public Works\GrievancesDashboard.aspx" />
+    <Content Include="UI\Public Works\HouseholdAndGroupIdMapping.aspx" />
+    <Content Include="UI\Public Works\HouseholdGroupView.aspx" />
     <Content Include="UI\Public Works\ImportFromServiceBenfAlternateDetLatestwithValidation_Thread.aspx" />
     <Content Include="UI\Public Works\AddAreaofWork.aspx" />
     <Content Include="UI\Public Works\AddBomas.aspx" />
@@ -413,8 +425,12 @@
     <Content Include="UI\Public Works\AutoMaticAlertProjectMonthlyFundsDisbursementReport.aspx" />
     <Content Include="UI\Public Works\AutoMaticAlertWorksMonthlyFundsDisbursementReport.aspx" />
     <Content Include="UI\Public Works\BDCMobilizationReg.aspx" />
-    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll" />
-    <Content Include="UI\Public Works\bin\itextsharp.dll" />
+    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Public Works\bin\itextsharp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UI\Public Works\BomaPaidInvoiceCyclewise.aspx" />
     <Content Include="UI\Public Works\BomaWiseReportNew.aspx" />
     <Content Include="UI\Public Works\BomaWiseReportNewLatest.aspx" />
@@ -532,6 +548,7 @@
     <Content Include="UI\Public Works\ImportFromServiceBenfWagesUpdateMatchedFP.aspx" />
     <Content Include="UI\Public Works\ImportFromServicePaymentsByBoma.aspx" />
     <Content Include="UI\Public Works\ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx" />
+    <Content Include="UI\Public Works\Component2TemplateImporting.aspx" />
     <Content Include="UI\Public Works\ImportUpdateFingerPrint.aspx" />
     <Content Include="UI\Public Works\ImportUpdateHouseHoldName.aspx" />
     <Content Include="UI\Public Works\ImportUpdatePhoto.aspx" />
@@ -561,6 +578,7 @@
     <Content Include="UI\Public Works\IPWOrkProposalsDraft.aspx" />
     <Content Include="UI\Public Works\KeyMonitoringIndicatorsMNE.aspx" />
     <Content Include="UI\Public Works\LIPWExports.aspx" />
+    <Content Include="UI\Public Works\LivelihoodGrantDisbursement.aspx" />
     <Content Include="UI\Public Works\Lookups\BeneficiaryLookup.aspx" />
     <Content Include="UI\Public Works\Lookups\BeneficiaryLookup1.aspx" />
     <Content Include="UI\Public Works\Lookups\BeneficiaryLookupAlternate.aspx" />
@@ -616,6 +634,7 @@
     <Content Include="UI\Public Works\PaymentSelectionPayingagencyBenfWages.aspx" />
     <Content Include="UI\Public Works\PaymentsReportDatewise.aspx" />
     <Content Include="UI\Public Works\PayrollDownload.aspx" />
+    <Content Include="UI\Public Works\ReconcilePayroll.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendance.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendancedeleting.aspx" />
     <Content Include="UI\Public Works\PDCHouseholdAttendanceDeletingnew.aspx" />
@@ -666,6 +685,7 @@
     <Content Include="UI\Public Works\SpecialistInvoiceDashboard.aspx" />
     <Content Include="UI\Public Works\SpecialistInvoices.aspx" />
     <Content Include="UI\Public Works\TotalBeneficiaryPaymentDetails.aspx" />
+    <Content Include="UI\Public Works\TrainingandAttendanceTracking.aspx" />
     <Content Include="UI\Public Works\TransferBenfAfterConfirmation.aspx" />
     <Content Include="UI\Public Works\TrngBatchClose.aspx" />
     <Content Include="UI\Public Works\TrngBatchCreation.aspx" />
@@ -698,6 +718,7 @@
     <Content Include="UI\Public Works\UpdationofAlternate.aspx" />
     <Content Include="UI\Public Works\UploadAttendance.aspx" />
     <Content Include="UI\Public Works\UploadFileWageRequest.aspx" />
+    <Content Include="UI\Public Works\UploadPaymentCycleDocuments.aspx" />
     <Content Include="UI\Public Works\UploadsTrainee.aspx" />
     <Content Include="UI\Public Works\UploadsTraineeUpdate.aspx" />
     <Content Include="UI\Public Works\UploadWagesSelection.aspx" />
@@ -706,6 +727,7 @@
     <Content Include="UI\Public Works\viewAttachemnt.aspx" />
     <Content Include="UI\Public Works\ViewBenfWages.aspx" />
     <Content Include="UI\Public Works\ViewHelpdesk.aspx" />
+    <Content Include="UI\Public Works\ViewPaymentCycleDocuments.aspx" />
     <Content Include="UI\Public Works\ViewPaymentCycleInvoiceDetails.aspx" />
     <Content Include="UI\Public Works\ViewRejectedWage.aspx" />
     <Content Include="UI\Public Works\ViewSelectionPayingagencyBenfWages.aspx" />
@@ -799,6 +821,8 @@
     <Compile Include="App_Code\CUserContext.cs" />
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
+    <Compile Include="Asynch\AutoReconcilePayrollAsync.cs" />
+    <Compile Include="Asynch\BulkIdCardGenerationAsync.cs" />
     <Compile Include="Asynch\SendGrmNotificationAsynch.cs" />
     <Compile Include="Entity\AlternateNewCardInfo.cs" />
     <Compile Include="Entity\IdCard\IdCardInfoV1.cs" />
@@ -818,6 +842,9 @@
     <Compile Include="Entity\Payroll_Download\PDPayrollAlternateDto.cs" />
     <Compile Include="Entity\Payroll_Download\PDPayrollDataDto.cs" />
     <Compile Include="Network\NetworkService.cs" />
+    <Compile Include="Service\AuditRecordService.cs" />
+    <Compile Include="Service\Component2Service.cs" />
+    <Compile Include="Service\IAuditRecordService.cs" />
     <Compile Include="Service\LookupManagerService.cs" />
     <Compile Include="Service\WageRequestApiManager.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -914,12 +941,33 @@
     <Compile Include="TokenAccess.aspx.designer.cs">
       <DependentUpon>TokenAccess.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\AuditRecordDownload.aspx.cs">
+      <DependentUpon>AuditRecordDownload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\AuditRecordDownload.aspx.designer.cs">
+      <DependentUpon>AuditRecordDownload.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\BeneficiaryEnrollmentSummaryMNE.aspx.cs">
       <DependentUpon>BeneficiaryEnrollmentSummaryMNE.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\Public Works\BeneficiaryEnrollmentSummaryMNE.aspx.designer.cs">
       <DependentUpon>BeneficiaryEnrollmentSummaryMNE.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\BeneficiaryList.aspx.cs">
+      <DependentUpon>BeneficiaryList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\BeneficiaryList.aspx.designer.cs">
+      <DependentUpon>BeneficiaryList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx.cs">
+      <DependentUpon>BeneficiaryRandomizationandEnrollment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx.designer.cs">
+      <DependentUpon>BeneficiaryRandomizationandEnrollment.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\BulkInvoicePrint.aspx.cs">
       <DependentUpon>BulkInvoicePrint.aspx</DependentUpon>
@@ -935,12 +983,40 @@
     <Compile Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx.designer.cs">
       <DependentUpon>BulkInvoicePrintAutoRec.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\EconomicOpportunitiesDashboard.aspx.cs">
+      <DependentUpon>EconomicOpportunitiesDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\EconomicOpportunitiesDashboard.aspx.designer.cs">
+      <DependentUpon>EconomicOpportunitiesDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\FinancialServiceLinkageTracking.aspx.cs">
+      <DependentUpon>FinancialServiceLinkageTracking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\FinancialServiceLinkageTracking.aspx.designer.cs">
+      <DependentUpon>FinancialServiceLinkageTracking.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\BusinessPlanDevelopment.aspx.cs">
+      <DependentUpon>BusinessPlanDevelopment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\BusinessPlanDevelopment.aspx.designer.cs">
+      <DependentUpon>BusinessPlanDevelopment.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\CashTransferSummaryMNE.aspx.cs">
       <DependentUpon>CashTransferSummaryMNE.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\Public Works\CashTransferSummaryMNE.aspx.designer.cs">
       <DependentUpon>CashTransferSummaryMNE.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\CoachingSessionTracking.aspx.cs">
+      <DependentUpon>CoachingSessionTracking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\CoachingSessionTracking.aspx.designer.cs">
+      <DependentUpon>CoachingSessionTracking.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\frmBenInvoice_LOC.aspx.cs">
       <DependentUpon>frmBenInvoice_LOC.aspx</DependentUpon>
@@ -990,6 +1066,20 @@
     </Compile>
     <Compile Include="UI\Public Works\GrievancesDashboard.aspx.designer.cs">
       <DependentUpon>GrievancesDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\HouseholdAndGroupIdMapping.aspx.cs">
+      <DependentUpon>HouseholdAndGroupIdMapping.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\HouseholdAndGroupIdMapping.aspx.designer.cs">
+      <DependentUpon>HouseholdAndGroupIdMapping.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\HouseholdGroupView.aspx.cs">
+      <DependentUpon>HouseholdGroupView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\HouseholdGroupView.aspx.designer.cs">
+      <DependentUpon>HouseholdGroupView.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\ImportFromServiceBenfAlternateDetLatestwithValidation_Thread.aspx.cs">
       <DependentUpon>ImportFromServiceBenfAlternateDetLatestwithValidation_Thread.aspx</DependentUpon>
@@ -1451,6 +1541,13 @@
     <Compile Include="UI\Public Works\ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx.designer.cs">
       <DependentUpon>ImportFromServiceUpdatePhotoAlternate1DetLatest.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\Component2TemplateImporting.aspx.cs">
+      <DependentUpon>Component2TemplateImporting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\Component2TemplateImporting.aspx.designer.cs">
+      <DependentUpon>Component2TemplateImporting.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\ImportmasterPageLogin.master.designer.cs">
       <DependentUpon>ImportmasterPageLogin.master</DependentUpon>
     </Compile>
@@ -1561,6 +1658,14 @@
     <Compile Include="UI\Public Works\LIPWExports.aspx.designer.cs">
       <DependentUpon>LIPWExports.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\LivelihoodGrantDisbursement.aspx.cs">
+      <DependentUpon>LivelihoodGrantDisbursement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\LivelihoodGrantDisbursement.aspx.designer.cs">
+      <DependentUpon>LivelihoodGrantDisbursement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\LivelihoodGrantService.cs" />
     <Compile Include="UI\Public Works\LookupMaster.master.designer.cs">
       <DependentUpon>LookupMaster.master</DependentUpon>
     </Compile>
@@ -1774,6 +1879,17 @@
     <Compile Include="UI\Public Works\PayrollDownload.aspx.designer.cs">
       <DependentUpon>PayrollDownload.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\Payroll\BulkResponseDto.cs" />
+    <Compile Include="UI\Public Works\Payroll\PayrollReconciliationDto.cs" />
+    <Compile Include="UI\Public Works\Payroll\PayrollReconciliationRequest.cs" />
+    <Compile Include="UI\Public Works\Payroll\PayrollReconciliationResponse.cs" />
+    <Compile Include="UI\Public Works\ReconcilePayroll.aspx.cs">
+      <DependentUpon>ReconcilePayroll.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\ReconcilePayroll.aspx.designer.cs">
+      <DependentUpon>ReconcilePayroll.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\PDCHouseholdAttendance.aspx.designer.cs">
       <DependentUpon>PDCHouseholdAttendance.aspx</DependentUpon>
     </Compile>
@@ -1936,6 +2052,13 @@
     <Compile Include="UI\Public Works\TotalBeneficiaryPaymentDetails.aspx.designer.cs">
       <DependentUpon>TotalBeneficiaryPaymentDetails.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\TrainingandAttendanceTracking.aspx.cs">
+      <DependentUpon>TrainingandAttendanceTracking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\TrainingandAttendanceTracking.aspx.designer.cs">
+      <DependentUpon>TrainingandAttendanceTracking.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\TransferBenfAfterConfirmation.aspx.designer.cs">
       <DependentUpon>TransferBenfAfterConfirmation.aspx</DependentUpon>
     </Compile>
@@ -2051,6 +2174,13 @@
     <Compile Include="UI\Public Works\UploadFileWageRequest.aspx.designer.cs">
       <DependentUpon>UploadFileWageRequest.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Public Works\UploadPaymentCycleDocuments.aspx.cs">
+      <DependentUpon>UploadPaymentCycleDocuments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\UploadPaymentCycleDocuments.aspx.designer.cs">
+      <DependentUpon>UploadPaymentCycleDocuments.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Public Works\UploadsTrainee.aspx.designer.cs">
       <DependentUpon>UploadsTrainee.aspx</DependentUpon>
     </Compile>
@@ -2078,6 +2208,13 @@
     </Compile>
     <Compile Include="UI\Public Works\ViewHelpdesk.aspx.designer.cs">
       <DependentUpon>ViewHelpdesk.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\ViewPaymentCycleDocuments.aspx.cs">
+      <DependentUpon>ViewPaymentCycleDocuments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\ViewPaymentCycleDocuments.aspx.designer.cs">
+      <DependentUpon>ViewPaymentCycleDocuments.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\ViewPaymentCycleInvoiceDetails.aspx.designer.cs">
       <DependentUpon>ViewPaymentCycleInvoiceDetails.aspx</DependentUpon>
@@ -3925,7 +4062,9 @@
     <Content Include="template\templateupdate.xlsx" />
     <Content Include="template\WagePaymentPA.xls" />
     <Content Include="UI\Public Works\AlertMaster.master" />
-    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll.refresh" />
+    <Content Include="UI\Public Works\bin\AjaxControlToolkit.dll.refresh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UI\Public Works\CCMaster.master" />
     <Content Include="UI\Public Works\CCMaster1.master" />
     <Content Include="Poppins\Poppins-Black.ttf" />
@@ -3950,6 +4089,7 @@
     <None Include="Properties\PublishProfiles\DEV.pubxml" />
     <Content Include="template\GBVTemplateFile.xlsx" />
     <Content Include="template\NonGBVTemplateFile.xlsx" />
+    <Content Include="template\BeneficiaryRandomizationEnrollmentTemplate.xlsx" />
     <None Include="UI\Public Works\Dataset\dsReport.xsd" />
     <Content Include="UI\Public Works\Dataset\dsReport.xss">
       <DependentUpon>dsReport.xsd</DependentUpon>

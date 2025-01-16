@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="CCMaster.master" AutoEventWireup="true" Inherits="Result" Title=":: :: SSSNP : :: Home" Codebehind="Result.aspx.cs" %>
+<%@ Page Language="C#" MasterPageFile="CCMaster.master" AutoEventWireup="true" Inherits="Result" Title=":: :: SNSOP : :: Home" Codebehind="Result.aspx.cs" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
  
     <script language="javascript">

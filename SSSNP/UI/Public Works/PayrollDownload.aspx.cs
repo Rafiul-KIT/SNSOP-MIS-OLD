@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -30,6 +30,27 @@ public partial class PayrollDownload : System.Web.UI.Page
         }
 
         accessToken = "";
+        SetButtonVisibility();
+    }
+
+    private void SetButtonVisibility()
+    {
+        if (Session["LockedStatus"] != null)
+        {
+            string lockedStatus = Session["LockedStatus"].ToString();
+
+            // Control button visibility based on the locked status
+            BtnUnlock.Visible = (lockedStatus == "LOCKED");
+            BtnDownload.Visible = (lockedStatus != "LOCKED");
+            BtnDownloadPdf.Visible = true;
+        }
+        else
+        {
+            // Default state when there is no status in the session
+            BtnUnlock.Visible = false;
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+        }
     }
 
     private void InitializeServices()
@@ -82,6 +103,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlSupportType.Items.Add(new ListItem("--Select--", ""));
         ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
         ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+        ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
         if (!string.IsNullOrEmpty(ddlState.SelectedValue))
         {
@@ -123,6 +145,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlSupportType.Items.Add(new ListItem("--Select--", ""));
         ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
         ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+        ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
         if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
         {
@@ -161,6 +184,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlSupportType.Items.Add(new ListItem("--Select--", ""));
         ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
         ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+        ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
 
         if (!string.IsNullOrEmpty(ddlPayam.SelectedValue))
@@ -198,6 +222,7 @@ public partial class PayrollDownload : System.Web.UI.Page
         ddlSupportType.Items.Add(new ListItem("--Select--", ""));
         ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
         ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+        ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
     }
 
@@ -220,6 +245,19 @@ public partial class PayrollDownload : System.Web.UI.Page
             return;
         }
 
+        // Save selected state to session
+        Session["SelectedStateId"] = ddlState.SelectedValue;
+        Session["SelectedStateName"] = ddlState.SelectedItem.Text;
+        // Save selected county to session
+        Session["SelectedCountyId"] = ddlCounty.SelectedValue;
+        Session["SelectedCountyName"] = ddlCounty.SelectedItem.Text;
+        // Save selected payam to session
+        Session["SelectedPayamId"] = ddlPayam.SelectedValue;
+        Session["SelectedPayamName"] = ddlPayam.SelectedItem.Text;
+        // Save selected boma to session
+        Session["SelectedBomaId"] = ddlBoma.SelectedValue;
+        Session["SelectedBomaName"] = ddlBoma.SelectedItem.Text;
+
         // Hide the warning label if validation passes
         LblWarning.Visible = false;
 
@@ -239,10 +277,10 @@ public partial class PayrollDownload : System.Web.UI.Page
         String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
         uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
-        /*if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
         {
             uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["DownloadPayroll"];
-        }*/
+        }
         Uri urlCheck = new Uri(uri);
         HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
         httpWReq.PreAuthenticate = true;
@@ -275,28 +313,105 @@ public partial class PayrollDownload : System.Web.UI.Page
             // System.Diagnostics.Debug.WriteLine("API Response: " + JsonConvert.SerializeObject(apiResponse, Formatting.Indented));
 
             Session["PDResponse"] = pdResponse;
-            int totalCount = pdResponse.totalCount;
-            Session["TotalItemCount"] = totalCount;
+            /*int totalCount = pdResponse.totalCount;
+            Session["TotalItemCount"] = totalCount;*/
 
             if (pdResponse != null && pdResponse.data != null && pdResponse.data.Count > 0)
             {
-                Session["PayrollData"] = pdResponse.data.SelectMany(c => c.payrollData).ToList();
+                //Session["PayrollData"] = pdResponse.data.SelectMany(c => c.payrollData).ToList();
+                var allPayrollData = pdResponse.data.SelectMany(c => c.payrollData).ToList();
+                int totalCount = allPayrollData.Count; // Get the total count from all payroll data
+
+                Session["PayrollData"] = allPayrollData;
+                Session["TotalItemCount"] = totalCount;
                 rgResults.Rebind();  // Trigger the NeedDataSource event
 
-                // Update button visibility based on lockedStatus
+                /*// Update button visibility based on lockedStatus
                 var firstData = pdResponse.data.FirstOrDefault();
                 var lockedStatus = firstData?.lockedStatus;
-                HiddenLockedStatus.Value = lockedStatus;
+                HiddenLockedStatus.Value = lockedStatus;*/
 
+                // Initialize variables to keep track of the statuses
+                bool hasLocked = false;
+                bool hasUnlocked = false;
+                bool hasReconciled = false;
+
+                // Traverse through each PDPayrollDataContainer and its payrollData to check lockedStatus
+                foreach (var container in pdResponse.data)
+                {
+                    // Check lockedStatus from the parent container
+                    if (container.lockedStatus == "LOCKED")
+                    {
+                        hasLocked = true;
+                    }
+                    else if (container.lockedStatus == "UNLOCKED")
+                    {
+                        hasUnlocked = true;
+                    }
+                    else if (container.lockedStatus == "RECONCILED")
+                    {
+                        hasReconciled = true;
+                    }
+
+                    // Check lockedStatus for each item in the payrollData list (nested)
+                    foreach (var payroll in container.payrollData)
+                    {
+                        if (payroll.status == "LOCKED")
+                        {
+                            hasLocked = true;
+                        }
+                        else if (payroll.status == "UNLOCKED")
+                        {
+                            hasUnlocked = true;
+                        }
+                        else if (payroll.status == "RECONCILED")
+                        {
+                            hasReconciled = true;
+                        }
+                    }
+                }
+
+                // Determine the final locked status based on the conditions
+                string lockedStatus;
+                if (hasLocked)
+                {
+                    lockedStatus = "LOCKED";
+                }
+                else if (hasReconciled)
+                {
+                    lockedStatus = "RECONCILED";
+                }
+                else if (hasUnlocked)
+                {
+                    lockedStatus = "UNLOCKED";
+                }
+                else
+                {
+                    lockedStatus = "UNKNOWN"; // Fallback in case no valid status is found
+                }
 
                 // Store paymentCycle and wagePaymentReqId in session
+                var firstData = pdResponse.data.FirstOrDefault();
                 var paymentCycle = firstData?.payrollData.FirstOrDefault()?.paymentCycle;
-                var wagePaymentReqId = firstData?.payrollData.FirstOrDefault()?.intWagePaymentReqid;
                 Session["PaymentCycle"] = paymentCycle;
-                Session["WagePaymentReqId"] = wagePaymentReqId;
+                //var wagePaymentReqId = firstData?.payrollData.FirstOrDefault()?.intWagePaymentReqid;
 
-                BtnDownload.Visible = true;
-                BtnUnlock.Visible = true;
+                // Initialize session variables for wage payment request IDs
+                Session["WagePaymentReqIdDIS"] = null;
+                Session["WagePaymentReqIdLIPW"] = null;
+
+                foreach (var payroll in allPayrollData)
+                {
+                    if (payroll.supportType == "DIS")
+                    {
+                        Session["WagePaymentReqIdDIS"] = payroll.intWagePaymentReqid;
+                    }
+                    else if (payroll.supportType == "LIPW")
+                    {
+                        Session["WagePaymentReqIdLIPW"] = payroll.intWagePaymentReqid;
+                    }
+                }
+                //Session["WagePaymentReqId"] = wagePaymentReqId;
 
                 LblLockedStatus.Visible = true;
                 LblLockedStatus.Text = "Locked Status: " + lockedStatus;
@@ -304,10 +419,19 @@ public partial class PayrollDownload : System.Web.UI.Page
                 if (lockedStatus == "UNLOCKED")
                 {
                     BtnDownload.Visible = true;
+                    BtnDownloadPdf.Visible = true;
                 }
                 else if (lockedStatus == "LOCKED")
                 {
                     BtnUnlock.Visible = true;
+                    BtnDownloadPdf.Visible = true;
+                    BtnDownload.Visible = false;
+                }
+                else if (lockedStatus == "RECONCILED")
+                {
+                    BtnDownload.Visible = false;
+                    BtnDownloadPdf.Visible = true;
+                    BtnUnlock.Visible = false;
                 }
             }
 
@@ -322,6 +446,7 @@ public partial class PayrollDownload : System.Web.UI.Page
                 // Update button visibility and locked status label
                 BtnDownload.Visible = false;
                 BtnUnlock.Visible = false;
+                BtnDownloadPdf.Visible = false;
                 LblLockedStatus.Visible = false;
             }
         }
@@ -409,7 +534,9 @@ public partial class PayrollDownload : System.Web.UI.Page
     protected void BtnUnlock_Click(object sender, EventArgs e)
     {
         var paymentCycle = Session["PaymentCycle"]?.ToString();
-        var wagePaymentReqId = Session["WagePaymentReqId"] != null ? int.Parse(Session["WagePaymentReqId"].ToString()) : 0;
+        var supportType = ddlSupportType.SelectedValue;
+        var wagePaymentReqIdLIPW = Session["WagePaymentReqIdLIPW"] != null ? int.Parse(Session["WagePaymentReqIdLIPW"].ToString()) : (int?)null;
+        var wagePaymentReqIdDIS = Session["WagePaymentReqIdDIS"] != null ? int.Parse(Session["WagePaymentReqIdDIS"].ToString()) : (int?)null;
 
         var request = new
         {
@@ -419,17 +546,18 @@ public partial class PayrollDownload : System.Web.UI.Page
             paymentCycle = paymentCycle,
             state = int.Parse(ddlState.SelectedValue),
             supportType = ddlSupportType.SelectedValue,
-            wagePaymentReqId = wagePaymentReqId
+            wagePaymentReqIdLIPW = (supportType == "ALL" || supportType == "LIPW") ? wagePaymentReqIdLIPW : null,
+            wagePaymentReqIdDIS = (supportType == "ALL" || supportType == "DIS") ? wagePaymentReqIdDIS : null
         };
 
         //string uri = ConfigurationManager.AppSettings["UnlockPayroll"];
         String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
         var uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
-        /*if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+        if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
         {
             uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["UnlockPayroll"];
-        }*/
+        }
 
         Uri urlCheck = new Uri(uri);
         HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
@@ -511,9 +639,11 @@ public partial class PayrollDownload : System.Web.UI.Page
             int countyId = int.Parse(ddlCounty.SelectedValue);
             int payamId = int.Parse(ddlPayam.SelectedValue);
             int bomaId = int.Parse(ddlBoma.SelectedValue);
+            var supportType = ddlSupportType.SelectedValue;
 
             var paymentCycle = Session["PaymentCycle"]?.ToString();
-            var wagePaymentReqId = Session["WagePaymentReqId"] != null ? int.Parse(Session["WagePaymentReqId"].ToString()) : 0;
+            var wagePaymentReqIdLIPW = Session["WagePaymentReqIdLIPW"] != null ? int.Parse(Session["WagePaymentReqIdLIPW"].ToString()) : (int?)null;
+            var wagePaymentReqIdDIS = Session["WagePaymentReqIdDIS"] != null ? int.Parse(Session["WagePaymentReqIdDIS"].ToString()) : (int?)null;
 
             var request = new
             {
@@ -522,18 +652,19 @@ public partial class PayrollDownload : System.Web.UI.Page
                 payam = payamId,
                 paymentCycle = paymentCycle,
                 state = stateId,
-                supportType = ddlSupportType.SelectedValue,
-                wagePaymentReqId = wagePaymentReqId
+                supportType = supportType,
+                wagePaymentReqIdLIPW = (supportType == "ALL" || supportType == "LIPW") ? wagePaymentReqIdLIPW : null,
+                wagePaymentReqIdDIS = (supportType == "ALL" || supportType == "DIS") ? wagePaymentReqIdDIS : null
             };
 
             // Define the API endpoint and access token
             String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
 
             var uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["LockPayroll"];
-            /*if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
+            if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
             {
                 uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["LockPayroll"];
-            }*/
+            }
 
             Uri urlCheck = new Uri(uri);
             HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
@@ -579,6 +710,7 @@ public partial class PayrollDownload : System.Web.UI.Page
                         // Display a warning that the payroll is locked
                         LblWarning.Text = responseMessage;
                         LblWarning.Visible = true;
+                        LblLockedStatus.Text = "Locked Status: LOCKED";
                     }
                     else
                     {
@@ -598,7 +730,36 @@ public partial class PayrollDownload : System.Web.UI.Page
         }
     }
 
- 
+
+    protected void BtnDownloadPdf_Click(object sender, EventArgs e)
+    {
+        if (Session["PDResponse"] != null)
+        {
+            try
+            {
+              /*// Insert the audit record into the database (optional step)
+                InsertAuditRecord(userId, stateId, countyId, payamId, bomaId);*/
+
+                // Redirect to ViewAttachmentHandler with the appropriate query parameters for PDF download
+                string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=13"; // AttachmentType=13 for PDF_PAYROLL_DATA
+                Response.Redirect(redirectUrl, false);
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+        else
+        {
+            // Display a message indicating that there is no data to download
+            LblWarning.Text = "No payroll data available to download.";
+            LblWarning.Visible = true;
+        }
+    }
+
+
+
     private void InsertAuditRecord(int userId, int stateId, int countyId, int payamId, int bomaId)
     {
         string query = "INSERT INTO tbl_audit_payroll_download (AuditId, UserId, DownloadTime, intStateid, intCountieid, intPayamid, intBomasid) " +

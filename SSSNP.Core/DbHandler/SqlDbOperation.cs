@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
+using System.Linq;
 
 namespace SSSNP_SNSOP.Core.DbHandler
 {
@@ -66,6 +67,115 @@ namespace SSSNP_SNSOP.Core.DbHandler
                 }
             }
         }
+
+        public bool GenericInsertDataList<T>(List<T> dataList, string tableName)
+        {
+            using (var sqlConnection = new SqlConnection(connectionStr))
+            {
+                sqlConnection.Open();
+                var transaction = sqlConnection.BeginTransaction();
+
+                try
+                {
+                    string columns = "";
+                    List<string> valueList = new List<string>();
+                    List<SqlParameter> parameters = new List<SqlParameter>();
+
+                    var properties = typeof(T).GetProperties();
+                    int paramIndex = 0;
+
+                    // Build the column names
+                    columns = string.Join(",", properties.Select(p => p.Name));
+
+                    foreach (var data in dataList)
+                    {
+                        List<string> currentValues = new List<string>();
+                        foreach (var property in properties)
+                        {
+                            paramIndex++;
+                            var value = property.GetValue(data) ?? DBNull.Value;
+
+                            string paramName = $"@param{paramIndex}";
+                            currentValues.Add(paramName);
+                            parameters.Add(new SqlParameter(paramName, value));
+                        }
+
+                        valueList.Add($"({string.Join(",", currentValues)})");
+                    }
+
+                    // Combine all values into a single SQL statement
+                    string sql = $"INSERT INTO {tableName} ({columns}) VALUES {string.Join(",", valueList)};";
+
+                    using (var command = new SqlCommand(sql, sqlConnection, transaction))
+                    {
+                        command.Parameters.AddRange(parameters.ToArray());
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                    return true; // All inserts succeeded
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    // Consider logging the exception
+                    throw;
+                }
+            }
+        }
+
+        public bool GenericInsertData<T>(T data, string tableName)
+        {
+            var sqlConnection = new SqlConnection(connectionStr);
+            string columns = "";
+            string param = "";
+            List<object> values = new List<object>();
+
+            try
+            {
+                var properties = typeof(T).GetProperties();
+                int i = 1;
+
+                foreach (var property in properties)
+                {
+                    var value = property.GetValue(data);
+                    columns += $"{property.Name},";
+                    param += $"@param{i},";
+                    values.Add(value);
+                    i++;
+                }
+
+                columns = columns.TrimEnd(',');
+                param = param.TrimEnd(',');
+
+                string sql = $"INSERT INTO {tableName}({columns}) VALUES({param});";
+
+                using (SqlCommand commands = new SqlCommand(sql, sqlConnection))
+                {
+                    int j = 1;
+                    foreach (var value in values)
+                    {
+                        string paramName = "@param" + j++;
+                        commands.Parameters.Add(new SqlParameter(paramName, value ?? DBNull.Value));
+                    }
+
+                    sqlConnection.Open();
+                    return commands.ExecuteNonQuery() > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+        }
+
         public bool UpdateData(string tableName, Dictionary<string, object> data, string wherePart)
         {
             var sqlConnection = new SqlConnection(connectionStr);
@@ -276,5 +386,48 @@ namespace SSSNP_SNSOP.Core.DbHandler
             }
             return dataTable;
         }
+
+        public DataTable ExecuteDataTable(string query, CommandType commandType, List<SqlParameter> parameters)
+        {
+            var sqlConnection = new SqlConnection(connectionStr);
+            var dataTable = new DataTable();
+            try
+            {
+                using (var sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlCommand.CommandType = commandType;
+
+                    // Add the list of parameters to the command if any
+                    if (parameters != null && parameters.Count > 0)
+                    {
+                        sqlCommand.Parameters.AddRange(parameters.ToArray());
+                    }
+
+                    // Open the connection
+                    sqlConnection.Open();
+
+                    // Execute the query and fill the DataTable
+                    using (var sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+                    {
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle or log exceptions
+                throw new Exception($"Error executing SQL query: {ex.Message}", ex);
+            }
+            finally
+            {
+                // Ensure the connection is closed
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+            return dataTable;
+        }
+
     }
 }

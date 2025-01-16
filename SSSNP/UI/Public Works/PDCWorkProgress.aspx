@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Work Progress " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"  AutoEventWireup="true" Inherits="PDCWorkProgress" Codebehind="PDCWorkProgress.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Work Progress " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"  AutoEventWireup="true" Inherits="PDCWorkProgress" Codebehind="PDCWorkProgress.aspx.cs" %>
 
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
@@ -339,7 +339,7 @@
                                             </td>
                                             <td style="padding: 5px; margin: 5px; width: 10px;">
                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator22" runat="server" ControlToValidate="txtStartDate"
-                                                    ErrorMessage="Please Enter Start Date" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                    ErrorMessage="Please Enter Start Date" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                             </td>
                                         </tr>
                                         <tr>
@@ -356,7 +356,7 @@
                                             <td style="padding: 5px; margin: 5px; width: 10px;">
                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator24" runat="server" ControlToValidate="txtIncharge"
                                                     ErrorMessage="Please Enter Work Supervison /Incharge" SetFocusOnError="True"
-                                                    ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                    ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                             </td>
                                         </tr>
                                         <tr>
@@ -384,7 +384,7 @@
                                             </td>
                                             <td style="padding: 5px; margin: 5px">
                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtUploadDocumentName"
-                                                    ErrorMessage="Please Enter Document Name" SetFocusOnError="True" ValidationGroup="group1">*</asp:RequiredFieldValidator>
+                                                    ErrorMessage="Please Enter Document Name" SetFocusOnError="True" ValidationGroup="group1"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                             </td>
                                         </tr>
                                          <tr id="tr_group_search" runat="server" visible="false">
@@ -513,11 +513,10 @@
                                                     <asp:ListItem>InProgress</asp:ListItem>
                                                     <asp:ListItem>Completed</asp:ListItem>
                                                 </asp:DropDownList>
-                                            </td>
-                                            <td style="padding: 5px; margin: 5px; width: 10px;">
+                                           
                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator23" runat="server" ControlToValidate="ddlStatus"
                                                     ErrorMessage="Please Select Status" InitialValue="--Select--" SetFocusOnError="True"
-                                                    ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                    ValidationGroup="group"><span style="color: red;">&ensp;*</span></asp:RequiredFieldValidator>
                                             </td>
                                         </tr>
                                         <tr>

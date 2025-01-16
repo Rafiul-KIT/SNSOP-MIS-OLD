@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SSSNP.UI.Public_Works
+namespace SSSNP_SNSOP.UI.Public_Works
 {
 
 

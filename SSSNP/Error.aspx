@@ -19,7 +19,7 @@
                 color: white;
                 font-size: 14px;
                 background-color: #fff;
-                background-image: url(/Resource/Images/Background_cover.png);
+                background-image: url(/Resource/Images/Background_cover_1.png);
                 background-position: center top;
                 background-attachment: inherit;
                 background-size: cover;

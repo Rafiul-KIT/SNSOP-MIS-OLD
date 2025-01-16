@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="CCMaster.master" AutoEventWireup="true" Inherits="Home" Title=":: :: SSSNP : :: Home" Codebehind="Home.aspx.cs" %>
+<%@ Page Language="C#" MasterPageFile="CCMaster.master" AutoEventWireup="true" Inherits="Home" Title=":: :: SNSOP : :: Home" Codebehind="Home.aspx.cs" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
  
     <script language="javascript">
@@ -122,15 +122,15 @@ function AlphaNumericOnly()
                                             <div class="panel panel-default">
                                                 <div class="panel-heading" align="center">
                                                   <asp:HiddenField ID="hasflash" runat="server" />
-                                                    <table cellpadding="4" cellspacing="5" style="width: 41%">
+                                                    <table cellpadding="4" cellspacing="5">
                                                         <tr>
                                                             <td style="padding: 5px; margin: 5px">
-                                                                <asp:Label ID="Label350" runat="server" CssClass="LBLBLACK" Width="131px">Year</asp:Label>
+                                                                <asp:Label ID="Label350" runat="server" CssClass="LBLBLACK">Year</asp:Label>
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px">:</td>
                                                             <td style="padding: 5px; margin: 5px">
                                                                 <asp:DropDownList ID="ddlYear" runat="server" class="form-control txtbox"
-                                                                    Height="28px" Width="180px" OnSelectedIndexChanged="ddlYear_SelectedIndexChanged" AutoPostBack="true">
+                                                                    Height="33px" Width="100px" OnSelectedIndexChanged="ddlYear_SelectedIndexChanged" AutoPostBack="true">
                                                                     <asp:ListItem Text="2023" Value="2023"></asp:ListItem>
                                                                     <asp:ListItem Text="2024" Value="2024"></asp:ListItem>
                                                                     <asp:ListItem Text="2025" Value="2025"></asp:ListItem>
@@ -150,7 +150,7 @@ function AlphaNumericOnly()
                                                                        <a href="#" class="list-group-item">
                                                                         <span class="badge">
                                                                             <asp:Label ID="lblNameOfIP" runat="server"></asp:Label></span>
-                                                                        <i class="fa fa-fw fa-calendar"></i>Name of Implementing Partners
+                                                                           <i class="fa fa-fw fa-truck"></i>User Role
                                                                     </a>
                                                                     <a href='#'  class="list-group-item">
                                                                         <span class="badge" style="background-color: #d9534f;">

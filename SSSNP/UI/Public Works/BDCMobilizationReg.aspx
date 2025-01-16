@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Mobilization " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="BDCMobilizationReg" Codebehind="BDCMobilizationReg.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Mobilization " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="BDCMobilizationReg" Codebehind="BDCMobilizationReg.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

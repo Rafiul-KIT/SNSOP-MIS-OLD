@@ -1,4 +1,5 @@
-﻿<%@ Page Title=":: :: SSSNP : : User Management" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="UserManagement.aspx.cs" Inherits="SSSNP.UI.Public_Works.UserManagement" Async ="true" %>
+﻿
+ <%@ Page Title=":: :: SNSOP : : User Management" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="UserManagement.aspx.cs" Inherits="SSSNP_SNSOP.UI.Public_Works.UserManagement" Async ="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
@@ -27,14 +28,16 @@
                             <div class="panel-body">
                                 <%--<asp:ValidationSummary ID="ValidationSummary1" runat="server" CssClass="text-danger" DisplayMode="BulletList" HeaderText="Please fix the following errors:" />--%>
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 90%">
-                                    <tr>
-                                        <td style="padding: 5px; margin: 5px" colspan="2" align="center">
-                                            <asp:Label ID="LabelSearch" runat="server" CssClass="LBLBLACK" Width="165px">Search</asp:Label>
-                                            <asp:Button ID="btnLookup" runat="server" CssClass="btn btn-primary" Height="32px"
-                                                OnClientClick="return OpenLookupPopup();" Text="Look Up" CausesValidation="False"
-                                                Font-Size="12px" Style="position: static" ToolTip="Lookup" />
-                                        </td>
-                                    </tr>
+                                   <tr>
+                                       <td colspan="2" align="center" style="text-align: center; padding: 5px; margin: 5px;">
+                                           <asp:Label ID="LabelSearch" runat="server" CssClass="LBLBLACK">Search&emsp;:</asp:Label>
+                                           &nbsp;&nbsp;
+           
+                                           <asp:Button ID="btnLookup" runat="server" CssClass="btn btn-primary" Height="32px"
+                                               OnClientClick="return OpenLookupPopup();" Text="Look Up" CausesValidation="False"
+                                               Font-Size="12px" Style="position: static" ToolTip="Lookup"></asp:Button>
+                                       </td>
+                                   </tr>
                                     <tr>
                                         <td>
                                             <table cellpadding="4" cellspacing="5" style="width: 83%">
@@ -46,8 +49,12 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtUserId" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="50" />
+
+                                                        <!-- Required Field Validator -->
                                                         <asp:RequiredFieldValidator ID="rfvUserId" runat="server" ControlToValidate="txtUserId"
-                                                            ErrorMessage="User ID is required." CssClass="text-danger" Display="Dynamic" />
+                                                            ErrorMessage="Please Enter User ID" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span>
+                                                        </asp:RequiredFieldValidator>
+
                                                     </td>
                                                 </tr>
                                                 <!-- User Name Field -->
@@ -59,7 +66,7 @@
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtUserName" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="100" />
                                                         <asp:RequiredFieldValidator ID="rfvUserName" runat="server" ControlToValidate="txtUserName"
-                                                            ErrorMessage="User Name is required." CssClass="text-danger" Display="Dynamic" />
+                                                            ErrorMessage="Please Enter User Name" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <!-- User Type Field -->
@@ -69,41 +76,55 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
+                                                        <div style="display: flex; align-items: center;">
                                                         <asp:DropDownList ID="ddlUserType" runat="server" CssClass="form-control" Width="180px">
-                                                            <asp:ListItem Text="Select User Type" Value="" />
-                                                            <asp:ListItem Text="Cordinator" Value="Cordinator" />
-                                                            <asp:ListItem Text="Manager" Value="Manager" />
-                                                            <asp:ListItem Text="IP" Value="IP" />
-                                                            <asp:ListItem Text="QualEng" Value="QualEng" />
-                                                            <asp:ListItem Text="TST" Value="TST" />
-                                                            <asp:ListItem Text="ManagerGRM" Value="ManagerGRM" />
-                                                            <asp:ListItem Text="Adm" Value="Adm" />
-                                                            <asp:ListItem Text="Specialist" Value="Specialist" />
-                                                            <asp:ListItem Text="WB" Value="WB" />
-                                                            <asp:ListItem Text="EnvSpec" Value="EnvSpec" />
-                                                            <asp:ListItem Text="GenderSpec" Value="GenderSpec" />
-                                                            <asp:ListItem Text="SocDevSpec" Value="SocDevSpec" />
-                                                            <asp:ListItem Text="PcuSpec" Value="PcuSpec" />
-                                                            <asp:ListItem Text="FSP" Value="FSP" />
+                                                            <asp:ListItem Text="--Select--" Value="" />
+                                                            <asp:ListItem Text="Implementing Partner" Value="IP" />
+                                                            <asp:ListItem Text="Initial Reviewer" Value="Cordinator" />
+                                                            <asp:ListItem Text="Final Payment Authorizer" Value="Manager" />
+                                                            <asp:ListItem Text="Quality Engineer" Value="QualEng" />
+                                                            <asp:ListItem Text="Technical Support Team" Value="TST" />
+                                                            <asp:ListItem Text="GRM Manager" Value="ManagerGRM" />
+                                                            <asp:ListItem Text="Admin" Value="Adm" />
+                                                            <asp:ListItem Text="Financial Approver" Value="Specialist" />
+                                                            <asp:ListItem Text="World Bank" Value="WB" />
+                                                            <asp:ListItem Text="Environment Specialist" Value="EnvSpec" />
+                                                            <asp:ListItem Text="Gender Specialist" Value="GenderSpec" />
+                                                            <asp:ListItem Text="Social Development Specialist" Value="SocDevSpec" />
+                                                            <asp:ListItem Text="PCU Specialist" Value="PcuSpec" />
+                                                            <asp:ListItem Text="Financial Service Provider" Value="FSP" />
                                                             <asp:ListItem Text="Report" Value="Report" />
                                                             <asp:ListItem Text="MIS" Value="MIS" />
-                                                            <asp:ListItem Text="EntryGRM" Value="EntryGRM" />
+                                                            <asp:ListItem Text="GRM Entry Operator" Value="EntryGRM" />
+                                                            <asp:ListItem Text="World Bank GRM Manager" Value="WBGBVMgr" />
+                                                            <asp:ListItem Text="Super Admin" Value="Superadm" />
                                                         </asp:DropDownList>
-                                                        <asp:RequiredFieldValidator ID="rfvUserType" runat="server" ControlToValidate="ddlUserType"
-                                                            InitialValue="" ErrorMessage="User Type is required." CssClass="text-danger" Display="Dynamic" />
+                                                            <asp:RequiredFieldValidator ID="rfvUserType" runat="server" ControlToValidate="ddlUserType"
+                                                            InitialValue="" ErrorMessage="Please select User Type" CssClass="text-danger" Display="Dynamic">
+                                                                <span style="color: red;">&nbsp;&emsp;*</span>
+                                                            </asp:RequiredFieldValidator>
+                                                       </div>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <!-- User Code Field -->
                                                 <tr>
-                                                    <td style="padding: 5px; margin: 5px">
+                                                        <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelUserCode" runat="server" CssClass="LBLBLACK" Width="165px">User Code</asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtUserCode" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="10" />
+
+                                                        <!-- Required Field Validator -->
                                                         <asp:RequiredFieldValidator ID="rfvUserCode" runat="server" ControlToValidate="txtUserCode"
-                                                            ErrorMessage="User Code is required." CssClass="text-danger" Display="Dynamic" />
+                                                            ErrorMessage="Please Enter User Code" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span>
+                                                        </asp:RequiredFieldValidator>
+
+                                                        <!-- Regular Expression Validator for Integers -->
+                                                        <asp:RegularExpressionValidator ID="revUserCode" runat="server" ControlToValidate="txtUserCode"
+                                                            ErrorMessage="Please Enter a valid User Code" ValidationExpression="^\d+$"
+                                                            CssClass="text-danger" Display="Dynamic"></asp:RegularExpressionValidator>
                                                     </td>
                                                 </tr>
                                                 <!-- Email Field -->
@@ -115,7 +136,7 @@
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control txtbox" Width="180px" MaxLength="150" ToolTip='<%# Eval("Email") %>' />
                                                         <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail"
-                                                            ErrorMessage="Email is required." CssClass="text-danger" Display="Dynamic" />
+                                                            ErrorMessage="Please Enter Your Email" CssClass="text-danger" Display="Dynamic"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                         <asp:RegularExpressionValidator ID="revEmail" runat="server" ControlToValidate="txtEmail"
                                                             ErrorMessage="Invalid email format." CssClass="text-danger" Display="Dynamic"
                                                             ValidationExpression="^[^@\s]+@[^@\s]+\.[^@\s]+$" />
@@ -132,13 +153,17 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
+                                                        <div style="display: flex; align-items: center;">
                                                         <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control" Width="180px">
                                                             <asp:ListItem Text="Select" Value="" />
                                                             <asp:ListItem Text="Yes" Value="Y" />
                                                             <asp:ListItem Text="No" Value="N" />
                                                         </asp:DropDownList>
                                                         <asp:RequiredFieldValidator ID="rfvStatus" runat="server" ControlToValidate="ddlStatus"
-                                                            InitialValue="" ErrorMessage="Status is required." CssClass="text-danger" Display="Dynamic" />
+                                                            InitialValue="" ErrorMessage="Please Select Status" CssClass="text-danger" Display="Dynamic">
+                                                            <span style="color: red;">&emsp;*</span>
+                                                        </asp:RequiredFieldValidator>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <!-- GBV User Field -->
@@ -230,26 +255,42 @@
                     document.getElementById('<%= txtUserCode.ClientID %>').value = userCode;
                     document.getElementById('<%= ddlStatus.ClientID %>').value = status;
                     document.getElementById('<%= txtEmail.ClientID %>').value = email;
+                    document.getElementById('<%= txtEmail.ClientID %>').readOnly = true;
 
                     // Set GBV User radio button
                     if (gbvUser === "True") {
                         document.getElementById('<%= rblGBVUser.ClientID %>_0').checked = true;
+                        document.getElementById('<%= rblGBVUser.ClientID %>_1').checked = false;
                     } else if (gbvUser === "False") {
                         document.getElementById('<%= rblGBVUser.ClientID %>_1').checked = true;
+                        document.getElementById('<%= rblGBVUser.ClientID %>_0').checked = false;
+                    } else {
+                        document.getElementById('<%= rblGBVUser.ClientID %>_0').checked = false;
+                        document.getElementById('<%= rblGBVUser.ClientID %>_1').checked = false;
                     }
 
                     // Set IP Approver radio button
                     if (ipApprover === "True") {
                         document.getElementById('<%= rblIPApprover.ClientID %>_0').checked = true;
+                        document.getElementById('<%= rblIPApprover.ClientID %>_1').checked = false;
                     } else if (ipApprover === "False") {
                         document.getElementById('<%= rblIPApprover.ClientID %>_1').checked = true;
+                        document.getElementById('<%= rblIPApprover.ClientID %>_0').checked = false;
+                    } else {
+                        document.getElementById('<%= rblIPApprover.ClientID %>_0').checked = false;
+                        document.getElementById('<%= rblIPApprover.ClientID %>_1').checked = false;
                     }
 
                     // Set Email Receiver radio button
                     if (emailReceiver === "1") {
                         document.getElementById('<%= rblEmailReceiver.ClientID %>_0').checked = true;
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_1').checked = false;
                     } else if (emailReceiver === "2") {
                         document.getElementById('<%= rblEmailReceiver.ClientID %>_1').checked = true;
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_0').checked = false;
+                    } else {
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_0').checked = false;
+                        document.getElementById('<%= rblEmailReceiver.ClientID %>_1').checked = false;
                     }
 
                     // Populate the hidden fields with the created and modified details
@@ -264,25 +305,6 @@
                     // Clear any validation messages
                     clearValidationMessages();
                 }
-
-                /*// Client-side validation
-                 * 
-                 * OnClientClick="return validateForm();"
-                 * 
-                function validateForm() {
-                    var userId = document.getElementById('*/<%= txtUserId.ClientID %>/*').value;
-                    var userName = document.getElementById('*/<%= txtUserName.ClientID %>/*').value;
-                    var userType = document.getElementById('*/<%= ddlUserType.ClientID %>/*').value;
-                    var userCode = document.getElementById('*/<%= txtUserCode.ClientID %>/*').value;
-                    var email = document.getElementById('*/<%= txtEmail.ClientID %>/*').value;
-
-                    if (!userId || !userName || !userType || !userCode || !email) {
-                        alert("Please fill in all required fields.");
-                        return false;
-                    }
-
-                    return true;
-                }*/
 
                 function clearValidationMessages() {
                     var validators = document.getElementsByClassName('text-danger');

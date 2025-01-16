@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SSSNP.UI.Public_Works
+namespace SSSNP_SNSOP.UI.Public_Works
 {
 
 
@@ -148,6 +148,15 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvUserCode;
+
+        /// <summary>
+        /// revUserCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revUserCode;
 
         /// <summary>
         /// LabelEmail control.

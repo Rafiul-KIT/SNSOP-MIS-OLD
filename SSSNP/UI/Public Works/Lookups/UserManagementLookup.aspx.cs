@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Telerik.Web.UI;
 
-namespace SSSNP.UI.Public_Works.Lookups
+namespace SSSNP_SNSOP.UI.Public_Works.Lookups
 {
     public partial class UserManagementLookup : System.Web.UI.Page
     {

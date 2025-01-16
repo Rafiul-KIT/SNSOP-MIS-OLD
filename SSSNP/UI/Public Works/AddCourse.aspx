@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Add Course" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="AddCourses" Codebehind="AddCourse.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Add Course" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="AddCourses" Codebehind="AddCourse.aspx.cs" %>
 
 
 

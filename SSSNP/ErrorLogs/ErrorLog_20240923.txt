@@ -1,0 +1,132 @@
+<<<<<<< HEAD
+Time: 9/23/2024 2:08:12 PM
+=======
+Time: 9/23/2024 1:28:16 PM
+>>>>>>> origin/obaydur
+Message: Violation of UNIQUE KEY constraint 'UK_Household_Group_View'. Cannot insert duplicate key in object 'dbo.tbl_com2_Household_Group_View'. The duplicate key value is (test).
+The statement has been terminated.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+<<<<<<< HEAD
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in C:\Users\KIT\Desktop\Rafiul-Branch\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 219
+---------------------------------------------------------
+Time: 9/23/2024 2:09:01 PM
+Message: DataSet does not support System.Nullable<>.
+StackTrace:    at System.Data.DataColumn..ctor(String columnName, Type dataType, String expr, MappingType type)
+   at System.Data.DataColumnCollection.Add(String columnName, Type type)
+   at SSSNP.UI.Public_Works.TrainingandAttendanceTracking.btnAnalyze_Click(Object sender, EventArgs e) in C:\Users\KIT\Desktop\Rafiul-Branch\SNSOP-MIS\SSSNP\UI\Public Works\TrainingandAttendanceTracking.aspx.cs:line 102
+---------------------------------------------------------
+Time: 9/23/2024 2:09:29 PM
+Message: DataSet does not support System.Nullable<>.
+StackTrace:    at System.Data.DataColumn..ctor(String columnName, Type dataType, String expr, MappingType type)
+   at System.Data.DataColumnCollection.Add(String columnName, Type type)
+   at SSSNP.UI.Public_Works.TrainingandAttendanceTracking.btnAnalyze_Click(Object sender, EventArgs e) in C:\Users\KIT\Desktop\Rafiul-Branch\SNSOP-MIS\SSSNP\UI\Public Works\TrainingandAttendanceTracking.aspx.cs:line 102
+---------------------------------------------------------
+Time: 9/23/2024 2:12:39 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Training_Attendance'. Cannot insert duplicate key in object 'dbo.tbl_com2_Training_Attendance'. The duplicate key value is (h4).
+=======
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 226
+---------------------------------------------------------
+Time: 9/23/2024 1:28:31 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Household_Group_View'. Cannot insert duplicate key in object 'dbo.tbl_com2_Household_Group_View'. The duplicate key value is (test).
+>>>>>>> origin/obaydur
+The statement has been terminated.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+<<<<<<< HEAD
+   at SSSNP.UI.Public_Works.TrainingandAttendanceTracking.InsertTrainingAttendanceIntoDB(SqlConnection conn, SqlTransaction transaction, String householdNumber, String courseCode, Nullable`1 courseDuration, Nullable`1 classesAttended, Nullable`1 classesHeld, Nullable`1 classesMissed, String whyMissed) in C:\Users\KIT\Desktop\Rafiul-Branch\SNSOP-MIS\SSSNP\UI\Public Works\TrainingandAttendanceTracking.aspx.cs:line 240
+---------------------------------------------------------
+Time: 9/23/2024 4:17:20 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Training_Attendance'. Cannot insert duplicate key in object 'dbo.tbl_com2_Training_Attendance'. The duplicate key value is (h8).
+=======
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 226
+---------------------------------------------------------
+Time: 9/23/2024 1:38:42 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Household_Group_View'. Cannot insert duplicate key in object 'dbo.tbl_com2_Household_Group_View'. The duplicate key value is (test).
+>>>>>>> origin/obaydur
+The statement has been terminated.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+<<<<<<< HEAD
+   at SSSNP.UI.Public_Works.TrainingandAttendanceTracking.InsertTrainingAttendanceIntoDB(SqlConnection conn, SqlTransaction transaction, String householdNumber, String courseCode, Nullable`1 courseDuration, Nullable`1 classesAttended, Nullable`1 classesHeld, Nullable`1 classesMissed, String whyMissed) in C:\Users\KIT\Desktop\Rafiul-Branch\SNSOP-MIS\SSSNP\UI\Public Works\TrainingandAttendanceTracking.aspx.cs:line 246
+---------------------------------------------------------
+Time: 9/23/2024 5:09:32 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Training_Attendance'. Cannot insert duplicate key in object 'dbo.tbl_com2_Training_Attendance'. The duplicate key value is (h8).
+=======
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 226
+---------------------------------------------------------
+Time: 9/23/2024 1:38:50 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Household_Group_View'. Cannot insert duplicate key in object 'dbo.tbl_com2_Household_Group_View'. The duplicate key value is (test).
+>>>>>>> origin/obaydur
+The statement has been terminated.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+<<<<<<< HEAD
+   at SSSNP.UI.Public_Works.TrainingandAttendanceTracking.InsertTrainingAttendanceIntoDB(SqlConnection conn, SqlTransaction transaction, String householdNumber, String courseCode, Nullable`1 courseDuration, Nullable`1 classesAttended, Nullable`1 classesHeld, Nullable`1 classesMissed, String whyMissed) in C:\Users\KIT\Desktop\Rafiul-Branch\SNSOP-MIS\SSSNP\UI\Public Works\TrainingandAttendanceTracking.aspx.cs:line 247
+---------------------------------------------------------
+Time: 9/23/2024 5:33:16 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Training_Attendance'. Cannot insert duplicate key in object 'dbo.tbl_com2_Training_Attendance'. The duplicate key value is (h6).
+=======
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 226
+---------------------------------------------------------
+Time: 9/23/2024 1:52:33 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Household_Group_View'. Cannot insert duplicate key in object 'dbo.tbl_com2_Household_Group_View'. The duplicate key value is (test).
+>>>>>>> origin/obaydur
+The statement has been terminated.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+<<<<<<< HEAD
+   at SSSNP.UI.Public_Works.TrainingandAttendanceTracking.InsertTrainingAttendanceIntoDB(SqlConnection conn, SqlTransaction transaction, String householdNumber, String courseCode, Nullable`1 courseDuration, Nullable`1 classesAttended, Nullable`1 classesHeld, Nullable`1 classesMissed, String whyMissed) in C:\Users\KIT\Desktop\Rafiul-Branch\SNSOP-MIS\SSSNP\UI\Public Works\TrainingandAttendanceTracking.aspx.cs:line 247
+=======
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 226
+---------------------------------------------------------
+Time: 9/23/2024 1:52:49 PM
+Message: Violation of UNIQUE KEY constraint 'UK_Household_Group_View'. Cannot insert duplicate key in object 'dbo.tbl_com2_Household_Group_View'. The duplicate key value is (test).
+The statement has been terminated.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 226
+>>>>>>> origin/obaydur
+---------------------------------------------------------

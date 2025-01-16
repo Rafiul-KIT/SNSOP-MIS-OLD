@@ -56,7 +56,7 @@
 				,M.[Status]
 				,M.[StatusLastModificationDate]
 				,CASE
-				WHEN  (dateadd(DAY,14, [Date]) < getdate() and m.Status <> 5) then '1'
+				WHEN  (dateadd(DAY,9, [Date]) < getdate() and m.Status <> 5) then '1'
 					else  '0'
 				END as Expired,
 				s.StateName ,
@@ -64,7 +64,7 @@
 				p.PayamName,
 				b.BomaName,				
 				stat.StatusName,
-				case when stat.StatusID=7 then 1 when stat.StatusID=1 then 2 when stat.StatusID=2 then 3 else 4 end as OrderById
+				case when stat.StatusID=7 then 1 when stat.StatusID=1 then 2 when stat.StatusID=2 then 3 when stat.StatusId != 5 then 4 else 5 end as OrderById
 
 				FROM [NonGBVMain] as M left join NonGBVDetails as d on (d.NonGBVMainID = m.NonGBVMainID and d.Deleted = 0)
 						inner join tm_States as S on s.intStateid = m.StateID 

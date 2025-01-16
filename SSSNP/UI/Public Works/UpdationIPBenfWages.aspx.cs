@@ -153,7 +153,7 @@ public partial class UpdationIPBenfWages : System.Web.UI.Page
             if (iTotalRows > 1000)
             {
                 PageSizeCombo.Items.Add(new RadComboBoxItem("1000", "1000"));
-                PageSizeCombo.FindItemByText("100").Attributes.Add("ownerTableViewId", rgAttendances.MasterTableView.ClientID);
+                PageSizeCombo.FindItemByText("1000").Attributes.Add("ownerTableViewId", rgAttendances.MasterTableView.ClientID);
             }
 
             PageSizeCombo.Items.Add(new RadComboBoxItem("All", iTotalRows.ToString()));

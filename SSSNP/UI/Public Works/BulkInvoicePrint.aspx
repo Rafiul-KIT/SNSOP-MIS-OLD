@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Payment Apply" Language="C#" AutoEventWireup="true" Inherits="BulkInvoicePrint" CodeBehind="BulkInvoicePrint.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Wages Payment Apply" Language="C#" AutoEventWireup="true" Inherits="BulkInvoicePrint" CodeBehind="BulkInvoicePrint.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="CCMaster.master" AutoEventWireup="true" Inherits="DeleteRequestResult" Title=":: :: SSSNP : :: Home" Codebehind="DeleteRequestResult.aspx.cs" %>
+<%@ Page Language="C#" MasterPageFile="CCMaster.master" AutoEventWireup="true" Inherits="DeleteRequestResult" Title=":: :: SNSOP : :: Home" Codebehind="DeleteRequestResult.aspx.cs" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
  
     <script language="javascript">

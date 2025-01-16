@@ -13,11 +13,147 @@ using System.Web.Services;
 
 public partial class CCMaster : System.Web.UI.MasterPage
 {
-
+    General Gen = new General();
     [WebMethod]
     public string Username()
     {
         return Session["username"].ToString();
+    }
+
+    private void setAllMenuPermission(bool value)
+    {
+        LiIp1.Visible = value;
+        IPDashboard.Visible = value;
+        IPInvoiceDashboard.Visible = value;
+        APIDashboard.Visible = value;
+
+        LiIp2.Visible = value;
+
+        LiIp3.Visible = value;
+        workProposalMenu.Visible = value;
+        beneficiaryRegistrationMenu.Visible = value;
+        jobCardMenu.Visible = value;
+        printIdCardMenu.Visible = value;
+        workProgressMenu.Visible = value;
+        lipwExportMenu.Visible = value;
+        BeneficiaryListMenu.Visible = value;
+
+        RejectedWages.Visible = value;
+        WageRequestDraft.Visible = value;
+
+        LiIp4.Visible = value;
+
+        LiIp5.Visible = value;
+        WageRequestApplyLIPW.Visible = value;
+        WageRequestApplyDIS.Visible = value;
+        WageRequestDraft.Visible = value;
+        RejectedWages.Visible = value;
+
+        LiPaymentCycleDocument.Visible = value;
+        liUploadPaymentCycleDoc.Visible = value;
+        liViewPaymentCycleDoc.Visible = value;
+
+        EconomicOpportunities.Visible = value;
+        EconomicOpportunitiesDashboard.Visible = value;
+        Component2TemplateImporting.Visible = value;
+        HouseholdGroupView.Visible = value;
+        HouseholdAndGroupIdMapping.Visible = value;
+        BeneficiaryRandomizationandEnrollment.Visible = value;
+        TrainingandAttendanceTracking.Visible = value;
+        BusinessPlanDevelopment.Visible = value;
+        LivelihoodGrantDisbursement.Visible = value;
+        FinancialServiceLinkageTracking.Visible = value;
+        CoachingSessionTracking.Visible = value;
+        AuditRecordDownload.Visible = value;
+
+        LiPayroll.Visible = value;
+        payrollDownload.Visible = value;
+        payrollReconcile.Visible = value;
+
+        LiMNE.Visible = value;
+
+        LiUM.Visible = value;
+
+        LiIp6.Visible = value;
+        nongbvMenu.Visible = value;
+        nongbvDashboardMenu.Visible = value;
+        gbvNewMenu.Visible = value;
+        gbvNewMenuDashboard.Visible = value;
+        grmReport.Visible = value;
+        grmImporting.Visible = value;
+
+        LiIp7.Visible = value;
+
+        LiIp8.Visible = value;
+
+        setLiPaymentReportsPermission(value);
+
+        LiIp11.Visible = value;
+
+        LiTST1.Visible = value;
+        TSTDashboard.Visible = value;
+
+        LiTST2.Visible = value;
+        LiTST3.Visible = value;
+        LiTST4.Visible = value;
+        LiTST5.Visible = value;
+        LiTST6.Visible = value;
+        LiTST7.Visible = value;
+        LiTST8.Visible = value;
+
+        LiCO1.Visible = value;
+        LiCO2.Visible = value;
+        LiSpeccialist1.Visible = value;
+        LiSpeccialist2.Visible = value;
+        LiManger1.Visible = value;
+        LiManger2.Visible = value;
+        LiReviewVerify.Visible = value;
+
+        LiPA1.Visible = value;
+        LiPA2.Visible = value;
+        LiPA8.Visible = value;
+        LiPA3.Visible = value;
+
+        LiWB4.Visible = value;
+        LiWB2.Visible = value;
+        LiWB1.Visible = value;
+        LiWB3.Visible = value;
+
+        PayConnect2.Visible = value;
+        PayConnect1.Visible = value;
+        LiAlpha1.Visible = value;
+        LiAlpha2.Visible = value;
+
+        liFrim.Visible = value;
+        BDC.Visible = value;
+        PDC.Visible = value;
+        liEnvSpec.Visible = value;
+        Li1.Visible = value;
+    }
+
+    private void setLiPaymentReportsPermission(bool value)
+    {
+        LiPaymentReports.Visible = value;
+        WageRequestAbstractReportMenu.Visible = value;
+        WageRequestAbstractLIPWReportMenu.Visible = value;
+        WageRequestAbstractDISReportMenu.Visible = value;
+        UnpaidWageRequestAbstractReportMenu.Visible = value;
+        UnpaidWageRequestAbstractLIPWReportMenu.Visible = value;
+        UnpaidWageRequestAbstractDISReportMenu.Visible = value;
+        PaidWageRequestAbstractReportMenu.Visible = value;
+        PaidWageRequestAbstractLIPWReportMenu.Visible = value;
+        PaidWageRequestAbstractDISReportMenu.Visible = value;
+        WagePaidAbstractReportMenu.Visible = value;
+        WagePaidAbstractLIPWReportMenu.Visible = value;
+        WagePaidAbstractDISReportMenu.Visible = value;
+        WagePaidAbstractBiometricReportMenu.Visible = value;
+        WageDetailsFromPayconnectReportMenu.Visible = value;
+        UnpaidWageDetailsFromPayconnectReportMenu.Visible = value;
+        PaidWageDetailsFromPayconnectReportMenu.Visible = value;
+        TotalBeneficiryPaymentDetailsReportMenu.Visible = value;
+        MultipleWagesReportMenu.Visible = value;
+        WagePaidCycleWiseReportMenu.Visible = value;
+        PaidAlternateNotInMISReportMenu.Visible = value;
     }
 
     protected void Page_Load(object sender, EventArgs e)
@@ -44,7 +180,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         LiIp6.Visible = false;
         LiIp7.Visible = false;
         LiIp8.Visible = false;
-        LiIp9.Visible = false;
+        LiPaymentReports.Visible = false;
         LiIp10.Visible = false;
         LiIp11.Visible = false;
         LiTST1.Visible = false;
@@ -54,6 +190,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         LiPayroll.Visible = false;
         LiMNE.Visible = false;
         LiUM.Visible = false;
+        EconomicOpportunities.Visible = false;
         //  LiTST5.Visible = false;
         LiTST6.Visible = false;
         LiTST5.Visible = false;
@@ -83,10 +220,21 @@ public partial class CCMaster : System.Web.UI.MasterPage
         liFrim.Visible = false;
         LiPA8.Visible = false;
 
+        LiPaymentCycleDocument.Visible = false;
+        liUploadPaymentCycleDoc.Visible = false;
+        liViewPaymentCycleDoc.Visible = false;
+
+        setAllMenuPermission(false);
+
         if (Session.Count > 0)
         {
             lblwecome.Text = Session["username"].ToString();
             liEnvSpec.Visible = false;
+
+            if (Session["user_type"].ToString() == "Superadm")
+            {
+                setAllMenuPermission(true);
+            }
 
             if (CUser.Current.IsEntryGRMRole)
             {
@@ -113,36 +261,88 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
             if (Session["user_type"].ToString() == "IP")
             {
-                LiIp1.Visible = true;
-                LiIp2.Visible = true;
-                LiIp3.Visible = true;
-                workProposalMenu.Visible = true;
-                beneficiaryRegistrationMenu.Visible = true;
-                jobCardMenu.Visible = true;
-                printIdCardMenu.Visible = true;
-                workProgressMenu.Visible = true;
-                lipwExportMenu.Visible = true;
-                LiIp4.Visible = true;
-                LiIp5.Visible = true;
+                if (Session["ip_approver"]?.ToString() == "1")
+                {
+                    //setAllMenuPermission(false);
+                    LiIp5.Visible = true;
+                    WageRequestDraft.Visible = true;
+                    LiIp8.Visible = true;
+                    setLiPaymentReportsPermission(true);
+                }
+                else
+                {
+                    LiIp1.Visible = true;
+                    IPDashboard.Visible = true;
+                    IPInvoiceDashboard.Visible = true;
+                    APIDashboard.Visible = true;
 
+                    LiIp2.Visible = true;
 
-                LiIp6.Visible = true;
-                LiIp7.Visible = true;
-                LiIp8.Visible = true;
-                LiIp9.Visible = true;
-                LiIp10.Visible = true;
-                LiIp11.Visible = true;
-                LiPayroll.Visible = true;
-                LiMNE.Visible = true;
-                //LiUM.Visible = true;
+                    LiIp3.Visible = true;
+                    workProposalMenu.Visible = true;
+                    beneficiaryRegistrationMenu.Visible = true;
+                    jobCardMenu.Visible = true;
+                    printIdCardMenu.Visible = true;
+                    workProgressMenu.Visible = true;
+                    lipwExportMenu.Visible = true;
+                    BeneficiaryListMenu.Visible = true;
 
-                nongbvMenu.Visible = true;
-                nongbvDashboardMenu.Visible = true;
-                gbvNewMenu.Visible = true;
-                gbvNewMenuDashboard.Visible = true;
-                grmReport.Visible = true;
-                grmImporting.Visible = true;
+                    LiIp4.Visible = true;
 
+                    LiIp5.Visible = true;
+                    WageRequestApplyLIPW.Visible = true;
+                    WageRequestApplyDIS.Visible = true;
+                    RejectedWages.Visible = true;
+
+                    LiIp6.Visible = true;
+                    nongbvMenu.Visible = true;
+                    nongbvDashboardMenu.Visible = true;
+                    gbvNewMenu.Visible = true;
+                    gbvNewMenuDashboard.Visible = true;
+                    grmReport.Visible = true;
+                    grmImporting.Visible = true;
+
+                    LiIp7.Visible = true;
+
+                    LiIp8.Visible = true;
+
+                    setLiPaymentReportsPermission(true);
+
+                    LiIp10.Visible = true;
+
+                    LiIp11.Visible = true;
+
+                    LiPayroll.Visible = true;
+                    payrollDownload.Visible = true;
+                    payrollReconcile.Visible = true;
+
+                    LiMNE.Visible = true;
+                    EconomicOpportunities.Visible = true;
+                    EconomicOpportunitiesDashboard.Visible = true;
+                    Component2TemplateImporting.Visible = true;
+                    HouseholdGroupView.Visible = true;
+                    HouseholdAndGroupIdMapping.Visible = true;
+                    BeneficiaryRandomizationandEnrollment.Visible = true;
+                    TrainingandAttendanceTracking.Visible = true;
+                    BusinessPlanDevelopment.Visible = true;
+                    LivelihoodGrantDisbursement.Visible = true;
+                    FinancialServiceLinkageTracking.Visible = true;
+                    CoachingSessionTracking.Visible = true;
+                    AuditRecordDownload.Visible = true;
+                    //LiUM.Visible = true;
+
+                    nongbvMenu.Visible = true;
+                    nongbvDashboardMenu.Visible = true;
+                    gbvNewMenu.Visible = true;
+                    gbvNewMenuDashboard.Visible = true;
+                    grmReport.Visible = true;
+                    grmImporting.Visible = true;
+
+                    LiPaymentCycleDocument.Visible = true;
+                    liUploadPaymentCycleDoc.Visible = false;
+                    liViewPaymentCycleDoc.Visible = true;
+                }
+                
             }
             if (Session["user_type"].ToString() == "FSP")
             {
@@ -150,11 +350,27 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 printIdCardMenu.Visible = true;
                 Li1.Visible = false;
                 LiPayroll.Visible = true;
+                payrollDownload.Visible = true;
+                payrollReconcile.Visible = true;
+
+                LiPaymentCycleDocument.Visible = true;
+                liUploadPaymentCycleDoc.Visible = false;
+                liViewPaymentCycleDoc.Visible = true;
+
+                LiPaymentReports.Visible = true;
+                PaidWageRequestAbstractReportMenu.Visible = true;
+                PaidWageRequestAbstractLIPWReportMenu.Visible = true;
+                PaidWageRequestAbstractDISReportMenu.Visible = true;
             }
             if (Session["user_type"].ToString() == "MIS")
             {
                 LiIp1.Visible = true;
+                IPDashboard.Visible = true;
+                IPInvoiceDashboard.Visible = true;
+                APIDashboard.Visible = true;
+
                 LiIp2.Visible = true;
+
                 LiIp3.Visible = true;
                 workProposalMenu.Visible = true;
                 beneficiaryRegistrationMenu.Visible = true;
@@ -162,19 +378,42 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 printIdCardMenu.Visible = true;
                 workProgressMenu.Visible = true;
                 lipwExportMenu.Visible = true;
+                BeneficiaryListMenu.Visible = true;
+
                 LiIp4.Visible = true;
                 LiIp5.Visible = false; // Apply Wage Request menus hidden for MIS user_type
 
 
                 LiIp6.Visible = true;
+                nongbvMenu.Visible = true;
+                nongbvDashboardMenu.Visible = true;
+                gbvNewMenu.Visible = true;
+                gbvNewMenuDashboard.Visible = true;
+                grmReport.Visible = true;
+                grmImporting.Visible = true;
+
                 LiIp7.Visible = true;
                 LiIp8.Visible = true;
-                LiIp9.Visible = true;
+                LiPaymentReports.Visible = true;
                 LiIp10.Visible = true;
                 LiIp11.Visible = true;
                 LiPayroll.Visible = true;
+                payrollDownload.Visible = true;
+                payrollReconcile.Visible = true;
                 LiMNE.Visible = true;
                 LiUM.Visible = true;
+                EconomicOpportunities.Visible = true;
+                EconomicOpportunitiesDashboard.Visible = true;
+                Component2TemplateImporting.Visible = true;
+                HouseholdGroupView.Visible = true;
+                HouseholdAndGroupIdMapping.Visible = true;
+                BeneficiaryRandomizationandEnrollment.Visible = true;
+                TrainingandAttendanceTracking.Visible = true;
+                BusinessPlanDevelopment.Visible = true;
+                LivelihoodGrantDisbursement.Visible = true;
+                FinancialServiceLinkageTracking.Visible = true;
+                CoachingSessionTracking.Visible = true;
+                AuditRecordDownload.Visible = true;
 
                 nongbvMenu.Visible = true;
                 nongbvDashboardMenu.Visible = true;
@@ -182,12 +421,11 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 gbvNewMenuDashboard.Visible = true;
                 grmReport.Visible = true;
                 grmImporting.Visible = true;
-				LiPayroll.Visible = true;
             }
             if (Session["user_type"].ToString() == "Report")
             {
                 LiIp8.Visible = true;
-                LiIp9.Visible = true;
+                setLiPaymentReportsPermission(true);
                 Li1.Visible = false;
 
             }
@@ -349,7 +587,12 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiTST8.Visible = true;
                 LiUM.Visible = true;
             }
-
+            if (Session["user_type"].ToString() == ConfigurationManager.AppSettings["PaymentCycleDocumentUploadRole"].ToString())
+            {
+                LiPaymentCycleDocument.Visible = true;
+                liUploadPaymentCycleDoc.Visible = true;
+                liViewPaymentCycleDoc.Visible = true;
+            }
             
             if (Session["user_type"].ToString() == "PC")
             {
@@ -407,7 +650,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 nongbvDashboardMenu.Visible = true;
                 Li1.Visible = false;
             }
-            if (Session["user_type"].ToString() == "PcuSpec")
+            if (Session["user_type"].ToString() == "PcuSpec" || Session["user_type"].ToString() == "WBGBVMgr")
             {
                 LiIp6.Visible = true;
                 nongbvMenu.Visible = true;

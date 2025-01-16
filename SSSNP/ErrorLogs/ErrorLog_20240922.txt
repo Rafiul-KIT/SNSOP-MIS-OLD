@@ -1,0 +1,128 @@
+Time: 9/22/2024 2:17:54 PM
+Message: Invalid column name 'GroupID'.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupID, String groupName, String latitude, String longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 223
+---------------------------------------------------------
+Time: 9/22/2024 2:53:19 PM
+Message: Invalid column name 'GroupID'.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupID, String groupName, String latitude, String longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 223
+---------------------------------------------------------
+Time: 9/22/2024 2:54:08 PM
+Message: Invalid column name 'GroupID'.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupID, String groupName, String latitude, String longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 223
+---------------------------------------------------------
+Time: 9/22/2024 2:54:13 PM
+Message: Invalid column name 'GroupID'.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupID, String groupName, String latitude, String longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 223
+---------------------------------------------------------
+Time: 9/22/2024 2:54:16 PM
+Message: Invalid column name 'GroupID'.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupID, String groupName, String latitude, String longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 223
+---------------------------------------------------------
+Time: 9/22/2024 2:54:42 PM
+Message: Invalid column name 'GroupID'.
+StackTrace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupID, String groupName, String latitude, String longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 223
+---------------------------------------------------------
+Time: 9/22/2024 3:19:26 PM
+Message: Specified cast is not valid.
+StackTrace:    at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 200
+   at SSSNP.UI.Public_Works.HouseholdGroupView.btnImport_Click(Object sender, EventArgs e) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 150
+---------------------------------------------------------
+Time: 9/22/2024 3:22:29 PM
+Message: Invalid user ID in session.
+StackTrace: 
+---------------------------------------------------------
+Time: 9/22/2024 3:22:55 PM
+Message: Invalid user ID in session.
+StackTrace: 
+---------------------------------------------------------
+Time: 9/22/2024 3:27:31 PM
+Message: Invalid user ID in session.
+StackTrace: 
+---------------------------------------------------------
+Time: 9/22/2024 3:27:40 PM
+Message: Invalid user ID in session.
+StackTrace: 
+---------------------------------------------------------
+Time: 9/22/2024 3:34:20 PM
+Message: Invalid user ID in session.
+StackTrace: 
+---------------------------------------------------------
+Time: 9/22/2024 3:36:00 PM
+Message: Invalid user ID in session.
+StackTrace: 
+---------------------------------------------------------
+Time: 9/22/2024 3:39:37 PM
+Message: Input string was not in a correct format.
+StackTrace:    at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.String.System.IConvertible.ToInt32(IFormatProvider provider)
+   at System.Convert.ToInt32(Object value)
+   at SSSNP.UI.Public_Works.HouseholdGroupView.InsertHouseholdGroupIntoDB(SqlConnection conn, SqlTransaction transaction, String groupName, Decimal latitude, Decimal longitude) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 202
+   at SSSNP.UI.Public_Works.HouseholdGroupView.btnImport_Click(Object sender, EventArgs e) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 151
+---------------------------------------------------------
+Time: 9/22/2024 4:30:33 PM
+Message: This SqlTransaction has completed; it is no longer usable.
+StackTrace:    at System.Data.SqlClient.SqlTransaction.ZombieCheck()
+   at System.Data.SqlClient.SqlTransaction.Rollback()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.btnImport_Click(Object sender, EventArgs e) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 187
+---------------------------------------------------------
+Time: 9/22/2024 4:33:42 PM
+Message: This SqlTransaction has completed; it is no longer usable.
+StackTrace:    at System.Data.SqlClient.SqlTransaction.ZombieCheck()
+   at System.Data.SqlClient.SqlTransaction.Rollback()
+   at SSSNP.UI.Public_Works.HouseholdGroupView.btnImport_Click(Object sender, EventArgs e) in D:\projcet_snsop\SNSOP-MIS\SSSNP\UI\Public Works\HouseholdGroupView.aspx.cs:line 187
+---------------------------------------------------------

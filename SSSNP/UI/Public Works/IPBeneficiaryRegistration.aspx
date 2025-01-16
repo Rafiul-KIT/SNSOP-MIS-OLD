@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Beneficiary Enrollment " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="IPBeneficiaryRegistration" CodeBehind="IPBeneficiaryRegistration.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Beneficiary Enrollment " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="IPBeneficiaryRegistration" CodeBehind="IPBeneficiaryRegistration.aspx.cs" %>
 
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
@@ -135,7 +135,7 @@
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator11" runat="server"
                                                             ControlToValidate="ddlIP" ErrorMessage="Please Select IP"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
 
@@ -155,7 +155,7 @@
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator13" runat="server"
                                                             ControlToValidate="txtHeadName"
                                                             ErrorMessage="Please Enter Name of household head" SetFocusOnError="True"
-                                                            ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
 
@@ -178,7 +178,7 @@
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server"
                                                             ControlToValidate="ddlBeneficiary" ErrorMessage="Please Select Beneficiary Type?"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
 
@@ -499,7 +499,7 @@
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server"
                                                             ControlToValidate="ddlGroupList" ErrorMessage="Please Select Group?" Visible="false"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
 
@@ -521,7 +521,7 @@
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator14" runat="server"
                                                             ControlToValidate="txtFamilySize" ErrorMessage="Please Enter Household size"
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -540,7 +540,7 @@
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator15" runat="server"
                                                             ControlToValidate="ddlSex" ErrorMessage="Please Select Sex"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -568,7 +568,7 @@
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator16" runat="server"
                                                             ControlToValidate="txtSpouse" ErrorMessage="Please Enter Name of spouse"
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -621,7 +621,7 @@
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator17" runat="server"
                                                             ControlToValidate="ddlNoofAdults"
                                                             ErrorMessage="Please Select No.of other adult household members"
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
 
@@ -823,7 +823,7 @@
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator18" runat="server"
                                                             ControlToValidate="ddldependents"
                                                             ErrorMessage="Please Select Number of dependents" SetFocusOnError="True"
-                                                            ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
 
@@ -991,9 +991,9 @@
                                                             ValidationGroup="group" Width="180px"></asp:TextBox>--%>
                                                         <asp:DropDownList ID="ddlComponent"
                                                             runat="server" class="form-control txtbox" Height="36px">
-                                                            <asp:ListItem Value="Select">--- Select ---</asp:ListItem>
+                                                            <asp:ListItem Value="Select">--Select--</asp:ListItem>
                                                             <asp:ListItem Value="Component 1 (Public Works)">Component 1 (LIPW)</asp:ListItem>
-                                                            <asp:ListItem Value="Component 2 (Direct Income Support)">Component 2 (DIS)</asp:ListItem>
+                                                            <asp:ListItem Value="Component 1 (Direct Income Support)">Component 1 (DIS)</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
 
@@ -1091,11 +1091,10 @@
                                                             OnSelectedIndexChanged="ddlState_SelectedIndexChanged" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server"
                                                             ControlToValidate="ddlState" ErrorMessage="Please Select State"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
 
@@ -1128,11 +1127,10 @@
                                                             OnSelectedIndexChanged="ddlCounties_SelectedIndexChanged" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator8" runat="server"
                                                             ControlToValidate="ddlCounties" ErrorMessage="Please Select County"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1146,11 +1144,10 @@
                                                             AutoPostBack="True" OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                   
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator9" runat="server"
                                                             ControlToValidate="ddlPayam" ErrorMessage="Please Select Payam"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
 
@@ -1166,11 +1163,10 @@
                                                         </asp:DropDownList>
 
                                                         <asp:HiddenField ID="hdBoma" runat="server" />
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator10" runat="server"
                                                             ControlToValidate="ddlBoma" ErrorMessage="Please Select Boma"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
 
                                                     </td>
                                                 </tr>
@@ -1197,11 +1193,10 @@
                                                         <asp:TextBox ID="txtAddress" runat="server" class="form-control txtbox"
                                                             Height="42px" MaxLength="100" TabIndex="1"
                                                             TextMode="MultiLine" ValidationGroup="group" Width="180px"></asp:TextBox>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator19" runat="server"
                                                             ControlToValidate="txtAddress" ErrorMessage="Please Enter Address"
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1217,7 +1212,7 @@
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator20" runat="server"
                                                             ControlToValidate="txtContactNo" ErrorMessage="Please Enter Contact No"
-                                                            SetFocusOnError="True" ValidationGroup="group" Visible="False">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group" Visible="False"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1247,11 +1242,10 @@
                                                         <asp:TextBox ID="txtHomePhone" runat="server" class="form-control txtbox"
                                                             Height="28px" MaxLength="15" onkeypress="NumberOnly()" TabIndex="1"
                                                             ValidationGroup="group" Width="180px"></asp:TextBox>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator22" runat="server"
                                                             ControlToValidate="txtHomePhone" ErrorMessage="Please Enter Second Line / Home"
-                                                            SetFocusOnError="True" ValidationGroup="group" Visible="False">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group" Visible="False"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1273,11 +1267,10 @@
                                                             <asp:ListItem>Citizen</asp:ListItem>
 
                                                         </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="rvddlLegalStatus" runat="server"
                                                             ControlToValidate="ddlLegalStatus" ErrorMessage="Please Select Legal Status"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
 
                                                     </td>
                                                 </tr>
@@ -1295,11 +1288,10 @@
                                                             <asp:ListItem Value="Y">Yes</asp:ListItem>
                                                             <asp:ListItem Value="N">No</asp:ListItem>
                                                         </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                   
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator23" runat="server"
                                                             ControlToValidate="ddlIsdisability" ErrorMessage="Please Select Is Disability?"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr runat="server" visible="false" id="trdisability">
@@ -1312,11 +1304,10 @@
                                                             class="form-control txtbox" Height="36px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator24" runat="server"
                                                             ControlToValidate="ddlDisability" ErrorMessage="Please select Disability"
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1377,12 +1368,10 @@
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
                                                         <asp:TextBox ID="txtName1stAlternatePayee" runat="server" class="form-control txtbox"
                                                             Height="28px" MaxLength="40" TabIndex="1" ValidationGroup="group" Width="180px"></asp:TextBox>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
 
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator26" runat="server"
                                                             ControlToValidate="txtName1stAlternatePayee" ErrorMessage="Please Enter First Alternate Payee"
-                                                            InitialValue="" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
 
                                                     </td>
                                                 </tr>
@@ -1484,11 +1473,10 @@
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
                                                         <asp:TextBox ID="txtName2ndAlternatePayee" runat="server" class="form-control txtbox"
                                                             Height="28px" MaxLength="40" TabIndex="1" ValidationGroup="group" Width="180px"></asp:TextBox>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server"
                                                             ControlToValidate="txtName2ndAlternatePayee" ErrorMessage="Please Enter Second Alternate Payee"
-                                                            InitialValue="" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1638,12 +1626,11 @@
                                                         <asp:TextBox ID="txtReAccNo" runat="server" class="form-control txtbox"
                                                             Height="28px" MaxLength="15" TabIndex="1" ValidationGroup="group"
                                                             Width="180px"></asp:TextBox>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:CompareValidator ID="CompareValidator1" runat="server"
                                                             ControlToCompare="txtAccNo" ControlToValidate="txtReAccNo"
                                                             ErrorMessage="Account No and Retype Account No should match"
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:CompareValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:CompareValidator>
                                                     </td>
                                                 </tr>
                                             </table>

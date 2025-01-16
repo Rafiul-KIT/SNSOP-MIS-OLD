@@ -74,7 +74,7 @@
             font-size: 14px;
             position: absolute;
             background-color: #FFF /*#009EDB;*/;
-            background-image: url('Resource/Images/Background_cover.png');
+            background-image: url('Resource/Images/Background_cover_1.png');
             background-size: cover;
             background-position: center top;
             background-attachment: inherit;
@@ -344,7 +344,7 @@
                     <div class="col-md" style="align-self: center; padding-top: 2px;">
                         <div class="btn-group dropup mb-6">
 
-                            <img src="Resource/Images/Image.png" class="login-Laptop6" alt="" aria-atomic="False" />
+                            <img src="Resource/Images/Image_optimized_100.png" class="login-Laptop6" alt="" aria-atomic="False" />
                         </div>
                         <br />
                         <img src="Resource/Images/SNSOP_logo_transparent.png" alt="" style="height: 70px; display: inline-block; vertical-align: middle;" />

@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Project Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPProjectRegistration" Codebehind="IPProjectRegistration.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Project Details " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="IPProjectRegistration" Codebehind="IPProjectRegistration.aspx.cs" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 
 
@@ -96,31 +96,31 @@ function OpenPopup()
                                                         :</td>
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
                                                         <asp:DropDownList ID="ddlIP" runat="server" class="form-control txtbox" 
-                                                            Height="33px" Width="180px" ValidationGroup="group">
+                                                            Height="33px" Width="180px" ValidationGroup="group" style="display: inline-block;">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator22" runat="server" 
                                                             ControlToValidate="ddlIP" ErrorMessage="Please Select IP" 
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
+                                                        </td>
+                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="Label304" runat="server" CssClass="LBLBLACK" Width="137px">Project Name</asp:Label>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">
-                                                        :</td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
                                                         <asp:TextBox ID="txtProjectName" runat="server" class="form-control txtbox" 
                                                             Height="28px" MaxLength="40"  TabIndex="1" 
-                                                            ValidationGroup="group" Width="180px"></asp:TextBox>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                            ValidationGroup="group" Width="180px" style="display: inline-block;"></asp:TextBox>
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator23" runat="server" 
                                                             ControlToValidate="txtProjectName" ErrorMessage="Please Enter Project Name" 
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                        &nbsp;
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -132,21 +132,18 @@ function OpenPopup()
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
                                                         <asp:TextBox ID="txtStartDate" runat="server" class="form-control txtbox" 
                                                             Height="28px" MaxLength="9" onkeypress="Dates()" TabIndex="1" 
-                                                            ValidationGroup="group" Width="180px"></asp:TextBox>
+                                                            ValidationGroup="group" Width="180px" style="display: inline-block;">--Select--</asp:TextBox>
                                                             
-                                                            <cc1:CalendarExtender ID="CalendarExtender1" runat="server" 
-Format="dd-MM-yyyy" PopupButtonID="txtStartDate" 
-TargetControlID="txtStartDate">
-</cc1:CalendarExtender>
+                                                            <cc1:CalendarExtender ID="CalendarExtender1" runat="server" Format="dd-MM-yyyy" PopupButtonID="txtStartDate" TargetControlID="txtStartDate">
+                                                            </cc1:CalendarExtender>
 
 
-<%--<input type="date" value="Select date" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Select date';}">--%>
-                                                            
-                                                           </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                    <%--<input type="date" value="Select date" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Select date';}">--%>
+                                                          
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator25" runat="server" 
                                                             ControlToValidate="txtStartDate" ErrorMessage="Please Enter Start Date" 
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
+                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -158,19 +155,18 @@ TargetControlID="txtStartDate">
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
                                                         <asp:TextBox ID="txtEndDate" runat="server" class="form-control txtbox" 
                                                             Height="28px" MaxLength="10" onkeypress="Dates()"  TabIndex="1" 
-                                                            ValidationGroup="group" Width="180px"></asp:TextBox>
+                                                            ValidationGroup="group" Width="180px" style="display: inline-block;">--Select--</asp:TextBox>
                                                             
                                                             <cc1:CalendarExtender ID="CalendarExtender2" runat="server" 
-Format="dd-MM-yyyy" PopupButtonID="txtEndDate" 
-TargetControlID="txtEndDate">
-</cc1:CalendarExtender>
-                                                            
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                                Format="dd-MM-yyyy" PopupButtonID="txtEndDate" TargetControlID="txtEndDate">
+                                                            </cc1:CalendarExtender>
+                                                        
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator26" runat="server" 
                                                             ControlToValidate="txtEndDate" ErrorMessage="Please Enter End Date" 
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
                                                     </td>
+                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                        </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
@@ -181,16 +177,16 @@ TargetControlID="txtEndDate">
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
                                                         <asp:TextBox ID="txtActStartDate" runat="server" class="form-control txtbox" 
                                                             Height="28px" MaxLength="10" onkeypress="Dates()"  TabIndex="1" 
-                                                            ValidationGroup="group" Width="180px"></asp:TextBox>
+                                                            ValidationGroup="group" Width="180px" style="display: inline-block;">--Select--</asp:TextBox>
+                                                        
                                                         <cc1:CalendarExtender ID="txtActStartDate_CalendarExtender" runat="server" 
-                                                            Format="dd-MM-yyyy" PopupButtonID="txtActStartDate" 
-                                                            TargetControlID="txtActStartDate">
+                                                            Format="dd-MM-yyyy" PopupButtonID="txtActStartDate" TargetControlID="txtActStartDate">
                                                         </cc1:CalendarExtender>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator27" runat="server" 
                                                             ControlToValidate="txtActStartDate" ErrorMessage="Please Enter Sanction Date" 
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&emsp;*</span></asp:RequiredFieldValidator>
+                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
                                                     </td>
                                                 </tr>
                                                  <tr>
@@ -219,7 +215,8 @@ TargetControlID="txtEndDate">
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:Label ID="Label364" runat="server" CssClass="LBLBLACK" Width="165px">State Name</asp:Label>
+                                                        <asp:Label ID="Label364" runat="server" CssClass="LBLBLACK" Width="165px">State Name
+                                                        </asp:Label>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         :</td>
@@ -234,7 +231,7 @@ TargetControlID="txtEndDate">
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator18" runat="server" 
                                                             ControlToValidate="ddlState" ErrorMessage="Please Select State" 
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="child">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="child"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 
@@ -256,7 +253,7 @@ TargetControlID="txtEndDate">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator20" runat="server" 
                                                             ControlToValidate="ddlWorkActivity" ErrorMessage="Please Select Work Activity" 
                                                             InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="child" 
-                                                            Visible="False">*</asp:RequiredFieldValidator>
+                                                            Visible="False"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr runat="server" visible="false">
@@ -275,7 +272,7 @@ TargetControlID="txtEndDate">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator21" runat="server" 
                                                             ControlToValidate="ddlWorkActivity" ErrorMessage="Please Select Work Activity" 
                                                             InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="child" 
-                                                            Visible="False">*</asp:RequiredFieldValidator>
+                                                            Visible="False"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -300,7 +297,7 @@ TargetControlID="txtEndDate">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator28" runat="server" 
                                                             ControlToValidate="txtTargetBen" 
                                                             ErrorMessage="Please Enter Target Beneficiaries" SetFocusOnError="True" 
-                                                            ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr >
@@ -317,7 +314,7 @@ TargetControlID="txtEndDate">
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator29" runat="server" 
                                                             ControlToValidate="txtPrjCost" ErrorMessage="Please Enter Project Cost (In USD)" 
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -335,7 +332,7 @@ TargetControlID="txtEndDate">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator30" runat="server" 
                                                             ControlToValidate="txtPrjInchargeName" 
                                                             ErrorMessage="Please Enter Incharge Name" SetFocusOnError="True" 
-                                                            ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -353,7 +350,7 @@ TargetControlID="txtEndDate">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator31" runat="server" 
                                                             ControlToValidate="txtPrjInchMobile" 
                                                             ErrorMessage="Please Enter Person Incharge Mobile" SetFocusOnError="True" 
-                                                            ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -370,7 +367,7 @@ TargetControlID="txtEndDate">
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator32" runat="server" 
                                                             ControlToValidate="txtPrjInchEmail" ErrorMessage="Please Enter Project Email" 
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                         <br />
                                                         <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" 
                                                             ControlToValidate="txtPrjInchEmail" ErrorMessage="Please Enter Valid Email" 
@@ -387,7 +384,7 @@ TargetControlID="txtEndDate">
                                                         :</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlStatus" runat="server" class="form-control txtbox" 
-                                                            Height="28px" Width="180px">
+                                                            Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                             <asp:ListItem>InProgress</asp:ListItem>
                                                             <asp:ListItem>Closed</asp:ListItem>
@@ -397,7 +394,7 @@ TargetControlID="txtEndDate">
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator24" runat="server" 
                                                             ControlToValidate="ddlStatus" ErrorMessage="Please Select Status" 
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -428,7 +425,7 @@ TargetControlID="txtEndDate">
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator19" runat="server" 
                                                             ControlToValidate="ddlCounties" ErrorMessage="Please Select Municipality" 
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="child">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="child"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr runat="server" visible="false">
@@ -446,7 +443,7 @@ TargetControlID="txtEndDate">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator15" runat="server" 
                                                             ControlToValidate="txtProposedTarget" 
                                                             ErrorMessage="Please Enter Proposed Target" SetFocusOnError="True" 
-                                                            ValidationGroup="child" Visible="False">*</asp:RequiredFieldValidator>
+                                                            ValidationGroup="child" Visible="False"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                         </td>
                                                 </tr>
                                                 <tr runat="server" visible="false">
@@ -467,7 +464,7 @@ TargetControlID="txtEndDate">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator16" runat="server" 
                                                             ControlToValidate="ddlAreasofWork" ErrorMessage="Please Select Type of Work" 
                                                             InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="child" 
-                                                            Visible="False">*</asp:RequiredFieldValidator>
+                                                            Visible="False"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr runat="server" visible="false">
@@ -488,7 +485,7 @@ TargetControlID="txtEndDate">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator17" runat="server" 
                                                             ControlToValidate="ddlWorkActivity" ErrorMessage="Please Select Work Activity" 
                                                             InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="child" 
-                                                            Visible="False">*</asp:RequiredFieldValidator>
+                                                            Visible="False"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>

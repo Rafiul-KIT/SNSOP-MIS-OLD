@@ -139,6 +139,15 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl beneficiaryRegistrationMenu;
 
     /// <summary>
+    /// BeneficiaryListMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl BeneficiaryListMenu;
+
+    /// <summary>
     /// jobCardMenu control.
     /// </summary>
     /// <remarks>
@@ -193,6 +202,177 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiIp5;
 
     /// <summary>
+    /// WageRequestApplyLIPW control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestApplyLIPW;
+
+    /// <summary>
+    /// WageRequestApplyDIS control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestApplyDIS;
+
+    /// <summary>
+    /// WageRequestDraft control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestDraft;
+
+    /// <summary>
+    /// RejectedWages control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl RejectedWages;
+
+    /// <summary>
+    /// LiPaymentCycleDocument control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiPaymentCycleDocument;
+
+    /// <summary>
+    /// liUploadPaymentCycleDoc control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liUploadPaymentCycleDoc;
+
+    /// <summary>
+    /// liViewPaymentCycleDoc control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liViewPaymentCycleDoc;
+
+    /// <summary>
+    /// EconomicOpportunities control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl EconomicOpportunities;
+
+    /// <summary>
+    /// EconomicOpportunitiesDashboard control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl EconomicOpportunitiesDashboard;
+
+    /// <summary>
+    /// Component2TemplateImporting control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl Component2TemplateImporting;
+
+    /// <summary>
+    /// HouseholdGroupView control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl HouseholdGroupView;
+
+    /// <summary>
+    /// HouseholdAndGroupIdMapping control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl HouseholdAndGroupIdMapping;
+
+    /// <summary>
+    /// BeneficiaryRandomizationandEnrollment control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl BeneficiaryRandomizationandEnrollment;
+
+    /// <summary>
+    /// TrainingandAttendanceTracking control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl TrainingandAttendanceTracking;
+
+    /// <summary>
+    /// BusinessPlanDevelopment control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl BusinessPlanDevelopment;
+
+    /// <summary>
+    /// LivelihoodGrantDisbursement control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LivelihoodGrantDisbursement;
+
+    /// <summary>
+    /// FinancialServiceLinkageTracking control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl FinancialServiceLinkageTracking;
+
+    /// <summary>
+    /// CoachingSessionTracking control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl CoachingSessionTracking;
+
+    /// <summary>
+    /// AuditRecordDownload control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl AuditRecordDownload;
+
+    /// <summary>
     /// LiPayroll control.
     /// </summary>
     /// <remarks>
@@ -200,6 +380,24 @@ public partial class CCMaster
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiPayroll;
+
+    /// <summary>
+    /// payrollDownload control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl payrollDownload;
+
+    /// <summary>
+    /// payrollReconcile control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl payrollReconcile;
 
     /// <summary>
     /// LiMNE control.
@@ -265,15 +463,6 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl gbvNewMenuDashboard;
 
     /// <summary>
-    /// GRMMenuDashboard control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl GRMMenuDashboard;
-
-    /// <summary>
     /// grmReport control.
     /// </summary>
     /// <remarks>
@@ -328,13 +517,193 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiIp11;
 
     /// <summary>
-    /// LiIp9 control.
+    /// LiPaymentReports control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiIp9;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiPaymentReports;
+
+    /// <summary>
+    /// WageRequestAbstractReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestAbstractReportMenu;
+
+    /// <summary>
+    /// WageRequestAbstractLIPWReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestAbstractLIPWReportMenu;
+
+    /// <summary>
+    /// WageRequestAbstractDISReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestAbstractDISReportMenu;
+
+    /// <summary>
+    /// UnpaidWageRequestAbstractReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl UnpaidWageRequestAbstractReportMenu;
+
+    /// <summary>
+    /// UnpaidWageRequestAbstractLIPWReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl UnpaidWageRequestAbstractLIPWReportMenu;
+
+    /// <summary>
+    /// UnpaidWageRequestAbstractDISReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl UnpaidWageRequestAbstractDISReportMenu;
+
+    /// <summary>
+    /// PaidWageRequestAbstractReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl PaidWageRequestAbstractReportMenu;
+
+    /// <summary>
+    /// PaidWageRequestAbstractLIPWReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl PaidWageRequestAbstractLIPWReportMenu;
+
+    /// <summary>
+    /// PaidWageRequestAbstractDISReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl PaidWageRequestAbstractDISReportMenu;
+
+    /// <summary>
+    /// WagePaidAbstractReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WagePaidAbstractReportMenu;
+
+    /// <summary>
+    /// WagePaidAbstractLIPWReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WagePaidAbstractLIPWReportMenu;
+
+    /// <summary>
+    /// WagePaidAbstractDISReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WagePaidAbstractDISReportMenu;
+
+    /// <summary>
+    /// WagePaidAbstractBiometricReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WagePaidAbstractBiometricReportMenu;
+
+    /// <summary>
+    /// WageDetailsFromPayconnectReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageDetailsFromPayconnectReportMenu;
+
+    /// <summary>
+    /// UnpaidWageDetailsFromPayconnectReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl UnpaidWageDetailsFromPayconnectReportMenu;
+
+    /// <summary>
+    /// PaidWageDetailsFromPayconnectReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl PaidWageDetailsFromPayconnectReportMenu;
+
+    /// <summary>
+    /// TotalBeneficiryPaymentDetailsReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl TotalBeneficiryPaymentDetailsReportMenu;
+
+    /// <summary>
+    /// MultipleWagesReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl MultipleWagesReportMenu;
+
+    /// <summary>
+    /// WagePaidCycleWiseReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl WagePaidCycleWiseReportMenu;
+
+    /// <summary>
+    /// PaidAlternateNotInMISReportMenu control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl PaidAlternateNotInMISReportMenu;
 
     /// <summary>
     /// LiTST1 control.

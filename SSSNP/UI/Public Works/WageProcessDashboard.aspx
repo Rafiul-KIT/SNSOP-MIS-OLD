@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : ::   : Dashboard " Language="C#" MasterPageFile="~/UI/Public Works/TstMaster.master" AutoEventWireup="true" Inherits="WageProcessDashboard" CodeBehind="WageProcessDashboard.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : ::   : Dashboard " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="WageProcessDashboard" CodeBehind="WageProcessDashboard.aspx.cs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 
@@ -37,7 +37,7 @@
                 <div class="panel panel-warning">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <asp:Label ID="lblOfficer" runat="server" Text="Label"></asp:Label>&nbsp; Wages Dashboard 
+                            <asp:Label ID="lblOfficer" runat="server" Text="Label"></asp:Label> Wages Dashboard 
                         </h3>
                     </div>
 

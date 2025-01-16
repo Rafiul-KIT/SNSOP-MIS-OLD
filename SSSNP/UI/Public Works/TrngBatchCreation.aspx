@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : :  Batch Creation " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngBatchCreation" Codebehind="TrngBatchCreation.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : :  Batch Creation " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master"AutoEventWireup="true" Inherits="TrngBatchCreation" Codebehind="TrngBatchCreation.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

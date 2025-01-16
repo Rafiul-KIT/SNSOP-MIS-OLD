@@ -1,3 +1,941 @@
+-- 23-11-2024
+
+alter table tbl_com2_Household_Enrollment_Data add ReasonForWhyNotEnrolled text;
+alter table tbl_com2_Household_Enrollment_Data_Audit add ReasonForWhyNotEnrolled text;
+
+alter table tbl_com2_Household_Group_View add VSLA_formed bit;
+
+alter table tbl_com2_Livelihood_Grant_Disbursement add ActualPaymentDate date;
+alter table tbl_com2_Livelihood_Grant_Disbursement_Audit add ActualPaymentDate date;
+
+create table tbl_com2_fsp_entity
+(
+    id int identity primary key,
+    name varchar(255) unique
+);
+
+alter table tbl_com2_Financial_Services_Linkage_Tracking add fsp_entity_id int references tbl_com2_fsp_entity;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add fsp_entity_id int;
+alter table tbl_com2_Financial_Services_Linkage_Tracking add fsp_connection_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add fsp_connection_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking add deposit_account_opened bit;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add deposit_account_opened bit;
+alter table tbl_com2_Financial_Services_Linkage_Tracking add deposit_account_open_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add deposit_account_open_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking add account_last_activity_date date;
+alter table tbl_com2_Financial_Services_Linkage_Tracking_Audit add account_last_activity_date date;
+
+create table tbl_com2_Business_Plan_Status
+(
+    id int primary key,
+    name varchar(16)
+);
+
+insert into tbl_com2_Business_Plan_Status(id,name)
+values (0,'Drafted'),(1,'Undrafted'),(2,'Approved'),(3,'Rejected');
+
+alter table tbl_com2_Business_Plan_Development drop column BusinessPlanStatus;
+alter table tbl_com2_Business_Plan_Development_Audit drop column BusinessPlanStatus;
+
+alter table tbl_com2_Business_Plan_Development add BusinessPlanStatus int references tbl_com2_Business_Plan_Status;
+alter table tbl_com2_Business_Plan_Development_Audit add BusinessPlanStatus int references tbl_com2_Business_Plan_Status;
+
+-- 23-11-2024
+
+-- 16/11/2024
+
+create procedure getReconciledUnpaidPayrollKIT
+(
+    @intStateId int,
+    @intCountieId int,
+    @intPayamId int,
+    @intBomaId int
+) as
+select wrbd.AmountInSSP, wrbd.TotAttendance, wwr.ReqFromDate, wwr.ReqToDate,
+ben.EnrollmentNo, wwr.Exchangerateattime, ben.NameofHousehold, wwr.Created_dt,
+ben.household_number, ben.latitude, ben.longitude, '' PaidTo,
+'UNPAID' status, wrbd.intWagesReqBenTransid trans_id, wwr.intWagePaymentReqid uuid,
+wrbd.AmountInSSP, wm.WorkCode, wm.intWorkid
+from td_WageReqBenDet wrbd
+inner join td_WorkWageRequest wwr on wrbd.intWagePaymentReqid = wwr.intWagePaymentReqid
+inner join tbl_WorkMaster wm on wrbd.intWorkid = wm.intWorkid
+inner join tbl_BeneficiaryDet ben on wrbd.intBenid=ben.intBenid
+left join tr_BenWagesPayment pay on wrbd.intWagesReqBenTransid=pay.trans_id
+where 1=1
+and wwr.Status > 4 and pay.intWageid is null
+and (@intStateId is null or ben.intStateid=@intStateId)
+and (@intCountieId is null or ben.intCountieid=@intCountieId)
+and (@intPayamId is null or ben.intPayamid=@intPayamId)
+and (@intBomaId is null or ben.intBomasid=@intBomaId)
+;
+go
+
+-- 16/11/2024
+
+-- 19-10-2024
+
+create table tbl_com2_Business_Plan_Development
+(
+    Id                 int identity,
+    HouseholdNumber    nvarchar(255)
+        constraint UK_Business_Plan_Development
+            unique,
+    BusinessPlanStatus bit,
+    BusinessType       int,
+    CreatedBy          int,
+    CreatedDate        datetime,
+    ModifiedBy         int,
+    ModifiedDate       datetime,
+    StateID            int
+        references tm_States,
+    CountyID           int
+        references tm_Counties,
+    PayamID            int
+        references tm_Payams,
+    BomaID             int
+        references tm_Bomas,
+    FirstName          varchar(255),
+    MiddleName         varchar(255),
+    NickName           varchar(255),
+    LastName           varchar(255),
+    Gender             varchar,
+    Age                int
+)
+go
+
+create table tbl_com2_Business_Plan_Development_Audit
+(
+    Id                 int identity,
+    HouseholdNumber    nvarchar(255),
+    BusinessPlanStatus bit,
+    BusinessType       int,
+    UploadedBy         int,
+    UploadDate         datetime,
+    Validity           bit,
+    InvalidReason      varchar(max),
+    FileId             varchar(20)
+)
+go
+
+create table tbl_com2_course
+(
+    Id         int identity
+        primary key,
+    CourseCode varchar(32)
+        unique,
+    CourseName varchar(255)
+        unique
+)
+go
+
+create table tbl_com2_Financial_Services_Linkage_Tracking
+(
+    Id                         int identity,
+    HouseholdNumber            nvarchar(255)
+        constraint UK_Financial_Services_Linkage_Tracking
+            unique,
+    ConnectedFinancialServices bit,
+    EntityName                 varchar(255),
+    CreatedBy                  int,
+    CreatedDate                datetime,
+    ModifiedBy                 int,
+    ModifiedDate               datetime,
+    StateID                    int
+        references tm_States,
+    CountyID                   int
+        references tm_Counties,
+    PayamID                    int
+        references tm_Payams,
+    BomaID                     int
+        references tm_Bomas,
+    FirstName                  varchar(255),
+    MiddleName                 varchar(255),
+    NickName                   varchar(255),
+    LastName                   varchar(255),
+    Gender                     varchar,
+    Age                        int
+)
+go
+
+create table tbl_com2_Financial_Services_Linkage_Tracking_Audit
+(
+    Id                         int identity,
+    HouseholdNumber            nvarchar(255),
+    ConnectedFinancialServices bit,
+    EntityName                 varchar(255),
+    UploadedBy                 int,
+    UploadDate                 datetime,
+    Validity                   bit,
+    InvalidReason              varchar(max),
+    FileId                     varchar(20)
+)
+go
+
+create table tbl_com2_Household_Enrollment_Data
+(
+    Id                        int identity,
+    StateID                   int
+        references tm_States,
+    CountyID                  int
+        references tm_Counties,
+    PayamID                   int
+        references tm_Payams,
+    BomaID                    int
+        references tm_Bomas,
+    HouseholdNumber           nvarchar(255) not null
+        constraint UK_Household_Enrollment_Data
+            unique,
+    InterestedInParticipating bit,
+    FirstName                 nvarchar(255),
+    MiddleName                nvarchar(255),
+    LastName                  nvarchar(255),
+    NickName                  nvarchar(255),
+    Gender                    nvarchar(50),
+    Age                       int,
+    SurvivesTargeting         bit,
+    TreatmentArm              bit,
+    HHEnrollmentStatus        bit,
+    GroupID                   int,
+    EnrolledMemberID          int,
+    CreatedBy                 int,
+    CreatedDate               datetime,
+    ModifiedBy                int,
+    ModifiedDate              datetime
+)
+go
+
+create table tbl_com2_Household_Enrollment_Data_Audit
+(
+    Id                        int identity,
+    HouseholdNumber           nvarchar(255),
+    InterestedInParticipating bit,
+    SurvivesTargeting         bit,
+    TreatmentArm              bit,
+    HHEnrollmentStatus        bit,
+    GroupID                   int,
+    EnrolledMemberID          int,
+    UploadedBy                int,
+    UploadDate                datetime,
+    Validity                  bit,
+    InvalidReason             varchar(max),
+    FileId                    varchar(20)
+)
+go
+
+create table tbl_com2_Household_Group_Linkage
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255),
+    GroupId         int not null,
+    CreatedBy       int,
+    CreatedDate     datetime,
+    ModifiedBy      int,
+    ModifiedDate    datetime
+)
+go
+
+create table tbl_com2_Household_Group_View
+(
+    Id           int identity
+        constraint PK_tbl_com2_Household_Group_View
+            primary key,
+    GroupName    nvarchar(255)
+        constraint UK_Household_Group_View
+            unique,
+    Latitude     decimal(10, 7),
+    Longitude    decimal(10, 7),
+    CreatedBy    int,
+    CreatedDate  datetime,
+    ModifiedBy   int,
+    ModifiedDate datetime
+)
+go
+
+create table tbl_com2_Livelihood_Grant_Disbursement
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255) not null
+        constraint UK_Livelihood_Grant_Disbursement
+            unique,
+    PaymentCycle    nvarchar(50),
+    PaymentAmount   decimal(18, 2),
+    PaymentDate     datetime,
+    CreatedBy       int,
+    CreatedDate     datetime,
+    ModifiedBy      int,
+    ModifiedDate    datetime,
+    StateID         int
+        references tm_States,
+    CountyID        int
+        references tm_Counties,
+    PayamID         int
+        references tm_Payams,
+    BomaID          int
+        references tm_Bomas,
+    FirstName       varchar(255),
+    MiddleName      varchar(255),
+    NickName        varchar(255),
+    LastName        varchar(255),
+    Gender          varchar,
+    Age             int
+)
+go
+
+create table tbl_com2_Livelihood_Grant_Disbursement_Audit
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255),
+    PaymentCycle    nvarchar(50),
+    PaymentAmount   decimal(18, 2),
+    PaymentDate     datetime,
+    UploadedBy      int,
+    UploadDate      datetime,
+    Validity        bit,
+    InvalidReason   varchar(max),
+    FileId          varchar(20)
+)
+go
+
+create table tbl_com2_Training_Attendance
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255)
+        constraint UK_Training_Attendance
+            unique,
+    CourseCode      varchar(32),
+    CourseDuration  int,
+    ClassesAttended int,
+    ClassesHeld     int,
+    ClassesMissed   int,
+    WhyMissed       nvarchar(255),
+    CreatedBy       int,
+    CreatedDate     datetime,
+    ModifiedBy      int,
+    ModifiedDate    datetime,
+    StateID         int
+        references tm_States,
+    CountyID        int
+        references tm_Counties,
+    PayamID         int
+        references tm_Payams,
+    BomaID          int
+        references tm_Bomas,
+    FirstName       varchar(255),
+    MiddleName      varchar(255),
+    NickName        varchar(255),
+    LastName        varchar(255),
+    Gender          varchar,
+    Age             int,
+    CourseId        int
+        references tbl_com2_course
+)
+go
+
+create table tbl_com2_Training_Attendance_Audit
+(
+    Id              int identity,
+    HouseholdNumber nvarchar(255),
+    CourseCode      varchar(32),
+    CourseDuration  int,
+    ClassesAttended int,
+    ClassesHeld     int,
+    ClassesMissed   int,
+    WhyMissed       nvarchar(255),
+    UploadedBy      int,
+    UploadDate      datetime,
+    Validity        bit,
+    InvalidReason   varchar(max),
+    FileId          varchar(20)
+)
+go
+
+insert into tbl_com2_course (CourseCode, CourseName) values
+('FINLIT', 'Financial Literacy'),
+('LIVETECH', 'Livelihood Technical Training'),
+('LIFESKILL','Life-skills Training'),
+('SAVINGS', 'Savings Group')
+;
+
+create table tbl_payment_cycle_document_details
+(
+    id                   int identity
+        primary key,
+    pc_year              varchar(10),
+    payment_cycle        int,
+    document_1_file_name varchar(200),
+    document_2_file_name varchar(200),
+    document_3_file_name varchar(200),
+    uploaded_at          datetime default getdate() not null,
+    uploaded_by          int
+)
+go
+
+
+
+-- 19-10-2024
+
+-- 19-09-2024
+
+alter table tbl_Nominee add afis_nominee_id bigint unique;
+
+alter procedure [dbo].[insertNomineeInfo]
+
+    @applicationId	varchar(100),
+    @nomineeFirstName varchar(100),
+    @nomineeMiddleName varchar(100),
+    @nomineeLastName varchar(100),
+    @nomineeNickName varchar(100),
+    @relationshipWithHouseholdHead int,
+    @relationshipOther varchar(100),
+    @nomineeAge	int,
+    @nomineeGender int,
+    @isReadWrite int,
+    @nomineeOccupation int,
+    @otherOccupation	varchar(100),
+    @afisNomineeId bigint,
+    @ReturnVal int output
+
+as begin
+    if not exists(select id from tbl_Nominee where afis_nominee_id=@afisNomineeId and @afisNomineeId is not null)
+
+        insert into tbl_Nominee
+        (
+            application_id,
+            nominee_first_name,
+            nominee_middle_name,
+            nominee_last_name,
+            nominee_nick_name,
+            relationship_with_household,
+            nominee_age,
+            nominee_gender,
+            is_read_write,
+            nominee_occupation,
+            other_occupation,
+            relationship_other,
+            afis_nominee_id
+        )
+        values
+            (
+
+                @applicationId,
+                @nomineeFirstName,
+                @nomineeMiddleName,
+                @nomineeLastName,
+                @nomineeNickName,
+                @relationshipWithHouseholdHead,
+                @nomineeAge,
+                @nomineeGender,
+                @isReadWrite,
+                @nomineeOccupation,
+                @otherOccupation,
+                @relationshipOther,
+                @afisNomineeId
+            )
+    else update tbl_Nominee set
+                                nominee_first_name = @nomineeFirstName,
+                                nominee_middle_name = @nomineeMiddleName,
+                                nominee_last_name = @nomineeLastName,
+                                nominee_nick_name = @nomineeNickName,
+                                relationship_with_household = @relationshipWithHouseholdHead,
+                                nominee_age = @nomineeAge,
+                                nominee_gender = @nomineeGender,
+                                is_read_write = @isReadWrite,
+                                nominee_occupation = @nomineeOccupation,
+                                other_occupation = @otherOccupation,
+                                relationship_other = @relationshipOther
+         where afis_nominee_id = @afisNomineeId
+    Declare @ids  as int
+    set @ids=@@IDENTITY
+    set @ReturnVal = @ids
+
+    return @ReturnVal
+end
+go
+
+-----
+
+alter procedure [dbo].[insertbenficiaryDetfromapi]
+
+    @intIP	varchar(100),
+    @household_number	varchar(100),
+    @BeneficiaryType	varchar(100),
+    @GroupId	varchar(100),
+    @supervisor_id	varchar(100),
+    @member_number	varchar(100),
+    @FamilySize	varchar(100),
+    @NameofHousehold	varchar(100),
+    @Age	varchar(100),
+    @NameofSpouse	varchar(100),
+    @NationalID	varchar(100),
+    @ContactNo	varchar(100),
+    @Sex	varchar(1),
+    @female_dependants	varchar(100),
+    @male_dependants	varchar(100),
+    @NoofDependents	varchar(100),
+    @NumberChildrenAgeAbove5years	varchar(100),
+    @NumberChildrenAgeAbove18years	varchar(100),
+    @NumberAdultsAgeBetween30_45	varchar(100),
+    @NumberAdultsAgeBetween45_64	varchar(100),
+    @NumberAdultsAgeAbove65	varchar(100),
+    @SOurceofIncome	varchar(100),
+    @FamilyIncome	varchar(100),
+    @intStateid	varchar(100),
+    @intCountieid	varchar(100),
+    @intPayamid	varchar(100),
+    @intBomasid	varchar(100),
+    @latitude	varchar(100),
+    @longitude	varchar(100),
+    @LegalStatus	varchar(100),
+    @PhotoName	varchar(100),
+    @id_url	varchar(100),
+    @TransferDate	varchar(100),
+    @TransferUpdateat	varchar(100),
+    @Created_by varchar(100),
+    @SelectionCriteria varchar(100),
+    @SelectionReason varchar(max),
+    @liTemplate varchar(MAX),
+    @lmTemplate  varchar(MAX),
+    @lrTemplate  varchar(MAX),
+    @lsTemplate  varchar(MAX),
+    @ltTemplate varchar(MAX),
+    @riTemplate varchar(MAX),
+    @rmTemplate varchar(MAX),
+    @rrTemplate varchar(MAX),
+    @rsTemplate varchar(MAX),
+    @rtTemplate varchar(MAX),
+    @household_photo_url varchar(255),
+    @alt1_photo_url varchar(255),
+    @alt2_photo_url varchar(255),
+    @alt1Name varchar(100),
+    @alt1Gender varchar(1),
+    @alt1Age int,
+    @alt1Nid varchar(20),
+    @alt1Mobile varchar(30),
+    @alt2Name varchar(100),
+    @alt2Gender varchar(1),
+    @alt2Age int,
+    @alt2Nid varchar(20),
+    @alt2Mobile varchar(30),
+    @ReturnVal int output
+
+as begin
+
+    Declare @BomasCode  varchar(50),@exist_household_number nvarchar(200),@exist_servicehousehold_number nvarchar(200)
+
+    set @BomasCode=(select top 1 BomaCode from tm_Bomas where intBomasid =@intBomasid)
+    set @exist_household_number = (select top 1  household_number from tbl_BeneficiaryDet where household_number = @household_number)
+    set @exist_servicehousehold_number = (select top 1 household_number from tbl_BeneficiaryServiceDet where household_number = @household_number)
+    Declare @checkcnt as int
+    set @checkcnt=1
+    if(@intIP <>'' and @intIP <>'null' )
+        begin
+            set @checkcnt=(select count(*) from td_IPDetails as ip where ip.intIP=@intIP)
+        End
+    if (@BomasCode is null)
+        begin
+            set @ReturnVal =  98
+
+        end
+    else if(@exist_household_number!='')
+        begin
+            set @ReturnVal =  99
+        end
+        -- else if(@exist_servicehousehold_number!='')
+-- begin
+-- set @ReturnVal =  97
+-- end
+    else if(@intIP ='' or @intIP ='null')
+        begin
+            set @ReturnVal =  96
+        end
+    else if(@BomasCode ='' or @BomasCode ='null')
+        begin
+            set @ReturnVal =  95
+        end
+    else if(@household_number ='' or @household_number ='null')
+        begin
+            set @ReturnVal =  94
+        end
+    else if(@intStateid ='' or @intStateid ='null')
+        begin
+            set @ReturnVal =  93
+        end
+    else if(@intCountieid ='' or @intCountieid ='null')
+        begin
+            set @ReturnVal =  92
+        end
+    else if(@intPayamid ='' or @intPayamid ='null')
+        begin
+            set @ReturnVal =  91
+        end
+    else if(@intBomasid ='' or @intBomasid ='null')
+        begin
+            set @ReturnVal =  85
+        end
+    else if(@NameofHousehold ='' or @NameofHousehold ='null')
+        begin
+            set @ReturnVal =  90
+        end
+    else if(@intIP <>'' and @intIP <>'null' and @checkcnt=0)
+        begin
+
+            set @ReturnVal =  89
+
+        end
+    else if(@intBomasid <>'' and @intBomasid <>'null' and @intPayamid <>'' and (select top 1 intPayamid from tm_Bomas where intBomasid like @intBomasid) <> @intPayamid )
+        begin
+
+            set @ReturnVal =  88
+
+
+        end
+    else if(@intPayamid <>'' and @intCountieid <>'' and (select top 1 intCountieid from tm_Payams where intPayamid like @intPayamid) <> @intCountieid )
+        begin
+
+            set @ReturnVal =  87
+
+
+        end
+    else if(@intCountieid <>'' and @intStateid <>'' and (select top 1 intStateid from tm_Counties where intCountieid like @intCountieid) <> @intStateid )
+        begin
+
+            set @ReturnVal =  86
+
+
+        end
+    else
+        begin
+
+            Declare @Prefix varchar(50)
+            Set @Prefix = Case When @BeneficiaryType = 'Group' Then @BomasCode + '/' + @GroupId + '/' Else @BomasCode + '/' + @BeneficiaryType + '/' End;
+
+            Declare @MaxEnrollmentNo varchar(50);
+--Select @MaxEnrollmentNo =  @Prefix + FORMAT(ISNULL(Max(CONVERT(int,SUBSTRING(EnrollmentNo,Len(@Prefix)+1,3))),0) + 1,'000') from tbl_BeneficiaryDet Where EnrollmentNo Like @Prefix + '%'; 
+            Select @MaxEnrollmentNo =  @BomasCode  + REPLACE( REPLACE( REPLACE(CONVERT(VARCHAR(23), SYSDATETIME(), 121),':',''),'.',''),'-','')
+
+            if not exists (select EnrollmentNo from tbl_BeneficiaryServiceDet where household_number=@household_number)
+
+                insert into tbl_BeneficiaryServiceDet
+                (
+
+                    intIP,
+                    household_number,
+                    EnrollmentNo,
+                    BeneficiaryType,
+                    GroupId,
+                    supervisor_id,
+                    member_number,
+                    FamilySize,
+                    NameofHousehold,
+                    Age,
+                    NameofSpouse,
+                    NationalID,
+                    ContactNo,
+                    Sex,
+                    female_dependants,
+                    male_dependants,
+                    NoofDependents,
+                    NumberChildrenAgeAbove5years,
+                    NumberChildrenAgeAbove18years,
+                    NumberAdultsAgeBetween30_45,
+                    NumberAdultsAgeBetween45_64,
+                    NumberAdultsAgeAbove65,
+                    SOurceofIncome,
+                    FamilyIncome,
+                    intStateid,
+                    intCountieid,
+                    intPayamid,
+                    intBomasid,
+                    latitude,
+                    longitude,
+                    LegalStatus,
+                    PhotoName,
+                    id_url,
+                    TransferDate,
+                    TransferUpdateat,Created_by,API_Status	,
+                    SelectionCriteria,
+                    SelectionReason,
+                    household_photo_url,
+                    alt1_photo_url,
+                    alt2_photo_url,
+                    Name1stAlternatePayee,
+                    FirstAlternatePayeeGender,
+                    FirstAlternatePayeeAge,
+                    FirstAlternatePayeeNationID,
+                    FirstAlternatePayeeMobile,
+                    Name2ndAlternatePayee,
+                    SecondAlternatePayeeGender,
+                    SecondAlternatePayeeAge,
+                    SecondAlternateNationalID,
+                    SecondAlternatePayeeMobile
+                )
+                values
+
+                    (
+
+                        @intIP,
+                        @household_number,
+                        @MaxEnrollmentNo,
+                        @BeneficiaryType,
+                        @GroupId,
+                        @supervisor_id,
+                        @member_number,
+                        @FamilySize,
+                        @NameofHousehold,
+                        @Age,
+                        @NameofSpouse,
+                        @NationalID,
+                        @ContactNo,
+                        @Sex,
+                        @female_dependants,
+                        @male_dependants,
+                        @NoofDependents,
+                        @NumberChildrenAgeAbove5years,
+                        @NumberChildrenAgeAbove18years,
+                        @NumberAdultsAgeBetween30_45,
+                        @NumberAdultsAgeBetween45_64,
+                        @NumberAdultsAgeAbove65,
+                        @SOurceofIncome,
+                        @FamilyIncome,
+                        @intStateid,
+                        @intCountieid,
+                        @intPayamid,
+                        @intBomasid,
+                        @latitude,
+                        @longitude,
+                        @LegalStatus,
+                        @PhotoName,
+                        @id_url,
+                        @TransferDate,
+                        @TransferUpdateat,
+                        @Created_by,'Success'	,
+                        @SelectionCriteria,
+                        @SelectionReason,
+                        @household_photo_url,
+                        @alt1_photo_url,
+                        @alt2_photo_url,
+                        @alt1Name,
+                        @alt1Gender,
+                        @alt1Age,
+                        @alt1Nid,
+                        @alt1Mobile,
+                        @alt2Name,
+                        @alt2Gender,
+                        @alt2Age,
+                        @alt2Nid,
+                        @alt2Mobile
+                    )
+
+            else update tbl_BeneficiaryServiceDet set
+                                                      intIP = @intIP,
+                                                      household_number = @household_number,
+                                                      BeneficiaryType = @BeneficiaryType,
+                                                      GroupId = @GroupId,
+                                                      supervisor_id = @supervisor_id,
+                                                      member_number = @member_number,
+                                                      FamilySize = @FamilySize,
+                                                      NameofHousehold = @NameofHousehold,
+                                                      Age = @Age,
+                                                      NameofSpouse = @NameofHousehold,
+                                                      NationalID = @NationalID,
+                                                      ContactNo = @ContactNo,
+                                                      Sex = @Sex,
+                                                      female_dependants = @female_dependants,
+                                                      male_dependants = @male_dependants,
+                                                      NoofDependents = @NoofDependents,
+                                                      NumberChildrenAgeAbove5years = @NumberChildrenAgeAbove5years,
+                                                      NumberChildrenAgeAbove18years = @NumberChildrenAgeAbove18years,
+                                                      NumberAdultsAgeBetween30_45 = @NumberAdultsAgeBetween30_45,
+                                                      NumberAdultsAgeBetween45_64 = @NumberAdultsAgeBetween45_64,
+                                                      NumberAdultsAgeAbove65 = @NumberAdultsAgeAbove65,
+                                                      SOurceofIncome = @SOurceofIncome,
+                                                      FamilyIncome = @FamilyIncome,
+                                                      intStateid = @intStateid,
+                                                      intCountieid = @intCountieid,
+                                                      intPayamid = @intPayamid,
+                                                      intBomasid = @intBomasid,
+                                                      latitude = @latitude,
+                                                      longitude = @longitude,
+                                                      LegalStatus = @LegalStatus,
+                                                      PhotoName = @PhotoName,
+                                                      id_url = @id_url,
+                                                      TransferDate = @TransferDate,
+                                                      TransferUpdateat = @TransferUpdateat,
+                                                      Created_by = @Created_by,
+                                                      API_Status = 'Success',
+                                                      SelectionCriteria = @SelectionCriteria,
+                                                      SelectionReason = @SelectionReason,
+                                                      household_photo_url = @household_photo_url,
+                                                      alt1_photo_url = @alt1_photo_url,
+                                                      alt2_photo_url = @alt2_photo_url,
+                                                      Name1stAlternatePayee = @alt1Name,
+                                                      FirstAlternatePayeeGender = @alt1Gender,
+                                                      FirstAlternatePayeeAge = @alt1Age,
+                                                      FirstAlternatePayeeNationID = @alt1Nid,
+                                                      FirstAlternatePayeeMobile = @alt1Mobile,
+                                                      Name2ndAlternatePayee = @alt2Name,
+                                                      SecondAlternatePayeeGender = @alt2Gender,
+                                                      SecondAlternatePayeeAge = @alt2Age,
+                                                      SecondAlternateNationalID = @alt2Nid,
+                                                      SecondAlternatePayeeMobile = @alt2Mobile,
+                                                      Modified_dt=GETDATE(),
+                                                      Modified_by=1
+                 where household_number=@household_number and BenStatus != '2'
+
+            Declare @ids  as int
+            set @ids=@@IDENTITY
+            Update tbl_BeneficiaryServiceDet set EnrollmentNo=@MaxEnrollmentNo+Convert(varchar,@ids) where intBenid like @ids
+            set @ReturnVal = @ids
+
+        end
+
+    return @ReturnVal
+
+end
+go
+
+
+
+-- 19-09-2024
+
+-- 08-09-2024
+
+update LK_GBVStatus set StatusName='Resolved' where StatusID=5;
+update LK_GBVStatus set StatusName='Referred' where StatusID=15;
+update LK_GBVStatus set StatusName='Unresolved' where StatusID=1;
+update NonGBVMain set Status=1 where Status in (2,3,6,7,14,16,17);
+update GBVMain set Status=1 where Status in (2,3,6,7,14,16,17);
+delete from LK_GBVStatus where StatusID in (2,3,6,7,14,16,17);
+
+-- 08-09-2024
+
+-- 04-09-2024
+
+CREATE Procedure [dbo].[InsUpdPaymentCycleDocDetails]
+(
+    @pc_year varchar(10),
+    @payment_cycle int,
+    @document_1_file_name varchar(200),
+    @document_2_file_name varchar(200),
+    @document_3_file_name varchar(200),
+    @uploaded_by int
+) AS
+    Begin
+        IF NOT EXISTS(SELECT id from tbl_payment_cycle_document_details where pc_year=@pc_year and payment_cycle=@payment_cycle)
+            INSERT INTO tbl_payment_cycle_document_details(pc_year, payment_cycle, document_1_file_name, document_2_file_name, document_3_file_name, uploaded_at, uploaded_by)
+                                                    values (@pc_year, @payment_cycle, @document_1_file_name, @document_2_file_name, @document_3_file_name, getdate(), @uploaded_by)
+        ELSE UPDATE tbl_payment_cycle_document_details set document_1_file_name=@document_1_file_name,
+                                                           document_2_file_name=@document_2_file_name,
+                                                           document_3_file_name=@document_3_file_name,
+                                                           uploaded_at=getdate(),
+                                                           uploaded_by=@uploaded_by
+                                                           where pc_year=@pc_year and payment_cycle=@payment_cycle
+    End
+go
+
+CREATE Procedure [dbo].[getPaymentCycleDocDetails]
+(
+    @pc_year varchar(10),
+    @payment_cycle varchar(2)
+) AS
+Begin
+    select pc_year Year, payment_cycle PaymentCycle,
+           document_1_file_name Document1,
+           document_2_file_name Document2,
+           document_3_file_name Document3,
+           uploaded_at UploadDate
+           FROM dbo.tbl_payment_cycle_document_details
+             WHERE pc_year like @pc_year and payment_cycle like @payment_cycle
+End
+go
+
+CREATE Procedure [dbo].[getPaymentCycleDocCount]
+(
+    @pc_year varchar(10),
+    @payment_cycle varchar(2)
+) AS
+Begin
+    select count(*) FROM dbo.tbl_payment_cycle_document_details
+    WHERE pc_year like @pc_year and payment_cycle like @payment_cycle
+End
+go
+
+-- 04-09-2024
+
+-- 26-08-2024
+
+CREATE Procedure [dbo].[GenericDashboardKIT]
+(
+    @Year varchar(10),
+    @IPid varchar(8)
+)
+as
+    begin
+    if(@Year='ALL')
+        begin
+            select 'No. of Implementing Partners' as [Profession],td_IPDetails.IPName as cnt
+            from td_IPDetails where td_IPDetails.intIp like @IPid;
+            select count(distinct intStateid) state_count, count(distinct intCountieid) county_count,
+                   count(distinct intPayamId) payam_count, count(distinct intBomasid) boma_count
+            from tbl_WorkMaster where IPid like @IPid;
+            select count(distinct intBenid) enrolled_count, sum(IIF(Sex = 'M', 1, 0)) male_count, sum(IIF(Sex = 'F', 1, 0)) female_count
+            from tbl_BeneficiaryDet where intIP like @IPid;
+            select count(distinct intBenTempid) total_beneficiary_count,
+            sum(IIF(BenStatus = '1', 1, 0)) pending_beneficiary_count
+            from tbl_BeneficiaryServiceDet where intIP like @IPid;
+        end
+    else
+        begin
+            select 'No. of Implementing Partners' as [Profession],td_IPDetails.IPName as cnt
+            from td_IPDetails  where td_IPDetails.intIp like @IPid;
+            select count(distinct intStateid) state_count, count(distinct intCountieid) county_count,
+                   count(distinct intPayamId) payam_count, count(distinct intBomasid) boma_count
+            from tbl_WorkMaster where IPid like @IPid and YEAR(Created_dt)=@Year;
+            select count(distinct intBenid) enrolled_count, sum(IIF(Sex = 'M', 1, 0)) male_count, sum(IIF(Sex = 'F', 1, 0)) female_count
+            from tbl_BeneficiaryDet where intIP like @IPid and YEAR(Created_dt)=@Year;
+            select count(distinct intBenTempid) total_beneficiary_count,
+                   sum(IIF(BenStatus = '1', 1, 0)) pending_beneficiary_count
+            from tbl_BeneficiaryServiceDet where intIP like @IPid and YEAR(Created_dt)=@Year;
+        end
+    end;
+	
+
+CREATE Procedure [dbo].[GetUserInfoKIT]
+(
+    @User_id varchar(50), @User_type varchar(10), @Email varchar(150)
+) AS
+Begin
+    select *from tbl_Users
+    where 1=1
+    and (@User_id is null or @User_id='' or User_id like @User_id)
+    and (@User_type is null or @User_type='' or User_type = @User_type)
+    and (@Email is null or @Email='' or Email = @Email)
+END
+go
+
+
+CREATE Procedure [dbo].[InsUpdUserKIT]
+(
+    @User_id varchar(50), @User_name varchar(100), @User_type varchar(10), @User_code varchar(10), @Status varchar,
+    @Created_by int, @Modified_by int, @Email varchar(150), @GBVUser bit, @IP_Approver bit, @email_receiver tinyint
+) AS
+Begin
+    IF NOT EXISTS(SELECT intUserid from tbl_Users where Email=@Email)
+        INSERT INTO tbl_Users(User_id, User_name, User_type, User_code, Status,
+                              Created_by, Created_dt, Modified_by, Modified_dt, Email, GBVUser, email_receiver) values
+    (@User_id, @User_name, @User_type, @User_code, @Status,
+                            @Created_by, GETDATE(), null, null, @Email, @GBVUser, @email_receiver)
+    ELSE UPDATE tbl_Users set
+    User_id=@User_id, User_name=@User_name, User_type=@User_type, User_code=@User_code, Status=@Status,
+    Modified_by=@Modified_by, Modified_dt=GETDATE(), GBVUser=@GBVUser, IP_Approver=@IP_Approver, email_receiver=@email_receiver
+                          where Email=@Email
+End
+go
+
+
+
+-- 26-08-2024
+
 
 alter table tbl_BeneficiaryServiceDet add household_photo_url varchar(255), alt1_photo_url varchar(255), alt2_photo_url varchar(255);
 alter table tbl_BeneficiaryDet add household_photo_url varchar(255), alt1_photo_url varchar(255), alt2_photo_url varchar(255);

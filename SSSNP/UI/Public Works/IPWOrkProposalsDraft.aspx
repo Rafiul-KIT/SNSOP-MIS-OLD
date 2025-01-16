@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Work Proposals " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="IPWOrkProposalsDraft" CodeBehind="IPWOrkProposalsDraft.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Work Proposals " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="IPWOrkProposalsDraft" CodeBehind="IPWOrkProposalsDraft.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
@@ -749,7 +749,7 @@
                                                     DataKeyNames="intWorkid,intWorkActivityId,intAreaofWork,intWorkActivity,WorkName,EstManPower,EstDays,EstEquipmnts,EstMaterial,EstSkilLabour,EstWorkStartDate,EstWorkEndDate,EstCost,EquipmntQuantity,MaterialQuantity,WorkCode,Latitude,Longitude,WorkPhoto,MaterialsPhoto,EquipmentPhoto"
                                                     Font-Names="Poppins" Font-Size="12px" OnRowDataBound="gvpractical0_RowDataBound"
                                                     ForeColor="#333333" GridLines="None"
-                                                    Width="100%" OnSelectedIndexChanged="gvpractical0_SelectedIndexChanged">
+                                                    Width="100%" OnSelectedIndexChanged="gvpractical0_SelectedIndexChanged" OnRowCommand="gvpractical0_RowCommand">
                                                     <FooterStyle BackColor="#013161" Font-Bold="True" ForeColor="White" />
                                                     <RowStyle BackColor="#FFFFFF" Width="200px" />
                                                     <Columns>

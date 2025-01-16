@@ -200,7 +200,24 @@ public class CUserContext
             try
             {
                 string usert_type = Convert.ToString(HttpContext.Current.Session["user_type"]);
-                if (usert_type == "PcuSpec") return true;
+                if (usert_type.Equals("PcuSpec")) return true;
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+    }
+    public bool IsWBGBVManagerRole
+    {
+        get
+        {
+            try
+            {
+                string user_type = Convert.ToString(HttpContext.Current.Session["user_type"]);
+                if (user_type.Equals("WBGBVMgr")) return true;
                 return false;
             }
             catch (Exception)

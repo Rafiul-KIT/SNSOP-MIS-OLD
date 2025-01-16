@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Title=":: :: SSSNP : : Beneficiary Details " AutoEventWireup="true" MasterPageFile="~/UI/Public Works/CCMaster.master" Inherits="frmDeleteBenSplitBasicDetails" Codebehind="frmDeleteBenSplitBasicDetails.aspx.cs" %>
+﻿<%@ Page Language="C#" Title=":: :: SNSOP : : Beneficiary Details " AutoEventWireup="true" MasterPageFile="~/UI/Public Works/CCMaster.master" Inherits="frmDeleteBenSplitBasicDetails" Codebehind="frmDeleteBenSplitBasicDetails.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 
-namespace SSSNP
+namespace SSSNP_SNSOP
 {
     public partial class piwikTest2
     {

@@ -208,8 +208,8 @@ public partial class BulkInvoicePrintAutoRec : System.Web.UI.Page
             lbl1StepPaidToBeneficiaries.Text = dt.Select("household_number=paidTo").Length.ToString();
             lbl1StepPaydToAlt.Text = dt.Select("household_number<>paidTo").Length.ToString();
             lbl1StepActualPaidSSP.Text = dt.Compute("Sum(Amt1)", string.Empty).ToString();
-            lbl1StepActualPaidUSDDIS.Text = dt.Compute("Sum(Amt)", "Component=\'Component 2 (Direct Income Support)\'").ToString();
-            lbl1StepActualPaidSSPDIS.Text = dt.Compute("Sum(Amt1)", "Component=\'Component 2 (Direct Income Support)\'").ToString();
+            lbl1StepActualPaidUSDDIS.Text = dt.Compute("Sum(Amt)", "Component=\'Component 1 (Direct Income Support)\'").ToString();
+            lbl1StepActualPaidSSPDIS.Text = dt.Compute("Sum(Amt1)", "Component=\'Component 1 (Direct Income Support)\'").ToString();
             lbl1StepActualPaidSSPLIPW.Text = dt.Compute("Sum(Amt1)", "Component=\'Component 1 (Public Works)'").ToString();
             lbl1StepActualPaidUSDLIPW.Text = dt.Compute("Sum(Amt)", "Component=\'Component 1 (Public Works)'").ToString();
             rg1StepPaidBeneficiaries.DataSource = dt;
@@ -264,10 +264,10 @@ public partial class BulkInvoicePrintAutoRec : System.Web.UI.Page
             lblMopUpActualPaidUSD.Text = dt.Compute("Sum(Amt)", string.Empty).ToString();
             lblMopUpPaidToBeneficiaries.Text = dt.Select("household_number=paidTo").Length.ToString();
             lblMopUpPaydToAlt.Text = dt.Select("household_number<>paidTo").Length.ToString();
-            lblMopUpActualPaidUSDDIS.Text = dt.Compute("Sum(Amt)", "Component=\'Component 2 (Direct Income Support)\'").ToString();
+            lblMopUpActualPaidUSDDIS.Text = dt.Compute("Sum(Amt)", "Component=\'Component 1 (Direct Income Support)\'").ToString();
             lblMopUpActualPaidUSDLIPW.Text = dt.Compute("Sum(Amt)", "Component=\'Component 1 (Public Works)'").ToString();
             lblMopUpActualPaidSSP.Text = dt.Compute("Sum(Amt1)", string.Empty).ToString();
-            lblMopUpActualPaidSSPDIS.Text = dt.Compute("Sum(Amt1)", "Component=\'Component 2 (Direct Income Support)\'").ToString();
+            lblMopUpActualPaidSSPDIS.Text = dt.Compute("Sum(Amt1)", "Component=\'Component 1 (Direct Income Support)\'").ToString();
             lblMopUpActualPaidSSPLIPW.Text = dt.Compute("Sum(Amt1)", "Component=\'Component 1 (Public Works)'").ToString();
             rg1MopUpBeneficiaries.DataSource = dt;
             rg1MopUpBeneficiaries.Visible = true;

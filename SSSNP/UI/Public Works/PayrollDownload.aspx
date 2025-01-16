@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Payroll Download" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="PayrollDownload" CodeBehind="PayrollDownload.aspx.cs" %>
+﻿<%@ Page Title=":: :: SNSOP : : Payroll Download" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="PayrollDownload" CodeBehind="PayrollDownload.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
@@ -148,6 +148,9 @@
                                             <asp:Button ID="BtnDownload" runat="server" CssClass="btn btn-primary"
                                                 Height="32px" OnClick="BtnDownload_Click" TabIndex="10" Text="Download"
                                                 ValidationGroup="group" Width="110px" Visible="false" />
+                                            <asp:Button ID="BtnDownloadPdf" runat="server" CssClass="btn btn-primary"
+                                                Height="32px" OnClick="BtnDownloadPdf_Click" TabIndex="10" Text="Download PDF"
+                                                ValidationGroup="group" Visible="false" />
                                             <asp:Button ID="BtnUnlock" runat="server" CssClass="btn btn-primary"
                                                 Height="32px" OnClick="BtnUnlock_Click" TabIndex="10" Text="Unlock"
                                                 ValidationGroup="group" Width="110px" Visible="false" />
@@ -232,6 +235,7 @@
 
         <Triggers>
             <asp:PostBackTrigger ControlID="BtnDownload" />
+            <asp:PostBackTrigger ControlID="BtnDownloadPdf" />
         </Triggers>
 
 

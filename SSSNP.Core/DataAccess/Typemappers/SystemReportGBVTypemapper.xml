@@ -75,11 +75,11 @@
 				from
 
 				(
-				select 'SSSNP' as ProgrammeT, count(*) as CountValue
+				select 'SNSOP' as ProgrammeT, count(*) as CountValue
 				from NonGBVMain
 				where deleted = 0
 				union
-				select 'SSSNP'as programmeT,count(*) as CountValue
+				select 'SNSOP'as programmeT,count(*) as CountValue
 				from GBVMain
 				where deleted = 0
 				) as tmp
@@ -138,7 +138,7 @@
 			<query>
 				with CTE(program, status, countValue)
 				as (
-				select 'SSSNP',status, count(*) as [Count] from
+				select 'SNSOP',status, count(*) as [Count] from
 				(
 				select NEWID() as id, status from GBVMain where deleted = 0
 				) as tmp

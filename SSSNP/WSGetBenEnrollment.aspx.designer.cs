@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SSSNP
+namespace SSSNP_SNSOP
 {
 
 

@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="APIDashboardDrillDown"
-    Title=":: :: SSSNP : ::" CodeBehind="APIDashboardDrillDown.aspx.cs" %>
+    Title=":: :: SNSOP : ::" CodeBehind="APIDashboardDrillDown.aspx.cs" %>
 
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
@@ -270,7 +270,7 @@
                                                         <asp:DropDownList runat="server" ID="ddlRgComponent">
                                                             <asp:ListItem Value="Select">--- Select ---</asp:ListItem>
                                                             <asp:ListItem Value="Component 1 (Public Works)">Component 1 (LIPW)</asp:ListItem>
-                                                            <asp:ListItem Value="Component 2 (Direct Income Support)">Component 2 (DIS)</asp:ListItem>
+                                                            <asp:ListItem Value="Component 1 (Direct Income Support)">Component 1 (DIS)</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </ItemTemplate>
                                                 </telerik:GridTemplateColumn>

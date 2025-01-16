@@ -1,4 +1,4 @@
-﻿<%@ Page Title=":: :: SSSNP : : Cash Transfer Summary" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="CashTransferSummaryMNE" CodeBehind="CashTransferSummaryMNE.aspx.cs" %>
+﻿<%@ Page Title=":: :: SNSOP : : Cash Transfer Summary" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="CashTransferSummaryMNE" CodeBehind="CashTransferSummaryMNE.aspx.cs" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
@@ -187,7 +187,21 @@
                                             <asp:Button ID="BtnDownloadPdf" runat="server" Text="Download PDF" OnClick="BtnDownload_Pdf" CssClass="btn btn-primary"
                                                 Height="32px" Visible="false"/>
                                             <asp:Button ID="BtnDownloadExl" runat="server" Text="Download Excel" OnClick="BtnDownload_Exl" CssClass="btn btn-primary"
-                                                Height="32px" Visible="false"/>
+                                                Height="32px" Visible="false" />
+                                            <asp:Button ID="BtnClear" runat="server" Text="Clear" OnClick="BtnClear_Click" CssClass="btn btn-primary"
+                                                Height="32px" Width="110px" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="padding: 5px; margin: 5px" valign="top" align="left">
+                                            <!-- Panel to contain the total fields, initially hidden  Visible="false"-->
+                                            <asp:Panel ID="pnlTotals" runat="server" Visible="false">
+                                                <asp:Label ID="lblTotalPaidBeneficiary" runat="server" CssClass="LBLBLACK" Text="Total Paid Beneficiary: 0" />
+                                                <br />
+                                                <asp:Label ID="lblTotalUnpaidBeneficiary" runat="server" CssClass="LBLBLACK" Text="Total Unpaid Beneficiary: 0" />
+                                                <br />
+                                                <asp:Label ID="lblTotalPaidAmount" runat="server" CssClass="LBLBLACK" Text="Total Paid Amount(USD): 0.00" />
+                                            </asp:Panel>
                                         </td>
                                     </tr>
                                 </table>
@@ -222,7 +236,7 @@
                                             <telerik:GridBoundColumn DataField="Component" HeaderText="Component">
                                                 <HeaderStyle Width="10%" />
                                             </telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn DataField="PaymentAmount" HeaderText="Payment Amount">
+                                            <telerik:GridBoundColumn DataField="PaymentAmountUSD" HeaderText="Payment Amount(USD)">
                                                 <HeaderStyle Width="10%" />
                                             </telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn DataField="PaymentDate" HeaderText="Payment Date" DataFormatString="{0:MM/dd/yyyy}">

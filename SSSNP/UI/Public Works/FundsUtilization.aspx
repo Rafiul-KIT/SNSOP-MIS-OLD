@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Work Progress " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="FundsUtilization" Codebehind="FundsUtilization.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Work Progress " Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="FundsUtilization" Codebehind="FundsUtilization.aspx.cs" %>
 
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
@@ -225,7 +225,7 @@ function OpenPopup()
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator22" runat="server" 
                                                             ControlToValidate="txtFundsUtilizationDate" ErrorMessage="Please Enter Funds Utilization Date" 
-                                                            SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 
@@ -245,7 +245,7 @@ function OpenPopup()
                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
                                                             ControlToValidate="txtAmount" 
                                                             ErrorMessage="Please Enter Amount" SetFocusOnError="True" 
-                                                            ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -262,17 +262,16 @@ function OpenPopup()
                                                         :</td>
                                                     <td style="padding: 5px; margin: 5px; width: 192px;">
                                                         <asp:DropDownList ID="ddlFundsUtilizationFor" runat="server" class="form-control txtbox" 
-                                                            Height="28px">
+                                                            Height="33px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                             <asp:ListItem>Tools</asp:ListItem>
                                                             <asp:ListItem>Skilled labour</asp:ListItem>
                                                             <asp:ListItem>Materials</asp:ListItem>
                                                         </asp:DropDownList>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px; width: 10px;">
+                                                    
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator23" runat="server" 
                                                             ControlToValidate="ddlFundsUtilizationFor" ErrorMessage="Please Select Funds Utilization" 
-                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                            InitialValue="--Select--" SetFocusOnError="True" ValidationGroup="group"><span style="color: red;">&ensp;*</span></asp:RequiredFieldValidator>
                                                     </td>
                                                 </tr>
                                                 <tr>

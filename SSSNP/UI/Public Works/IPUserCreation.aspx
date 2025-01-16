@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Implentation Partner User Creation Details" Language="C#"
+<%@ Page Title=":: :: SNSOP : : Implentation Partner User Creation Details" Language="C#"
     MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true"
     Inherits="IPUserCreation" Codebehind="IPUserCreation.aspx.cs" %>
 
@@ -86,7 +86,7 @@ function OpenPopup()
                                                         <tr>
                                                             <td style="padding: 5px; margin: 5px">
                                                                 <asp:Label ID="Label303" runat="server" CssClass="LBLBLACK" Width="165px">Name 
-                                                        of the IP</asp:Label>
+                                                        of The IP</asp:Label>
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px">
                                                                 :
@@ -99,13 +99,13 @@ function OpenPopup()
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px; width: 10px;">
                                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="ddlIP"
-                                                                    ErrorMessage="Please Enter IP Name" InitialValue="--Select--" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                                    ErrorMessage="Please Enter IP Name" InitialValue="--Select--" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                                 &nbsp;
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td style="padding: 5px; margin: 5px">
-                                                                <asp:Label ID="Label1" runat="server" CssClass="LBLBLACK" Width="165px">Staff name</asp:Label>
+                                                                <asp:Label ID="Label1" runat="server" CssClass="LBLBLACK" Width="165px">Staff Name</asp:Label>
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px">
                                                                 :
@@ -116,14 +116,13 @@ function OpenPopup()
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px; width: 10px;">
                                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtOfficerName"
-                                                                    ErrorMessage="Please Enter Staff Name" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                                    ErrorMessage="Please Enter Staff Name" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                                 &nbsp;
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td style="padding: 5px; margin: 5px">
-                                                                <asp:Label ID="Label351" runat="server" CssClass="LBLBLACK" Width="137px">
-                                                        Email Id</asp:Label>
+                                                                <asp:Label ID="Label351" runat="server" CssClass="LBLBLACK" Width="137px">Email Id</asp:Label>
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px">
                                                                 :
@@ -134,7 +133,7 @@ function OpenPopup()
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px; width: 10px;">
                                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="txtmail"
-                                                                    ErrorMessage="Please Enter Email" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                                    ErrorMessage="Please Enter Email" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                                 <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtmail"
                                                                     ErrorMessage="Please Enter Correct Email" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
                                                                     ValidationGroup="group">*</asp:RegularExpressionValidator>
@@ -163,7 +162,7 @@ function OpenPopup()
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px; width: 10px;">
                                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="txtuser"
-                                                                    ErrorMessage="Please Enter User ID" ValidationGroup="group">*</asp:RequiredFieldValidator>
+                                                                    ErrorMessage="Please Enter User ID" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>
                                                                 &nbsp;
                                                             </td>
                                                         </tr>
@@ -180,7 +179,7 @@ function OpenPopup()
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px">
                                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ControlToValidate="txtpass"
-                                                                    ErrorMessage="Please Enter Password" ValidationGroup="group">*</asp:RequiredFieldValidator>&nbsp;
+                                                                    ErrorMessage="Please Enter Password" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>&nbsp;
                                                             </td>
                                                         </tr>
                                                         <tr runat="server" id="trPass1">
@@ -196,7 +195,7 @@ function OpenPopup()
                                                             </td>
                                                             <td style="padding: 5px; margin: 5px">
                                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtpassconf"
-                                                                    ErrorMessage="Please Enter Confirm Password" ValidationGroup="group">*</asp:RequiredFieldValidator>&nbsp;
+                                                                    ErrorMessage="Please Enter Confirm Password" ValidationGroup="group"><span style="color: red;">*</span></asp:RequiredFieldValidator>&nbsp;
                                                             </td>
                                                         </tr>
                                                          <tr>

@@ -10,7 +10,7 @@ using System.Web.UI.WebControls;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 
-namespace SSSNP.UI.Public_Works
+namespace SSSNP_SNSOP.UI.Public_Works
 {
     public partial class UserManagement : Page
     {
@@ -89,6 +89,13 @@ namespace SSSNP.UI.Public_Works
                         UpdateOperation(userEmail, userName);
                     }
                 }
+
+                // Clear hidden fields
+                hfCreatedBy.Value = "";
+                hfCreatedDt.Value = "";
+                hfModifiedBy.Value = "";
+                hfModifiedDt.Value = "";
+                hfOriginalEmail.Value = "";
             }
             catch (Exception ex)
             {
@@ -172,9 +179,25 @@ namespace SSSNP.UI.Public_Works
         {
             try
             {
-                string clientId = ConfigurationManager.AppSettings["AzureADClientId"];
+                string azureADEnv = ConfigurationManager.AppSettings["AZUREAD_ENV"];
+                string clientId = "";
                 string tenantId = ConfigurationManager.AppSettings["AzureADTenantId"];
-                string clientSecret = ConfigurationManager.AppSettings["AzureADClientSecret"];
+                string clientSecret = "";
+                if (azureADEnv.Equals("local"))
+                {
+                    clientId = ConfigurationManager.AppSettings["AzureADClientIdLocal"];
+                    clientSecret = ConfigurationManager.AppSettings["AzureADClientSecretLocal"];
+                } 
+                else if (azureADEnv.Equals("dev"))
+                {
+                    clientId = ConfigurationManager.AppSettings["AzureADClientIdDev"];
+                    clientSecret = ConfigurationManager.AppSettings["AzureADClientSecretDev"];
+                } 
+                else if (azureADEnv.Equals("prod"))
+                {
+                    clientId = ConfigurationManager.AppSettings["AzureADClientIdProd"];
+                    clientSecret = ConfigurationManager.AppSettings["AzureADClientSecretProd"];
+                }
 
                 IConfidentialClientApplication confidentialClient = ConfidentialClientApplicationBuilder
                     .Create(clientId)
@@ -346,6 +369,13 @@ namespace SSSNP.UI.Public_Works
             rblIPApprover.ClearSelection();
             rblEmailReceiver.ClearSelection();
             lblMessage.Text = "";
+
+            // Clear hidden fields
+            hfCreatedBy.Value = "";
+            hfCreatedDt.Value = "";
+            hfModifiedBy.Value = "";
+            hfModifiedDt.Value = "";
+            hfOriginalEmail.Value = "";
 
             // Clear server-side validation warnings if needed
             Page.Validate();

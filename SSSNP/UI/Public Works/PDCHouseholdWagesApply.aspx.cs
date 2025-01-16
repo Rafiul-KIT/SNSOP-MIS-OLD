@@ -123,6 +123,13 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
 
         if (ds.Tables[0].Rows.Count > 0)
         {
+            if (ds.Tables[0].Rows[0]["PDC_ApprvDate"] == DBNull.Value)
+            {
+                lblmsg0.Text = ds.Tables[0].Rows[0]["workcode"]?.ToString() + " work proposal has not been approved by TST yet";
+                Failure.Visible = true;
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alert", lblmsg0.Text, true);
+                return;
+            }
             //rgAttendances.DataSource = ds.Tables[0];
             //rgAttendances.DataBind();
             lblProject.Text = ds.Tables[0].Rows[0]["PrjName"].ToString();
@@ -263,7 +270,7 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
                 }
             }
 
-            int resultwage = Gen.insertWageRequestDraft(hdfID.Value.ToString(), txtAmount.Text, TxtFromDate.Text, TxtToDate.Text, System.DateTime.Now.Year.ToString(), System.DateTime.Now.Month.ToString(), ddlPaymentCycle.SelectedValue.ToString(), txtExchangerate.Text, Session["uid"].ToString().Trim(), "Component 2 (Direct Income Support)");
+            int resultwage = Gen.insertWageRequestDraft(hdfID.Value.ToString(), txtAmount.Text, TxtFromDate.Text, TxtToDate.Text, System.DateTime.Now.Year.ToString(), System.DateTime.Now.Month.ToString(), ddlPaymentCycle.SelectedValue.ToString(), txtExchangerate.Text, Session["uid"].ToString().Trim(), "Component 1 (Public Works)");
 
             if (resultwage > 0)
             {
@@ -448,7 +455,7 @@ public partial class PDCHouseholdWagesApply : System.Web.UI.Page
             if (iTotalRows > 1000)
             {
                 PageSizeCombo.Items.Add(new RadComboBoxItem("1000", "1000"));
-                PageSizeCombo.FindItemByText("100").Attributes.Add("ownerTableViewId", rgAttendances.MasterTableView.ClientID);
+                PageSizeCombo.FindItemByText("1000").Attributes.Add("ownerTableViewId", rgAttendances.MasterTableView.ClientID);
             }
 
             PageSizeCombo.Items.Add(new RadComboBoxItem("All", iTotalRows.ToString()));

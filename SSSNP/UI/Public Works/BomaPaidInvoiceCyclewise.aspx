@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Wages Report from Pay Connect Team Cycle wise" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="BomaPaidInvoiceCyclewise" CodeBehind="BomaPaidInvoiceCyclewise.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Wages Report from Pay Connect Team Cycle wise" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="BomaPaidInvoiceCyclewise" CodeBehind="BomaPaidInvoiceCyclewise.aspx.cs" %>
 
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>

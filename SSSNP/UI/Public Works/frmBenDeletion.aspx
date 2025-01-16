@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/TstMaster.master" AutoEventWireup="true" Inherits="frmBenDeletion" Title=":: SSSNP Online Management System ::" EnableEventValidation="false" Codebehind="frmBenDeletion.aspx.cs" %>
+<%@ Page Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="frmBenDeletion" Title=":: SSSNP Online Management System ::" EnableEventValidation="false" Codebehind="frmBenDeletion.aspx.cs" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="cc1" %>
 

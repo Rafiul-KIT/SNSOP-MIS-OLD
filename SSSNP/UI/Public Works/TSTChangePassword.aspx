@@ -1,4 +1,4 @@
-<%@ Page Title=":: :: SSSNP : : Add States" Language="C#" MasterPageFile="~/UI/Public Works/TSTmaster.master" AutoEventWireup="true" Inherits="TSTChangePassword" Codebehind="TSTChangePassword.aspx.cs" %>
+<%@ Page Title=":: :: SNSOP : : Add States" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" Inherits="TSTChangePassword" Codebehind="TSTChangePassword.aspx.cs" %>
 
 
 

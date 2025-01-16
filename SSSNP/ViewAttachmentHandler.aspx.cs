@@ -18,6 +18,12 @@ using System.Data;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using OfficeOpenXml;
+using Image = iTextSharp.text.Image;
+using SSSNP.Service;
+using System.Diagnostics;
+using System.Data.SqlClient;
+using SSSNP_SNSOP.Core.Model;
+using System.Configuration;
 
 namespace SSSNP_SNSOP
 {
@@ -27,6 +33,8 @@ namespace SSSNP_SNSOP
         private readonly string _queryType = "AttachmentType";
         private HandlerAttachment _type;
         private object _attachmentValue;
+        private GeoLocationDto _location;
+        private General genDbAccess = new General();
 
         public enum HandlerAttachment
         {
@@ -40,19 +48,41 @@ namespace SSSNP_SNSOP
             GBV_ATTACHMENT_DEDICATED = 7,
             SYSTEM_REPORT = 8,
             SYSTEM_REPORT_ELRP = 9,
-            ENCRYPTED_PAYROLL_DATA = 10,// Add new case for encrypted payroll data
-            MNE_MODULE_Pdf_Download = 11,// Add new case for MNE_MODULE_Pdf_Download
-            MNE_MODULE_Exl_Download = 12 // Add new case for MNE_MODULE_Exl_Download
-         
+            ENCRYPTED_PAYROLL_DATA = 10,    // Add new case for encrypted payroll data 
+            MNE_MODULE_Pdf_Download = 11,   // Add new case for MNE_MODULE_Pdf_Download
+            MNE_MODULE_Exl_Download = 12,   // Add new case for MNE_MODULE_Exl_Download
+            PDF_PAYROLL_DATA = 13,
+            CASH_TRANSFER_Pdf_Download = 14,
+            CASH_TRANSFER_Exl_Download = 15,
+            HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE = 16,
+            TRAINING_ATTENDANCE_TRACKING_TEMPLATE = 17,
+            BUSINESS_PLAN_DEVELOPMENT_TEMPLATE = 18,
+            LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE = 19,
+            BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE = 20,
+            FINANCIAL_SERVICE_LINKAGE_TEMPLATE = 21,
+            ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD = 22,
+            MNE_REPORT_DOWNLOAD = 23,
+            ID_CARD_DOWNLOAD = 24,
+            PAYROLL_RECONCILE = 30
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.LoadGeoLocation();
             if (!Page.IsPostBack)
             {
                 this.LoadAttachmentHandler();
-
+                
             }
+        }
+
+        private void LoadGeoLocation()
+        {
+            _location = Session["GeoLocation"] as GeoLocationDto;
+            /*if (_location == null)
+            {
+                throw new InvalidOperationException("Location details are missing from the session.");
+            }*/
         }
         private string LoadAttachmentHandler()
         {
@@ -91,18 +121,223 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.ENCRYPTED_PAYROLL_DATA:
                     EncryptedPayrollDataHandler();
                     return "OK";
+                case HandlerAttachment.PDF_PAYROLL_DATA:
+                    GeneratePayrollPdf();
+                    return "OK";
                 case HandlerAttachment.MNE_MODULE_Exl_Download:
                     MNEModuleExlHandler();
                     return "OK";
                 case HandlerAttachment.MNE_MODULE_Pdf_Download:
                     MNEModulePdfHandler();
                     return "OK";
-                    //break;
-
+                case HandlerAttachment.CASH_TRANSFER_Pdf_Download:
+                    CashTransferPdfHandler();
+                    return "OK";
+                case HandlerAttachment.CASH_TRANSFER_Exl_Download:
+                    CashTransferxlHandler();
+                    return "OK";
+                case HandlerAttachment.HOUSEHOLD_GROUP_VIEW_EXCEL_TEMPLATE:
+                    HouseholdTemplateExlTemplate();
+                    return "OK";
+                case HandlerAttachment.TRAINING_ATTENDANCE_TRACKING_TEMPLATE:
+                    TrainingAttendanceTrackingTemplate();
+                    return "OK";
+                //break;
+                case HandlerAttachment.BUSINESS_PLAN_DEVELOPMENT_TEMPLATE:
+                    BusinessPlanDevelopmentTemplate();
+                    return "OK";
+                case HandlerAttachment.BENEFICIARY_RANDOMIZATION_ENROLLMENT_TEMPLATE:
+                    BeneficiaryRandomizationEnrollmentTemplate();
+                    return "OK";
+                case HandlerAttachment.FINANCIAL_SERVICE_LINKAGE_TEMPLATE:
+                    FinancialServiceLinkageTrackingTemplate();
+                    return "OK";
+                case HandlerAttachment.LIVELIHOOD_GRANT_DISBURSEMENT_TEMPLATE:
+                    LivelihoodGrantDisbursementTemplate();
+                    return "OK";
+                case HandlerAttachment.ECONOMIC_OPPORTUNITY_AUDIT_RECORD_DOWNLOAD:
+                    EconomicOppontunityAuditRecordDownload();
+                    return "OK";
+                case HandlerAttachment.PAYROLL_RECONCILE:
+                    PayrollReconcileTemplate();
+                    return "OK";
+                case HandlerAttachment.MNE_REPORT_DOWNLOAD:
+                    DownloadFile(GetAttachmentValueAsInt);
+                    return "OK";
+                case HandlerAttachment.ID_CARD_DOWNLOAD:
+                    DownloadIdCard(GetAttachmentValueAsInt);
+                    return "OK";
             }
 
             return "";
         }
+
+        private void BusinessPlanDevelopmentTemplate()
+        {
+            try
+            {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+                Component2Service service = new Component2Service();
+
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Business Plan Development Template");
+
+                    // Adding the three columns
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Business Plan Status";
+                    worksheet.Cells[1, 3].Value = "Business Type";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Pre-fill the Household Number column with the fetched household numbers
+                    var householdNumberList = householdNumbers.ToList();
+                    if (householdNumberList.Count > 0)
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;
+                    }
+
+                    // Define options for the drop-downs in columns 2 and 3
+                    string[] yesNoOptions = { "Yes", "No" };
+                    string[] farmNonFarmOptions = { "Farm", "Non-Farm" };
+
+                    // Add drop-down for the Business Plan Status field (Column 2)
+                    var businessPlanStatusValidation = worksheet.DataValidations.AddListValidation("B2:B1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        businessPlanStatusValidation.Formula.Values.Add(option);
+                    }
+
+                    // Add drop-down for the Business Type field (Column 3)
+                    var businessTypeValidation = worksheet.DataValidations.AddListValidation("C2:C1000");
+                    foreach (string option in farmNonFarmOptions)
+                    {
+                        businessTypeValidation.Formula.Values.Add(option);
+                    }
+
+                    // Protect the worksheet so that locked cells (Household Number) are read-only
+                    worksheet.Protection.IsProtected = true;
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:C1000"].Style.Locked = false;
+
+                    // Auto-fit columns to adjust the size
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=BusinessPlanDevelopmentTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+
+
+        private void FinancialServiceLinkageTrackingTemplate()
+        {
+            try
+            {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+                Component2Service service = new Component2Service();
+
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Financial Services Linkage Template");
+
+                    // Adding the three columns
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Connected Financial Services";
+                    worksheet.Cells[1, 3].Value = "Entity Name";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Pre-fill the Household Number column with the fetched household numbers
+                    var householdNumberList = householdNumbers.ToList();
+                    if (householdNumberList.Count > 0)
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;
+                    }
+
+                    // Define options for the drop-down in the 2nd column
+                    string[] yesNoOptions = { "Yes", "No" };
+
+                    // Add drop-down for the Connected Financial Services field (Column 2)
+                    var connectedFinancialServicesValidation = worksheet.DataValidations.AddListValidation("B2:B1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        connectedFinancialServicesValidation.Formula.Values.Add(option);
+                    }
+
+                    // Protect the worksheet so that locked cells (Household Number) are read-only
+                    worksheet.Protection.IsProtected = true;
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:C1000"].Style.Locked = false;
+
+                    // Auto-fit columns to adjust the size
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=FinancialServicesLinkageTrackingTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
 
         private void Non_GBVAttachmentHandler(object valueFunction)
         {
@@ -357,6 +592,23 @@ namespace SSSNP_SNSOP
             }
         }
 
+        private int GetAttachmentValueAsInt
+        {
+
+            get
+            {
+                try
+                {
+                    return Convert.ToInt32(Request.QueryString[_queryValue]);
+                }
+                catch
+                {
+                    return 0; // or handle default as appropriate
+                }
+            }   
+            
+        }
+
         //downlaod encrypted payroll data module start
         private void EncryptedPayrollDataHandler()
         {
@@ -449,6 +701,337 @@ namespace SSSNP_SNSOP
         }
         //downlaod encrypted payroll data module end
 
+        //download payroll data in pdf started
+        public void GeneratePayrollPdf()
+        {
+            // Retrieve the ApiResponse object from the session
+            PayrollDownloadResponse apiResponse = Session["PDResponse"] as PayrollDownloadResponse;
+            if (apiResponse == null)
+            {
+                throw new InvalidOperationException("apiResponse is not initialized in the session.");
+            }
+
+            // Retrieve geo location data from session
+            string stateName = Session["SelectedStateName"] as string ?? "N/A";
+            string countyName = Session["SelectedCountyName"] as string ?? "N/A";
+            string payamName = Session["SelectedPayamName"] as string ?? "N/A";
+            string bomaName = Session["SelectedBomaName"] as string ?? "N/A";
+
+            // Define a custom page size with increased width
+            Rectangle customPageSize = new Rectangle(PageSize.LEGAL.Width + 200f, PageSize.LEGAL.Height);
+
+            // Create a new PDF document
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(customPageSize.Rotate(), 25, 25, 30, 30); // Increased width and rotated to landscape
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+
+                // Attach the custom PageNumberHelper to the writer
+                writer.PageEvent = new PageNumberHelper();
+
+                document.Open();
+
+                // Create a font for the title with size 16 and bold
+                Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+
+                Paragraph title = new Paragraph("Payroll Data", titleFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                };
+                document.Add(title);
+
+                // Add Wage Request label with current date
+                Paragraph wageRequest = new Paragraph("Wage Request: " + DateTime.Now.ToString("dd-MM-yyyy"))
+                {
+                    Alignment = Element.ALIGN_LEFT
+                };
+                document.Add(wageRequest);
+
+                // Add geo location data (State, County, Payam, Boma)
+                document.Add(new Paragraph("State: " + stateName));
+                document.Add(new Paragraph("County: " + countyName));
+                document.Add(new Paragraph("Payam: " + payamName));
+                document.Add(new Paragraph("Boma: " + bomaName));
+
+                // Add space before main table
+                document.Add(new Paragraph(" "));
+
+                // Create table with 19 columns for payroll details
+                PdfPTable table = new PdfPTable(19)
+                {
+                    WidthPercentage = 100
+                };
+
+                // Adjust column widths: ID and Age reduced, Signature increased
+                table.SetWidths(new float[] {
+            1f, 1.5f, 1.5f, 1f, 1f,          // Beneficiary (5 columns: Photo, ID, Name, Gender, Age)
+            1f, 1.5f, 1.5f, 1f, 1f,          // First Alternate (5 columns: Photo, ID, Name, Gender, Age)
+            1f, 1.5f, 1.5f, 1f, 1f,          // Second Alternate (5 columns: Photo, ID, Name, Gender, Age)
+            1.2f, 1.2f, 1f,                    // Payment (3 columns: Cycle, Support Type, Wage Total)
+            2f                                 // Signature (1 column)
+        });
+                // Add section headers
+                AddSectionHeaderToPdfTable(table, "Beneficiary", 5);
+                AddSectionHeaderToPdfTable(table, "First Alternate", 5);
+                AddSectionHeaderToPdfTable(table, "Second Alternate", 5);
+                AddSectionHeaderToPdfTable(table, "Payment", 3);
+                AddSectionHeaderToPdfTable(table, "Signature", 1);
+
+                // Add payroll data headers (columns)
+                AddCellToPdfTableHeader(table, "ID");
+                AddCellToPdfTableHeader(table, "Photo");
+                AddCellToPdfTableHeader(table, "Name");
+                AddCellToPdfTableHeader(table, "Gender");
+                AddCellToPdfTableHeader(table, "Age");
+
+                AddCellToPdfTableHeader(table, "ID");
+                AddCellToPdfTableHeader(table, "Photo");
+                AddCellToPdfTableHeader(table, "Name");
+                AddCellToPdfTableHeader(table, "Gender");
+                AddCellToPdfTableHeader(table, "Age");
+
+                AddCellToPdfTableHeader(table, "ID");
+                AddCellToPdfTableHeader(table, "Photo");
+                AddCellToPdfTableHeader(table, "Name");
+                AddCellToPdfTableHeader(table, "Gender");
+                AddCellToPdfTableHeader(table, "Age");
+
+                AddCellToPdfTableHeader(table, "Cycle");
+                AddCellToPdfTableHeader(table, "Support Type");
+                AddCellToPdfTableHeader(table, "Wage Total");
+
+                AddCellToPdfTableHeader(table, "Sign");
+
+                table.HeaderRows = 2;
+
+                // Combine all payroll data from all containers and sort by beneficiary name
+                List<PDPayrollDataDto> sortedPayrollData = apiResponse.data
+                    .SelectMany(container => container.payrollData)
+                    .OrderBy(payroll => payroll.houseHoldDetail.firstName +
+                                        payroll.houseHoldDetail.middleName +
+                                        payroll.houseHoldDetail.lastName)
+                    .ToList();
+
+                // Iterate through payroll data in the container and add rows
+                foreach (var payroll in sortedPayrollData)
+                {
+                    // Beneficiary Details
+                    AddCellToPdfTableBody(table, payroll.intBenid.ToString());
+                    string beneficiaryPhoto = payroll.houseHoldDetail.biometric != null ? payroll.houseHoldDetail.biometric.Photo : null;
+                    AddPhotoToPdfTable(table, beneficiaryPhoto);
+                    AddCellToPdfTableBody(table, $"{payroll.houseHoldDetail.firstName}\n{payroll.houseHoldDetail.middleName}\n{payroll.houseHoldDetail.lastName}", true);
+                    AddCellToPdfTableBody(table, GetGenderString(payroll.houseHoldDetail.gender));
+                    AddCellToPdfTableBody(table, payroll.houseHoldDetail.age.ToString());
+
+                    // First Alternate
+                    if (payroll.alternates.Count > 0)
+                    {
+                        var firstAlternate = payroll.alternates[0];
+                        AddCellToPdfTableBody(table, firstAlternate.id.ToString());
+                        string firstAlternatePhoto = firstAlternate.biometric != null ? firstAlternate.biometric.Photo : null;
+                        AddPhotoToPdfTable(table, firstAlternatePhoto);
+                        AddCellToPdfTableBody(table, $"{firstAlternate.firstName}\n{firstAlternate.middleName}\n{firstAlternate.lastName}", true);
+                        AddCellToPdfTableBody(table, GetGenderString(firstAlternate.gender));
+                        AddCellToPdfTableBody(table, firstAlternate.age.ToString());
+                    }
+                    else
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            AddCellToPdfTableBody(table, string.Empty);
+                        }
+                    }
+
+                    // Second Alternate
+                    if (payroll.alternates.Count > 1)
+                    {
+                        var secondAlternate = payroll.alternates[1];
+                        AddCellToPdfTableBody(table, secondAlternate.id.ToString());
+                        string secondAlternatePhoto = secondAlternate.biometric != null ? secondAlternate.biometric.Photo : null;
+                        AddPhotoToPdfTable(table, secondAlternatePhoto);
+                        AddCellToPdfTableBody(table, $"{secondAlternate.firstName}\n{secondAlternate.middleName}\n{secondAlternate.lastName}", true);
+                        AddCellToPdfTableBody(table, GetGenderString(secondAlternate.gender));
+                        AddCellToPdfTableBody(table, secondAlternate.age.ToString());
+                    }
+                    else
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            AddCellToPdfTableBody(table, string.Empty);
+                        }
+                    }
+
+                    // Payment and Signature
+                    AddCellToPdfTableBody(table, payroll.paymentCycle);
+                    AddCellToPdfTableBody(table, payroll.supportType);
+                    AddCellToPdfTableBody(table, payroll.wageRateUSDTotal.ToString("F2"));
+
+                    // Signature with increased height
+                    PdfPCell signatureCell = new PdfPCell(new Phrase(string.Empty))
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        FixedHeight = 100f // Increased height for thumbprint accommodation
+                    };
+                    table.AddCell(signatureCell);
+                }
+
+                // Add the table to the document
+                document.Add(table);
+
+                // Close the document
+                document.Close();
+
+                // Send the document to the client
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("content-disposition", "attachment;filename=PayrollData.pdf");
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.BinaryWrite(ms.ToArray());
+                Response.End();
+            }
+        }
+
+        // Helper methods remain unchanged
+        private void AddPhotoToPdfTable(PdfPTable table, string base64Photo)
+        {
+            string emptyPhoto = "C:/mis_published_folder/SNSOP/Resource/Images/not-available-2.jpg";
+
+            if (!string.IsNullOrEmpty(base64Photo))
+            {
+                try
+                {
+                    byte[] imageBytes = Convert.FromBase64String(base64Photo);
+                    Image img = Image.GetInstance(imageBytes);
+                    img.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
+
+                    PdfPCell imageCell = new PdfPCell(img, true)
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        Padding = 2f,
+                        FixedHeight = 50f
+                    };
+                    table.AddCell(imageCell);
+                }
+                catch (Exception)
+                {
+                    // If base64 string is invalid, use the empty photo image
+                    AddEmptyPhotoToPdfTable(table, emptyPhoto);
+                }
+            }
+            else
+            {
+                // If no base64 photo is provided, use the empty photo image
+                AddEmptyPhotoToPdfTable(table, emptyPhoto);
+            }
+        }
+
+        private void AddEmptyPhotoToPdfTable(PdfPTable table, string emptyPhotoPath)
+        {
+            try
+            {
+                Image emptyImg = Image.GetInstance(emptyPhotoPath);
+                emptyImg.ScaleToFit(40f, 50f); // Set image size to fit within the fixed cell height
+
+                PdfPCell emptyCell = new PdfPCell(emptyImg, true)
+                {
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_MIDDLE,
+                    Padding = 2f,
+                    FixedHeight = 50f
+                };
+                table.AddCell(emptyCell);
+            }
+            catch (Exception)
+            {
+                // Fallback in case the empty photo file is missing or invalid
+                Font fallbackFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                PdfPCell fallbackCell = new PdfPCell(new Phrase("No Image", fallbackFont))
+                {
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_MIDDLE,
+                    FixedHeight = 50f
+                };
+                table.AddCell(fallbackCell);
+            }
+        }
+
+
+        private void AddSectionHeaderToPdfTable(PdfPTable table, string headerText, int colspan)
+        {
+            PdfPCell headerCell = new PdfPCell(new Phrase(headerText, FontFactory.GetFont(FontFactory.HELVETICA, 10, Font.BOLD)))
+            {
+                Colspan = colspan,
+                BackgroundColor = BaseColor.LIGHT_GRAY,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                FixedHeight = 30f
+            };
+            table.AddCell(headerCell);
+        }
+
+        private void AddCellToPdfTableHeader(PdfPTable table, string text)
+        {
+            PdfPCell cell = new PdfPCell(new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA, 10, Font.BOLD)))
+            {
+                BackgroundColor = BaseColor.LIGHT_GRAY,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                FixedHeight = 30f
+            };
+            table.AddCell(cell);
+        }
+
+        private void AddCellToPdfTableBody(PdfPTable table, string text, bool isNameCell = false)
+        {
+            Phrase content;
+            if (isNameCell && !string.IsNullOrEmpty(text))
+            {
+                string[] nameParts = text.Split(' ');
+                content = new Phrase(string.Join("\n", nameParts), FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            }
+            else
+            {
+                content = new Phrase(text, FontFactory.GetFont(FontFactory.HELVETICA, 10));
+            }
+
+            PdfPCell cell = new PdfPCell(content)
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                FixedHeight = 50f
+            };
+            table.AddCell(cell);
+        }
+
+        public class PageNumberHelper : PdfPageEventHelper
+        {
+            private Font footerFont = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+
+            public override void OnEndPage(PdfWriter writer, Document document)
+            {
+                // Create a footer paragraph with the page number
+                Paragraph footer = new Paragraph("Page " + writer.PageNumber, footerFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                };
+
+                // Set the footer position
+                float x = document.PageSize.Width / 2;
+                float y = document.BottomMargin / 2;
+
+                // Write the footer at the bottom center
+                ColumnText.ShowTextAligned(writer.DirectContent, Element.ALIGN_CENTER, new Phrase(footer), x, y, 0);
+            }
+        }
+
+
+        private string GetGenderString(int genderValue)
+        {
+            return genderValue == 0 ? "Male" : genderValue == 1 ? "Female" : "N/A";
+        }
+        //download payroll data in pdf end
+
 
         // MNE module pdf started
         private void MNEModulePdfHandler()
@@ -457,14 +1040,14 @@ namespace SSSNP_SNSOP
             {
                 // Retrieve the data from the session
                 var dt = Session["ReportPdf"] as DataTable;
-                if (dt == null) throw new Exception("Cash transfer summary data is missing.");
+                if (dt == null) throw new Exception("Report Summary is missing.");
 
                 // Generate PDF from the DataTable
                 GeneratePDF(dt);
             }
             catch (Exception ex)
             {
-                LogError("Error in CashTransferSummaryHandler: " + ex.Message, ex);
+                LogError("Error in MNEModulePDFHandler: " + ex.Message, ex);
                 throw;
             }
         }
@@ -608,6 +1191,962 @@ namespace SSSNP_SNSOP
         }
 
         // Excel Download ended
+
+        // Cash Transfer pdf started
+        private void CashTransferPdfHandler()
+        {
+            try
+            {
+                // Retrieve the CashTransferSummaryData object from the session
+                var cashTransferSummaryData = Session["CashTransferSummary"] as CashTransferSummaryMNE.CashTransferSummaryData;
+
+                if (cashTransferSummaryData == null || cashTransferSummaryData.ReportData == null)
+                    throw new Exception("Cash Transfer Summary data is missing.");
+
+                // Generate PDF using the DataTable from the CashTransferSummaryData
+                GenerateCPDF(cashTransferSummaryData);
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in Cash Transfer Summary: " + ex.Message, ex);
+                throw;
+            }
+        }
+
+        private void GenerateCPDF(CashTransferSummaryMNE.CashTransferSummaryData cashTransferSummaryData)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // Set the document size to legal and rotate it to landscape for more width
+                using (Document document = new Document(PageSize.LEGAL.Rotate(), 10f, 10f, 10f, 10f))
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                    document.Open();
+
+                    // Set the font and size
+                    Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                    Font font = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+                    Font headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+
+                    // Add the title at the top
+                    Paragraph title = new Paragraph("Cash Transfer Summary", titleFont)
+                    {
+                        Alignment = Element.ALIGN_CENTER
+                    };
+                    document.Add(title);
+
+                    document.Add(new Paragraph(" ")); // Add a space after the title
+
+                    // Display the totals from CashTransferSummaryData above the table
+                    Paragraph totalPaidBeneficiaries = new Paragraph("Total Paid Beneficiaries: " + cashTransferSummaryData.TotalPaidBeneficiaries, headerFont);
+                    Paragraph totalUnpaidBeneficiaries = new Paragraph("Total Unpaid Beneficiaries: " + cashTransferSummaryData.TotalUnpaidBeneficiaries, headerFont);
+                    Paragraph totalPaidAmount = new Paragraph("Total Paid Amount(USD): " + cashTransferSummaryData.TotalPaidAmount.ToString("N2"), headerFont);
+
+                    document.Add(totalPaidBeneficiaries);
+                    document.Add(totalUnpaidBeneficiaries);
+                    document.Add(totalPaidAmount);
+                    document.Add(new Paragraph(" ")); // Add a space before the table
+
+                    // Retrieve the DataTable from CashTransferSummaryData
+                    DataTable dt = cashTransferSummaryData.ReportData;
+
+                    // Calculate column widths based on the number of columns
+                    float[] columnWidths = new float[dt.Columns.Count];
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        columnWidths[i] = 1f; // Adjust as necessary
+                    }
+
+                    PdfPTable table = new PdfPTable(dt.Columns.Count)
+                    {
+                        WidthPercentage = 100
+                    };
+                    table.SetWidths(columnWidths);
+
+                    // Add headers with font styling
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, font))
+                        {
+                            HorizontalAlignment = Element.ALIGN_CENTER,
+                            VerticalAlignment = Element.ALIGN_MIDDLE,
+                            BackgroundColor = new BaseColor(230, 230, 250), // Light color for headers
+                            Padding = 5
+                        };
+                        table.AddCell(headerCell);
+                    }
+
+                    // Add data rows
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            PdfPCell dataCell = new PdfPCell(new Phrase(row[col].ToString(), font))
+                            {
+                                HorizontalAlignment = Element.ALIGN_LEFT,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                Padding = 5
+                            };
+                            table.AddCell(dataCell);
+                        }
+                    }
+
+                    document.Add(table);
+                    document.Close();
+                }
+
+                // Write the stream to the response
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("Content-Disposition", "attachment; filename=CashTransferSummary.pdf");
+                Response.BinaryWrite(ms.ToArray());
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+            }
+        }
+
+
+
+        // Cash Transfer pdf ended
+
+        // Cash Transfer Download started
+        // Cash Transfer Excel Download started
+        private void CashTransferxlHandler()
+        {
+            try
+            {
+                // Retrieve the CashTransferSummaryData object from the session
+                var cashTransferSummaryData = Session["CashTransferSummary"] as CashTransferSummaryMNE.CashTransferSummaryData;
+
+                if (cashTransferSummaryData == null || cashTransferSummaryData.ReportData == null)
+                    throw new Exception("Cash Transfer Summary data is missing.");
+
+                // Generate Excel using the DataTable from the CashTransferSummaryData
+                GenerateCExcel(cashTransferSummaryData);
+            }
+            catch (Exception ex)
+            {
+                LogError("Error in Cash Transfer Summary: " + ex.Message, ex);
+            }
+        }
+
+        private void GenerateCExcel(CashTransferSummaryMNE.CashTransferSummaryData cashTransferSummaryData)
+        {
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                // Add a new worksheet to the empty workbook
+                var worksheet = package.Workbook.Worksheets.Add("Sheet1");
+
+                // Set the font for headers
+                worksheet.Cells.Style.Font.Size = 12;
+                worksheet.Cells.Style.Font.Name = "Arial";
+
+                // Add the title at the top
+                worksheet.Cells["A1"].Value = "Cash Transfer Summary";
+                worksheet.Cells["A1"].Style.Font.Bold = true;
+                worksheet.Cells["A1"].Style.Font.Size = 16;
+                worksheet.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                // Merge cells for title
+                worksheet.Cells["A1:B1"].Merge = true;
+
+                // Add the summary totals below the title
+                worksheet.Cells["A3"].Value = "Total Paid Beneficiaries";
+                worksheet.Cells["B3"].Value = cashTransferSummaryData.TotalPaidBeneficiaries;
+
+                worksheet.Cells["A4"].Value = "Total Unpaid Beneficiaries";
+                worksheet.Cells["B4"].Value = cashTransferSummaryData.TotalUnpaidBeneficiaries;
+
+                worksheet.Cells["A5"].Value = "Total Paid Amount(USD)";
+                worksheet.Cells["B5"].Value = cashTransferSummaryData.TotalPaidAmount.ToString("N2");
+
+                // Leave an empty row before adding the table headers and data
+                int startRow = 7;
+
+                // Retrieve the DataTable from CashTransferSummaryData
+                DataTable dt = cashTransferSummaryData.ReportData;
+
+                // Add the headers
+                for (int col = 0; col < dt.Columns.Count; col++)
+                {
+                    worksheet.Cells[startRow, col + 1].Value = dt.Columns[col].ColumnName;
+                    worksheet.Cells[startRow, col + 1].Style.Font.Bold = true;
+                }
+
+                // Add the data
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    for (int col = 0; col < dt.Columns.Count; col++)
+                    {
+                        // Handle potential null or DBNull values gracefully
+                        var cellValue = dt.Rows[row][col];
+                        worksheet.Cells[startRow + row + 1, col + 1].Value = cellValue == DBNull.Value ? "" : cellValue.ToString();
+                    }
+                }
+
+                // Auto-fit columns for all cells
+                worksheet.Cells.AutoFitColumns();
+
+                // Set other styling options as needed (e.g., borders, alignment, number formats)
+
+                byte[] fileContents = package.GetAsByteArray();
+
+                // Write the stream to the response
+                Response.ClearHeaders();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("Content-Disposition", "attachment; filename = CashTransferSummary.xlsx");
+                Response.AddHeader("Content-Length", fileContents.Length.ToString());
+
+                Response.BinaryWrite(fileContents);
+                Response.Flush();
+                Response.Close();
+            }
+        }
+
+
+        // Cash Transfer Download ended
+
+        //Household group view excel template Started
+        private void HouseholdTemplateExlTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Household Group Template");
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Group Name";
+                    worksheet.Cells[1, 2].Value = "Latitude";
+                    worksheet.Cells[1, 3].Value = "Longitude";
+                    worksheet.Cells[1, 4].Value = "VSLA Formed";
+                    /*worksheet.Cells[1, 4].Value = "Created By";
+                    worksheet.Cells[1, 5].Value = "Created Date";
+                    worksheet.Cells[1, 6].Value = "Modified By";
+                    worksheet.Cells[1, 7].Value = "Modified Date";*/
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 4; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+
+                    // Add data validation for Latitude (between -90 and 90)
+                    var latitudeValidation = worksheet.DataValidations.AddDecimalValidation(worksheet.Cells[2, 2, 1048576, 2].Address);
+                    latitudeValidation.ShowErrorMessage = true;
+                    latitudeValidation.ErrorTitle = "Invalid Latitude";
+                    latitudeValidation.Error = "Please enter a latitude between -90 and 90.";
+                    latitudeValidation.Formula.Value = -90;
+                    latitudeValidation.Formula2.Value = 90;
+
+                    // Add data validation for Longitude (between -180 and 180)
+                    var longitudeValidation = worksheet.DataValidations.AddDecimalValidation(worksheet.Cells[2, 3, 1048576, 3].Address);
+                    longitudeValidation.ShowErrorMessage = true;
+                    longitudeValidation.ErrorTitle = "Invalid Longitude";
+                    longitudeValidation.Error = "Please enter a longitude between -180 and 180.";
+                    longitudeValidation.Formula.Value = -180;
+                    longitudeValidation.Formula2.Value = 180;
+                    
+                    // Add data validation for VSLA formed (Yes/No)
+                    var vslaFormedValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 4, 1048576, 4].Address);
+                    vslaFormedValidation.ShowErrorMessage = true;
+                    vslaFormedValidation.ErrorTitle = "Invalid Selection";
+                    vslaFormedValidation.Error = "Please select 'Yes' or 'No' from the drop-down list.";
+                    vslaFormedValidation.Formula.Values.Add("Yes");
+                    vslaFormedValidation.Formula.Values.Add("No");
+
+                    worksheet.Cells.AutoFitColumns();
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=HouseholdGroupViewTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+
+        //Household group view excel template Ended
+
+
+        //Training and Attendance Tracking Template Start
+        private void TrainingAttendanceTrackingTemplate()
+        {
+            try
+            {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+                Component2Service service = new Component2Service();
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Training Attendance Tracking Template");
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Course Code";
+                    worksheet.Cells[1, 3].Value = "Course Duration";
+                    worksheet.Cells[1, 4].Value = "Classes Attended";
+                    worksheet.Cells[1, 5].Value = "Classes Held";
+                    worksheet.Cells[1, 6].Value = "Classes Missed";
+                    worksheet.Cells[1, 7].Value = "Why Missed";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 7; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    var householdNumberList = householdNumbers.ToList(); // Convert HashSet to List
+                    
+                    if (householdNumberList.Count > 0)  // Check if there are any items in the list
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;  // Ensure valid range
+                    }
+
+                    // Add dropdown for Course Code in column B (2nd column)
+                    var courseCodes = new List<string> { "", "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" }; // Empty string for blank option
+                    var validation = worksheet.DataValidations.AddListValidation("B2:B100"); // Adjust the range as needed
+                    foreach (var courseCode in courseCodes)
+                    {
+                        validation.Formula.Values.Add(courseCode); // Adds each course code including the blank option
+                    }
+
+                    validation.ShowErrorMessage = false;
+                    validation.ErrorTitle = "Invalid Selection";
+                    validation.Error = "Please select a course code from the list.";
+
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Cells["B2:G1000"].Style.Locked = false;
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=TrainingAndAttendanceTrackingTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+        //Training and Attendance Tracking Template End
+
+        //BeneficiaryRandomizationEnrollmentTemplate start
+        private void BeneficiaryRandomizationEnrollmentTemplate()
+        {
+            try
+            {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+                Component2Service service = new Component2Service();
+
+                // Call the new method to get household numbers along with group info
+                List<HouseholdGroupLinkageModel> householdGroupData = service.GetMappedHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create the worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Beneficiary Enrollment Template");
+
+                    // Define the headers
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Interested In Participating";
+                    worksheet.Cells[1, 3].Value = "Survives Targeting";
+                    worksheet.Cells[1, 4].Value = "Treatment Arm";
+                    worksheet.Cells[1, 5].Value = "HH Enrollment Status";
+                    //worksheet.Cells[1, 6].Value = "Group ID";
+                    worksheet.Cells[1, 6].Value = "Group Name";
+                    worksheet.Cells[1, 7].Value = "Enrolled Member ID";
+                    worksheet.Cells[1, 8].Value = "Reason For Why Not Enrolled";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 8; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Pre-fill the Household Number, Group ID, and Group Name columns with the fetched data
+                    for (int row = 0; row < householdGroupData.Count; row++)
+                    {
+                        var data = householdGroupData[row];
+
+                        worksheet.Cells[row + 2, 1].Value = data.HouseholdNumber; // Household Number
+                        //worksheet.Cells[row + 2, 6].Value = data.GroupId.HasValue ? (object)data.GroupId.Value : null; // Group ID
+                        worksheet.Cells[row + 2, 6].Value = !string.IsNullOrEmpty(data.GroupName) ? data.GroupName : ""; // Group Name
+                    }
+
+                    // Lock the Household Number, Group ID, and Group Name columns (Columns 1, 6, and 7)
+                    worksheet.Cells["A2:A" + (householdGroupData.Count + 1)].Style.Locked = true;
+                    worksheet.Cells["F2:F" + (householdGroupData.Count + 1)].Style.Locked = true;
+                    //worksheet.Cells["G2:G" + (householdGroupData.Count + 1)].Style.Locked = true;
+
+                    // Define the Yes/No options for the drop-downs
+                    string[] yesNoOptions = { "Yes", "No" };
+                    string[] treatmentArm = { "Treatment", "Control" };
+
+                    // Add drop-down for the InterestedInParticipating field (Column 2)
+                    var validation1 = worksheet.DataValidations.AddListValidation("B2:B1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        validation1.Formula.Values.Add(option);
+                    }
+
+                    // Add drop-down for the SurvivesTargeting field (Column 3)
+                    var validation2 = worksheet.DataValidations.AddListValidation("C2:C1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        validation2.Formula.Values.Add(option);
+                    }
+
+                    // Add drop-down for the TreatmentArm field (Column 4)
+                    var validation3 = worksheet.DataValidations.AddListValidation("D2:D1000");
+                    foreach (string option in treatmentArm)
+                    {
+                        validation3.Formula.Values.Add(option);
+                    }
+
+                    // Add drop-down for the HHEnrollmentStatus field (Column 5)
+                    var validation4 = worksheet.DataValidations.AddListValidation("E2:E1000");
+                    foreach (string option in yesNoOptions)
+                    {
+                        validation4.Formula.Values.Add(option);
+                    }
+
+                    // Add validation for the Enrolled Member ID field (Column 7) to only allow integers between 1 and 5, or leave blank
+                    var validation5 = worksheet.DataValidations.AddCustomValidation("G2:G1000");
+                    validation5.Formula.ExcelFormula = "OR(ISBLANK(G2), AND(ISNUMBER(G2), G2 >= 1, G2 <= 5))";
+                    validation5.ShowErrorMessage = true;
+                    validation5.ErrorTitle = "Invalid Input";
+                    validation5.Error = "Please enter a whole number between 1 and 5, or leave the cell blank.";
+                    validation5.PromptTitle = "Input Restriction";
+                    validation5.Prompt = "Enter a whole number between 1 and 5, or leave blank.";
+
+                    // Add conditional validation for "Reason for why not" (Column 8)
+                    for (int row = 2; row <= 100; row++)
+                    {
+                        var conditionalValidation = worksheet.DataValidations.AddCustomValidation($"H{row}");
+                        conditionalValidation.Formula.ExcelFormula = $"IF(E{row}=\"No\", TRUE, ISBLANK(H{row}))";
+                        conditionalValidation.ShowErrorMessage = true;
+                        conditionalValidation.ErrorTitle = "Invalid Input";
+                        conditionalValidation.Error = "This field can only be edited if HH Enrollment Status is 'No'. It must be blank otherwise.";
+                        conditionalValidation.PromptTitle = "Input Restriction";
+                        conditionalValidation.Prompt = "Enter a reason only if HH Enrollment Status is 'No'.";
+                    }
+
+                    // Protect the worksheet so that locked cells (Household Number, Group ID, Group Name) are read-only
+                    worksheet.Protection.IsProtected = true;
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:E1000"].Style.Locked = false;
+                    worksheet.Cells["G2:G1000"].Style.Locked = false; // Allow users to edit "Enrolled Member ID"
+                    worksheet.Cells["H2:H1000"].Style.Locked = false;
+
+                    // Auto-fit columns to adjust the size
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=BeneficiaryEnrollmentTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+
+
+        private void LivelihoodGrantDisbursementTemplate()
+        {
+            try
+            {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+
+                Component2Service service = new Component2Service();
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Livelihood Grant Disbursement Template");
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Payment Cycle";
+                    worksheet.Cells[1, 3].Value = "Payment Amount";
+                    worksheet.Cells[1, 4].Value = "Payment Date" + "\n" + "(mm-dd-yyyy)";
+                    worksheet.Cells[1, 4].Style.WrapText = true;
+                    worksheet.Cells[1, 5].Value = "Actual Payment Date" + "\n" + "(mm-dd-yyyy)";
+                    worksheet.Cells[1, 5].Style.WrapText = true;
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 5; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    var householdNumberList = householdNumbers.ToList(); // Convert HashSet to List
+
+                    if (householdNumberList.Count > 0)  // Check if there are any items in the list
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;  // Ensure valid range
+                    }
+
+                    // Suppose we know the number of data rows to be inserted
+                    // In this example, assume we are inserting 10 rows of data dynamically
+                    int dataRows = 20; // Replace this with the actual number of data rows to be inserted
+
+                    // Add a dropdown for "Payment Cycle" (column 2)
+                    var paymentCycleValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 2, dataRows + 1, 2].Address);  // Apply to data rows only
+                    paymentCycleValidation.ShowErrorMessage = true;
+                    paymentCycleValidation.AllowBlank = true;
+                    paymentCycleValidation.ErrorTitle = "Invalid Payment Cycle";
+                    paymentCycleValidation.Error = "Please select valid cycle.";
+                    paymentCycleValidation.Formula.Values.Add("Installment 1");
+                    paymentCycleValidation.Formula.Values.Add("Installment 2");
+                    paymentCycleValidation.Formula.Values.Add("Installment 3");
+                    paymentCycleValidation.Formula.Values.Add("Installment 4");
+                    paymentCycleValidation.Formula.Values.Add("Installment 5");
+                    paymentCycleValidation.Formula.Values.Add("Installment 6");
+                    paymentCycleValidation.Formula.Values.Add("Installment 7");
+                    paymentCycleValidation.Formula.Values.Add("Installment 8");
+                    paymentCycleValidation.Formula.Values.Add("Installment 9");
+
+                    // Set the format for "Payment Date" as DateTime for the actual data rows
+                    worksheet.Cells[2, 4, dataRows + 1, 4].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
+
+                    // Apply data validation for the "Payment Date" column (only to the actual data rows)
+                    var dateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 4, dataRows + 1, 4].Address);
+                    dateValidation.ShowErrorMessage = true;
+                    dateValidation.ErrorTitle = "Invalid Date";
+                    dateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-mm-yyyy";
+                    dateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-MM-yyyy";
+                    dateValidation.AllowBlank = true;
+                    dateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
+                    dateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
+
+                    // Set the format for "Actual Payment Date" as DateTime for the actual data rows
+                    worksheet.Cells[2, 5, dataRows + 1, 5].Style.Numberformat.Format = "MM-dd-yyyy"; // or any DateTime format
+
+                    // Apply data validation for the "Actual Payment Date" column (only to the actual data rows)
+                    var actualDateValidation = worksheet.DataValidations.AddDateTimeValidation(worksheet.Cells[2, 5, dataRows + 1, 5].Address);
+                    actualDateValidation.ShowErrorMessage = true;
+                    actualDateValidation.ErrorTitle = "Invalid Date";
+                    actualDateValidation.Error = "Please enter a valid date in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-mm-yyyy";
+                    actualDateValidation.Prompt = "Select a date or enter manually in the format MM-dd-yyyy. Also ensure you machine's date format is in dd-MM-yyyy";
+                    actualDateValidation.AllowBlank = true;
+                    actualDateValidation.Formula.Value = new DateTime(2000, 1, 1); // Minimum allowed date
+                    actualDateValidation.Formula2.Value = new DateTime(2100, 12, 31); // Maximum allowed date
+
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Cells["B2:G1000"].Style.Locked = false;
+
+                    // Auto-fit columns for better appearance
+                    worksheet.Cells.AutoFitColumns();
+                    worksheet.Column(4).Width = 15;
+                    worksheet.Column(5).Width = 15;
+
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=LivelihoodGrantDisbursementTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+        private void EconomicOppontunityAuditRecordDownload()
+        {
+            // Retrieve the selected audit table and data from the session
+            string selectedAuditTable = Session["SelectedAuditTable"] as string;
+            DataTable auditRecords = Session["AuditRecordData"] as DataTable;
+
+            // Step 1: Check if session data is still valid
+            if (string.IsNullOrEmpty(selectedAuditTable) || auditRecords == null || auditRecords.Rows.Count == 0)
+            {
+                // If no data, respond with a message or handle the error gracefully
+                Response.Clear();
+                Response.Write("No data available for download.");
+                Response.End();
+                return;
+            }
+
+            // Step 2: Create the PDF document in Landscape orientation
+            Document pdfDoc = new Document(PageSize.A4.Rotate(), 10f, 10f, 10f, 10f);  // Rotate A4 to Landscape
+            MemoryStream memoryStream = new MemoryStream();
+            PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+            pdfDoc.Open();
+
+            // Step 3: Add title to the PDF document
+            string reportName = "";
+            switch(selectedAuditTable)
+            {
+                case "tbl_com2_Household_Enrollment_Data_Audit":
+                    reportName = "Beneficiary Randomization and Enrollment";
+                    break;
+                case "tbl_com2_Training_Attendance_Audit":
+                    reportName = "Training and Attendance Tracking";
+                    break;
+                case "tbl_com2_Business_Plan_Development_Audit":
+                    reportName = "Business Plan Development";
+                    break;
+                case "tbl_com2_Livelihood_Grant_Disbursement_Audit":
+                    reportName = "Livelihood Grant Disbursement";
+                    break;
+                case "tbl_com2_Financial_Services_Linkage_Tracking_Audit":
+                    reportName = "Financial Services Linkage Tracking";
+                    break;
+            }
+
+            Paragraph title = new Paragraph("Audit Record Report - " + reportName);
+            title.Alignment = Element.ALIGN_CENTER;
+            title.SpacingAfter = 20f;
+            pdfDoc.Add(title);
+
+            // Step 4: Create a table with the same number of columns as the DataTable
+            PdfPTable pdfTable = new PdfPTable(auditRecords.Columns.Count)
+            {
+                WidthPercentage = 100,
+                HorizontalAlignment = Element.ALIGN_LEFT
+            };
+
+            // Step 5: Set table column headers dynamically from the DataTable
+            foreach (DataColumn column in auditRecords.Columns)
+            {
+                PdfPCell headerCell = new PdfPCell(new Phrase(column.ColumnName, FontFactory.GetFont("Arial", 10, Font.BOLD)))
+                {
+                    BackgroundColor = BaseColor.LIGHT_GRAY,
+                    HorizontalAlignment = Element.ALIGN_CENTER
+                };
+                pdfTable.AddCell(headerCell);
+            }
+
+            // Step 6: Add rows to the PDF table dynamically from the DataTable
+            foreach (DataRow row in auditRecords.Rows)
+            {
+                foreach (var cellData in row.ItemArray)
+                {
+                    PdfPCell dataCell = new PdfPCell(new Phrase(cellData?.ToString() ?? "", FontFactory.GetFont("Arial", 10)))
+                    {
+                        HorizontalAlignment = Element.ALIGN_LEFT
+                    };
+                    pdfTable.AddCell(dataCell);
+                }
+            }
+
+            // Step 7: Add the table to the PDF document
+            pdfDoc.Add(pdfTable);
+
+            // Step 8: Close the document
+            pdfDoc.Close();
+
+            // Step 9: Send the PDF as a response for download
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-disposition", "attachment;filename=AuditRecord_" + selectedAuditTable + ".pdf");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.BinaryWrite(memoryStream.ToArray());
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+
+        }
+
+        private void PayrollReconcileTemplate()
+        {
+            try
+            {
+                PayrollReconcileRequestDto dto = Session["PayrollReconcileRequest"] as PayrollReconcileRequestDto;
+
+                int? stateId = dto?.StateId;
+                int? countyId = dto?.CountyId;
+                int? payamId = dto?.PayamId;
+                int? bomaId = dto?.BomaId;
+                string ReqNo = string.IsNullOrEmpty(dto?.ReqNo?.Trim()) ? dto?.ReqNo?.Trim() : null;
+                string WorkCode = string.IsNullOrEmpty(dto?.WorkCode?.Trim()) ? dto?.WorkCode?.Trim() : null;
+
+                DataSet ds = genDbAccess.GetReconciledUnpaidPayrollKIT(stateId, countyId, payamId, bomaId, ReqNo, WorkCode);
+                if (ds == null || ds.Tables != null && ds.Tables.Count > 0 && ds.Tables[0].Rows != null && ds.Tables[0].Rows.Count <= 0)
+                {
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
+
+                    using (ExcelPackage package = new ExcelPackage())
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Payroll");
+
+                        Response.ClearHeaders();
+                        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                        Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
+
+                        Response.BinaryWrite(package.GetAsByteArray());
+                        Response.Flush();
+                        Response.Close();
+                        return;
+                    }
+                }
+
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Payroll");
+
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Enrollment Number";
+                    worksheet.Cells[1, 3].Value = "First Name";
+                    worksheet.Cells[1, 4].Value = "Sur Name";
+                    worksheet.Cells[1, 5].Value = "Last Name";
+                    worksheet.Cells[1, 6].Value = "Payment Status";
+                    worksheet.Cells[1, 7].Value = "Payment Center";
+                    worksheet.Cells[1, 8].Value = "Paid To";
+                    worksheet.Cells[1, 9].Value = "Wage";
+                    worksheet.Cells[1, 10].Value = "Attendance";
+                    worksheet.Cells[1, 11].Value = "Exchange Rate";
+                    worksheet.Cells[1, 12].Value = "Amount in SSP";
+                    worksheet.Cells[1, 13].Value = "Work Code";
+                    worksheet.Cells[1, 14].Value = "Work Id";
+                    worksheet.Cells[1, 15].Value = "Transaction Id";
+                    worksheet.Cells[1, 16].Value = "UUID";
+                    worksheet.Cells[1, 17].Value = "Payroll Start Date";
+                    worksheet.Cells[1, 18].Value = "Payroll End Date";
+                    worksheet.Cells[1, 19].Value = "Created At";
+                    worksheet.Cells[1, 20].Value = "Generated At";
+                    worksheet.Cells[1, 21].Value = "Latitude";
+                    worksheet.Cells[1, 22].Value = "Longitude";
+                    worksheet.Cells[1, 1].Style.WrapText = true;
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 4; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    for (int row = 0; row < ds.Tables[0].Rows.Count; row++)
+                    {
+                        worksheet.Cells[row + 2, 1].Value = ds.Tables[0].Rows[row]["household_number"].ToString();
+                        worksheet.Cells["A2:A" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 2].Value = ds.Tables[0].Rows[row]["EnrollmentNo"].ToString();
+                        worksheet.Cells["B2:B" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        if (ds.Tables[0].Rows[row]["NameofHousehold"] != null)
+                        {
+                            var names = ds.Tables[0].Rows[row]["NameofHousehold"].ToString().Split(' ');
+                            if (names != null && names.Length > 0)
+                            {
+                                if (names.Length >= 3)
+                                {
+                                    worksheet.Cells[row + 2, 3].Value = names[0];
+                                    worksheet.Cells["C2:C" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                                    worksheet.Cells[row + 2, 4].Value = names[1];
+                                    worksheet.Cells["D2:D" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                                    worksheet.Cells[row + 2, 5].Value = names[2];
+                                    worksheet.Cells["E2:E" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+                                }
+                            }
+                        }
+
+                        worksheet.Cells[row + 2, 6].Value = ds.Tables[0].Rows[row]["status"].ToString();
+                        worksheet.Cells[row + 2, 7].Value = ""; // payment center
+                        worksheet.Cells[row + 2, 8].Value = ""; // paid to
+
+                        worksheet.Cells[row + 2, 9].Value = ds.Tables[0].Rows[row]["AmountInSSP"].ToString();
+                        worksheet.Cells["I2:I" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 10].Value = ds.Tables[0].Rows[row]["TotAttendance"].ToString();
+                        worksheet.Cells["J2:J" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 11].Value = ds.Tables[0].Rows[row]["Exchangerateattime"].ToString();
+                        worksheet.Cells["K2:K" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 12].Value = ds.Tables[0].Rows[row]["AmountInSSP"].ToString();
+                        worksheet.Cells["L2:L" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 13].Value = ds.Tables[0].Rows[row]["WorkCode"].ToString();
+                        worksheet.Cells["M2:M" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 14].Value = ds.Tables[0].Rows[row]["intWorkid"].ToString();
+                        worksheet.Cells["N2:N" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 15].Value = ds.Tables[0].Rows[row]["trans_id"].ToString();
+                        worksheet.Cells["O2:O" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 16].Value = ds.Tables[0].Rows[row]["uuid"].ToString();
+                        worksheet.Cells["P2:P" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 17].Value = ds.Tables[0].Rows[row]["ReqFromDate"].ToString();
+                        worksheet.Cells["Q2:Q" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 18].Value = ds.Tables[0].Rows[row]["ReqToDate"].ToString();
+                        worksheet.Cells["R2:R" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 19].Value = ds.Tables[0].Rows[row]["Created_dt"].ToString();
+                        worksheet.Cells["S2:S" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 20].Value = ds.Tables[0].Rows[row]["Modified_dt"].ToString();
+                        worksheet.Cells["T2:T" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 21].Value = ds.Tables[0].Rows[row]["latitude"].ToString();
+                        worksheet.Cells["U2:U" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+
+                        worksheet.Cells[row + 2, 22].Value = ds.Tables[0].Rows[row]["longitude"].ToString();
+                        worksheet.Cells["V2:V" + (ds.Tables[0].Rows.Count + 1)].Style.Locked = true;
+                    }
+
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Cells.AutoFitColumns();
+
+                    var statusValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 6, 100000, 6].Address);
+                    statusValidation.ShowErrorMessage = true;
+                    statusValidation.ErrorTitle = "Invalid Status";
+                    statusValidation.Error = "Please select status.";
+                    statusValidation.Formula.Values.Add("UNPAID");
+                    statusValidation.Formula.Values.Add("PAID");
+
+                    worksheet.Cells["F2:F10000"].Style.Locked = false;
+                    worksheet.Cells["G2:G10000"].Style.Locked = false;
+                    worksheet.Cells["H2:H10000"].Style.Locked = false;
+
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=PayrollReconcile.xlsx");
+
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+
+        private void DownloadFile(int reportId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT FilePath FROM tbl_mne_Report WHERE Id = @ReportId AND Status = 'Active'";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ReportId", reportId);
+                    conn.Open();
+                    string filePath = cmd.ExecuteScalar() as string;
+
+                    if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                    {
+                        Response.Clear();
+                        Response.ContentType = "application/octet-stream";
+                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(filePath)}");
+                        Response.TransmitFile(filePath);
+                        Response.End();
+                    }
+                    else
+                    {
+                        Response.Write("File not found or inactive.");
+                    }
+                }
+            }
+        }
+
+        private void DownloadIdCard(int benId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT id_card_path FROM tbl_BeneficiaryDet WHERE intBenid = @ID AND id_card_generation_status = 1";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ID", benId);
+                    conn.Open();
+                    string filePath = cmd.ExecuteScalar() as string;
+                    string genericPath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"].ToString() +
+                                    "\\" + "id_cards" + "\\";
+                    string fullPath = genericPath + filePath;
+
+                    if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
+                    {
+                        Response.Clear();
+                        Response.ContentType = "application/pdf";
+                        Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(fullPath)}");
+                        Response.TransmitFile(fullPath);
+                        Response.End();
+                    }
+                    else
+                    {
+                        Response.Write("ID card file not found or not yet generated.");
+                    }
+                }
+            }
+        }
+
 
         private void LogError(string v, Exception ex)
         {
