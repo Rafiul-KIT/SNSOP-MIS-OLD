@@ -413,31 +413,31 @@
                                                     <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
                                                 </ul>
                                             </li>
-                                            <li id="LiIp9" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-powerpoint-o"></i>Payment Reports</a>
+                                            <li id="LiPaymentReports" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-file-powerpoint-o"></i>Payment Reports</a>
                                                 <ul class="down_menu">
                                                     <li><a href="#" style="font-weight: bold">Abstracts:</a> </li>
-                                                    <li><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
-                                                    <li><a href="WageInvoiceAbstractAPI_LIPW.aspx">Wage Request Abstract LIPW</a> </li>
-                                                    <li><a href="WageInvoiceAbstractAPI_DIS.aspx">Wage Request Abstract DIS</a> </li>
-                                                    <li><a href="UnPaidWageInvoiceAbstractAPI.aspx">Unpaid Wage Request Abstract</a> </li>
-                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_LIPW.aspx">Unpaid Wage Request Abstract LIPW</a> </li>
-                                                    <li><a href="UnPaidWageInvoiceAbstractAPI_DIS.aspx">Unpaid Wage Request Abstract DIS</a> </li>
-                                                    <li><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
-                                                    <li><a href="WageInvoiceAbstractAPIPaid_LIPW.aspx">Paid Wage Request Abstract LIPW</a> </li>
-                                                    <li><a href="WageInvoiceAbstractAPIPaid_DIS.aspx">Paid Wage Request Abstract DIS</a> </li>
-                                                    <li><a href="WageAbstractReports.aspx">Wage Paid Abstract</a></li>
-                                                    <li><a href="WageAbstractReports_LIPW.aspx">Wage Paid Abstract LIPW</a></li>
-                                                    <li><a href="WageAbstractReports_DIS.aspx">Wage Paid Abstract DIS</a></li>
-                                                    <li><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li>
+                                                    <li id="WageRequestAbstractReportMenu" runat="server" visible="false"><a href="WageInvoiceAbstractAPI.aspx">Wage Request Abstract</a> </li>
+                                                    <li id="WageRequestAbstractLIPWReportMenu" runat="server" visible="false"><a href="WageInvoiceAbstractAPI_LIPW.aspx">Wage Request Abstract LIPW</a> </li>
+                                                    <li id="WageRequestAbstractDISReportMenu" runat="server" visible="false"><a href="WageInvoiceAbstractAPI_DIS.aspx">Wage Request Abstract DIS</a> </li>
+                                                    <li id="UnpaidWageRequestAbstractReportMenu" runat="server" visible="false"><a href="UnPaidWageInvoiceAbstractAPI.aspx">Unpaid Wage Request Abstract</a> </li>
+                                                    <li id="UnpaidWageRequestAbstractLIPWReportMenu" runat="server" visible="false"><a href="UnPaidWageInvoiceAbstractAPI_LIPW.aspx">Unpaid Wage Request Abstract LIPW</a> </li>
+                                                    <li id="UnpaidWageRequestAbstractDISReportMenu" runat="server" visible="false"><a href="UnPaidWageInvoiceAbstractAPI_DIS.aspx">Unpaid Wage Request Abstract DIS</a> </li>
+                                                    <li id="PaidWageRequestAbstractReportMenu" runat="server" visible="false"><a href="WageInvoiceAbstractAPIPaid.aspx">Paid Wage Request Abstract</a> </li>
+                                                    <li id="PaidWageRequestAbstractLIPWReportMenu" runat="server" visible="false"><a href="WageInvoiceAbstractAPIPaid_LIPW.aspx">Paid Wage Request Abstract LIPW</a> </li>
+                                                    <li id="PaidWageRequestAbstractDISReportMenu" runat="server" visible="false"><a href="WageInvoiceAbstractAPIPaid_DIS.aspx">Paid Wage Request Abstract DIS</a> </li>
+                                                    <li id="WagePaidAbstractReportMenu" runat="server" visible="false"><a href="WageAbstractReports.aspx">Wage Paid Abstract</a></li>
+                                                    <li id="WagePaidAbstractLIPWReportMenu" runat="server" visible="false"><a href="WageAbstractReports_LIPW.aspx">Wage Paid Abstract LIPW</a></li>
+                                                    <li id="WagePaidAbstractDISReportMenu" runat="server" visible="false"><a href="WageAbstractReports_DIS.aspx">Wage Paid Abstract DIS</a></li>
+                                                    <li id="WagePaidAbstractBiometricReportMenu" runat="server" visible="false"><a href="WageAbstractReportsAPI.aspx">Wage Paid Abstract from Biometric</a> </li>
                                                     <li><a href="#" style="font-weight: bold">Detailed Reports:</a> </li>
-                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Wages Details from PayConnect API</a> </li>
-                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages Details from PayConnect API</a> </li>
-                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages Details from PayConnect API</a> </li>
-                                                    <li><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li>
-                                                    <li><a href="PDCHouseholdAttendanceRptWagesMultiple.aspx">Multiple Wages Report</a> </li>
-                                                    <li><a href="WagePaidInvoiceCyclewise.aspx">Wage Paid Cycle wise Report </a></li>
+                                                    <li id="WageDetailsFromPayconnectReportMenu" runat="server" visible="false"><a href="PDCHouseholdAttendanceRptWagesMultiplePCTotal.aspx">Wages Details from PayConnect API</a> </li>
+                                                    <li id="UnpaidWageDetailsFromPayconnectReportMenu" runat="server" visible="false"><a href="PDCHouseholdAttendanceRptWagesMultiplePCUnPaid.aspx">Unpaid Wages Details from PayConnect API</a> </li>
+                                                    <li id="PaidWageDetailsFromPayconnectReportMenu" runat="server" visible="false"><a href="PDCHouseholdAttendanceRptWagesMultiplePC.aspx">Paid Wages Details from PayConnect API</a> </li>
+                                                    <li id="TotalBeneficiryPaymentDetailsReportMenu" runat="server" visible="false"><a href="TotalBeneficiaryPaymentDetails.aspx">Total Payment Details</a> </li>
+                                                    <li id="MultipleWagesReportMenu" runat="server" visible="false"><a href="PDCHouseholdAttendanceRptWagesMultiple.aspx">Multiple Wages Report</a> </li>
+                                                    <li id="WagePaidCycleWiseReportMenu" runat="server" visible="false"><a href="WagePaidInvoiceCyclewise.aspx">Wage Paid Cycle wise Report </a></li>
 
-                                                    <li><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
+                                                    <li id="PaidAlternateNotInMISReportMenu" runat="server" visible="false"><a href="frmwagespaidalter.aspx">Paid Alternate not registered in MIS Report</a> </li>
 
 
                                                 </ul>

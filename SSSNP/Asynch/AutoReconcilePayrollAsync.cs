@@ -15,7 +15,7 @@ namespace SSSNP.Asynch
 {
     public class AutoReconcilePayrollAsync : IThreadable
     {
-        private const int SLEEP_TIME = 60 * 1000 * 30; // 30 minutes interval
+        private int SLEEP_TIME = 0;
         private const string NAME = "reconcile_notification_daemon";
         private AutoResetEvent waitHandle = new AutoResetEvent(false);
         private AutoResetEvent abortHandle = new AutoResetEvent(false);
@@ -25,6 +25,7 @@ namespace SSSNP.Asynch
         public AutoReconcilePayrollAsync()
         {
             PayrollReconBatchFlag = ConfigurationManager.AppSettings["PayrollReconBatchFlag"];
+            SLEEP_TIME = int.Parse(ConfigurationManager.AppSettings["AutoReconcileInterval"].ToString());
         }
 
         public string GetName()
@@ -56,9 +57,12 @@ namespace SSSNP.Asynch
                 {
                     if (PayrollReconBatchFlag == null || PayrollReconBatchFlag.Equals("no"))
                     {
-                        return;
+                        Console.WriteLine("no need");
                     }
-                    InsertWageBenDetails();
+                    else
+                    {
+                        InsertWageBenDetails();
+                    }
 
                     Console.WriteLine("AUTO PAYROLL RECONCILE NOTIFICATION: Going into sleep mode!");
                     GetWaitHandle().WaitOne(GetSleepTime());

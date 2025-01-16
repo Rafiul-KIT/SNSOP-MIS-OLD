@@ -1942,12 +1942,16 @@ namespace SSSNP_SNSOP
         {
             try
             {
-                int? stateId = _location?.StateId;
-                int? countyId = _location?.CountyId;
-                int? payamId = _location?.PayamId;
-                int? bomaId = _location?.BomaId;
+                PayrollReconcileRequestDto dto = Session["PayrollReconcileRequest"] as PayrollReconcileRequestDto;
 
-                DataSet ds = genDbAccess.GetReconciledUnpaidPayrollKIT(stateId, countyId, payamId, bomaId);
+                int? stateId = dto?.StateId;
+                int? countyId = dto?.CountyId;
+                int? payamId = dto?.PayamId;
+                int? bomaId = dto?.BomaId;
+                string ReqNo = string.IsNullOrEmpty(dto?.ReqNo?.Trim()) ? dto?.ReqNo?.Trim() : null;
+                string WorkCode = string.IsNullOrEmpty(dto?.WorkCode?.Trim()) ? dto?.WorkCode?.Trim() : null;
+
+                DataSet ds = genDbAccess.GetReconciledUnpaidPayrollKIT(stateId, countyId, payamId, bomaId, ReqNo, WorkCode);
                 if (ds == null || ds.Tables != null && ds.Tables.Count > 0 && ds.Tables[0].Rows != null && ds.Tables[0].Rows.Count <= 0)
                 {
                     Response.ClearHeaders();

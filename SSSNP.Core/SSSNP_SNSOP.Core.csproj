@@ -207,6 +207,7 @@
     <Compile Include="Model\HouseholdDataModel.cs" />
     <Compile Include="Model\GeoLocationDto.cs" />
     <Compile Include="Model\HouseholdGroupLinkageModel.cs" />
+    <Compile Include="Model\PayrollReconcileRequestDto.cs" />
     <Compile Include="Model\ResponseModel.cs" />
     <Compile Include="Model\ValidHouseholdNumberModel.cs" />
     <Compile Include="OleDbMapping\CreateGBVImported.cs" />
