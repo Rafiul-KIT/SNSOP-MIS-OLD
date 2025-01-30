@@ -1,6 +1,4 @@
-﻿
-
-CREATE procedure [dbo].[Retrieve_getWageReportAbstractAPIInvoicebyReqNoPaid] -- '05/23/2016','05/30/2016',1015
+﻿CREATE procedure [dbo].[Retrieve_getWageReportAbstractAPIInvoicebyReqNoPaid] -- '05/23/2016','05/30/2016',1015
 (  
 @workCode varchar(120),
 @intStateid varchar(8),

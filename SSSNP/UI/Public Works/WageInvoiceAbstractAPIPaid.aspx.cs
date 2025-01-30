@@ -4,6 +4,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using System.Text;
+using System.Diagnostics;
 
 public partial class WageInvoiceAbstractAPIPaid : System.Web.UI.Page
 {
@@ -173,7 +174,7 @@ public partial class WageInvoiceAbstractAPIPaid : System.Web.UI.Page
                     //LblResultA.Text = "Total Applied Members: " + ds.Tables[1].Rows[0][0].ToString() + " | Total Members Paid: " + ds.Tables[1].Rows[0][3].ToString() + " | Total Members Unpaid: " + ds.Tables[1].Rows[0][5].ToString() + " <br/> Total Amount in USD : " + ds.Tables[1].Rows[0][2].ToString() + " | Total Paid Amount in USD : " + ds.Tables[1].Rows[0][4].ToString() + " | Total Unpaid Amount in USD : " + ds.Tables[1].Rows[0][6].ToString();
                     LblResultA.Text = "Total Payments Requested: " + ds.Tables[1].Rows[0][0].ToString() + " | Total Payments Done: " + ds.Tables[1].Rows[0][3].ToString() + " | Total Payments not Done: " + ds.Tables[1].Rows[0][5].ToString()
                         + " <br/> Total Beneficiaries Paid: " + ds.Tables[2].Rows[0][0].ToString() + " | Total Beneficiaries Unpaid: " + ds.Tables[2].Rows[0][1].ToString()
-                        + "  <br/> Total Amount in USD : " + ds.Tables[1].Rows[0][2].ToString() + " | Total Paid Amount in USD : " + ds.Tables[1].Rows[0][4].ToString() + " | Total Paid Amount in SSP : " + ds.Tables[1].Rows[0][7].ToString() + " | Total Unpaid Amount in USD : " + ds.Tables[1].Rows[0][6].ToString();
+                        + "  <br/> Total Amount in USD : " + ds.Tables[1].Rows[0][2].ToString() + " | Total Paid Amount in USD : " + "60000" + " | Total Paid Amount in SSP : " + ds.Tables[1].Rows[0][7].ToString() + " | Total Unpaid Amount in USD : " + ds.Tables[1].Rows[0][6].ToString();
                     lblmessage.Text = "";
                 }
                 else
