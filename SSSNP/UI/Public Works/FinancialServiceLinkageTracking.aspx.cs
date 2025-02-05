@@ -392,14 +392,14 @@ namespace SSSNP.UI.Public_Works
                                     ELSE '' 
                                 END AS ConnectedFinancialServices,
                                 EntityName,
-                                FORMAT(fsp_connection_date, 'MM-dd-yyyy') AS FinancialServiceConnectionDate,
+                                FORMAT(FinancialServiceConnectionDate, 'MM-dd-yyyy') AS FinancialServiceConnectionDate,
                                 CASE 
-                                    WHEN deposit_account_opened = 1 THEN 'YES' 
-                                    WHEN deposit_account_opened = 0 THEN 'NO' 
+                                    WHEN DepositAccountOpened = 1 THEN 'YES' 
+                                    WHEN DepositAccountOpened = 0 THEN 'NO' 
                                     ELSE '' 
                                 END AS DepositAccountOpened,
-                                FORMAT(deposit_account_open_date, 'MM-dd-yyyy') AS DepositAccountOpeningDate,
-                                FORMAT(account_last_activity_date, 'MM-dd-yyyy') AS AccountLastActivityDate 
+                                FORMAT(DepositAccountOpeningDate, 'MM-dd-yyyy') AS DepositAccountOpeningDate,
+                                FORMAT(AccountLastActivityDate, 'MM-dd-yyyy') AS AccountLastActivityDate 
                             FROM 
                                 tbl_com2_Financial_Services_Linkage_Tracking 
                             ORDER BY 
