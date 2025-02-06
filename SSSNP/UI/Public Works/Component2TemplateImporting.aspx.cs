@@ -203,6 +203,15 @@ namespace SSSNP.UI.Public_Works
                     LabelBoma.Visible = true;
                     ddlBoma.Visible = true;
                 }
+                if (ddlTemplate.SelectedValue == "17") // Training Attendance Tracking Template
+                {
+                    trTrainingDate.Style["display"] = "table-row"; // Show Date Field
+                }
+                else
+                {
+                    trTrainingDate.Style["display"] = "none"; // Hide Date Field
+                    txtTrainingDate.Text = string.Empty; // Clear value when hidden
+                }
             }
         }
 
@@ -238,6 +247,15 @@ namespace SSSNP.UI.Public_Works
 
                 // Save the GeoLocationDto object in the session
                 Session["GeoLocation"] = geoLocation;
+
+                string trainingDate = txtTrainingDate.Text.Trim();
+                // If Training Attendance is selected but no date is provided, show an error
+                if (ddlTemplate.SelectedValue == "17" && string.IsNullOrEmpty(trainingDate))
+                {
+                    LblWarning.Text = "Please select a training date.";
+                    LblWarning.Visible = true;
+                    return;
+                }
 
                 // Prepare redirect URL with parameters
                 if (int.TryParse(ddlTemplate.SelectedValue, out int attachmentType))
