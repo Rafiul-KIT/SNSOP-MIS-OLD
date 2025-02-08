@@ -385,6 +385,7 @@
     <Content Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrint.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx" />
+    <Content Include="UI\Public Works\Comp2IndicatorResult.aspx" />
     <Content Include="UI\Public Works\EconomicOpportunitiesDashboard.aspx" />
     <Content Include="UI\Public Works\FinancialServiceLinkageTracking.aspx" />
     <Content Include="UI\Public Works\BusinessPlanDevelopment.aspx" />
@@ -845,6 +846,8 @@
     <Compile Include="Service\AuditRecordService.cs" />
     <Compile Include="Service\Component2Service.cs" />
     <Compile Include="Service\IAuditRecordService.cs" />
+    <Compile Include="Service\IndicatorResultQuery.cs" />
+    <Compile Include="Service\IndicatorResultService.cs" />
     <Compile Include="Service\LookupManagerService.cs" />
     <Compile Include="Service\WageRequestApiManager.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -982,6 +985,13 @@
     </Compile>
     <Compile Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx.designer.cs">
       <DependentUpon>BulkInvoicePrintAutoRec.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\Comp2IndicatorResult.aspx.cs">
+      <DependentUpon>Comp2IndicatorResult.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\Comp2IndicatorResult.aspx.designer.cs">
+      <DependentUpon>Comp2IndicatorResult.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\EconomicOpportunitiesDashboard.aspx.cs">
       <DependentUpon>EconomicOpportunitiesDashboard.aspx</DependentUpon>

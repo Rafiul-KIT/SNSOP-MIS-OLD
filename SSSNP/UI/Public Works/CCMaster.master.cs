@@ -65,6 +65,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         FinancialServiceLinkageTracking.Visible = value;
         CoachingSessionTracking.Visible = value;
         AuditRecordDownload.Visible = value;
+        IndicatorResult.Visible = value;
 
         LiPayroll.Visible = value;
         payrollDownload.Visible = value;
@@ -329,6 +330,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     FinancialServiceLinkageTracking.Visible = true;
                     CoachingSessionTracking.Visible = true;
                     AuditRecordDownload.Visible = true;
+                    IndicatorResult.Visible = true;
                     //LiUM.Visible = true;
 
                     nongbvMenu.Visible = true;
@@ -414,6 +416,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 FinancialServiceLinkageTracking.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
+                IndicatorResult.Visible = true;
 
                 nongbvMenu.Visible = true;
                 nongbvDashboardMenu.Visible = true;

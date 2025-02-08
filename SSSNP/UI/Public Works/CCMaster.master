@@ -338,6 +338,7 @@
                                                      <li id="FinancialServiceLinkageTracking" runat="server"><a href="FinancialServiceLinkageTracking.aspx">Financial Service Linkage Tracking</a></li>
                                                      <li id="CoachingSessionTracking" runat="server"><a href="CoachingSessionTracking.aspx">Coaching Session Tracking</a></li>
                                                      <li id="AuditRecordDownload" runat="server"><a href="AuditRecordDownload.aspx">Audit Download</a></li>
+                                                     <li id="IndicatorResult" runat="server"><a href="Comp2IndicatorResult.aspx">Indicator Result</a></li>
                                                  </ul>
                                             </li>
                                             <li id="LiPayroll" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-money"></i>Payroll</a>
