@@ -143,7 +143,7 @@ namespace SSSNP_SNSOP
                     HouseholdTemplateExlTemplate();
                     return "OK";
                 case HandlerAttachment.TRAINING_ATTENDANCE_TRACKING_TEMPLATE:
-                    TrainingAttendanceTrackingTemplate();
+                    TrainingAttendanceTrackingTemplate(this.GetAttachmentValue);
                     return "OK";
                 //break;
                 case HandlerAttachment.BUSINESS_PLAN_DEVELOPMENT_TEMPLATE:
@@ -1505,7 +1505,7 @@ namespace SSSNP_SNSOP
 
 
         //Training and Attendance Tracking Template Start
-        private void TrainingAttendanceTrackingTemplate()
+        private void TrainingAttendanceTrackingTemplate(object trainingDate)
         {
             try
             {
@@ -1514,63 +1514,67 @@ namespace SSSNP_SNSOP
                 int? payamId = _location?.PayamId;
                 int? bomaId = _location?.BomaId;
 
+                string TrainingDate = HttpUtility.UrlDecode(trainingDate.ToString());
 
                 Component2Service service = new Component2Service();
                 HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+
+                // Fetch course codes dynamically from the database
+                Dictionary<string, int> existingCourseCode = service.GetExistingCourseCode();
+                List<string> courseCodeList = existingCourseCode.Keys.ToList(); // Extracting only the course codes
 
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Create a new worksheet
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Training Attendance Tracking Template");
 
-                    // Add headers to the worksheet (reflecting your table schema)
+                    // Add headers to the worksheet (reflecting the updated table schema)
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Course Code";
-                    worksheet.Cells[1, 3].Value = "Course Duration";
-                    worksheet.Cells[1, 4].Value = "Classes Attended";
-                    worksheet.Cells[1, 5].Value = "Classes Held";
-                    worksheet.Cells[1, 6].Value = "Classes Missed";
-                    worksheet.Cells[1, 7].Value = "Why Missed";
+                    worksheet.Cells[1, 3].Value = "Class Attendance Date"; // New column for training date
+
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 7; col++)
+                    for (int col = 1; col <= 3; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
 
                     var householdNumberList = householdNumbers.ToList(); // Convert HashSet to List
-                    
-                    if (householdNumberList.Count > 0)  // Check if there are any items in the list
+
+                    if (householdNumberList.Count > 0) // Check if there are any items in the list
                     {
                         for (int row = 0; row < householdNumberList.Count; row++)
                         {
-                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // Household Number (Locked)
+                            worksheet.Cells[row + 2, 3].Value = TrainingDate; // Populate Training Date column
                         }
 
                         // Lock the first column (Household Number) and make it read-only
-                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;  // Ensure valid range
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;
+                        worksheet.Cells["C2:C" + (householdNumberList.Count + 1)].Style.Locked = true;
                     }
 
-                    // Add dropdown for Course Code in column B (2nd column)
-                    var courseCodes = new List<string> { "", "FINLIT", "LIVETECH", "LIFESKILL", "SAVINGS" }; // Empty string for blank option
-                    var validation = worksheet.DataValidations.AddListValidation("B2:B100"); // Adjust the range as needed
-                    foreach (var courseCode in courseCodes)
+                    // Add dropdown for Course Code in column B (2nd column) using the fetched course codes
+                    var validation = worksheet.DataValidations.AddListValidation("B2:B1000"); // Adjust range as needed
+                    validation.Formula.Values.Add("");
+                    foreach (var courseCode in courseCodeList)
                     {
-                        validation.Formula.Values.Add(courseCode); // Adds each course code including the blank option
+                        validation.Formula.Values.Add(courseCode);
                     }
 
                     validation.ShowErrorMessage = false;
                     validation.ErrorTitle = "Invalid Selection";
-                    validation.Error = "Please select a course code from the list.";
+                    validation.Error = "Please select a valid course code from the list.";
 
                     worksheet.Protection.IsProtected = true;
-                    worksheet.Cells["B2:G1000"].Style.Locked = false;
+                    worksheet.Cells["B2:B" + (householdNumberList.Count + 1)].Style.Locked = false; // Unlock Course Code & Attendance Date
                     worksheet.Cells.AutoFitColumns();
 
                     // Set the content type and headers for the download
                     Response.ClearHeaders();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("Content-Disposition", "attachment; filename=TrainingAndAttendanceTrackingTemplate.xlsx");
+                    Response.AddHeader("Content-Disposition", "attachment; filename=TrainingAttendanceTracking.xlsx");
 
                     // Write the file to the response stream
                     Response.BinaryWrite(package.GetAsByteArray());

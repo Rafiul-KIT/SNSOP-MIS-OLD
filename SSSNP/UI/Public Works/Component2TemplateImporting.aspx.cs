@@ -261,6 +261,10 @@ namespace SSSNP.UI.Public_Works
                 if (int.TryParse(ddlTemplate.SelectedValue, out int attachmentType))
                 {
                     string redirectUrl = $"~/ViewAttachmentHandler.aspx?AttachmentType={attachmentType}";
+                    if (ddlTemplate.SelectedValue == "17" && !string.IsNullOrEmpty(trainingDate))
+                    {
+                        redirectUrl += $"&AttachmentValue={HttpUtility.UrlEncode(trainingDate)}";
+                    }
 
                     // Redirect with query parameters
                     Response.Redirect(redirectUrl, false);

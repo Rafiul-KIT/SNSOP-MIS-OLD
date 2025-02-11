@@ -10,6 +10,7 @@ namespace SSSNP_SNSOP.Core.Model.Component2
     {
         public string HouseholdNumber { get; set; }
         public string CourseCode { get; set; }
+        public DateTime? ClassAttendanceDate { get; set; }
         public int? CourseDuration { get; set; }
         public int? ClassesAttended { get; set; }
         public int? ClassesHeld { get; set; }

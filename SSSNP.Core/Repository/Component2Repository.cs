@@ -44,11 +44,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
                     data.Add("CourseId", GetCourseIdByCode(obj.CourseCode));
                     data.Add("CourseCode", obj.CourseCode ?? (object)DBNull.Value);
-                    data.Add("CourseDuration", obj.CourseDuration ?? (object)DBNull.Value);
-                    data.Add("ClassesAttended", obj.ClassesAttended ?? (object)DBNull.Value);
-                    data.Add("ClassesHeld", obj.ClassesHeld ?? (object)DBNull.Value);
-                    data.Add("ClassesMissed", obj.ClassesMissed ?? (object)DBNull.Value);
-                    data.Add("WhyMissed", obj.WhyMissed ?? (object)DBNull.Value);
+                    data.Add("ClassAttendanceDate", obj.ClassAttendanceDate);
                     data.Add("StateID", denormalizedData.StateID);
                     data.Add("CountyID", denormalizedData.CountyID);
                     data.Add("PayamID", denormalizedData.PayamID);
@@ -1286,6 +1282,47 @@ namespace SSSNP_SNSOP.Core.Repository
 
             return CourseDetails;
         }
+
+
+        public List<DateTime> GetValidCourseDates(string courseCode)
+        {
+            List<DateTime> validDates = new List<DateTime>();
+
+            try
+            {
+                // Define the SQL query
+                string query = "SELECT ClassHoldingDate FROM tbl_com2_Course_Details WHERE CourseCode = @CourseCode";
+
+                // Create SQL parameters
+                var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@CourseCode", courseCode)
+                };
+
+                // Execute query using IDbOperation
+                var dt = _dbOperation.ExecuteDataTable(query, CommandType.Text, parameters);
+
+                // Process results
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (DateTime.TryParse(row["ClassHoldingDate"].ToString(), out DateTime parsedDate))
+                        {
+                            validDates.Add(parsedDate.Date); // Store only the date part
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching valid class dates for course '{courseCode}': {ex.Message}");
+            }
+
+            return validDates;
+        }
+
+
 
     }
 

@@ -124,6 +124,13 @@ namespace SSSNP.Service
                 return (false, "Classes Attended cannot exceed Classes Held.");
             }
 
+            var validCourseDates = _component2Repository.GetValidCourseDates(obj.CourseCode);
+
+            if (!validCourseDates.Contains(obj.ClassAttendanceDate?.Date ?? DateTime.MinValue))
+            {
+                return (false, $"Class Attendance Date '{obj.ClassAttendanceDate?.ToShortDateString()}' is not valid for course '{obj.CourseCode}'.");
+            }
+
             // Add more validation as needed
             return (true, string.Empty);
         }

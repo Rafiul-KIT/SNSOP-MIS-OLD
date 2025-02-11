@@ -76,17 +76,6 @@
                                         <td style="vertical-align: top; width: 35%;">
                                             <!-- Right Side: Payam, Boma -->
                                             <table cellpadding="10" cellspacing="5" style="width: 100%;">
-                                                <tr id="trTrainingDate" runat="server" style="display: none;">
-                                                    <td style="padding: 5px;">
-                                                        <asp:Label ID="LabelTrainingDate" runat="server" CssClass="LBLBLACK" Width="165px">Training Date</asp:Label>
-                                                        <span style="color: red">*</span>
-                                                    </td>
-                                                    <td>:</td>
-                                                    <td>
-                                                        <asp:TextBox ID="txtTrainingDate" runat="server" CssClass="form-control txtbox" Width="180px"></asp:TextBox>
-                                                        <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" TargetControlID="txtTrainingDate" Format="yyyy-MM-dd" />
-                                                    </td>
-                                                </tr>
                                                 <tr>
                                                     <td style="padding: 5px;">
                                                         <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
@@ -107,6 +96,17 @@
                                                         <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                                <tr id="trTrainingDate" runat="server" style="display: none;">
+                                                    <td style="padding: 5px;">
+                                                        <asp:Label ID="LabelTrainingDate" runat="server" CssClass="LBLBLACK" Width="165px">Training Date</asp:Label>
+                                                        <span style="color: red">*</span>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <asp:TextBox ID="txtTrainingDate" runat="server" CssClass="form-control txtbox" Width="180px"></asp:TextBox>
+                                                        <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" TargetControlID="txtTrainingDate" Format="yyyy-MM-dd" />
                                                     </td>
                                                 </tr>
                                             </table>

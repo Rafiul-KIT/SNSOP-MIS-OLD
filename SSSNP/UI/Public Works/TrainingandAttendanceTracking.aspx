@@ -150,11 +150,7 @@
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" />
                                             <telerik:GridBoundColumn DataField="CourseCode" HeaderText="Course Code" />
-                                            <telerik:GridBoundColumn DataField="CourseDuration" HeaderText="Course Duration" />
-                                            <telerik:GridBoundColumn DataField="ClassesAttended" HeaderText="Classes Attended" />
-                                            <telerik:GridBoundColumn DataField="ClassesHeld" HeaderText="Classes Held" />
-                                            <telerik:GridBoundColumn DataField="ClassesMissed" HeaderText="Classes Missed" />
-                                            <telerik:GridBoundColumn DataField="WhyMissed" HeaderText="Why Missed" />
+                                            <telerik:GridBoundColumn DataField="ClassAttendanceDate" HeaderText="Class Attendance Date" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>

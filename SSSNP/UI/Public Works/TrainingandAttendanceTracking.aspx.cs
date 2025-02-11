@@ -79,7 +79,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Household Number", "Course Code", "Course Duration", "Classes Attended", "Classes Held", "Classes Missed", "Why Missed"
+                        "Household Number", "Course Code", "Course Duration", "Class Attendance Date"
                     };
 
                     // Validate headers
@@ -102,17 +102,11 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         // Handle null or empty values for each column
                         var courseCode = string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) ? null : worksheet.Cells[row, 2].Text;
                         var courseDuration = string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 3].Text);
-                        var classesAttended = string.IsNullOrWhiteSpace(worksheet.Cells[row, 4].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 4].Text);
-                        var classesHeld = string.IsNullOrWhiteSpace(worksheet.Cells[row, 5].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 5].Text);
-                        var classesMissed = string.IsNullOrWhiteSpace(worksheet.Cells[row, 6].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 6].Text);
-                        var whyMissed = string.IsNullOrWhiteSpace(worksheet.Cells[row, 7].Text) ? null : worksheet.Cells[row, 7].Text;
+                        var classAttendanceDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime parsedDate) ? (DateTime?)parsedDate: null;
 
                         if (string.IsNullOrWhiteSpace(courseCode) &&
                             courseDuration == null &&
-                            classesAttended == null &&
-                            classesHeld == null &&
-                            classesMissed == null &&
-                            string.IsNullOrWhiteSpace(whyMissed))
+                            classAttendanceDate == null)
                         {
                             continue; // Skip this row
                         }
@@ -122,10 +116,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                             HouseholdNumber = worksheet.Cells[row, 1].Text,
                             CourseCode = courseCode,
                             CourseDuration = courseDuration ?? 0, // Default to 0 if null
-                            ClassesAttended = classesAttended ?? 0, // Default to 0 if null
-                            ClassesHeld = classesHeld ?? 0, // Default to 0 if null
-                            ClassesMissed = classesMissed ?? 0, // Default to 0 if null
-                            WhyMissed = whyMissed, // Allow null for WhyMissed
+                            ClassAttendanceDate = classAttendanceDate,
                             CreatedBy = userId,
                             ModifiedBy = userId
                         };
@@ -168,11 +159,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 dt.Columns.Add("Id", typeof(int));
                 dt.Columns.Add("HouseholdNumber", typeof(string));
                 dt.Columns.Add("CourseCode", typeof(string));
-                dt.Columns.Add("CourseDuration", typeof(object)); // Change to object to support null values
-                dt.Columns.Add("ClassesAttended", typeof(object)); // Change to object to support null values
-                dt.Columns.Add("ClassesHeld", typeof(object)); // Change to object to support null values
-                dt.Columns.Add("ClassesMissed", typeof(object)); // Change to object to support null values
-                dt.Columns.Add("WhyMissed", typeof(string));
+                dt.Columns.Add("ClassAttendanceDate", typeof(DateTime)); // Change to object to support null values
                 dt.Columns.Add("ValidationStatus", typeof(string)); // For error messages
 
                 // Store error messages for rows with validation issues
@@ -189,7 +176,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 // Iterate over attendanceList and validate each entry
                 foreach (var attendance in validAttendanceList)
-                {
+                { 
                     var validationResult = _component2Service.IsValidData(attendance, validHouseholdNumbers); // Call validation
 
                     // Populate DataTable with the data
@@ -197,21 +184,13 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     dr["Id"] = serial;
                     dr["HouseholdNumber"] = attendance.HouseholdNumber;
                     dr["CourseCode"] = attendance.CourseCode;
-                    dr["CourseDuration"] = attendance.CourseDuration ?? (object)DBNull.Value; // Handle null values
-                    dr["ClassesAttended"] = attendance.ClassesAttended ?? (object)DBNull.Value; // Handle null values
-                    dr["ClassesHeld"] = attendance.ClassesHeld ?? (object)DBNull.Value; // Handle null values
-                    dr["ClassesMissed"] = attendance.ClassesMissed ?? (object)DBNull.Value; // Handle null values
-                    dr["WhyMissed"] = attendance.WhyMissed ?? (object)DBNull.Value;
+                    dr["ClassAttendanceDate"] = attendance.ClassAttendanceDate;
 
                     TrainingAndAttendanceAuditModel auditEntityObj = new TrainingAndAttendanceAuditModel();
                     auditEntityObj.FileId = FileId;
                     auditEntityObj.HouseholdNumber = attendance.HouseholdNumber;
                     auditEntityObj.CourseCode = attendance.CourseCode;
-                    auditEntityObj.CourseDuration = attendance.CourseDuration;
-                    auditEntityObj.ClassesAttended = attendance.ClassesAttended;
-                    auditEntityObj.ClassesHeld = attendance.ClassesHeld;
-                    auditEntityObj.ClassesMissed = attendance.ClassesMissed;
-                    auditEntityObj.WhyMissed = attendance.WhyMissed;
+                    auditEntityObj.ClassAttendanceDate = attendance.ClassAttendanceDate;
 
                     // Collect error messages to display in the ValidationStatus column
                     if (!validationResult.isValid)
@@ -412,7 +391,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             try
             {
                 // Construct the query with parameters for pagination
-                string query = @"SELECT Id, HouseholdNumber, CourseCode, CourseDuration, ClassesAttended, ClassesHeld, ClassesMissed, WhyMissed 
+                string query = @"SELECT Id, HouseholdNumber, CourseCode, ClassAttendanceDate 
                          FROM tbl_com2_Training_Attendance 
                          ORDER BY Id 
                          OFFSET @Offset ROWS 
