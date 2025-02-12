@@ -28,8 +28,11 @@ namespace SSSNP.Service
         {
             try
             {
-                string sql = "select 'Total' as 'IndicatorKey', count(*) IndicatorValue " +
-                    " from tbl_BeneficiaryDet where 1=1";
+                string sql = "with cte as (select intBenid from tr_BenWagesPayment group by intBenid) " +
+                    " select 'Total' as 'IndicatorKey', count(*) IndicatorValue " +
+                    " from tbl_BeneficiaryDet b" +
+                    " inner join cte on b.intBenid = cte.intBenid" +
+                    " where 1=1";
                 List<SqlParameter> list = new List<SqlParameter>();
 
                 sql = modify(request, sql, list);
@@ -44,14 +47,16 @@ namespace SSSNP.Service
             }
         }
 
-        public DataTable GetBeneficiariesReceivingCash(IndicatorResultQuery request)
+        public DataTable GetBeneficiariesReceivingCash(IndicatorResultQuery request, bool lipw)
         {
             try
             {
-                string sql = "select 'Total' as 'IndicatorKey', count(*) IndicatorValue " +
+                string sql = "with cte as (select intBenid from tr_BenWagesPayment group by intBenid)" +
+                    " select 'Total' as 'IndicatorKey', count(*) IndicatorValue " +
                     " from tbl_BeneficiaryDet b" +
-                    " inner join tr_BenWagesPayment bwp on b.intBenid = bwp.intBenid" +
-                    " inner join td_WageReqBenDet wrbd on b.intBenid = wrbd.intBenid and wrbd.intWorkid != 999" +
+                    " inner join cte on b.intBenid = cte.intBenid" +
+                    " inner join td_WageReqBenDet wrbd on b.intBenid = wrbd.intBenid" +
+                    ((lipw == false) ? " and wrbd.intWorkid = 999" : " and wrbd.intWorkid != 999") +
                     " where 1=1";
                 List<SqlParameter> list = new List<SqlParameter>();
 
@@ -95,7 +100,13 @@ namespace SSSNP.Service
             }
             if (!string.IsNullOrEmpty(request.legalStatus))
             {
-                sql += " AND LegalStatus = @legalStatus";
+                if (!request.legalStatus.Contains(","))
+                {
+                    sql += " AND LegalStatus = @legalStatus";
+                } else
+                {
+                    sql += " AND LegalStatus in @legalStatus";
+                }
                 SqlParameter param = new SqlParameter("@legalStatus", request.legalStatus);
                 list.Add(param);
             }
@@ -110,6 +121,14 @@ namespace SSSNP.Service
                 sql += " AND Sex = @sex";
                 SqlParameter param = new SqlParameter("@sex", request.sex);
                 list.Add(param);
+            }
+            if (!string.IsNullOrEmpty(request.ageRange))
+            {
+                String[] ages = request.ageRange.Split('-');
+                if (ages != null && ages.Length == 2)
+                {
+                    sql += " AND age between " + int.Parse(ages[0]) + " and " + int.Parse(ages[1]);
+                }
             }
 
             return sql;

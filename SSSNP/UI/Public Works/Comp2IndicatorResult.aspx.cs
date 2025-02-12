@@ -1,12 +1,8 @@
 ﻿using SSSNP.Service;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
 namespace SSSNP.UI.Public_Works
@@ -50,35 +46,38 @@ namespace SSSNP.UI.Public_Works
             LoadDropdownData();
 
             // Populate fixed dropdowns for Payment Cycle and Status
-            ddlPaymentCycle.Items.Add(new ListItem("--Select--", ""));
+            ddlPaymentCycle.Items.Add(new System.Web.UI.WebControls.ListItem("--Select--", ""));
             for (int i = 1; i <= 9; i++)
             {
-                ddlPaymentCycle.Items.Add(new ListItem($"Payment Cycle {i}", i.ToString()));
+                ddlPaymentCycle.Items.Add(new System.Web.UI.WebControls.ListItem($"Payment Cycle {i}", i.ToString()));
             }
 
-            ddlIndicatorType.Items.Add(new ListItem("Project Development Objective Indicators by Objectives/Outcomes", "1"));
-            ddlIndicatorType.Items.Add(new ListItem("Monitoring & Evaluation Plan: Intermediate Results Indicators", "2"));
+            ddlIndicatorType.Items.Add(new System.Web.UI.WebControls.ListItem("Project Development Objective Indicators by Objectives/Outcomes", "1"));
+            ddlIndicatorType.Items.Add(new System.Web.UI.WebControls.ListItem("Monitoring & Evaluation Plan: Intermediate Results Indicators", "2"));
 
             LoadLegalStatus();
         }
 
         private void LoadLegalStatus()
         {
-            ddlLegalStatus.Items.Add(new ListItem("Host", "HOST"));
-            ddlLegalStatus.Items.Add(new ListItem("Refugee", "REFUGEE"));
-            ddlLegalStatus.Items.Add(new ListItem("Returnee", "RETURNEE"));
-            ddlLegalStatus.Items.Add(new ListItem("IDP", "IDP"));
+            ddlLegalStatus.Items.Add(new System.Web.UI.WebControls.ListItem("Host", "HOST"));
+            ddlLegalStatus.Items.Add(new System.Web.UI.WebControls.ListItem("Refugee", "REFUGEE"));
+            ddlLegalStatus.Items.Add(new System.Web.UI.WebControls.ListItem("Returnee", "RETURNEE"));
+            ddlLegalStatus.Items.Add(new System.Web.UI.WebControls.ListItem("IDP", "IDP"));
 
-            ddlSex.Items.Add(new ListItem("Male", "M"));
-            ddlSex.Items.Add(new ListItem("Female", "F"));
+            ddlSex.Items.Add(new System.Web.UI.WebControls.ListItem("Male", "M"));
+            ddlSex.Items.Add(new System.Web.UI.WebControls.ListItem("Female", "F"));
 
-            ddlSupportType.Items.Add(new ListItem("Component 1 (Public Works)", "Component 1 (Public Works)"));
-            ddlSupportType.Items.Add(new ListItem("Component 1 (Direct Income Support)", "Component 1 (Direct Income Support)"));
+            ddlSupportType.Items.Add(new System.Web.UI.WebControls.ListItem("Component 1 (Public Works)", "Component 1 (Public Works)"));
+            ddlSupportType.Items.Add(new System.Web.UI.WebControls.ListItem("Component 1 (Direct Income Support)", "Component 1 (Direct Income Support)"));
 
-            ddlAge.Items.Add(new ListItem("0-10", "1"));
+            ddlAge.Items.Add(new System.Web.UI.WebControls.ListItem("Child", "0-17"));
+            ddlAge.Items.Add(new System.Web.UI.WebControls.ListItem("Youth", "18-35"));
+            ddlAge.Items.Add(new System.Web.UI.WebControls.ListItem("Middle Age", "36-53"));
+            ddlAge.Items.Add(new System.Web.UI.WebControls.ListItem("Old", "54-125"));
 
-            ddlGrievanceCategory.Items.Add(new ListItem("Non-GBV", "N"));
-            ddlGrievanceCategory.Items.Add(new ListItem("GBV", "G"));
+            ddlGrievanceCategory.Items.Add(new System.Web.UI.WebControls.ListItem("Non-GBV", "N"));
+            ddlGrievanceCategory.Items.Add(new System.Web.UI.WebControls.ListItem("GBV", "G"));
         }
 
         private void LoadDropdownData()
@@ -90,7 +89,7 @@ namespace SSSNP.UI.Public_Works
                 ddlState.DataTextField = "StateName";
                 ddlState.DataValueField = "intStateid";
                 ddlState.DataBind();
-                ddlState.Items.Insert(0, new ListItem("--Select--", ""));
+                ddlState.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
             }
             catch (Exception ex)
             {
@@ -104,9 +103,9 @@ namespace SSSNP.UI.Public_Works
             ddlPayam.Items.Clear();
             ddlBoma.Items.Clear();
 
-            ddlCounty.Items.Add(new ListItem("--Select--", ""));
-            ddlPayam.Items.Add(new ListItem("--Select--", ""));
-            ddlBoma.Items.Add(new ListItem("--Select--", ""));
+            ddlCounty.Items.Add(new System.Web.UI.WebControls.ListItem("--Select--", ""));
+            ddlPayam.Items.Add(new System.Web.UI.WebControls.ListItem("--Select--", ""));
+            ddlBoma.Items.Add(new System.Web.UI.WebControls.ListItem("--Select--", ""));
 
             if (!string.IsNullOrEmpty(ddlState.SelectedValue))
             {
@@ -121,7 +120,7 @@ namespace SSSNP.UI.Public_Works
                         ddlCounty.DataTextField = "CountieName";
                         ddlCounty.DataValueField = "intCountieid";
                         ddlCounty.DataBind();
-                        ddlCounty.Items.Insert(0, new ListItem("--Select--", ""));
+                        ddlCounty.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
                     }
                     else
                     {
@@ -138,8 +137,8 @@ namespace SSSNP.UI.Public_Works
             ddlPayam.Items.Clear();
             ddlBoma.Items.Clear();
 
-            ddlPayam.Items.Add(new ListItem("--Select--", ""));
-            ddlBoma.Items.Add(new ListItem("--Select--", ""));
+            ddlPayam.Items.Add(new System.Web.UI.WebControls.ListItem("--Select--", ""));
+            ddlBoma.Items.Add(new System.Web.UI.WebControls.ListItem("--Select--", ""));
 
             if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
             {
@@ -154,7 +153,7 @@ namespace SSSNP.UI.Public_Works
                         ddlPayam.DataTextField = "PayamName";
                         ddlPayam.DataValueField = "intPayamid";
                         ddlPayam.DataBind();
-                        ddlPayam.Items.Insert(0, new ListItem("--Select--", ""));
+                        ddlPayam.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
                     }
                     else
                     {
@@ -169,7 +168,7 @@ namespace SSSNP.UI.Public_Works
         protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlBoma.Items.Clear();
-            ddlBoma.Items.Add(new ListItem("--Select--", ""));
+            ddlBoma.Items.Add(new System.Web.UI.WebControls.ListItem("--Select--", ""));
             if (!string.IsNullOrEmpty(ddlPayam.SelectedValue))
             {
                 try
@@ -183,7 +182,7 @@ namespace SSSNP.UI.Public_Works
                         ddlBoma.DataTextField = "BomaName";
                         ddlBoma.DataValueField = "intBomasid";
                         ddlBoma.DataBind();
-                        ddlBoma.Items.Insert(0, new ListItem("--Select--", ""));
+                        ddlBoma.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", ""));
                     }
                     else
                     {
@@ -198,7 +197,7 @@ namespace SSSNP.UI.Public_Works
         protected void ddlIndicatorType_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlIndicator.Items.Clear();
-            ddlIndicator.Items.Add(new ListItem("Select", "--"));
+            ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Select", "--"));
             if (!string.IsNullOrEmpty(ddlIndicatorType.SelectedValue))
             {
                 try
@@ -206,34 +205,34 @@ namespace SSSNP.UI.Public_Works
                     int indicatorType = int.Parse(ddlIndicatorType.SelectedValue?.ToString());
                     if (indicatorType == 1)
                     {
-                        ddlIndicator.Items.Add(new ListItem("Beneficiaries of social safety net programs", "1"));
-                        ddlIndicator.Items.Add(new ListItem("Beneficiaries of social safety net programs - Female", "2"));
-                        ddlIndicator.Items.Add(new ListItem("Beneficiary households of social safety net programs- Refugees", "3"));
-                        ddlIndicator.Items.Add(new ListItem("Beneficiary households of social safety net programs- Host Communities", "4"));
-                        ddlIndicator.Items.Add(new ListItem("Beneficiary households of social safety net programs- Female Refugees (Number)", "5"));
-                        ddlIndicator.Items.Add(new ListItem("Beneficiary households of social safety net programs- Female Host Communities (Number)", "6"));
-                        ddlIndicator.Items.Add(new ListItem("Beneficiary and non-beneficiary households reporting satisfaction with community assets created through LIPW (Outside MIS-Survey)", "7"));
-                        ddlIndicator.Items.Add(new ListItem("Beneficiary households receiving economic opportunities", "8"));
-                        ddlIndicator.Items.Add(new ListItem("Eligible beneficiary households with functional income-generating investments four months after the receipt of the full economic opportunities package", "9"));
-                        ddlIndicator.Items.Add(new ListItem("Percentage of beneficiaries paid using the enhanced integrated biometric and Management Information Systems", "10"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Beneficiaries of social safety net programs", "1"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Beneficiaries of social safety net programs - Female", "2"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Beneficiary households of social safety net programs- Refugees", "3"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Beneficiary households of social safety net programs- Host Communities", "4"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Beneficiary households of social safety net programs- Female Refugees (Number)", "5"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Beneficiary households of social safety net programs- Female Host Communities (Number)", "6"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Beneficiary and non-beneficiary households reporting satisfaction with community assets created through LIPW (Outside MIS-Survey)", "7"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Beneficiary households receiving economic opportunities", "8"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Eligible beneficiary households with functional income-generating investments four months after the receipt of the full economic opportunities package", "9"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Percentage of beneficiaries paid using the enhanced integrated biometric and Management Information Systems", "10"));
                     } else if (indicatorType == 2)
                     {
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiary households receiving cash for performing labor intensive public works", "11"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiaries receiving cash for performing labor intensive public works who are female", "12"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiary households participating in all sessions of the in-depth Cash Plus training", "13"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiary households participating in all the sessions of the in-depth Cash Plus training - refugees number", "14"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiary households participating in all the sessions of the in-depth Cash Plus training - host communities", "15"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiary households receiving cash transfer for participating in the behavioral change communication training", "16"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiary households receiving Direct Income Support", "17"));
-                        ddlIndicator.Items.Add(new ListItem("Percentage of Labor Intensive Public Works subprojects that mitigate climate-induced shocks", "18"));
-                        ddlIndicator.Items.Add(new ListItem("Number of LIPW work days created", "19"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiaries receiving cash for performing labor intensive public works who are refugees or host communities", "20"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiary households receiving Direct Income Support who have a female primary beneficiary (Number)", "21"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiaries receiving economic opportunities who are youth", "22"));
-                        ddlIndicator.Items.Add(new ListItem("Number of beneficiaries receiving Economic Opportunities who are female youth", "23"));
-                        ddlIndicator.Items.Add(new ListItem("Percentage of grievances resolved through the GRM", "24"));
-                        ddlIndicator.Items.Add(new ListItem("Percentage of cash transfers to beneficiary households made on time", "25"));
-                        ddlIndicator.Items.Add(new ListItem("Increased participation by women in community level governance and coordination structures", "26"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiary households receiving cash for performing labor intensive public works", "11"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiaries receiving cash for performing labor intensive public works who are female", "12"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiary households participating in all sessions of the in-depth Cash Plus training", "13"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiary households participating in all the sessions of the in-depth Cash Plus training - refugees number", "14"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiary households participating in all the sessions of the in-depth Cash Plus training - host communities", "15"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiary households receiving cash transfer for participating in the behavioral change communication training", "16"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiary households receiving Direct Income Support", "17"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Percentage of Labor Intensive Public Works subprojects that mitigate climate-induced shocks", "18"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of LIPW work days created", "19"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiaries receiving cash for performing labor intensive public works who are refugees or host communities", "20"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiary households receiving Direct Income Support who have a female primary beneficiary (Number)", "21"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiaries receiving economic opportunities who are youth", "22"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Number of beneficiaries receiving Economic Opportunities who are female youth", "23"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Percentage of grievances resolved through the GRM", "24"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Percentage of cash transfers to beneficiary households made on time", "25"));
+                        ddlIndicator.Items.Add(new System.Web.UI.WebControls.ListItem("Increased participation by women in community level governance and coordination structures", "26"));
                     }
                 } catch (Exception ex)
                 {
@@ -336,10 +335,14 @@ namespace SSSNP.UI.Public_Works
             rgResults.DataSource = null;
             rgResults.Rebind();
 
-            if (ddlIndicator.SelectedValue?.ToString() != null)
+            if (ddlIndicator.SelectedValue?.ToString() != null && !ddlIndicator.SelectedValue.ToString().Equals("--Select Indicator--"))
             {
                 DataTable dt = new DataTable();
                 IndicatorResultQuery request = prepareRequestModel();
+                if (request == null || request.indicatorId == null || request.indicatorId == 0)
+                {
+                    return;
+                }
                 switch(request.indicatorId)
                 {
                     case 1:
@@ -378,17 +381,52 @@ namespace SSSNP.UI.Public_Works
                     case 8:
                         break;
                     case 9:
-                        break;
+                        break; // Not in db yet
                     case 10:
                         break;
                     case 11:
-                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request);
+                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request, true);
                         rgResults.DataSource = dt;
                         break;
                     case 12:
                         request.sex = "F";
-                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request);
+                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request, true);
                         rgResults.DataSource = dt;
+                        break;
+                    case 17:
+                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request, false);
+                        rgResults.DataSource = dt;
+                        break;
+                    case 18:
+                        break;
+                    case 19:
+                        break;
+                    case 20:
+                        request.legalStatus = "('REFUGEE', 'HOST')";
+                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request, false);
+                        rgResults.DataSource = dt;
+                        break;
+                    case 21:
+                        request.sex = "F";
+                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request, false);
+                        rgResults.DataSource = dt;
+                        break;
+                    case 22:
+                        request.ageRange = "18-35";
+                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request, false);
+                        rgResults.DataSource = dt;
+                        break;
+                    case 23:
+                        request.ageRange = "18-35";
+                        request.sex = "F";
+                        dt = indicatorResultService.GetBeneficiariesReceivingCash(request, false);
+                        rgResults.DataSource = dt;
+                        break;
+                    case 24:
+                        break;
+                    case 25:
+                        break;
+                    case 26:
                         break;
                 }
 
