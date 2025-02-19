@@ -778,17 +778,6 @@ namespace SSSNP_SNSOP
                 document.Add(new Paragraph("Payam: " + payamName));
                 document.Add(new Paragraph("Boma: " + bomaName));
 
-                string paymentCycleText = apiResponse.data
-                .SelectMany(container => container.payrollData)
-                .FirstOrDefault()?.paymentCycle ?? "N/A";
-
-                // Add Payment Cycle information above the table
-                Paragraph paymentCycleParagraph = new Paragraph($"Payment Cycle: {paymentCycleText}")
-                {
-                    Alignment = Element.ALIGN_LEFT
-                };
-                document.Add(paymentCycleParagraph);
-
                 // Add space before main table
                 document.Add(new Paragraph(" "));
 
@@ -833,9 +822,9 @@ namespace SSSNP_SNSOP
 
                 AddCellToPdfTableHeader(table, "Cycle");
                 AddCellToPdfTableHeader(table, "Support Type");
-                AddCellToPdfTableHeader(table, "Total Attendance");
-                AddCellToPdfTableHeader(table, "Wage Total");
+                AddCellToPdfTableHeader(table, "Total Attendance"); 
                 AddCellToPdfTableHeader(table, "Wage Rate (USD)");
+                AddCellToPdfTableHeader(table, "Wage Total");
                 AddCellToPdfTableHeader(table, "Exchange Rate At Time");
                 AddCellToPdfTableHeader(table, "Wage Rate SSP Total");
 
@@ -974,9 +963,9 @@ namespace SSSNP_SNSOP
                     // Payment and Signature
                     AddCellToPdfTableBody(table, payroll.paymentCycle, false, hasTwoAlternates);
                     AddCellToPdfTableBody(table, payroll.supportType);
-                    AddCellToPdfTableBody(table, payroll.totAttendance.ToString() ?? "N/A", false, hasTwoAlternates);
-                    AddCellToPdfTableBody(table, payroll.wageRateUSDTotal.ToString(), false, hasTwoAlternates);
+                    AddCellToPdfTableBody(table, payroll.totAttendance.ToString() ?? "N/A", false, hasTwoAlternates);                   
                     AddCellToPdfTableBody(table, payroll.wageRateUSD.ToString(), false, hasTwoAlternates);
+                    AddCellToPdfTableBody(table, payroll.wageRateUSDTotal.ToString(), false, hasTwoAlternates);
                     AddCellToPdfTableBody(table, payroll.exchangerateattime.ToString());
                     AddCellToPdfTableBody(table, payroll.wageRateSSPTotal.ToString(), false, hasTwoAlternates);
                     // Signature with increased height
