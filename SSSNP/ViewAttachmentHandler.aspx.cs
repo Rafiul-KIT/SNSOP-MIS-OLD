@@ -778,6 +778,17 @@ namespace SSSNP_SNSOP
                 document.Add(new Paragraph("Payam: " + payamName));
                 document.Add(new Paragraph("Boma: " + bomaName));
 
+                string paymentCycleText = apiResponse.data
+                .SelectMany(container => container.payrollData)
+                .FirstOrDefault()?.paymentCycle ?? "N/A";
+
+                // Add Payment Cycle information above the table
+                Paragraph paymentCycleParagraph = new Paragraph($"Payment Cycle: {paymentCycleText}")
+                {
+                    Alignment = Element.ALIGN_LEFT
+                };
+                document.Add(paymentCycleParagraph);
+
                 // Add space before main table
                 document.Add(new Paragraph(" "));
 
@@ -835,9 +846,12 @@ namespace SSSNP_SNSOP
                 // Combine all payroll data from all containers and sort by beneficiary name
                 List<PDPayrollDataDto> sortedPayrollData = apiResponse.data
                     .SelectMany(container => container.payrollData)
-                    .OrderBy(payroll => payroll.houseHoldDetail.firstName +
-                                        payroll.houseHoldDetail.middleName +
-                                        payroll.houseHoldDetail.lastName)
+                    .GroupBy(payroll => payroll.supportType) // Grouping by Support Type (DIS, LIPW, etc.)
+                    .OrderBy(group => group.Key) // Sort groups alphabetically (DIS first, then LIPW, etc.)
+                    .SelectMany(group => group.OrderBy(payroll =>
+                        payroll.houseHoldDetail.firstName +
+                        payroll.houseHoldDetail.middleName +
+                        payroll.houseHoldDetail.lastName)) // Sorting within each group
                     .ToList();
 
                 // Iterate through payroll data in the container and add rows
@@ -1008,7 +1022,7 @@ namespace SSSNP_SNSOP
                         HorizontalAlignment = Element.ALIGN_CENTER,
                         VerticalAlignment = Element.ALIGN_MIDDLE,
                         Padding = 2f,
-                        FixedHeight = hasTwoAlternates ? 100f : 50f
+                        FixedHeight = hasTwoAlternates ? 50f : 50f
                     };
                     table.AddCell(imageCell);
                 }
