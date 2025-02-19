@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SSSNP.Service;
 using SSSNP.UI.Public_Works.Payroll;
 using SSSNP_SNSOP.App_Code;
 using SSSNP_SNSOP.Core.Model;
@@ -20,6 +21,7 @@ namespace SSSNP.UI.Public_Works
     {
         private LookupManagerService _lookupManagerService;
         ErrorLogger eLog = new ErrorLogger();
+        private Component2Service _component2Service = new Component2Service();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -204,6 +206,70 @@ namespace SSSNP.UI.Public_Works
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
+        void saveAuditLog(FileUpload fileUpload, List<PayrollReconciliationDto> list)
+        {
+            DateTime now = DateTime.Now;
+            string fullFilePath = now.ToString()
+                .Replace("/", "_")
+                .Replace(" ", "_")
+                .Replace(":", "_");
+            try
+            {
+                string genericPath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"].ToString()
+                                + "\\" + "reconcilePayload" + "\\" + fullFilePath;
+                if (!Directory.Exists(genericPath))
+                {
+                    Directory.CreateDirectory(genericPath);
+                }
+                genericPath += "\\" + fileUpload.FileName;
+                File.WriteAllBytes(genericPath, fileUpload.FileBytes);
+
+            }
+            catch (Exception ex)
+            {
+                eLog.LogError(ex);
+            }
+
+            string file_name = fullFilePath + "\\" + fileUpload.FileName;
+
+            try
+            {
+                List<PayrollReconcileExcelUploadLog> logList = list.Select(dto => new PayrollReconcileExcelUploadLog
+                {
+                    amount = dto.amount,
+                    attendance = dto.attendance,
+                    date_from = dto.date_from,
+                    date_to = dto.date_to,
+                    enrolment_number = dto.enrolment_number,
+                    exchange_rate = dto.exchange_rate,
+                    file_name = file_name,
+                    first_name = dto.first_name,
+                    generated_at = dto.generated_at,
+                    household_number = dto.household_number,
+                    last_name = dto.last_name,
+                    latitude = dto.latitude,
+                    longitude = dto.longitude,
+                    paid_to = dto.paid_to,
+                    paymentCenter = dto.paymentCenter,
+                    status = dto.status,
+                    supervisor_id = dto.supervisor_id,
+                    surname = dto.surname,
+                    trans_id = dto.trans_id,
+                    uploaded_at = now,
+                    uploaded_by = int.Parse(Session["uid"].ToString()),
+                    uuid = dto.uuid,
+                    wage = dto.wage,
+                    work_code = dto.work_code,
+                    work_id = dto.work_id
+                }).ToList();
+
+                _component2Service.SaveAuditLog(logList, "payroll_reconcile_excel_upload_log");
+            } catch (Exception ex)
+            {
+                eLog.LogError(ex);
+            }
+        }
+
         protected void btnUpload_Click(object sender, EventArgs e)
         {
             try
@@ -230,6 +296,21 @@ namespace SSSNP.UI.Public_Works
                     {
                         AddErrorMessage("The uploaded file does not contain any worksheet.");
                         return;
+                    }
+
+                    try
+                    {
+                        string genericPath = ConfigurationManager.AppSettings["PaymentCycleDocumentPath"].ToString()
+                            + "\\" + "reconcilePayload";
+                        if (!Directory.Exists(genericPath))
+                        {
+                            Directory.CreateDirectory(genericPath);
+                        }
+                        genericPath += "\\" + fileUpload.FileName;
+                        File.WriteAllBytes(genericPath, fileUpload.FileBytes);
+                    } catch (Exception ex)
+                    {
+                        eLog.LogError(ex);
                     }
 
                     List<PayrollReconciliationDto> list = new List<PayrollReconciliationDto>();
@@ -294,6 +375,14 @@ namespace SSSNP.UI.Public_Works
 
                     if (list != null && list.Count > 0)
                     {
+                        try
+                        {
+                            saveAuditLog(fileUpload, list);
+                        } catch (Exception ex)
+                        {
+                            eLog.LogError(ex);
+                        }
+
                         PayrollReconciliationRequest payrollReconciliationRequest = new PayrollReconciliationRequest();
                         payrollReconciliationRequest.dataList = list;
 
@@ -328,7 +417,7 @@ namespace SSSNP.UI.Public_Works
                 uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["PayrollReconBatchSaveEndpoint"];
                 if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
                 {
-                    uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["PushApprovedPaymentsEndpoint"];
+                    uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["PayrollReconBatchSaveEndpoint"];
                 }
                 Uri urlCheck = new Uri(uri);
                 HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);

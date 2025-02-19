@@ -1896,6 +1896,7 @@
       <DependentUpon>PayrollDownload.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\Payroll\BulkResponseDto.cs" />
+    <Compile Include="UI\Public Works\Payroll\PayrollReconcileExcelUploadLog.cs" />
     <Compile Include="UI\Public Works\Payroll\PayrollReconciliationDto.cs" />
     <Compile Include="UI\Public Works\Payroll\PayrollReconciliationRequest.cs" />
     <Compile Include="UI\Public Works\Payroll\PayrollReconciliationResponse.cs" />
