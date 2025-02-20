@@ -173,9 +173,29 @@ namespace SSSNP
             PdfContentByte cb3 = writer.DirectContent;
             cb3.BeginText();
             //BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            cb3.SetFontAndSize(f_cn, 8);
+            /*cb3.SetFontAndSize(f_cn, 8);
             cb3.SetTextMatrix(159, 110);  //(xPos, yPos)
-            cb3.ShowText(cardID.CountryName );
+            cb3.ShowText(cardID.CountryName );*/
+            BaseFont baseFont = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+
+            float startX = 159;  // X start position
+            float endX = 275;    // X end position
+            float maxWidth = endX - startX;  // Max allowed width
+            float fontSize = 8f;  // Default font size
+            float minFontSize = 5f;  // Minimum font size
+            float yPos = 110;  // Fixed Y position
+            string countyPayamText = cardID.CountryName;
+
+            // Shrink font size dynamically until text fits within (140 to 275)
+            while (baseFont.GetWidthPoint(countyPayamText, fontSize) > maxWidth && fontSize > minFontSize)
+            {
+                fontSize -= 0.5f;
+            }
+
+            // Apply dynamically adjusted font size
+            cb3.SetFontAndSize(baseFont, fontSize);
+            cb3.SetTextMatrix(startX, yPos);
+            cb3.ShowText(countyPayamText);
             cb3.EndText();
 
             // NOME ALTERNATIVE 1
