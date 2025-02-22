@@ -847,6 +847,8 @@
     <Compile Include="Service\AuditRecordService.cs" />
     <Compile Include="Service\Component2Service.cs" />
     <Compile Include="Service\IAuditRecordService.cs" />
+    <Compile Include="Service\IndicatorResultQuery.cs" />
+    <Compile Include="Service\IndicatorResultService.cs" />
     <Compile Include="Service\LookupManagerService.cs" />
     <Compile Include="Service\WageRequestApiManager.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />

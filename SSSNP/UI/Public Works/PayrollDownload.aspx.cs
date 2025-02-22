@@ -429,9 +429,16 @@ public partial class PayrollDownload : System.Web.UI.Page
                 }
                 else if (lockedStatus == "RECONCILED")
                 {
-                    BtnDownload.Visible = false;
-                    BtnDownloadPdf.Visible = true;
-                    BtnUnlock.Visible = false;
+                    if (ConfigurationManager.AppSettings["ReconciledPayrollDownloadFlag"].ToString().Equals("yes"))
+                    {
+                        BtnDownload.Visible = true;
+                        BtnDownloadPdf.Visible = true;
+                    } else
+                    {
+                        BtnDownload.Visible = false;
+                        BtnDownloadPdf.Visible = true;
+                        BtnUnlock.Visible = false;
+                    }
                 }
             }
 
@@ -712,10 +719,21 @@ public partial class PayrollDownload : System.Web.UI.Page
                         LblWarning.Visible = true;
                         LblLockedStatus.Text = "Locked Status: LOCKED";
                     }
-                    else
+                    else if (responseCode == 2)
                     {
-                        // Handle unexpected response codes
-                        System.Diagnostics.Debug.WriteLine($"Unexpected response code: {responseCode}. Message: {responseMessage}");
+                        if (ConfigurationManager.AppSettings["ReconciledPayrollDownloadFlag"].ToString().Equals("yes"))
+                        {
+                            string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";
+                            Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
+                            HttpContext.Current.ApplicationInstance.CompleteRequest();
+                        } else
+                        {
+                            LblWarning.Text = responseMessage;
+                            LblWarning.Visible = true;
+                            LblLockedStatus.Text = "Status: RECONCILED";
+                            // Handle unexpected response codes
+                            System.Diagnostics.Debug.WriteLine($"Unexpected response code: {responseCode}. Message: {responseMessage}");
+                        }
                     }
                 }
             }
