@@ -89,6 +89,21 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                                <tr>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:Label ID="LabelPaymentStatus" runat="server" CssClass="LBLBLACK" Width="165px">Payment Status</asp:Label>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <asp:DropDownList ID="ddlPaymentStatus" runat="server" class="form-control txtbox"
+                                                            Height="33px" Width="180px" AutoPostBack="True"
+                                                            OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
+                                                            <asp:ListItem>--Select--</asp:ListItem>
+
+                                                        </asp:DropDownList>
+                                                    </td>
+                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                                </tr>
                                             </table>
                                         </td>
                                         <td style="width: 27px">&nbsp;</td>

@@ -41,7 +41,9 @@ namespace SSSNP.UI.Public_Works
             }
             catch (Exception ex)
             {
-
+                // Log the error instead of ignoring it
+                System.Diagnostics.Debug.WriteLine("Error in InitializeServices: " + ex.Message);
+                throw; // Rethrow the exception to see the actual problem
             }
         }
 
@@ -50,7 +52,6 @@ namespace SSSNP.UI.Public_Works
             LoadDropdownData();
 
             // Populate fixed dropdowns for Payment Cycle and Status
-            ddlPaymentCycle.Items.Add(new ListItem("--Select--", ""));
             for (int i = 1; i <= 9; i++)
             {
                 ddlPaymentCycle.Items.Add(new ListItem($"Payment Cycle {i}", i.ToString()));
@@ -206,7 +207,13 @@ namespace SSSNP.UI.Public_Works
             {
                 try
                 {
-                    int indicatorType = int.Parse(ddlIndicatorType.SelectedValue?.ToString());
+                    //int indicatorType = int.Parse(ddlIndicatorType.SelectedValue?.ToString());
+                    int indicatorType;
+                    if (!int.TryParse(ddlIndicatorType.SelectedValue, out indicatorType))
+                    {
+                        System.Diagnostics.Debug.WriteLine("Invalid Indicator Type: " + ddlIndicatorType.SelectedValue);
+                        return;
+                    }
                     if (indicatorType == 1)
                     {
                         ddlIndicator.Items.Add(new ListItem("Beneficiaries of social safety net programs", "1"));
@@ -271,7 +278,13 @@ namespace SSSNP.UI.Public_Works
                 try
                 {
                     initSearchCriteria();
-                    int indicator = int.Parse(ddlIndicator.SelectedValue?.ToString());
+                    //int indicator = int.Parse(ddlIndicator.SelectedValue?.ToString());
+                    int indicator;
+                    if (!int.TryParse(ddlIndicator.SelectedValue, out indicator))
+                    {
+                        System.Diagnostics.Debug.WriteLine("Invalid Indicator Value: " + ddlIndicator.SelectedValue);
+                        return; // Stop execution if parsing fails
+                    }
                     switch (indicator)
                     {
                         case 1:
@@ -492,50 +505,55 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 IndicatorResultQuery request = new IndicatorResultQuery();
-                if (ddlIndicator.SelectedValue != null && !ddlIndicator.SelectedValue.ToString().Equals("") && !ddlIndicator.SelectedValue.ToString().Equals("--Select--"))
+
+                if (int.TryParse(ddlIndicator.SelectedValue, out int indicatorId) && indicatorId != 0)
                 {
-                    request.indicatorId = int.Parse(ddlIndicator.SelectedValue.ToString());
+                    request.indicatorId = indicatorId;
                 }
-                if (ddlState.SelectedValue != null && !ddlState.SelectedValue.ToString().Equals("") && !ddlState.SelectedValue.ToString().Equals("--Select--"))
+
+                if (int.TryParse(ddlState.SelectedValue, out int stateId) && stateId != 0)
                 {
-                    request.stateId = int.Parse(ddlState.SelectedValue.ToString());
+                    request.stateId = stateId;
                 }
-                if (ddlCounty.SelectedValue != null && !ddlCounty.SelectedValue.ToString().Equals("") && !ddlCounty.SelectedValue.ToString().Equals("--Select--"))
+
+                if (int.TryParse(ddlCounty.SelectedValue, out int countyId) && countyId != 0)
                 {
-                    request.countyId = int.Parse(ddlCounty.SelectedValue.ToString());
+                    request.countyId = countyId;
                 }
-                if (ddlPayam.SelectedValue != null && !ddlPayam.SelectedValue.ToString().Equals("") && !ddlPayam.SelectedValue.ToString().Equals("--Select--"))
+
+                if (int.TryParse(ddlPayam.SelectedValue, out int payamId) && payamId != 0)
                 {
-                    request.payamId = int.Parse(ddlPayam.SelectedValue.ToString());
+                    request.payamId = payamId;
                 }
-                if (ddlBoma.SelectedValue != null && !ddlBoma.SelectedValue.ToString().Equals("") && !ddlBoma.SelectedValue.ToString().Equals("--Select--"))
+
+                if (int.TryParse(ddlBoma.SelectedValue, out int bomaId) && bomaId != 0)
                 {
-                    request.bomaId = int.Parse(ddlBoma.SelectedValue.ToString());
+                    request.bomaId = bomaId;
                 }
-                if (ddlSupportType.SelectedValue != null && !ddlSupportType.SelectedValue.ToString().Equals("") && !ddlSupportType.SelectedValue.ToString().Equals("--Select--"))
-                {
-                    request.supportType = ddlSupportType.SelectedValue.ToString();
-                }
-                if (ddlLegalStatus.SelectedValue != null && !ddlLegalStatus.SelectedValue.ToString().Equals("") && !ddlLegalStatus.SelectedValue.ToString().Equals("--Select--"))
-                {
-                    request.legalStatus = ddlLegalStatus.SelectedValue.ToString();
-                }
-                if (ddlPaymentCycle.SelectedValue != null && !ddlPaymentCycle.SelectedValue.ToString().Equals("") && !ddlPaymentCycle.SelectedValue.ToString().Equals("--Select--"))
-                {
-                    request.paymentCycle = ddlPaymentCycle.SelectedValue.ToString();
-                }
-                if (ddlSex.SelectedValue != null && !ddlSex.SelectedValue.ToString().Equals("") && !ddlSex.SelectedValue.ToString().Equals("--Select--"))
-                {
-                    request.sex = ddlSex.SelectedValue.ToString();
-                }
-                if (ddlAge.SelectedValue != null && !ddlAge.SelectedValue.ToString().Equals("") && !ddlAge.SelectedValue.ToString().Equals("--Select--"))
-                {
-                    request.ageRange = ddlAge.SelectedValue.ToString();
-                }
-                if (ddlGrievanceCategory.SelectedValue != null && !ddlGrievanceCategory.SelectedValue.ToString().Equals("") && !ddlGrievanceCategory.SelectedValue.ToString().Equals("--Select--"))
-                {
-                    request.grievanceCategory = ddlGrievanceCategory.SelectedValue.ToString();
-                }
+
+                request.supportType = !string.IsNullOrEmpty(ddlSupportType.SelectedValue) && ddlSupportType.SelectedValue != "--Select--"
+                    ? ddlSupportType.SelectedValue
+                    : null;
+
+                request.legalStatus = !string.IsNullOrEmpty(ddlLegalStatus.SelectedValue) && ddlLegalStatus.SelectedValue != "--Select--"
+                    ? ddlLegalStatus.SelectedValue
+                    : null;
+
+                request.paymentCycle = !string.IsNullOrEmpty(ddlPaymentCycle.SelectedValue) && ddlPaymentCycle.SelectedValue != "--Select--"
+                    ? ddlPaymentCycle.SelectedValue
+                    : null;
+
+                request.sex = !string.IsNullOrEmpty(ddlSex.SelectedValue) && ddlSex.SelectedValue != "--Select--"
+                    ? ddlSex.SelectedValue
+                    : null;
+
+                request.ageRange = !string.IsNullOrEmpty(ddlAge.SelectedValue) && ddlAge.SelectedValue != "--Select--"
+                    ? ddlAge.SelectedValue
+                    : null;
+
+                request.grievanceCategory = !string.IsNullOrEmpty(ddlGrievanceCategory.SelectedValue) && ddlGrievanceCategory.SelectedValue != "--Select--"
+                    ? ddlGrievanceCategory.SelectedValue
+                    : null;
 
                 return request;
             }
