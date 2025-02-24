@@ -351,7 +351,8 @@ namespace SSSNP.UI.Public_Works
                 }
                 catch (Exception ex)
                 {
-
+                    System.Diagnostics.Debug.WriteLine("Error in ddlIndicator_SelectedIndexChanged: " + ex.Message);
+                    throw;
                 }
             }
         }
