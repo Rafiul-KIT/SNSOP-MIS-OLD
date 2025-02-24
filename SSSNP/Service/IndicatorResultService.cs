@@ -142,7 +142,8 @@ namespace SSSNP.Service
             try
             {
                 string sql = "select 'Total' as 'IndicatorKey'," +
-                    " count(distinct AttendanceDate) IndicatorValue from tr_BenAttendanceDet";
+                    " count(distinct AttendanceDate) IndicatorValue from tr_BenAttendanceDet t" +
+                    " inner join tbl_BeneficiaryDet b on t.intBenid=b.intBenid";
                 List<SqlParameter> list = new List<SqlParameter>();
 
                 sql = modify(request, sql, list);

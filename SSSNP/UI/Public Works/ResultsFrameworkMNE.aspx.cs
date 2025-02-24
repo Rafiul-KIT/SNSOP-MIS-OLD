@@ -201,6 +201,7 @@ namespace SSSNP.UI.Public_Works
 
         protected void ddlIndicatorType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ddlIndicator.ClearSelection();
             ddlIndicator.Items.Clear();
             ddlIndicator.Items.Add(new ListItem("--Select--", ""));
             if (!string.IsNullOrEmpty(ddlIndicatorType.SelectedValue))
@@ -226,6 +227,7 @@ namespace SSSNP.UI.Public_Works
                         ddlIndicator.Items.Add(new ListItem("Beneficiary households receiving economic opportunities", "8"));
                         ddlIndicator.Items.Add(new ListItem("Eligible beneficiary households with functional income-generating investments four months after the receipt of the full economic opportunities package", "9"));
                         ddlIndicator.Items.Add(new ListItem("Percentage of beneficiaries paid using the enhanced integrated biometric and Management Information Systems", "10"));
+                        ddlIndicator.DataBind();
                     }
                     else if (indicatorType == 2)
                     {
@@ -246,6 +248,7 @@ namespace SSSNP.UI.Public_Works
                         ddlIndicator.Items.Add(new ListItem("Percentage of cash transfers to beneficiary households made on time", "25"));
                         ddlIndicator.Items.Add(new ListItem("Increased participation by women in community level governance and coordination structures", "26"));
                         ddlIndicator.Items.Add(new ListItem("Capacity Building Plan for Safety Net is implemented by the Ministry of Gender, Child and Social Welfare", "27"));
+                        ddlIndicator.DataBind();
                     }
                 }
                 catch (Exception ex)
@@ -258,16 +261,27 @@ namespace SSSNP.UI.Public_Works
 
         private void initSearchCriteria()
         {
-            ddlState.SelectedIndex = 0;
-            ddlState_SelectedIndexChanged(null, null);
-            ddlCounty_SelectedIndexChanged(null, null);
-            ddlPayam_SelectedIndexChanged(null, null);
-            ddlSex.SelectedIndex = 0;
-            ddlPaymentCycle.SelectedIndex = 0;
-            ddlAge.SelectedIndex = 0;
-            ddlGrievanceCategory.SelectedIndex = 0;
-            ddlLegalStatus.SelectedIndex = 0;
-            ddlSupportType.SelectedIndex = 0;
+            ddlState.ClearSelection();
+            ddlCounty.ClearSelection();
+            ddlPayam.ClearSelection();
+            ddlBoma.ClearSelection();
+            ddlSex.ClearSelection();
+            ddlPaymentCycle.ClearSelection();
+            ddlAge.ClearSelection();
+            ddlGrievanceCategory.ClearSelection();
+            ddlLegalStatus.ClearSelection();
+            ddlSupportType.ClearSelection();
+
+            //ddlState.SelectedIndex = 0;
+            //ddlState_SelectedIndexChanged(null, null);
+            //ddlCounty_SelectedIndexChanged(null, null);
+            //ddlPayam_SelectedIndexChanged(null, null);
+            //ddlSex.SelectedIndex = 0;
+            //ddlPaymentCycle.SelectedIndex = 0;
+            //ddlAge.SelectedIndex = 0;
+            //ddlGrievanceCategory.SelectedIndex = 0;
+            //ddlLegalStatus.SelectedIndex = 0;
+            //ddlSupportType.SelectedIndex = 0;
         }
 
         protected void ddlIndicator_SelectedIndexChanged(object sender, EventArgs e)
