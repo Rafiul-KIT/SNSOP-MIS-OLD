@@ -30,15 +30,15 @@
                                 <table align="center" cellpadding="10" cellspacing="5" style="width: 90%; margin-bottom: 1px; height: 13px;">
                                     <tr>
                                         <td style="vertical-align: top; width: 65%;">
-                                            <asp:DropDownList ID="ddlIndicatorType" runat="server" class="form-control txtbox" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlIndicatorType_SelectedIndexChanged">
-                                                <asp:ListItem>--Select Type--</asp:ListItem>
+                                            <asp:DropDownList ID="ddlIndicatorType" runat="server" class="form-control txtbox" Width="100%" AutoPostBack="True" EnableViewState="True" OnSelectedIndexChanged="ddlIndicatorType_SelectedIndexChanged">
+                                                <asp:ListItem Value="">--Select Type--</asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="vertical-align: top; width: 65%;">
                                             <asp:DropDownList ID="ddlIndicator" runat="server" class="form-control txtbox" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlIndicator_SelectedIndexChanged">
-                                                <asp:ListItem>--Select Indicator--</asp:ListItem>
+                                                <asp:ListItem Value="">--Select Indicator--</asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                     </tr>
@@ -59,7 +59,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlState" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True" OnSelectedIndexChanged="ddlState_SelectedIndexChanged">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -70,7 +70,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlCounty" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True" OnSelectedIndexChanged="ddlCounty_SelectedIndexChanged">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -81,7 +81,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlSupportType" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -92,7 +92,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlLegalStatus" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -103,7 +103,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlPaymentCycle" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -119,7 +119,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlPayam" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True" OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -130,7 +130,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -141,7 +141,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlSex" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -152,7 +152,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlAge" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
@@ -163,7 +163,7 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlGrievanceCategory" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>

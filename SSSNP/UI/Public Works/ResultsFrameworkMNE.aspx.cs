@@ -202,7 +202,7 @@ namespace SSSNP.UI.Public_Works
         protected void ddlIndicatorType_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlIndicator.Items.Clear();
-            ddlIndicator.Items.Add(new ListItem("Select", "--"));
+            ddlIndicator.Items.Add(new ListItem("--Select--", ""));
             if (!string.IsNullOrEmpty(ddlIndicatorType.SelectedValue))
             {
                 try
@@ -250,7 +250,8 @@ namespace SSSNP.UI.Public_Works
                 }
                 catch (Exception ex)
                 {
-
+                    System.Diagnostics.Debug.WriteLine("Error in ddlIndicatorType_SelectedIndexChanged: " + ex.Message);
+                    throw;
                 }
             }
         }
