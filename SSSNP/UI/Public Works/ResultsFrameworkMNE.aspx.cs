@@ -98,7 +98,8 @@ namespace SSSNP.UI.Public_Works
             }
             catch (Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine("Error in LoadDropdownData: " + ex.Message);
+                throw;
             }
         }
 
@@ -133,6 +134,8 @@ namespace SSSNP.UI.Public_Works
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("Error in ddlState_SelectedIndexChanged: " + ex.Message);
+                    throw;
                 }
             }
         }
@@ -166,6 +169,8 @@ namespace SSSNP.UI.Public_Works
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("Error in ddlCounty_SelectedIndexChanged: " + ex.Message);
+                    throw;
                 }
             }
         }
@@ -195,6 +200,8 @@ namespace SSSNP.UI.Public_Works
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("Error in ddlPayam_SelectedIndexChanged: " + ex.Message);
+                    throw;
                 }
             }
         }
@@ -429,14 +436,17 @@ namespace SSSNP.UI.Public_Works
                         rgResults.DataSource = dt;
                         break;
                     case 7:
+                        rgResults.DataSource = dt;
                         break; // Not in db yet
                     case 8:
                         dt = indicatorResultService.GetBeneficiariesReceivingEconomicOpportunities(request);
                         rgResults.DataSource = dt;
                         break;
                     case 9:
+                        rgResults.DataSource = dt;
                         break; // Not in db yet
                     case 10:
+                        rgResults.DataSource = dt;
                         break; // Not in db yet
                     case 11:
                         dt = indicatorResultService.GetBeneficiariesReceivingCash(request, true);
@@ -506,6 +516,7 @@ namespace SSSNP.UI.Public_Works
                         rgResults.DataSource = dt;
                         break;
                     case 26:
+                        rgResults.DataSource = dt;
                         break; // Not in db yet
                 }
 
@@ -575,7 +586,8 @@ namespace SSSNP.UI.Public_Works
             }
             catch (Exception e)
             {
-
+                System.Diagnostics.Debug.WriteLine("Error in prepareRequestModel: " + e.Message);
+                throw;
             }
             return null;
         }
@@ -597,6 +609,7 @@ namespace SSSNP.UI.Public_Works
             catch (Exception ex)
             {
                 //LogError("Error in rgResults_NeedDataSource: " + ex.Message, ex);
+                System.Diagnostics.Debug.WriteLine("Error in prepareRequestModel: " + ex.Message);
                 throw;
             }
         }
