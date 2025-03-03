@@ -147,9 +147,9 @@ public partial class CCMaster : System.Web.UI.MasterPage
         WagePaidAbstractLIPWReportMenu.Visible = value;
         WagePaidAbstractDISReportMenu.Visible = value;
         WagePaidAbstractBiometricReportMenu.Visible = value;
-        WageDetailsFromPayconnectReportMenu.Visible = value;
-        UnpaidWageDetailsFromPayconnectReportMenu.Visible = value;
-        PaidWageDetailsFromPayconnectReportMenu.Visible = value;
+        //WageDetailsFromPayconnectReportMenu.Visible = value;
+        //UnpaidWageDetailsFromPayconnectReportMenu.Visible = value;
+        //PaidWageDetailsFromPayconnectReportMenu.Visible = value;
         TotalBeneficiryPaymentDetailsReportMenu.Visible = value;
         MultipleWagesReportMenu.Visible = value;
         WagePaidCycleWiseReportMenu.Visible = value;
@@ -267,6 +267,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiIp5.Visible = true;
                     WageRequestDraft.Visible = true;
                     LiIp8.Visible = true;
+                    LiMNE.Visible = true;
                     setLiPaymentReportsPermission(true);
                 }
                 else
@@ -342,7 +343,6 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     liUploadPaymentCycleDoc.Visible = false;
                     liViewPaymentCycleDoc.Visible = true;
                 }
-                
             }
             if (Session["user_type"].ToString() == "FSP")
             {
@@ -352,15 +352,25 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiPayroll.Visible = true;
                 payrollDownload.Visible = true;
                 payrollReconcile.Visible = true;
-
+                LiMNE.Visible = true;
                 LiPaymentCycleDocument.Visible = true;
                 liUploadPaymentCycleDoc.Visible = false;
                 liViewPaymentCycleDoc.Visible = true;
 
                 LiPaymentReports.Visible = true;
+                WageRequestAbstractReportMenu.Visible = true;
+                WageRequestAbstractLIPWReportMenu.Visible = true;
+                WageRequestAbstractDISReportMenu.Visible = true;
+                UnpaidWageRequestAbstractReportMenu.Visible = true;
+                UnpaidWageRequestAbstractLIPWReportMenu.Visible = true;
+                UnpaidWageRequestAbstractDISReportMenu.Visible = true;
                 PaidWageRequestAbstractReportMenu.Visible = true;
                 PaidWageRequestAbstractLIPWReportMenu.Visible = true;
                 PaidWageRequestAbstractDISReportMenu.Visible = true;
+                WagePaidAbstractReportMenu.Visible = true;
+                WagePaidAbstractLIPWReportMenu.Visible = true;
+                WagePaidAbstractDISReportMenu.Visible = true;
+                WagePaidAbstractBiometricReportMenu.Visible = true;
             }
             if (Session["user_type"].ToString() == "MIS")
             {
@@ -427,18 +437,9 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiIp8.Visible = true;
                 setLiPaymentReportsPermission(true);
                 Li1.Visible = false;
-
             }
             if (Session["user_type"].ToString() == "TST")
             {
-                ////  LiTST1.Visible = true;
-                ////  LiTST2.Visible = true;
-                ////  LiTST3.Visible = true;
-                ////  LiTST4.Visible = true;
-                //////  LiTST5.Visible = true;
-                ////  LiTST6.Visible = true;
-                ////  LiTST7.Visible = true;
-                ////  LiTST8.Visible = true;
                 if (Session["Desgid"].ToString() == "1000")
                 {
                     LiTST1.Visible = true;
@@ -450,117 +451,27 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiTST7.Visible = true;
                     LiTST8.Visible = true;
                 }
-                if (Session["Desgid"].ToString() == "1001" || Session["Desgid"].ToString() == "1004")
-                {
-                    //  LiTST1.Visible = true;
-                    LiTST6.Visible = true;
-                    LiTST7.Visible = true;
-                    LiTST5.Visible = true;
-                    //   TSTDashboard.Visible = false;
-                    //   trCo.Visible = true;
-                    // trSp.Visible = true;
-                    //  trMa.Visible = true;
-                }
-
-                if (Session["Desgid"].ToString() == "1002")
-                {
-                    LiTST1.Visible = true;
-                    LiTST6.Visible = true;
-                    LiTST7.Visible = true;
-                    LiTST5.Visible = true;
-                    TSTDashboard.Visible = false;
-                    trCo.Visible = true;
-                    trSp.Visible = false;
-                    trMa.Visible = false;
-                }
-                if (Session["Desgid"].ToString() == "1003" || Session["Desgid"].ToString() == "1005" || Session["Desgid"].ToString() == "1011" || Session["Desgid"].ToString() == "1007" || Session["Desgid"].ToString() == "1009")
-                {
-                    if (Session["Desgid"].ToString() == "1007" || Session["Desgid"].ToString() == "1009")
-                    {
-                        LiTST6.Visible = true;
-                        LiTST7.Visible = true;
-                    }
-                    else
-                    {
-                        LiTST1.Visible = true;
-                        LiTST6.Visible = true;
-                        LiTST7.Visible = true;
-                        LiTST5.Visible = true;
-                        trCo.Visible = false;
-                        trSp.Visible = true;
-                        trMa.Visible = false;
-                        TSTDashboard.Visible = false;
-                    }
-
-                }
-                if (Session["Desgid"].ToString() == "1006" || Session["Desgid"].ToString() == "1010")
-                {
-                    if (Session["Desgid"].ToString() == "1010")
-                    {
-                        LiTST6.Visible = true;
-                        LiTST5.Visible = true;
-                        LiTST7.Visible = true;
-                    }
-                    else
-                    {
-                        LiTST1.Visible = true;
-                        LiTST6.Visible = true;
-                        LiTST5.Visible = true;
-                        LiTST7.Visible = true;
-                        trCo.Visible = false;
-                        trSp.Visible = false;
-                        trMa.Visible = true;
-                        TSTDashboard.Visible = false;
-                    }
-                }
-
-                if (Session["Desgid"].ToString() == "1002")
-                {
-                    LiTST1.Visible = true;
-                    LiTST6.Visible = true;
-                    LiTST7.Visible = true;
-                    LiTST5.Visible = true;
-                    trCo.Visible = true;
-                    trSp.Visible = false;
-                    trMa.Visible = false;
-                    TSTDashboard.Visible = false;
-                }
-                if (Session["Desgid"].ToString() == "1002")
-                {
-                    LiTST1.Visible = true;
-                    LiTST6.Visible = true;
-                    LiTST7.Visible = true;
-                    LiTST5.Visible = true;
-                    trCo.Visible = true;
-                    trSp.Visible = false;
-                    trMa.Visible = false;
-                    TSTDashboard.Visible = false;
-                }
             }
             if (Session["user_type"].ToString() == "Cordinator")
             {
                 LiReviewVerify.Visible = true;
                 LiCO1.Visible = true;
                 LiCO2.Visible = true;
+                LiMNE.Visible = true;
             }
             if (Session["user_type"].ToString() == "Specialist")
             {
                 LiSpeccialist1.Visible = true;
                 LiSpeccialist2.Visible = true;
                 LiReviewVerify.Visible = true;
+                LiMNE.Visible = true;
             }
             if (Session["user_type"].ToString() == "Manager")
             {
                 LiManger1.Visible = true;
                 LiManger2.Visible = true;
                 LiReviewVerify.Visible = true;
-            }
-            if (Session["user_type"].ToString() == "PA")
-            {
-                LiPA1.Visible = true;
-                LiPA2.Visible = true;
-                LiPA3.Visible = true;
-                LiPA8.Visible = true;
+                LiMNE.Visible = true;
             }
             if (Session["user_type"].ToString() == "WB")
             {
@@ -568,6 +479,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiWB1.Visible = true;
                 LiWB3.Visible = true;
                 LiWB4.Visible = true;
+                LiMNE.Visible = true;
 
                 LiIp6.Visible = true;
                 nongbvMenu.Visible = true;
@@ -586,6 +498,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiTST7.Visible = true;
                 LiTST8.Visible = true;
                 LiUM.Visible = true;
+                LiMNE.Visible = true;
             }
             if (Session["user_type"].ToString() == ConfigurationManager.AppSettings["PaymentCycleDocumentUploadRole"].ToString())
             {
@@ -593,47 +506,20 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 liUploadPaymentCycleDoc.Visible = true;
                 liViewPaymentCycleDoc.Visible = true;
             }
-            
-            if (Session["user_type"].ToString() == "PC")
-            {
-                // Masters1.Visible = true;
-                //  Masters2.Visible = true;
-                PayConnect2.Visible = true;
-                PayConnect1.Visible = true;
-                // LiTST6.Visible = true;
-                // LiTST7.Visible = true;
-                // LiTST8.Visible = true;
-            }
-            if (Session["user_type"].ToString() == "ALP")
-            {
-                // Masters1.Visible = true;
-                //  Masters2.Visible = true;
-                LiAlpha1.Visible = true;
-                LiAlpha2.Visible = true;
-                // LiTST6.Visible = true;
-                // LiTST7.Visible = true;
-                // LiTST8.Visible = true;
-            }
 
             if (Session["user_type"].ToString() == "EnvSpec")
             {
                 LiAlpha1.Visible = false;
                 LiAlpha2.Visible = false;
                 liEnvSpec.Visible = true;
+                LiMNE.Visible = true;
             }
             if (Session["user_type"].ToString() == "QualEng")
             {
                 LiAlpha1.Visible = false;
                 LiAlpha2.Visible = false;
                 liEnvSpec.Visible = true;
-            }
-            if (Session["user_type"].ToString() == "BDC")
-            {
-                BDC.Visible = true;
-            }
-            if (Session["user_type"].ToString() == "PDC")
-            {
-                PDC.Visible = true;
+                LiMNE.Visible = true;
             }
 
             if (Session["user_type"].ToString() == "GenderSpec")
@@ -660,210 +546,10 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 grmReport.Visible = true;
                 Li1.Visible = false;
             }
-
-            #region old code
-            //////    LiTST.Visible = false;
-            //////    lblwecome.Text = Session["username"].ToString();
-            //////    pnlreport.Visible = false;
-            //////    if (Session["user_type"].ToString() == "Adm")
-            //////    {
-            //////        TST.Visible = false;
-            //////        Masters.Visible = true;
-            //////        IP.Visible = false;
-            //////        APIDashboard.Visible = false;
-
-            //////        //lblwecome.Text = "Admin";
-            //////    }
-            //////    else if (Session["user_type"].ToString() == "TST" || Session["user_type"].ToString() == "Adm")
-            //////    {
-            //////        Masters.Visible = false;
-            //////        TST.Visible = true;
-            //////        IP.Visible = false;
-            //////        TSTDashboard.Visible = true;
-            //////        //lblwecome.Text = "Technical Support Team";
-            //////        APIDashboard.Visible = false;
-            //////        LiTST.Visible = true;
-
-            //////    }
-            //////    else if (Session["user_type"].ToString() == "IP")
-            //////    {
-            //////        Masters.Visible = false;
-            //////        TST.Visible = false;
-            //////        IP.Visible = true;
-            //////        IPDashboard.Visible = true;
-            //////        IPInvoiceDashboard.Visible = true;
-            //////       // ipDeleting.Visible = true;
-            //////        //lblwecome.Text = "Implementing Partner";
-            //////        APIDashboard.Visible = true;
-
-            //////    }
-            //////    else if (Session["user_type"].ToString() == "BDC")
-            //////    {
-            //////        BDC.Visible = true;
-            //////        TST.Visible = false;
-            //////        //Master.Visible = false;
-            //////        IP.Visible = false;
-            //////        PDC.Visible = false;
-            //////        //lblwecome.Text = "Implementing Partner";
-            //////        APIDashboard.Visible = false;
-
-            //////    }
-            //////    else if (Session["user_type"].ToString() == "PDC")
-            //////    {
-            //////        PDC.Visible = true;
-            //////        TST.Visible = false;
-            //////        //Master.Visible = false;
-            //////        IP.Visible = false;
-            //////        BDC.Visible = false;
-            //////       //lblwecome.Text = "Implementing Partner";
-            //////        APIDashboard.Visible = false;
-
-            //////    }
-            //////    else if (Session["user_type"].ToString() == "PA")
-            //////    {
-            //////        LiPA.Visible = true;
-            //////        TST.Visible = false;
-            //////        IP.Visible = false;
-            //////        pnlreport.Visible = false;
-
-            //////        WagePayment.Visible = false;
-            //////        wageAtten.Visible = false;
-            //////        Wagep.Visible = false;
-            //////        APIDashboard.Visible = false;
-
-            //////    }
-            //////    else if (Session["user_type"].ToString() == "Cordinator" || Session["user_type"].ToString() == "Specialist" || Session["user_type"].ToString() == "Manager")
-            //////    {
-            //////        LiPA.Visible = true;
-            //////        TST.Visible = false;
-            //////        IP.Visible = false;
-            //////        pnlreport.Visible = false;
-
-            //////        WagePayment.Visible = false;
-            //////        wageAtten.Visible = false;
-            //////        Wagep.Visible = false;
-            //////        APIDashboard.Visible = false;
-
-            //////    }
-
-            //////    if (Session["user_type"].ToString() == "Help" || Session["user_type"].ToString() == "Admin")
-            //////    {
-            //////        pnlreport.Visible = true;
-            //////        APIDashboard.Visible = false;
-
-
-            //////    }
-            //////    else
-            //////    {
-            //////        pnlreport.Visible = false;
-            //////    }
-
-            //////    if (Session["user_type"].ToString() == "TST" || Session["user_type"].ToString() == "Help")
-            //////    {
-            //////        WagePayment.Visible = true;
-            //////        wageAtten.Visible = true;
-            //////        Wagep.Visible = true;
-
-            //////    }
-            //////    else
-            //////    {
-            //////        WagePayment.Visible = false;
-            //////        wageAtten.Visible = false;
-            //////        Wagep.Visible = false;
-
-
-            //////    }
-            //////    LiWB.Visible = false;
-            //////     if (Session["user_type"].ToString() == "WB")
-            //////    {
-            //////        LiPA.Visible = false;
-            //////        TST.Visible = false;
-            //////        IP.Visible = false;
-            //////        pnlreport.Visible = false;
-            //////        WagePayment.Visible = false;
-            //////        wageAtten.Visible = false;
-            //////        Wagep.Visible = false;
-            //////        LiWB.Visible = true;
-            //////        APIDashboard.Visible = false;
-
-            //////    }
-
-            //////    if(Session["user_type"].ToString() == "IP")
-            //////    {
-            //////        LiDashboardIP.Visible=true;
-            //////    }
-            //////    if (Session["Desgid"].ToString() == "1000" || Session["Desgid"].ToString() == "1004" || Session["Desgid"].ToString() == "1007")
-            //////    {
-            //////        trCo.Visible = true;
-            //////        trSp.Visible = true;
-            //////        trMa.Visible = true;
-            //////    }
-            //////    if (Session["Desgid"].ToString() == "1001")
-            //////    {
-            //////        trCo.Visible = true;
-            //////        trSp.Visible = true;
-            //////        trMa.Visible = true;
-            //////    }
-
-            //////    if (Session["Desgid"].ToString() == "1002")
-            //////    {
-            //////        trCo.Visible = true;
-            //////        trSp.Visible = false;
-            //////        trMa.Visible = false;
-            //////    }
-            //////    if (Session["Desgid"].ToString() == "1003" || Session["Desgid"].ToString() == "1005" || Session["Desgid"].ToString() == "1011" || Session["Desgid"].ToString() == "1007" || Session["Desgid"].ToString() == "1009")
-            //////    {
-            //////        trCo.Visible = false;
-            //////        trSp.Visible = true;
-            //////        trMa.Visible = false;
-            //////    }
-            //////    if (Session["Desgid"].ToString() == "1006" || Session["Desgid"].ToString() == "1010")
-            //////    {
-            //////        trCo.Visible = false;
-            //////        trSp.Visible = false;
-            //////        trMa.Visible = true;
-            //////    }
-            //////    if (Session["Desgid"].ToString() == "1002")
-            //////    {
-            //////        trCo.Visible = true;
-            //////        trSp.Visible = false;
-            //////        trMa.Visible = false;
-            //////    }
-            //////    if (Session["Desgid"].ToString() == "1002")
-            //////    {
-            //////        trCo.Visible = true;
-            //////        trSp.Visible = false;
-            //////        trMa.Visible = false;
-            //////    }
-            //////    if (Session["Desgid"].ToString() == "1002")
-            //////    {
-            //////        trCo.Visible = true;
-            //////        trSp.Visible = false;
-            //////        trMa.Visible = false;
-            //////    }
-            //////    liFrim.Visible = false;
-            //////    if (Session["user_type"].ToString() == "IP")
-            //////    {
-            //////        liFrim.Visible = false;
-            //////    }
-            //////    else
-            //////    {
-            //////        liFrim.Visible = true;
-            //////    }
-            //////    WagePayment.Visible = false;
-            //////    wageAtten.Visible = false;
-            //////    Wagep.Visible = false;
-
-            #endregion
-
         }
         else
         {
             Response.Redirect("../../frmuserlogin.aspx");
         }
-
     }
-
-
-
 }

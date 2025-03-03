@@ -278,17 +278,6 @@ namespace SSSNP.UI.Public_Works
             ddlGrievanceCategory.ClearSelection();
             ddlLegalStatus.ClearSelection();
             ddlSupportType.ClearSelection();
-
-            //ddlState.SelectedIndex = 0;
-            //ddlState_SelectedIndexChanged(null, null);
-            //ddlCounty_SelectedIndexChanged(null, null);
-            //ddlPayam_SelectedIndexChanged(null, null);
-            //ddlSex.SelectedIndex = 0;
-            //ddlPaymentCycle.SelectedIndex = 0;
-            //ddlAge.SelectedIndex = 0;
-            //ddlGrievanceCategory.SelectedIndex = 0;
-            //ddlLegalStatus.SelectedIndex = 0;
-            //ddlSupportType.SelectedIndex = 0;
         }
 
         protected void ddlIndicator_SelectedIndexChanged(object sender, EventArgs e)
