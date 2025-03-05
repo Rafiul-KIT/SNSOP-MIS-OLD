@@ -400,10 +400,10 @@ public partial class ViewWagesReqDetailsAutoRec : System.Web.UI.Page
 
             sen2 = (Convert.ToString(DataBinder.Eval(e.Row.DataItem, "PhotoFilePath")) + "/" + Convert.ToString(DataBinder.Eval(e.Row.DataItem, "PhotoFileName")));
             sen1 = sen2.Replace(@"\", @"/");
-            sen = sen1.Replace(@"", "~/"); 
+            //sen = sen1.Replace(@"", "~/"); 
 
             string sssnpdir = System.Configuration.ConfigurationManager.AppSettings["SSSNPDIR"]; // Config dir
-            sen = sen.Replace(sssnpdir, "~");
+            sen = sen1.Replace(sssnpdir, "~");
 
             HyperLink1.NavigateUrl = sen.ToString();
             HyperLink1.Text = Convert.ToString(DataBinder.Eval(e.Row.DataItem, "PhotoFileName"));
