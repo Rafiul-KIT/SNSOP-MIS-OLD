@@ -88,7 +88,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
         setLiPaymentReportsPermission(value);
 
-        LiIp11.Visible = value;
+        //LiIp11.Visible = value;
 
         LiTST1.Visible = value;
         TSTDashboard.Visible = value;
@@ -110,7 +110,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         LiReviewVerify.Visible = value;
 
         LiPA1.Visible = value;
-        LiPA2.Visible = value;
+        //LiPA2.Visible = value;
         LiPA8.Visible = value;
         LiPA3.Visible = value;
 
@@ -122,7 +122,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         PayConnect2.Visible = value;
         PayConnect1.Visible = value;
         LiAlpha1.Visible = value;
-        LiAlpha2.Visible = value;
+        //LiAlpha2.Visible = value;
 
         liFrim.Visible = value;
         BDC.Visible = value;
@@ -311,7 +311,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
                     LiIp10.Visible = true;
 
-                    LiIp11.Visible = true;
+                    LiTST8.Visible = true;
 
                     LiPayroll.Visible = true;
                     payrollDownload.Visible = true;
@@ -406,7 +406,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiIp8.Visible = true;
                 LiPaymentReports.Visible = true;
                 LiIp10.Visible = true;
-                LiIp11.Visible = true;
+                LiTST8.Visible = true;
                 LiPayroll.Visible = true;
                 payrollDownload.Visible = true;
                 payrollReconcile.Visible = true;
