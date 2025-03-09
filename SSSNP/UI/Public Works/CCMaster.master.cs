@@ -371,6 +371,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 WagePaidAbstractLIPWReportMenu.Visible = true;
                 WagePaidAbstractDISReportMenu.Visible = true;
                 WagePaidAbstractBiometricReportMenu.Visible = true;
+
+                LiTST8.Visible = true;
             }
             if (Session["user_type"].ToString() == "MIS")
             {
