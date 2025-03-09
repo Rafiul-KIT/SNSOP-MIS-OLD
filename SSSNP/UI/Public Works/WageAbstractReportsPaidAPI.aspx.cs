@@ -378,6 +378,7 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
     {
         ddlCounties.Items.Clear();
         ddlPayam.Items.Clear();
+        ddlBoma.Items.Clear();
         if (ddlState.SelectedIndex != 0)
         {
             Gen.getCounties(ddlCounties, ddlState.SelectedValue);
@@ -386,12 +387,14 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
         {
             ddlCounties.Items.Insert(0, "--Select--");
             ddlPayam.Items.Insert(0, "--Select--");
+            ddlBoma.Items.Insert(0, "--Select--");
         }
     }
 
     void getPayams()
     {
         ddlPayam.Items.Clear();
+        ddlBoma.Items.Clear();
         if (ddlCounties.SelectedIndex != 0)
         {
             Gen.getPayams(ddlPayam, ddlCounties.SelectedValue);
@@ -399,6 +402,7 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
         else
         {
             ddlPayam.Items.Insert(0, "--Select--");
+            ddlBoma.Items.Insert(0, "--Select--");
         }
     }
 
