@@ -32194,7 +32194,10 @@ public class General
             con.CloseConnection();
         }
     }
-    public int InsUpdBeneficiaryWagesFromToDateLatestFinalUSDServiceNewlatest(string intBenid, string FromDate, string ToDate, string PaidDate, string PaidAmount, string Created_by, string Wagerate, string intWorkid, string ExchangeRate, string PaidAmountUSD, string WagerateUSD, string uuid, string attendance, string PaidGenerateddate, string Paidto, string trans_id, string matched_fp, string supervisor_id, string latitude, string longitude)
+    public int InsUpdBeneficiaryWagesFromToDateLatestFinalUSDServiceNewlatest(string intBenid, string FromDate, string ToDate,
+        string PaidDate, string PaidAmount, string Created_by, string Wagerate, string intWorkid, string ExchangeRate,
+        string PaidAmountUSD, string WagerateUSD, string uuid, string attendance, string PaidGenerateddate, string Paidto,
+        string trans_id, string matched_fp, string supervisor_id, string latitude, string longitude, string paidToName)
     {
         int value = 0;
 
@@ -32214,21 +32217,7 @@ public class General
             else
                 cmd.Parameters.Add("@Wagerate", SqlDbType.VarChar).Value = Wagerate.Trim();
 
-
-
-            //if (FromDate == "" || FromDate == null)
-            //    cmd.Parameters.Add("@FromDate", SqlDbType.VarChar).Value = DBNull.Value;
-            //else
-            //    cmd.Parameters.Add("@FromDate", SqlDbType.DateTime).Value = Convert.ToDateTime(FromDate.Trim());
-
-
-            //if (ToDate == "" || ToDate == null)
-            //    cmd.Parameters.Add("@ToDate", SqlDbType.VarChar).Value = DBNull.Value;
-            //else
-            //    cmd.Parameters.Add("@ToDate", SqlDbType.DateTime).Value = Convert.ToDateTime(ToDate.Trim());
-
             cmd.Parameters.Add("@intBenid", SqlDbType.VarChar).Value = intBenid.Trim();
-
 
             if (PaidDate == "" || PaidDate == null)
                 cmd.Parameters.Add("@PaidDate", SqlDbType.DateTime).Value = DBNull.Value;
@@ -32282,7 +32271,6 @@ public class General
             else
                 cmd.Parameters.Add("@Paidto", SqlDbType.VarChar).Value = Paidto.Trim();
 
-
             if (trans_id.Trim() == "" || trans_id.Trim() == null)
                 cmd.Parameters.Add("@trans_id", SqlDbType.VarChar).Value = DBNull.Value;
             else
@@ -32293,31 +32281,29 @@ public class General
             else
                 cmd.Parameters.Add("@matched_fp", SqlDbType.VarChar).Value = matched_fp.Trim();
 
-
             if (supervisor_id == null || supervisor_id.Trim() == "" || supervisor_id.Trim() == null)
                 cmd.Parameters.Add("@supervisor_id", SqlDbType.VarChar).Value = DBNull.Value;
             else
                 cmd.Parameters.Add("@supervisor_id", SqlDbType.VarChar).Value = supervisor_id.Trim();
-
 
             if (latitude.Trim() == "" || latitude.Trim() == null)
                 cmd.Parameters.Add("@latitude", SqlDbType.VarChar).Value = DBNull.Value;
             else
                 cmd.Parameters.Add("@latitude", SqlDbType.VarChar).Value = latitude.Trim();
 
-
             if (longitude.Trim() == "" || longitude.Trim() == null)
                 cmd.Parameters.Add("@longitude", SqlDbType.VarChar).Value = DBNull.Value;
             else
                 cmd.Parameters.Add("@longitude", SqlDbType.VarChar).Value = longitude.Trim();
 
-
+            if (paidToName != null && !paidToName.Trim().Equals(""))
+                cmd.Parameters.Add("@paid_to_name", SqlDbType.VarChar).Value = paidToName.Trim();
+            else
+                cmd.Parameters.Add("@paid_to_name", SqlDbType.VarChar).Value = DBNull.Value;
 
             string val = cmd.ExecuteScalar().ToString();
             if (val != string.Empty)
                 value = Int32.Parse(val);
-
-
 
             #region TraceLog Implementation
             try

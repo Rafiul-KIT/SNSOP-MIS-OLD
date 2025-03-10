@@ -117,6 +117,7 @@ namespace SSSNP.Asynch
             public string supervisor_id { get; set; }
             public string household_number { get; set; }
             public string paid_to { get; set; }
+            public string paid_to_name { get; set; }
             public string enrolment_number { get; set; }
             public string date_from { get; set; }
             public string date_to { get; set; }
@@ -260,7 +261,8 @@ namespace SSSNP.Asynch
                                                                     (Convert.ToDecimal(bad.amount) / Convert.ToDecimal(bad.exchange_rate)).ToString(), 
                                                                     (Convert.ToDecimal(bad.wage) / Convert.ToDecimal(bad.exchange_rate) / Convert.ToDecimal(bad.attendance)).ToString(), 
                                                                     bad.uuid, 
-                                                                    bad.attendance, bad.generated_at, bad.paid_to, bad.trans_id, "", bad.supervisor_id, bad.latitude, bad.longitude);
+                                                                    bad.attendance, bad.generated_at, bad.paid_to, bad.trans_id, "",
+                                                                    bad.supervisor_id, bad.latitude, bad.longitude, bad.paid_to_name);
                                                             }
                                                             else
                                                             {
