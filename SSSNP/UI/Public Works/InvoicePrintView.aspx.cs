@@ -615,6 +615,7 @@ public partial class InvoicePrintView : System.Web.UI.Page
     {
         ddlCounties.Items.Clear();
         ddlPayam.Items.Clear();
+        ddlBoma.Items.Clear();
         if (ddlState.SelectedIndex != 0)
         {
             Gen.getCounties(ddlCounties, ddlState.SelectedValue);
@@ -623,6 +624,7 @@ public partial class InvoicePrintView : System.Web.UI.Page
         {
             ddlCounties.Items.Insert(0, "--Select--");
             ddlPayam.Items.Insert(0, "--Select--");
+            ddlBoma.Items.Insert(0, "--Select--");
 
         }
     }

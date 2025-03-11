@@ -644,9 +644,6 @@ namespace SSSNP_SNSOP
                
                 string json = JsonConvert.SerializeObject(apiResponse);
 
-                // Print the JSON string for debugging
-                // System.Diagnostics.Debug.WriteLine(json);
-
                 // Hexadecimal key (256-bit) and IV (128-bit)
                 string hexKey = "dd8de506bd4a90418afe9372f01b979b6f0df2e8aae22ec90b09a0bc197dc80c";
                 string hexIv = "4a6f8e2f8a0c5d3e4b6c8d9e0f1a2b3c";
@@ -659,7 +656,7 @@ namespace SSSNP_SNSOP
                     // Encrypt the data
                     byte[] encryptedData;
                     encryptedData = EncryptData(json, key, iv);
-
+                    
                     // Set the response headers and content
                     // Response.Clear();
                     Response.ClearHeaders();
