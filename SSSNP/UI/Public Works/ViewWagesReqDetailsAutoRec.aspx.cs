@@ -298,7 +298,8 @@ public partial class ViewWagesReqDetailsAutoRec : System.Web.UI.Page
         DataTable dt = ds1.Tables[0];
         if (ds1.Tables[0].Rows.Count > 0)
         {
-            lblMopUpPaidBen.Text = dt.Rows.Count.ToString();
+            //lblMopUpPaidBen.Text = dt.Rows.Count.ToString();
+            lblMopUpPaidBen.Text = dt.Select("PayStatus='Paid'").Length.ToString();
             lblMopUpActualPaidUSD.Text = dt.Compute("Sum(Amt)", string.Empty).ToString();
             lblMopUpPaidToBeneficiaries.Text = dt.Select("household_number=paidTo").Length.ToString();
             lblMopUpPaydToAlt.Text = dt.Select("household_number<>paidTo").Length.ToString();
