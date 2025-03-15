@@ -7,6 +7,7 @@ using System.Data;
 using System.Net.Mail;
 using Telerik.Web.UI;
 using System.Text;
+using SSSNP_SNSOP.App_Code;
 #endregion
 
 #region Amendment History Begin
@@ -168,6 +169,31 @@ public partial class PDCHouseholdAttendance : System.Web.UI.Page
     }
     protected void BtnSave_Click(object sender, EventArgs e)
     {
+        ErrorLogger eLog = new ErrorLogger();
+        try
+        {
+            cmf.convertDateIndia(txtStartDate.Text);
+        } catch (Exception ex)
+        {
+            lblmsg0.Text = "Work Start date's format is invalid";
+            success.Visible = false;
+            Failure.Visible = true;
+            eLog.LogError(ex);
+            return;
+        }
+
+        try
+        {
+            cmf.convertDateIndia(lblWorkStartDate.Text);
+        } catch (Exception ex)
+        {
+            lblmsg0.Text = "Attendance Date's format is invalid";
+            success.Visible = false;
+            Failure.Visible = true;
+            eLog.LogError(ex);
+            return;
+        }
+
         if (cmf.convertDateIndia(txtStartDate.Text) < cmf.convertDateIndia(lblWorkStartDate.Text))
         {
             lblmsg0.Text = "Attendance Date should be greater than the Work Start date. ";
