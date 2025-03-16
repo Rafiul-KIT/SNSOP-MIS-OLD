@@ -358,7 +358,8 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
             Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Write(strAllInvoices);
             Response.Flush();
-            Response.End();
+            //Response.End();
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
     }
 
