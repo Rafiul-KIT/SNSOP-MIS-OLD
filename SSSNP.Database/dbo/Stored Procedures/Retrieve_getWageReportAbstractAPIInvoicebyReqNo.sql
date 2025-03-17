@@ -22,6 +22,7 @@ and intCountyId like @intCountieid
 and intPayamId like @intPayamid
 and intBomaId like @intBomasid
 and RequestNo like @reqno
+and WorkCode like @workCode
 	and
 	(
 	(@reportType = 'DIS' and (workcode='DIS - Direct Income Support' or workremarks like '%DIS%' ))

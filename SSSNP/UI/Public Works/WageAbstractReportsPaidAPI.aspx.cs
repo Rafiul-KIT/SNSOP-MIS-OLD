@@ -46,6 +46,8 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
                 ddlIP.SelectedValue = ddlIP.Items.FindByValue(Session["User_Code"].ToString().Trim()).Value;
                 ddlIP.Enabled = false;
             }
+            btnPrintSelected.Visible = false;
+
             btnPrintSelected.Enabled = false;
             BtnPrint.Enabled = false;
             btnexp.Enabled = false;
