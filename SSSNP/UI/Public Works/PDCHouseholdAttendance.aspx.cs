@@ -411,6 +411,16 @@ public partial class PDCHouseholdAttendance : System.Web.UI.Page
         {
             if (txtStartDate.Text.Trim() != "")
             {
+                try
+                {
+                    cmf.convertDateIndia(txtStartDate.Text);
+                } catch (Exception ex)
+                {
+                    lblmsg0.Text = "Attendance Date's format is invalid. Expected format dd/MM/yyyy";
+                    success.Visible = false;
+                    Failure.Visible = true;
+                    return;
+                }
                 lblmsg0.Text = "";
                 Failure.Visible = false;
                 DataSet dsBen = new DataSet();

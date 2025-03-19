@@ -317,7 +317,7 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
         string snsopweb = "";
         if (ConfigurationManager.AppSettings["build.profile.active"].ToString() == "prod")
         {
-            snsopweb = ConfigurationManager.AppSettings["SNSOPWEBToHit"].ToString() + "UI/Public Works/" + "BulkInvoicePrintAutoRec?intWageReqId={0}";
+            snsopweb = ConfigurationManager.AppSettings["SSSNPWEB"].ToString() + "UI/Public Works/BulkInvoicePrintAutoRec.aspx?intWageReqId={0}";
         }
         else
         {
