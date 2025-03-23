@@ -393,6 +393,7 @@
     <Content Include="UI\Public Works\CashTransferSummaryMNE.aspx" />
     <Content Include="UI\Public Works\CoachingSessionTracking.aspx" />
     <Content Include="UI\Public Works\frmBenInvoice_LOC.aspx" />
+    <Content Include="UI\Public Works\FSPInvoiceUpload.aspx" />
     <Content Include="UI\Public Works\GBVDashboard.aspx" />
     <Content Include="UI\Public Works\GBVDetailManagement.aspx" />
     <Content Include="UI\Public Works\GBVExcelImporting.aspx" />
@@ -1042,6 +1043,13 @@
     </Compile>
     <Compile Include="UI\Public Works\frmBenInvoice_LOC.aspx.designer.cs">
       <DependentUpon>frmBenInvoice_LOC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\FSPInvoiceUpload.aspx.cs">
+      <DependentUpon>FSPInvoiceUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\FSPInvoiceUpload.aspx.designer.cs">
+      <DependentUpon>FSPInvoiceUpload.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\GBVDashboard.aspx.cs">
       <DependentUpon>GBVDashboard.aspx</DependentUpon>

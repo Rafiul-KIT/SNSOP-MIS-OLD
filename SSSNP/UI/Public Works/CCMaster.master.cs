@@ -342,6 +342,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiPaymentCycleDocument.Visible = true;
                     liUploadPaymentCycleDoc.Visible = false;
                     liViewPaymentCycleDoc.Visible = true;
+
+                    LiFSPInvoice.Visible = true;
                 }
             }
             if (Session["user_type"].ToString() == "FSP")
