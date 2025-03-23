@@ -202,24 +202,24 @@ public partial class ViewWagesReqDetailsAutoRec : System.Web.UI.Page
 
     protected void grdDetails_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-        if ((e.Row.RowType == DataControlRowType.DataRow))
-        {
-            HyperLink hbm = (HyperLink)e.Row.Cells[4].Controls[0];
-            hbm.NavigateUrl = "frmBenInvoice.aspx?id=" + Convert.ToString(DataBinder.Eval(e.Row.DataItem, "intBenid")).Trim();// +"&status=13";
-            hbm.Target = "_blank";
-            HyperLink hbm1 = (HyperLink)e.Row.Cells[12].Controls[0];
+        //if ((e.Row.RowType == DataControlRowType.DataRow))
+        //{
+        //    HyperLink hbm = (HyperLink)e.Row.Cells[4].Controls[0];
+        //    hbm.NavigateUrl = "frmBenInvoice.aspx?id=" + Convert.ToString(DataBinder.Eval(e.Row.DataItem, "intBenid")).Trim();// +"&status=13";
+        //    hbm.Target = "_blank";
+        //    HyperLink hbm1 = (HyperLink)e.Row.Cells[12].Controls[0];
 
-            if (Convert.ToString(DataBinder.Eval(e.Row.DataItem, "PayStatus")).Trim().ToLower() == "paid" && Convert.ToString(DataBinder.Eval(e.Row.DataItem, "PaidToType")).Trim().ToLower() == "")
-            {
-                hbm1.NavigateUrl = "InvoiceNotAvaialbleDet.aspx";// +"&status=13";
-                hbm1.Target = "_blank";
-            }
-            else
-            {
-                hbm1.NavigateUrl = "frmBenInvoice.aspx?id=" + Convert.ToString(DataBinder.Eval(e.Row.DataItem, "intBenid")).Trim();// +"&status=13";
-                hbm1.Target = "_blank";
-            }
-        }
+        //    if (Convert.ToString(DataBinder.Eval(e.Row.DataItem, "PayStatus")).Trim().ToLower() == "paid" && Convert.ToString(DataBinder.Eval(e.Row.DataItem, "PaidToType")).Trim().ToLower() == "")
+        //    {
+        //        hbm1.NavigateUrl = "InvoiceNotAvaialbleDet.aspx";// +"&status=13";
+        //        hbm1.Target = "_blank";
+        //    }
+        //    else
+        //    {
+        //        hbm1.NavigateUrl = "frmBenInvoice.aspx?id=" + Convert.ToString(DataBinder.Eval(e.Row.DataItem, "intBenid")).Trim();// +"&status=13";
+        //        hbm1.Target = "_blank";
+        //    }
+        //}
     }
 
 
@@ -270,15 +270,15 @@ public partial class ViewWagesReqDetailsAutoRec : System.Web.UI.Page
                 rowCounter = rg1StepPaidBeneficiaries.MasterTableView.PageSize * rg1StepPaidBeneficiaries.MasterTableView.CurrentPageIndex;
                 lbl.Text = (e.Item.ItemIndex + 1 + rowCounter).ToString();
 
-                HyperLink hyperLinkView = e.Item.FindControl("hlHhCode") as HyperLink;
-                hyperLinkView.Text = ((System.Data.DataRowView)e.Item.DataItem).Row["household_number"].ToString();
-                hyperLinkView.Target = "_blank";
-                hyperLinkView.NavigateUrl = "frmBenInvoice.aspx?ID=" + ((System.Data.DataRowView)e.Item.DataItem).Row["intBenId"];
+                //HyperLink hyperLinkView = e.Item.FindControl("hlHhCode") as HyperLink;
+                //hyperLinkView.Text = ((System.Data.DataRowView)e.Item.DataItem).Row["household_number"].ToString();
+                //hyperLinkView.Target = "_blank";
+                //hyperLinkView.NavigateUrl = "frmBenInvoice.aspx?ID=" + ((System.Data.DataRowView)e.Item.DataItem).Row["intBenId"];
 
-                HyperLink hyperLinkViewPaidPerson = e.Item.FindControl("hlPersonHHCode") as HyperLink;
-                hyperLinkViewPaidPerson.Text = ((System.Data.DataRowView)e.Item.DataItem).Row["Paidto"].ToString();
-                hyperLinkViewPaidPerson.Target = "_blank";
-                hyperLinkViewPaidPerson.NavigateUrl = "frmBenInvoice.aspx?ID=" + ((System.Data.DataRowView)e.Item.DataItem).Row["intBenId"];
+                //HyperLink hyperLinkViewPaidPerson = e.Item.FindControl("hlPersonHHCode") as HyperLink;
+                //hyperLinkViewPaidPerson.Text = ((System.Data.DataRowView)e.Item.DataItem).Row["Paidto"].ToString();
+                //hyperLinkViewPaidPerson.Target = "_blank";
+                //hyperLinkViewPaidPerson.NavigateUrl = "frmBenInvoice.aspx?ID=" + ((System.Data.DataRowView)e.Item.DataItem).Row["intBenId"];
             }
     }
 
@@ -330,15 +330,15 @@ public partial class ViewWagesReqDetailsAutoRec : System.Web.UI.Page
                 rowCounter = rg1MopUpBeneficiaries.MasterTableView.PageSize * rg1MopUpBeneficiaries.MasterTableView.CurrentPageIndex;
                 lbl.Text = (e.Item.ItemIndex + 1 + rowCounter).ToString();
 
-                HyperLink hyperLinkView = e.Item.FindControl("hlHhCode") as HyperLink;
-                hyperLinkView.Text = ((System.Data.DataRowView)e.Item.DataItem).Row["household_number"].ToString();
-                hyperLinkView.Target = "_blank";
-                hyperLinkView.NavigateUrl = "frmBenInvoice.aspx?ID=" + ((System.Data.DataRowView)e.Item.DataItem).Row["intBenId"];
+                //        HyperLink hyperLinkView = e.Item.FindControl("hlHhCode") as HyperLink;
+                //        hyperLinkView.Text = ((System.Data.DataRowView)e.Item.DataItem).Row["household_number"].ToString();
+                //        hyperLinkView.Target = "_blank";
+                //        hyperLinkView.NavigateUrl = "frmBenInvoice.aspx?ID=" + ((System.Data.DataRowView)e.Item.DataItem).Row["intBenId"];
 
-                HyperLink hyperLinkViewPaidPerson = e.Item.FindControl("hlPersonHHCode") as HyperLink;
-                hyperLinkViewPaidPerson.Text = ((System.Data.DataRowView)e.Item.DataItem).Row["Paidto"].ToString();
-                hyperLinkViewPaidPerson.Target = "_blank";
-                hyperLinkViewPaidPerson.NavigateUrl = "frmBenInvoice.aspx?ID=" + ((System.Data.DataRowView)e.Item.DataItem).Row["intBenId"];
+                //        HyperLink hyperLinkViewPaidPerson = e.Item.FindControl("hlPersonHHCode") as HyperLink;
+                //        hyperLinkViewPaidPerson.Text = ((System.Data.DataRowView)e.Item.DataItem).Row["Paidto"].ToString();
+                //        hyperLinkViewPaidPerson.Target = "_blank";
+                //        hyperLinkViewPaidPerson.NavigateUrl = "frmBenInvoice.aspx?ID=" + ((System.Data.DataRowView)e.Item.DataItem).Row["intBenId"];
             }
     }
 

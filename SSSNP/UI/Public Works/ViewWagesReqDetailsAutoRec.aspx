@@ -678,12 +678,13 @@
                                                                 <telerik:GridBoundColumn DataField="intBenid" Visible="false" HeaderText="intBenid"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="EnrollmentNo" HeaderText="Enrollment No" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Name of household" HeaderStyle-Width="15%"></telerik:GridBoundColumn>
-                                                                <telerik:GridTemplateColumn UniqueName="tcHouseholdCode" HeaderText="Household Code">
+                                                                <telerik:GridBoundColumn DataField="household_number" HeaderText="HouseholdCode" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <%--<telerik:GridTemplateColumn UniqueName="tcHouseholdCode" HeaderText="Household Code">
                                                                     <ItemTemplate>
                                                                         <asp:HyperLink ID="hlHhCode" runat="server" Text="View" />
                                                                     </ItemTemplate>
                                                                     <HeaderStyle Width="10%" />
-                                                                </telerik:GridTemplateColumn>
+                                                                </telerik:GridTemplateColumn>--%>
                                                                 <telerik:GridBoundColumn DataField="PresentDays" HeaderText="No of Days Present" HeaderStyle-Width="7%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="AbsentDays" HeaderText="No of Days Absent" HeaderStyle-Width="7%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="Amt" HeaderText="Amount paid in USD" HeaderStyle-Width="11%"></telerik:GridBoundColumn>
@@ -692,12 +693,13 @@
                                                                 <telerik:GridBoundColumn DataField="PayStatus" HeaderText="Status" HeaderStyle-Width="7%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="paidToName" HeaderText="Paid to Name" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="Component" HeaderText="Component" HeaderStyle-Width="13%"></telerik:GridBoundColumn>
-                                                                <telerik:GridTemplateColumn UniqueName="tcPaidToPersonHHCode" HeaderText="Paid to Person Household Code">
+                                                                <telerik:GridBoundColumn DataField="Paidto" HeaderText="Paid to Person" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <%--<telerik:GridTemplateColumn UniqueName="tcPaidToPersonHHCode" HeaderText="Paid to Person Household Code">
                                                                     <ItemTemplate>
                                                                         <asp:HyperLink ID="hlPersonHHCode" runat="server" Text="View" />
                                                                     </ItemTemplate>
                                                                     <HeaderStyle Width="10%" />
-                                                                </telerik:GridTemplateColumn>
+                                                                </telerik:GridTemplateColumn>--%>
                                                             </Columns>
                                                         </MasterTableView>
                                                     </telerik:RadGrid>
@@ -853,12 +855,13 @@
                                                                 <telerik:GridBoundColumn DataField="intBenid" Visible="false" HeaderText="intBenid"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="EnrollmentNo" HeaderText="Enrollment No" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="NameofHousehold" HeaderText="Name of household" HeaderStyle-Width="15%"></telerik:GridBoundColumn>
-                                                                <telerik:GridTemplateColumn UniqueName="tcHouseholdCode" HeaderText="Household Code">
+                                                                <telerik:GridBoundColumn DataField="household_number" HeaderText="HouseholdCode" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <%--<telerik:GridTemplateColumn UniqueName="tcHouseholdCode" HeaderText="Household Code">
                                                                     <ItemTemplate>
                                                                         <asp:HyperLink ID="hlHhCode" runat="server" Text="View" />
                                                                     </ItemTemplate>
                                                                     <HeaderStyle Width="10%" />
-                                                                </telerik:GridTemplateColumn>
+                                                                </telerik:GridTemplateColumn>--%>
                                                                 <telerik:GridBoundColumn DataField="PresentDays" HeaderText="No of Days Present" HeaderStyle-Width="7%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="AbsentDays" HeaderText="No of Days Present" HeaderStyle-Width="7%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="Amt" HeaderText="Amount paid in USD" HeaderStyle-Width="11%"></telerik:GridBoundColumn>
@@ -867,12 +870,13 @@
                                                                 <telerik:GridBoundColumn DataField="PayStatus" HeaderText="Status" HeaderStyle-Width="7%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="paidToName" HeaderText="Paid to Name" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
                                                                 <telerik:GridBoundColumn DataField="Component" HeaderText="Component" HeaderStyle-Width="13%"></telerik:GridBoundColumn>
-                                                                <telerik:GridTemplateColumn UniqueName="tcPaidToPersonHHCode" HeaderText="Paid to Person Household Code">
+                                                                <telerik:GridBoundColumn DataField="Paidto" HeaderText="Paid to Person" HeaderStyle-Width="10%"></telerik:GridBoundColumn>
+                                                                <%--<telerik:GridTemplateColumn UniqueName="tcPaidToPersonHHCode" HeaderText="Paid to Person Household Code">
                                                                     <ItemTemplate>
                                                                         <asp:HyperLink ID="hlPersonHHCode" runat="server" Text="View" />
                                                                     </ItemTemplate>
                                                                     <HeaderStyle Width="10%" />
-                                                                </telerik:GridTemplateColumn>
+                                                                </telerik:GridTemplateColumn>--%>
                                                             </Columns>
                                                         </MasterTableView>
                                                     </telerik:RadGrid>
