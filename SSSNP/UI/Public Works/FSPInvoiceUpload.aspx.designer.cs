@@ -105,6 +105,15 @@ namespace SSSNP.UI.Public_Works
         protected global::System.Web.UI.WebControls.Button btnUpload;
 
         /// <summary>
+        /// btnSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSearch;
+
+        /// <summary>
         /// btnClear control.
         /// </summary>
         /// <remarks>
@@ -130,5 +139,14 @@ namespace SSSNP.UI.Public_Works
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hlPreview;
+
+        /// <summary>
+        /// gridInvoiceStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadGrid gridInvoiceStatus;
     }
 }

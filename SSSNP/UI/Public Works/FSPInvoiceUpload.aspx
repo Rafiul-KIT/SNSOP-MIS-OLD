@@ -1,5 +1,8 @@
 ﻿<%@ Page Title=":: :: SNSOP : : FSP Invoice Upload" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="FSPInvoiceUpload.aspx.cs" Inherits="SSSNP.UI.Public_Works.FSPInvoiceUpload" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+<%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:UpdatePanel ID="upd1" runat="server">
         <ContentTemplate>
@@ -89,6 +92,7 @@
                                     <tr>
                                         <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
                                             <asp:Button ID="btnUpload" runat="server" CssClass="btn btn-success" Text="Upload" OnClick="btnUpload_Click" />
+                                            <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-info" Text="Search Invoices" OnClick="btnSearch_Click" />
                                             <asp:Button ID="btnClear" runat="server" CssClass="btn btn-warning" Text="Clear" OnClick="btnClear_Click" />
                                         </td>
                                     </tr>
@@ -102,7 +106,38 @@
                                             <asp:HyperLink ID="hlPreview" runat="server" CssClass="btn btn-link" Target="_blank" Visible="false">View Uploaded Invoice</asp:HyperLink>
                                         </td>
                                     </tr>
-                          
+                                    <tr>
+                                        <td colspan="3" style="padding: 5px; margin: 5px" valign="top" align="center">
+                                            <telerik:RadGrid ID="gridInvoiceStatus" runat="server" AutoGenerateColumns="False" Width="100%"
+                                                AllowPaging="True" PageSize="10" AllowSorting="True" GridLines="Both" CssClass="table table-bordered table-striped"
+                                                Visible="false" OnNeedDataSource="gridInvoiceStatus_NeedDataSource" AllowCustomPaging="True">
+                                                <PagerStyle Mode="NextPrevAndNumeric" />
+                                                <HeaderStyle CssClass="MyGridHeader" />
+                                                <AlternatingItemStyle CssClass="MyGridAlternatingRow" />
+                                                <ClientSettings>
+                                                    <Scrolling AllowScroll="True" UseStaticHeaders="True" />
+                                                    <Selecting AllowRowSelect="True" />
+                                                </ClientSettings>
+                                                <MasterTableView HeaderStyle-CssClass="MyGridHeader" DataKeyNames="id"
+                                                    AllowPaging="True" PagerStyle-AlwaysVisible="True">
+                                                    <NoRecordsTemplate>No records found.</NoRecordsTemplate>
+                                                    <Columns>                                                        
+                                                        <telerik:GridBoundColumn DataField="StateName" HeaderText="State" UniqueName="StateName" HeaderStyle-Width="10%" />
+                                                        <telerik:GridBoundColumn DataField="CountyName" HeaderText="County" UniqueName="CountyName" HeaderStyle-Width="10%" />
+                                                        <telerik:GridBoundColumn DataField="PaymentCycle" HeaderText="Payment Cycle" UniqueName="PaymentCycle" HeaderStyle-Width="12%" />
+                                                        <telerik:GridBoundColumn DataField="CreatedBy" HeaderText="Created By" UniqueName="CreatedBy" HeaderStyle-Width="10%" />
+                                                        <telerik:GridBoundColumn DataField="UploadDate" HeaderText="Upload Date" UniqueName="UploadDate" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" HeaderStyle-Width="15%" />
+                                                        <telerik:GridBoundColumn DataField="ActionBy" HeaderText="Action By" UniqueName="ActionBy" HeaderStyle-Width="10%" />                                                        
+                                                        <telerik:GridBoundColumn DataField="ActionDate" HeaderText="Action Date" UniqueName="ActionDate" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" HeaderStyle-Width="15%" />
+                                                        <telerik:GridBoundColumn DataField="Status" HeaderText="Status" UniqueName="Status" HeaderStyle-Width="8%" />                                       
+                                                        <telerik:GridHyperLinkColumn DataNavigateUrlFields="DocumentPath" DataTextField="FileName"
+                                                            HeaderText="File Link" UniqueName="DocumentPath" Target="_blank" HeaderStyle-Width="15%" />
+                                                    </Columns>
+                                                </MasterTableView>
+                                            </telerik:RadGrid>
+
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>

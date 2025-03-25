@@ -106,23 +106,9 @@ namespace SSSNP.UI.Public_Works
 
         protected void btnUpload_Click(object sender, EventArgs e)
         {
-            if (ddlState.SelectedIndex == 0)
+            if (ddlState.SelectedIndex == 0 || ddlCounty.SelectedIndex == 0 || ddlPaymentCycle.SelectedIndex == 0)
             {
-                lblMessage.Text = "Please select a State.";
-                lblMessage.CssClass = "text-warning";
-                return;
-            }
-
-            if (ddlCounty.SelectedIndex == 0)
-            {
-                lblMessage.Text = "Please select a County.";
-                lblMessage.CssClass = "text-warning";
-                return;
-            }
-
-            if (ddlPaymentCycle.SelectedIndex == 0)
-            {
-                lblMessage.Text = "Please select a Payment Cycle.";
+                lblMessage.Text = "Please select all required fields.";
                 lblMessage.CssClass = "text-warning";
                 return;
             }
@@ -219,7 +205,7 @@ namespace SSSNP.UI.Public_Works
                     cmd.Parameters.AddWithValue("@PaymentCycleId", ddlPaymentCycle.SelectedValue);
                     cmd.Parameters.AddWithValue("@DocumentPath", filePath);
                     cmd.Parameters.AddWithValue("@UserId", userId);
-                    cmd.Parameters.AddWithValue("@Status", 0);  // Uploaded
+                    cmd.Parameters.AddWithValue("@Status", 0);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -229,6 +215,86 @@ namespace SSSNP.UI.Public_Works
                 throw new Exception("Error while saving to database: " + ex.Message);
             }
         }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Make the grid visible and rebind the data
+                gridInvoiceStatus.Visible = true;
+                gridInvoiceStatus.Rebind();
+                lblMessage.Text = "Showing uploaded invoice records.";
+                lblMessage.CssClass = "text-info";
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+                lblMessage.Text = "Error displaying invoice records: " + ex.Message;
+                lblMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void gridInvoiceStatus_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
+        {
+            try
+            {
+                DataTable dtInvoices = GetUploadedInvoices();
+                gridInvoiceStatus.DataSource = dtInvoices;
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+                lblMessage.Text = "Error loading invoice status: " + ex.Message;
+                lblMessage.CssClass = "text-danger";
+            }
+        }
+
+        private DataTable GetUploadedInvoices()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string query = @"
+            SELECT ih.id,
+                   ih.state_id, s.StateName, 
+                   ih.county_id, c.CountieName AS CountyName, 
+                   ih.payment_cycle_id, 
+                   CONCAT('Payment Cycle ', ih.payment_cycle_id) AS PaymentCycle,
+                   ih.document_path AS DocumentPath,
+                   ih.created_at AS UploadDate,
+                   u1.User_name AS CreatedBy,
+                   CASE ih.status 
+                       WHEN 0 THEN 'Uploaded' 
+                       WHEN 1 THEN 'Approved' 
+                       WHEN 2 THEN 'Rejected' 
+                       ELSE 'Unknown' 
+                   END AS Status,
+                   ih.action_at AS ActionDate,
+                   u2.User_name AS ActionBy,
+                   RIGHT(ih.document_path, CHARINDEX('\', REVERSE(ih.document_path)) - 1) AS FileName
+            FROM invoice_history ih
+            JOIN tm_States s ON ih.state_id = s.intStateid
+            JOIN tm_Counties c ON ih.county_id = c.intCountieid
+            LEFT JOIN tbl_Users u1 ON ih.created_by = u1.intUserid
+            LEFT JOIN tbl_Users u2 ON ih.action_by = u2.intUserid
+            ORDER BY ih.created_at DESC";
+
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    conn.Open();
+                    da.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(new Exception("Error fetching uploaded invoices: " + ex.Message, ex));
+            }
+
+            return dt;
+        }
+
 
 
         private int GetCurrentUserId()
@@ -253,6 +319,10 @@ namespace SSSNP.UI.Public_Works
             ddlState.SelectedIndex = 0;
             ddlCounty.SelectedIndex = 0;
             ddlPaymentCycle.SelectedIndex = 0;
+
+            gridInvoiceStatus.DataSource = null;
+            gridInvoiceStatus.Visible = false;
+            gridInvoiceStatus.Rebind();
         }
 
         private void ClearFields()
@@ -261,6 +331,10 @@ namespace SSSNP.UI.Public_Works
             ddlCounty.SelectedIndex = 0;
             ddlPaymentCycle.SelectedIndex = 0;
             fileUpload.Attributes.Clear();
+
+            gridInvoiceStatus.DataSource = null;
+            gridInvoiceStatus.Visible = false;
+            gridInvoiceStatus.Rebind();
         }
 
 
