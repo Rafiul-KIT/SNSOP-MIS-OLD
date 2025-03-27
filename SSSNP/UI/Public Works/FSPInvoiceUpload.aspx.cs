@@ -24,6 +24,7 @@ namespace SSSNP.UI.Public_Works
                 LoadPaymentCycles();
                 lblMessage.Text = "";
                 hlPreview.Visible = false;
+                gridInvoiceStatus.Visible = false;
             }
         }
 
@@ -121,6 +122,7 @@ namespace SSSNP.UI.Public_Works
                 if (Array.Exists(allowedExtensions, ext => ext == fileExtension))
                 {
                     SqlTransaction transaction = null;
+                    SqlConnection conn = null;
                     try
                     {
                         int userId = GetCurrentUserId();
@@ -131,20 +133,18 @@ namespace SSSNP.UI.Public_Works
                         // Ensure the directory exists
                         Directory.CreateDirectory(baseDirectory);
 
-                        using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
-                        {
-                            conn.Open();
-                            transaction = conn.BeginTransaction();
+                        conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString);
+                        conn.Open();
+                        transaction = conn.BeginTransaction();
 
-                            // Save file to disk
-                            SaveFile(fileUpload, filePath);
+                        // Save file to disk
+                        SaveFile(fileUpload, filePath);
 
-                            // Save record to the database
-                            SaveInvoiceRecord(conn, transaction, filePath, userId);
+                        // Save record to the database
+                        SaveInvoiceRecord(conn, transaction, filePath, userId);
 
-                            // Commit the transaction if both operations succeed
-                            transaction.Commit();
-                        }
+                        // Commit the transaction if both operations succeed
+                        transaction.Commit();
 
                         // Display success message and preview link
                         lblMessage.Text = "Invoice uploaded successfully!";
@@ -158,11 +158,32 @@ namespace SSSNP.UI.Public_Works
                     }
                     catch (Exception ex)
                     {
-                        // Rollback the transaction if an error occurs
-                        transaction?.Rollback();
+                        if (transaction != null && conn != null && transaction.Connection != null)
+                        {
+                            try
+                            {
+                                transaction.Rollback();
+                            }
+                            catch (Exception rollbackEx)
+                            {
+                                LogError(new Exception("Error during transaction rollback: " + rollbackEx.Message, rollbackEx));
+                            }
+                        }
                         lblMessage.Text = "Invoice upload failed: " + ex.Message;
                         lblMessage.CssClass = "text-danger";
                         LogError(ex);
+                    }
+                    finally
+                    {
+                        if (transaction != null)
+                        {
+                            transaction.Dispose();
+                        }
+                        if (conn != null)
+                        {
+                            conn.Close();
+                            conn.Dispose();
+                        }
                     }
                 }
                 else
@@ -194,16 +215,18 @@ namespace SSSNP.UI.Public_Works
         {
             try
             {
+                string relativePath = filePath.Replace(@"C:\xampp\htdocs", "").Replace(@"\", "/");
+
                 string query = @"
-        INSERT INTO invoice_history (state_id, county_id, payment_cycle_id, document_path, created_at, created_by, status)
-        VALUES (@StateId, @CountyId, @PaymentCycleId, @DocumentPath, GETDATE(), @UserId, @Status)";
+            INSERT INTO invoice_history (state_id, county_id, payment_cycle_id, document_path, created_at, created_by, status)
+            VALUES (@StateId, @CountyId, @PaymentCycleId, @DocumentPath, GETDATE(), @UserId, @Status)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn, transaction))
                 {
                     cmd.Parameters.AddWithValue("@StateId", ddlState.SelectedValue);
                     cmd.Parameters.AddWithValue("@CountyId", ddlCounty.SelectedValue);
                     cmd.Parameters.AddWithValue("@PaymentCycleId", ddlPaymentCycle.SelectedValue);
-                    cmd.Parameters.AddWithValue("@DocumentPath", filePath);
+                    cmd.Parameters.AddWithValue("@DocumentPath", relativePath);
                     cmd.Parameters.AddWithValue("@UserId", userId);
                     cmd.Parameters.AddWithValue("@Status", 0);
 
@@ -271,7 +294,11 @@ namespace SSSNP.UI.Public_Works
                    END AS Status,
                    ih.action_at AS ActionDate,
                    u2.User_name AS ActionBy,
-                   RIGHT(ih.document_path, CHARINDEX('\', REVERSE(ih.document_path)) - 1) AS FileName
+                   CASE 
+                    WHEN CHARINDEX('\', REVERSE(ih.document_path)) > 0 
+                    THEN RIGHT(ih.document_path, CHARINDEX('\', REVERSE(ih.document_path)) - 1)
+                    ELSE ih.document_path
+                    END AS FileName
             FROM invoice_history ih
             JOIN tm_States s ON ih.state_id = s.intStateid
             JOIN tm_Counties c ON ih.county_id = c.intCountieid
