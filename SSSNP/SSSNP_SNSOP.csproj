@@ -555,6 +555,7 @@
     <Content Include="UI\Public Works\ImportUpdateFingerPrint.aspx" />
     <Content Include="UI\Public Works\ImportUpdateHouseHoldName.aspx" />
     <Content Include="UI\Public Works\ImportUpdatePhoto.aspx" />
+    <Content Include="UI\Public Works\InvoiceAdminApproval.aspx" />
     <Content Include="UI\Public Works\InvoiceNotAvaialbleDet.aspx" />
     <Content Include="UI\Public Works\InvoiceNotAvaialbleDet_LOC.aspx" />
     <Content Include="UI\Public Works\InvoicePrintView.aspx" />
@@ -1585,6 +1586,13 @@
     </Compile>
     <Compile Include="UI\Public Works\ImportUpdatePhoto.aspx.designer.cs">
       <DependentUpon>ImportUpdatePhoto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\InvoiceAdminApproval.aspx.cs">
+      <DependentUpon>InvoiceAdminApproval.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\InvoiceAdminApproval.aspx.designer.cs">
+      <DependentUpon>InvoiceAdminApproval.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\InvoiceNotAvaialbleDet.aspx.designer.cs">
       <DependentUpon>InvoiceNotAvaialbleDet.aspx</DependentUpon>
