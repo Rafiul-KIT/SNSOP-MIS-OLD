@@ -175,7 +175,7 @@ public partial class PDCHouseholdAttendance : System.Web.UI.Page
             cmf.convertDateIndia(txtStartDate.Text);
         } catch (Exception ex)
         {
-            lblmsg0.Text = "Work Start date's format is invalid";
+            lblmsg0.Text = "Attendance date's format is invalid";
             success.Visible = false;
             Failure.Visible = true;
             eLog.LogError(ex);
@@ -187,7 +187,7 @@ public partial class PDCHouseholdAttendance : System.Web.UI.Page
             cmf.convertDateIndia(lblWorkStartDate.Text);
         } catch (Exception ex)
         {
-            lblmsg0.Text = "Attendance Date's format is invalid";
+            lblmsg0.Text = "Work Approval Date's format is invalid";
             success.Visible = false;
             Failure.Visible = true;
             eLog.LogError(ex);
