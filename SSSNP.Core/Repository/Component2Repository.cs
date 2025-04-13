@@ -106,6 +106,94 @@ namespace SSSNP_SNSOP.Core.Repository
                 throw ex;
             }
         }
+
+        public ResponseModel SaveCoachingSessionTracking(CoachingSessionTrackingModel obj)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                lock (_locker)
+                {
+                    var isExist = IsRecordExistInCoachingSessionAttendance(obj.HouseholdNumber?.Trim());
+                    var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
+
+                    if (denormalizedData == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Nominee info not found for this household number: " + obj.HouseholdNumber?.Trim();
+                        return response;
+                    }
+
+                    Dictionary<string, object> data = new Dictionary<string, object>
+                    {
+                        ["HouseholdNumber"] = obj.HouseholdNumber?.Trim(),
+                        ["CoachingDetailId"] = obj.CoachingDetailId,
+                        ["CoachingAttendanceDate"] = obj.ClassAttendanceDate ?? (object)DBNull.Value
+                    };
+
+                    if (!isExist)
+                    {
+                        data["CreatedBy"] = obj.CreatedBy;
+                        data["CreatedDate"] = obj.CreatedDate;
+                    }
+                    else
+                    {
+                        data["ModifiedBy"] = obj.ModifiedBy;
+                        data["ModifiedDate"] = obj.ModifiedDate;
+                    }
+
+                    if (isExist)
+                    {
+                        _dbOperation.UpdateData(
+                            "tbl_com2_Coaching_Session_Attendance",
+                            data,
+                            $"HouseholdNumber = '{obj.HouseholdNumber?.Trim()}' AND CoachingDetailId = {obj.CoachingDetailId}"
+                        );
+                    }
+                    else
+                    {
+                        _dbOperation.InsertData("tbl_com2_Coaching_Session_Attendance", data);
+                    }
+
+                    response.IsSuccess = true;
+                    response.Message = "Coaching Session Tracking data saved successfully.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when saving Coaching Session Tracking data. Error: " + ex.ToString());
+                return new ResponseModel()
+                {
+                    IsSuccess = false,
+                    Message = "Error when saving Coaching Session Tracking data for this household number: " + obj.HouseholdNumber?.Trim()
+                };
+            }
+        }
+
+
+        private bool IsRecordExistInCoachingSessionAttendance(string householdNumber)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
+                var dt = _dbOperation.ExecuteDataTable(
+                    "SELECT HouseholdNumber FROM tbl_com2_Coaching_Session_Attendance WHERE HouseholdNumber = @householdNumber",
+                    CommandType.Text, param);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         public ResponseModel SaveLivelihoodGrantDisbursement(LivelihoodGrantDisbursementModel obj)
         {
             var response = new ResponseModel();
@@ -1110,7 +1198,7 @@ namespace SSSNP_SNSOP.Core.Repository
                         else
                         {
                             _dbOperation.InsertData("tbl_com2_course", data);
-                            insertCount++; 
+                            insertCount++;
                         }
                     }
                     catch (Exception ex)
@@ -1192,15 +1280,15 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     try
                     {
-                        
+
                         if (isExist)
-                        {                            
-                                _dbOperation.UpdateData("tbl_com2_Course_Details", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
+                        {
+                            _dbOperation.UpdateData("tbl_com2_Course_Details", data, "CourseCode = '" + course.CourseCode?.Trim() + "'");
                         }
                         else
-                        {                          
-                                _dbOperation.InsertData("tbl_com2_Course_Details", data);
-                                insertCount++; 
+                        {
+                            _dbOperation.InsertData("tbl_com2_Course_Details", data);
+                            insertCount++;
                         }
                     }
                     catch (Exception ex)
@@ -1317,6 +1405,44 @@ namespace SSSNP_SNSOP.Core.Repository
             catch (Exception ex)
             {
                 throw new Exception($"Error fetching valid class dates for course '{courseCode}': {ex.Message}");
+            }
+
+            return validDates;
+        }
+
+
+        public List<DateTime> GetValidCoachingDates(int coachingDetailId)
+        {
+            List<DateTime> validDates = new List<DateTime>();
+
+            try
+            {
+                string query = @"
+            SELECT CoachingSessionHoldingDate 
+            FROM tbl_com2_Coaching_Details 
+            WHERE CoachingId = @CoachingDetailId";
+
+                var parameters = new List<SqlParameter>
+        {
+            new SqlParameter("@CoachingDetailId", coachingDetailId)
+        };
+
+                var dt = _dbOperation.ExecuteDataTable(query, CommandType.Text, parameters);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (DateTime.TryParse(row["CoachingSessionHoldingDate"].ToString(), out DateTime parsedDate))
+                        {
+                            validDates.Add(parsedDate.Date);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching valid coaching session dates for CoachingDetailId '{coachingDetailId}': {ex.Message}");
             }
 
             return validDates;

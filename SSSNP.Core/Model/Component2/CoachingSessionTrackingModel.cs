@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SSSNP_SNSOP.Core.Model.Component2
 {
-    class CoachingSessionTrackingModel : CommonModel
+    public class CoachingSessionTrackingModel : CommonModel
     {
         public int Id { get; set; }
         public string HouseholdNumber { get; set; }
-        public string CoachingDetailId { get; set; }
+        public int CoachingDetailId { get; set; }
         public DateTime? ClassAttendanceDate { get; set; }
     }
 }

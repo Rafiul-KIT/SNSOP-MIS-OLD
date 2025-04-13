@@ -135,6 +135,85 @@ namespace SSSNP.Service
             return (true, string.Empty);
         }
 
+        public ResponseModel SaveCoachingSessionTracking(List<CoachingSessionTrackingModel> request)
+        {
+            var response = new ResponseModel();
+            var errorMessages = new List<string>();
+
+            try
+            {
+                // Get valid household numbers from the repository
+                var validHouseholdNumbers = _component2Repository.GetValidHouseholdNumbers();
+
+                foreach (var obj in request)
+                {
+                    // Validate the coaching session tracking data
+                    var validationResult = IsValidData(obj, validHouseholdNumbers);
+
+                    if (!validationResult.isValid)
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        continue;
+                    }
+
+                    // Save the valid coaching session tracking record
+                    response = _component2Repository.SaveCoachingSessionTracking(obj);
+
+                    if (!response.IsSuccess)
+                    {
+                        errorMessages.Add(response.Message);
+                    }
+                }
+
+                // Set response based on errors
+                if (errorMessages.Count > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = string.Join("; ", errorMessages);
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "All coaching session records saved successfully.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when saving Coaching Session Tracking data. Error: " + ex.ToString());
+            }
+        }
+
+
+        public (bool isValid, string errorMessage) IsValidData(CoachingSessionTrackingModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
+        {
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
+            {
+                return (false, "Household Number is required.");
+            }
+
+            if (!validHouseholdNumbers.Any(hh => hh.HouseholdNumber.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
+            {
+                return (false, "Household Number is not valid.");
+            }
+
+            if (obj.CoachingDetailId == 0)
+            {
+                return (false, "Coaching Detail ID is required.");
+            }
+
+            var validSessionDates = _component2Repository.GetValidCoachingDates(obj.CoachingDetailId);
+
+            if (!validSessionDates.Contains(obj.ClassAttendanceDate?.Date ?? DateTime.MinValue))
+            {
+                return (false, $"Class Attendance Date '{obj.ClassAttendanceDate?.ToShortDateString()}' is not valid for Coaching Detail ID '{obj.CoachingDetailId}'.");
+            }
+
+            return (true, string.Empty);
+        }
+
+
         public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)
         {
             var response = new ResponseModel();

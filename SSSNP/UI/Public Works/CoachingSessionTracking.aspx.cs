@@ -52,8 +52,6 @@ namespace SSSNP.UI.Public_Works
                 }
 
 
-
-                // Parse the Excel file into a list of TrainingAttendance objects
                 using (var package = new OfficeOpenXml.ExcelPackage(fileUpload.PostedFile.InputStream))
                 {
                     int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
@@ -64,14 +62,12 @@ namespace SSSNP.UI.Public_Works
                         return;
                     }
 
-                    //for checking header
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Household Number", "Course Code", "Course Duration", "Class Attendance Date"
+                        "Household Number", "Coaching Id", "Coaching Attendance Date"
                     };
 
-                    // Validate headers
                     for (int col = 1; col <= expectedHeaders.Count; col++)
                     {
                         var header = worksheet.Cells[1, col].Text.Trim();
@@ -83,28 +79,33 @@ namespace SSSNP.UI.Public_Works
                     }
 
                     // Create a list to hold the parsed data
-                    List<TrainingAndAttendanceModel> attendanceList = new List<TrainingAndAttendanceModel>();
+                    List<CoachingSessionTrackingModel> attendanceList = new List<CoachingSessionTrackingModel>();
 
                     // Loop through the worksheet rows and populate the list
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
                         // Handle null or empty values for each column
-                        var courseCode = string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) ? null : worksheet.Cells[row, 2].Text;
-                        var courseDuration = string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 3].Text);
-                        var classAttendanceDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime parsedDate) ? (DateTime?)parsedDate : null;
+                        int coachingId = int.TryParse(worksheet.Cells[row, 2].Text, out int parsed)
+                        ? parsed
+                        : 0;
 
-                        if (string.IsNullOrWhiteSpace(courseCode) &&
-                            courseDuration == null &&
-                            classAttendanceDate == null)
+                        DateTime? classAttendanceDate = null;
+                        if (!string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) &&
+                            DateTime.TryParse(worksheet.Cells[row, 3].Text, out DateTime parsedDate))
+                        {
+                            classAttendanceDate = parsedDate;
+                        }
+
+
+                        if (coachingId == 0 && classAttendanceDate == null)
                         {
                             continue; // Skip this row
                         }
 
-                        TrainingAndAttendanceModel attendance = new TrainingAndAttendanceModel
+                        CoachingSessionTrackingModel attendance = new CoachingSessionTrackingModel
                         {
                             HouseholdNumber = worksheet.Cells[row, 1].Text,
-                            CourseCode = courseCode,
-                            CourseDuration = courseDuration ?? 0, // Default to 0 if null
+                            CoachingDetailId = coachingId,
                             ClassAttendanceDate = classAttendanceDate,
                             CreatedBy = userId,
                             ModifiedBy = userId
@@ -135,8 +136,7 @@ namespace SSSNP.UI.Public_Works
             Session["IsAnalyzing"] = true;
             try
             {
-                // Retrieve the list of TrainingAttendance objects from session
-                var attendanceList = Session["UploadedAttendanceData"] as List<TrainingAndAttendanceModel>;
+                var attendanceList = Session["UploadedAttendanceData"] as List<CoachingSessionTrackingModel>;
                 if (attendanceList == null || attendanceList.Count == 0)
                 {
                     AddErrorMessage("No file found for analysis.");
@@ -147,7 +147,7 @@ namespace SSSNP.UI.Public_Works
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));
                 dt.Columns.Add("HouseholdNumber", typeof(string));
-                dt.Columns.Add("CourseCode", typeof(string));
+                dt.Columns.Add("CoachingId", typeof(string));
                 dt.Columns.Add("ClassAttendanceDate", typeof(DateTime)); // Change to object to support null values
                 dt.Columns.Add("ValidationStatus", typeof(string)); // For error messages
 
@@ -158,7 +158,7 @@ namespace SSSNP.UI.Public_Works
                 var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
                 var validAttendanceList = attendanceList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
 
-                var uploadedDataList = new List<TrainingAndAttendanceAuditModel>();
+                var uploadedDataList = new List<CoachingSessionTrackingAuditModel>();
                 int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
                 Guid myuuid = Guid.NewGuid();
                 string FileId = myuuid.ToString().Replace("-", "").Substring(0, 10);
@@ -172,13 +172,13 @@ namespace SSSNP.UI.Public_Works
                     DataRow dr = dt.NewRow();
                     dr["Id"] = serial;
                     dr["HouseholdNumber"] = attendance.HouseholdNumber;
-                    dr["CourseCode"] = attendance.CourseCode;
+                    dr["CoachingId"] = attendance.CoachingDetailId;
                     dr["ClassAttendanceDate"] = attendance.ClassAttendanceDate;
 
-                    TrainingAndAttendanceAuditModel auditEntityObj = new TrainingAndAttendanceAuditModel();
+                    CoachingSessionTrackingAuditModel auditEntityObj = new CoachingSessionTrackingAuditModel();
                     auditEntityObj.FileId = FileId;
                     auditEntityObj.HouseholdNumber = attendance.HouseholdNumber;
-                    auditEntityObj.CourseCode = attendance.CourseCode;
+                    auditEntityObj.CoachingDetailId = attendance.CoachingDetailId;
                     auditEntityObj.ClassAttendanceDate = attendance.ClassAttendanceDate;
 
                     // Collect error messages to display in the ValidationStatus column
@@ -232,17 +232,17 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 // Retrieve the list of TrainingAttendance objects from session
-                var attendanceList = Session["UploadedAttendanceData"] as List<TrainingAndAttendanceModel>;
+                var attendanceList = Session["UploadedAttendanceData"] as List<CoachingSessionTrackingModel>;
                 if (attendanceList == null || attendanceList.Count == 0)
                 {
                     AddErrorMessage("No data available for import.");
                     return;
                 }
 
-                var allDataList = Session["UploadedTrainingAndAttendanceAllData"] as List<TrainingAndAttendanceAuditModel>;
+                var allDataList = Session["UploadedTrainingAndAttendanceAllData"] as List<CoachingSessionTrackingAuditModel>;
                 if (allDataList != null && allDataList.Count > 0)
                 {
-                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Training_Attendance_Audit");
+                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Coaching_Session_Attendance_Audit");
                 }
                 Session["UploadedTrainingAndAttendanceAllData"] = null;
 
@@ -256,7 +256,7 @@ namespace SSSNP.UI.Public_Works
                 }
 
                 // Save the valid data using the service layer
-                var response = _component2Service.SaveTrainingAndAttendanceTracking(validEntries);
+                var response = _component2Service.SaveCoachingSessionTracking(validEntries);
 
                 if (response.IsSuccess)
                 {
@@ -284,7 +284,7 @@ namespace SSSNP.UI.Public_Works
 
             try
             {
-                int totalRecordCount = GetTrainingAttendanceDataCount();
+                int totalRecordCount = GetCoachingSessionTrackingCount();
                 Session["TotalRecordCount"] = totalRecordCount;
                 RadGrid.CurrentPageIndex = 0;
                 RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
@@ -317,7 +317,7 @@ namespace SSSNP.UI.Public_Works
                 else
                 {
                     // Fetch the data for the search result
-                    dt = GetTrainingAttendanceData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                    dt = GetCoachingSessionAttendanceData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
                 }
 
                 // Bind the fetched data to the RadGrid
@@ -344,7 +344,7 @@ namespace SSSNP.UI.Public_Works
 
 
         // Fetch paginated data from the database
-        private int GetTrainingAttendanceDataCount()
+        private int GetCoachingSessionTrackingCount()
         {
             int totalRecords = 0;
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -355,7 +355,7 @@ namespace SSSNP.UI.Public_Works
                 {
                     conn.Open(); // Ensure the connection is opened
 
-                    string query = @"SELECT COUNT(*) FROM tbl_com2_Training_Attendance WHERE 1=1;";
+                    string query = @"SELECT COUNT(*) FROM tbl_com2_Coaching_Session_Attendace WHERE 1=1;";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -372,7 +372,7 @@ namespace SSSNP.UI.Public_Works
             return totalRecords;
         }
 
-        private DataTable GetTrainingAttendanceData(int pageIndex, int pageSize)
+        private DataTable GetCoachingSessionAttendanceData(int pageIndex, int pageSize)
         {
             DataTable dt = new DataTable();
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -380,11 +380,12 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 // Construct the query with parameters for pagination
-                string query = @"SELECT Id, HouseholdNumber, CourseCode, ClassAttendanceDate 
-                         FROM tbl_com2_Training_Attendance 
-                         ORDER BY Id 
-                         OFFSET @Offset ROWS 
-                         FETCH NEXT @PageSize ROWS ONLY;";
+                string query = @"
+                SELECT Id, HouseholdNumber, CoachingDetailId, CoachingAttendanceDate 
+                FROM tbl_com2_Coaching_Session_Attendance 
+                ORDER BY Id 
+                OFFSET @Offset ROWS 
+                FETCH NEXT @PageSize ROWS ONLY;";
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
