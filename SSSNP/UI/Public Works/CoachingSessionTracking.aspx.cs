@@ -201,7 +201,7 @@ namespace SSSNP.UI.Public_Works
                     serial++;
                 }
 
-                Session["UploadedTrainingAndAttendanceAllData"] = uploadedDataList;
+                Session["UploadedCoachingSessionAttendanceAllData"] = uploadedDataList;
 
                 // Bind the data to RadGrid for display
                 Session["AnalyzedData"] = dt;
@@ -239,12 +239,12 @@ namespace SSSNP.UI.Public_Works
                     return;
                 }
 
-                var allDataList = Session["UploadedTrainingAndAttendanceAllData"] as List<CoachingSessionTrackingAuditModel>;
+                var allDataList = Session["UploadedCoachingSessionAttendanceAllData"] as List<CoachingSessionTrackingAuditModel>;
                 if (allDataList != null && allDataList.Count > 0)
                 {
                     _component2Service.SaveAuditLog(allDataList, "tbl_com2_Coaching_Session_Attendance_Audit");
                 }
-                Session["UploadedTrainingAndAttendanceAllData"] = null;
+                Session["UploadedCoachingSessionAttendanceAllData"] = null;
 
                 // Filter valid entries from the attendance list
                 var validEntries = attendanceList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
@@ -355,7 +355,7 @@ namespace SSSNP.UI.Public_Works
                 {
                     conn.Open(); // Ensure the connection is opened
 
-                    string query = @"SELECT COUNT(*) FROM tbl_com2_Coaching_Session_Attendace WHERE 1=1;";
+                    string query = @"SELECT COUNT(*) FROM tbl_com2_Coaching_Session_Attendance WHERE 1=1;";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {

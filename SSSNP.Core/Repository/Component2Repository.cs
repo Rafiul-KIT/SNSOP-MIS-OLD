@@ -1410,6 +1410,33 @@ namespace SSSNP_SNSOP.Core.Repository
             return validDates;
         }
 
+        public Dictionary<string, int> GetExistingCoachingId()
+        {
+            Dictionary<string, int> coachingDetailId = new Dictionary<string, int>();
+            try
+            {
+                // Assuming CoachingId is the business identifier and Id is the primary key
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CoachingId FROM tbl_com2_Coaching_Details", CommandType.Text);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string coachingId = row["CoachingId"].ToString();
+                        int id = Convert.ToInt32(row["Id"]);
+                        if (!coachingDetailId.ContainsKey(coachingId))
+                        {
+                            coachingDetailId.Add(coachingId, id);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching Coaching Detail Codes: " + ex.Message);
+            }
+
+            return coachingDetailId;
+        }
 
         public List<DateTime> GetValidCoachingDates(int coachingDetailId)
         {
