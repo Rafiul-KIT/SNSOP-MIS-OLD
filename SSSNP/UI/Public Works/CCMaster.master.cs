@@ -59,6 +59,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
         HouseholdGroupView.Visible = value;
         HouseholdAndGroupIdMapping.Visible = value;
         BeneficiaryRandomizationandEnrollment.Visible = value;
+        CourseEntity.Visible = value;
+        CourseDetails.Visible = value;
         TrainingandAttendanceTracking.Visible = value;
         BusinessPlanDevelopment.Visible = value;
         LivelihoodGrantDisbursement.Visible = value;
@@ -324,6 +326,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     HouseholdGroupView.Visible = true;
                     HouseholdAndGroupIdMapping.Visible = true;
                     BeneficiaryRandomizationandEnrollment.Visible = true;
+                    CourseEntity.Visible = true;
+                    CourseDetails.Visible = true;
                     TrainingandAttendanceTracking.Visible = true;
                     BusinessPlanDevelopment.Visible = true;
                     LivelihoodGrantDisbursement.Visible = true;
@@ -420,6 +424,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 HouseholdGroupView.Visible = true;
                 HouseholdAndGroupIdMapping.Visible = true;
                 BeneficiaryRandomizationandEnrollment.Visible = true;
+                CourseEntity.Visible = true;
+                CourseDetails.Visible = true;
                 TrainingandAttendanceTracking.Visible = true;
                 BusinessPlanDevelopment.Visible = true;
                 LivelihoodGrantDisbursement.Visible = true;
@@ -460,6 +466,20 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiCO1.Visible = true;
                 LiCO2.Visible = true;
                 LiMNE.Visible = true;
+
+                EconomicOpportunities.Visible = true;
+                EconomicOpportunitiesDashboard.Visible = true;
+                Component2TemplateImporting.Visible = true;
+                HouseholdGroupView.Visible = true;
+                HouseholdAndGroupIdMapping.Visible = true;
+                BeneficiaryRandomizationandEnrollment.Visible = true;
+                CourseEntity.Visible = true;
+                CourseDetails.Visible = true;
+                TrainingandAttendanceTracking.Visible = true;
+                BusinessPlanDevelopment.Visible = true;
+                LivelihoodGrantDisbursement.Visible = true;
+                FinancialServiceLinkageTracking.Visible = true;
+                CoachingSessionTracking.Visible = true;
             }
             if (Session["user_type"].ToString() == "Specialist")
             {

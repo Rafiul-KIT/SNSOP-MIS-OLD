@@ -197,9 +197,6 @@ namespace SSSNP.Asynch
                             catch (Exception exc)
                             {
                                 eLog.LogError(exc);
-                            }
-                            if (response == null)
-                            {
                                 Thread.Sleep(600000);
                                 continue;
                             }
