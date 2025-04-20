@@ -507,6 +507,9 @@ namespace SSSNP.UI.Public_Works
                     case 26:
                         rgResults.DataSource = dt;
                         break; // Not in db yet
+                    case 27:
+                        rgResults.DataSource = dt;
+                        break;
                 }
 
                 rgResults.Visible = true;
