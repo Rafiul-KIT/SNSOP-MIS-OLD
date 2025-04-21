@@ -17,6 +17,7 @@ using OfficeOpenXml;
 using Telerik.Web.UI;
 using System.Net;
 using HtmlAgilityPack;
+using SSSNP_SNSOP.App_Code;
 
 public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
 {
@@ -29,6 +30,7 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
     decimal paidamount, AttendanceCount, paidamounta;
     General Gen = new General();
     comFunctions cmf = new comFunctions();
+    ErrorLogger eLog = new ErrorLogger();
     protected void Page_Load(object sender, EventArgs e)
     {
         this.BtnSave3.Attributes.Add("onclick", DisableTheButton(this.Page, this.BtnSave3, "group"));
@@ -46,6 +48,8 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
                 ddlIP.SelectedValue = ddlIP.Items.FindByValue(Session["User_Code"].ToString().Trim()).Value;
                 ddlIP.Enabled = false;
             }
+            //btnPrintSelected.Visible = false;
+
             btnPrintSelected.Enabled = false;
             BtnPrint.Enabled = false;
             btnexp.Enabled = false;
@@ -310,6 +314,16 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
         strUrlInvoicePrint = strCurrentURL.Replace("WageAbstractReportsPaidAPI", "BulkInvoicePrintAutoRec") + "?intWageReqId={0}";
         //strUrlInvoicePrint = strCurrentURL+ "BulkInvoicePrint.aspx?intWageReqId={0}";
 
+        string snsopweb = "";
+        if (ConfigurationManager.AppSettings["build.profile.active"].ToString() == "prod")
+        {
+            snsopweb = ConfigurationManager.AppSettings["SSSNPWEB"].ToString() + "UI/Public Works/BulkInvoicePrintAutoRec.aspx?intWageReqId={0}";
+        }
+        else
+        {
+            snsopweb = strUrlInvoicePrint;
+        }
+
         foreach (GridDataItem dataItem in rgDetails.MasterTableView.Items)
         {
             if ((dataItem.FindControl("chkSelected") as CheckBox).Checked)
@@ -322,7 +336,7 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
 
         if (lsIntWageReqNo.Count == 0)
         {
-            LblResultA.Text = "At least  one Invoice should be selected";
+            LblResultA.Text = "At least one Invoice should be selected";
             LblResultA.Visible = true;
             ScriptManager.RegisterClientScriptBlock((sender as Control), this.GetType(), "alert", lblmessage.Text, true);
             //return;
@@ -338,11 +352,28 @@ public partial class WageAbstractReportsPaidAPI : System.Web.UI.Page
                 //call page for invoice rendering and  get HTML of panel
                 //string strCompleteUrl = strUrlInvoicePrint + "?intWageReqId=" + strIntWageReqNoTemp;
                 WebClient WebCl = new WebClient();
-                string strCompleteUrl = string.Format(strUrlInvoicePrint, strIntWageReqNoTemp);
-                string strHtmlInvTemp = WebCl.DownloadString(strCompleteUrl);
+                //string strCompleteUrl = string.Format(strUrlInvoicePrint, strIntWageReqNoTemp);
+                //string strHtmlInvTemp = WebCl.DownloadString(strCompleteUrl);
+
+                string strCompleteUrl1 = string.Format(snsopweb, strIntWageReqNoTemp);
+                string strHtmlInvTemp1 = null;
+                try
+                {
+                    strHtmlInvTemp1 = WebCl.DownloadString(strCompleteUrl1);
+                }
+                catch (Exception ex)
+                {
+                    eLog.LogError(ex);
+                    LblResultA.Text = ex.ToString();
+                    LblResultA.Visible = true;
+                    ScriptManager.RegisterClientScriptBlock((sender as Control), this.GetType(), "alert", lblmessage.Text, true);
+                    return;
+                } 
+
                 HtmlDocument htmInvTemp = new HtmlDocument();
-                htmInvTemp.CreateElement("head"); 
-                htmInvTemp.LoadHtml(strHtmlInvTemp);
+                htmInvTemp.CreateElement("head");
+                //htmInvTemp.LoadHtml(strHtmlInvTemp);
+                htmInvTemp.LoadHtml(strHtmlInvTemp1);
                 HtmlNode nodePnl1 = htmInvTemp.GetElementbyId("pnl1");
                 strAllInvoices = strAllInvoices + nodePnl1.InnerHtml + strNewPage;
             }

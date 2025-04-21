@@ -189,9 +189,18 @@ namespace SSSNP.Asynch
                             httpWReq.ProtocolVersion = HttpVersion.Version11;
                             httpWReq.Method = "GET";
                             httpWReq.ContentType = "application/json; charset=utf-8";
-
-                            HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
-                            string s = response.ToString();
+                            HttpWebResponse response = null;
+                            try
+                            {
+                                response = (HttpWebResponse)httpWReq.GetResponse();
+                            }
+                            catch (Exception exc)
+                            {
+                                eLog.LogError(exc);
+                                Thread.Sleep(600000);
+                                continue;
+                            }
+                            //string s = response.ToString();
                             StreamReader reader = new StreamReader(response.GetResponseStream());
                             String jsonresponse = "";
                             String temp = null;
