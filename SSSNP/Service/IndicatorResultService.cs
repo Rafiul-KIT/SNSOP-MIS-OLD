@@ -163,11 +163,11 @@ namespace SSSNP.Service
             {
                 string sql = "select 'Total' as 'IndicatorKey'," +
                     " cast(round(sum(IIF(Status = 5, 1, 0))*100.0/count(*),2) as double precision) IndicatorValue" +
-                    ((request.grievanceCategory != null && request.grievanceCategory.Equals("N")) ? 
+                    ((request.grievanceCategory != null && request.grievanceCategory.Equals("N")) ?
                     " from NonGBVMain" : " from GBVMain");
                 List<SqlParameter> list = new List<SqlParameter>();
 
-                sql = modify(request, sql, list);
+                sql = GBVmodify(request, sql, list);
 
                 DataTable dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, list);
                 return dt;
@@ -267,5 +267,35 @@ namespace SSSNP.Service
 
             return sql;
         }
+
+        private string GBVmodify(IndicatorResultQuery request, string sql, List<SqlParameter> list)
+        {
+            if (request.stateId != null)
+            {
+                sql += " AND StateID = @stateId";
+                list.Add(new SqlParameter("@stateId", request.stateId));
+            }
+
+            if (request.countyId != null)
+            {
+                sql += " AND CountyID = @countyId";
+                list.Add(new SqlParameter("@countyId", request.countyId));
+            }
+
+            if (request.payamId != null)
+            {
+                sql += " AND PayamID = @payamId";
+                list.Add(new SqlParameter("@payamId", request.payamId));
+            }
+
+            if (request.bomaId != null)
+            {
+                sql += " AND BomaID = @bomaId";
+                list.Add(new SqlParameter("@bomaId", request.bomaId));
+            }
+
+            return sql;
+        }
+
     }
 }

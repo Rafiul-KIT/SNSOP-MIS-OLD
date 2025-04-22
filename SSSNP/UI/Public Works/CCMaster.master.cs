@@ -460,6 +460,22 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiTST6.Visible = true;
                     LiTST7.Visible = true;
                     LiTST8.Visible = true;
+
+                    LiMNE.Visible = true;
+                    EconomicOpportunities.Visible = true;
+                    EconomicOpportunitiesDashboard.Visible = true;
+                    Component2TemplateImporting.Visible = true;
+                    HouseholdGroupView.Visible = true;
+                    HouseholdAndGroupIdMapping.Visible = true;
+                    BeneficiaryRandomizationandEnrollment.Visible = true;
+                    CourseEntity.Visible = true;
+                    CourseDetails.Visible = true;
+                    TrainingandAttendanceTracking.Visible = true;
+                    BusinessPlanDevelopment.Visible = true;
+                    LivelihoodGrantDisbursement.Visible = true;
+                    FinancialServiceLinkageTracking.Visible = true;
+                    CoachingSessionTracking.Visible = true;
+                    AuditRecordDownload.Visible = true;
                 }
             }
             if (Session["user_type"].ToString() == "Cordinator")
@@ -482,6 +498,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LivelihoodGrantDisbursement.Visible = true;
                 FinancialServiceLinkageTracking.Visible = true;
                 CoachingSessionTracking.Visible = true;
+                AuditRecordDownload.Visible = true;
             }
             if (Session["user_type"].ToString() == "Specialist")
             {
@@ -496,6 +513,21 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiManger2.Visible = true;
                 LiReviewVerify.Visible = true;
                 LiMNE.Visible = true;
+
+                EconomicOpportunities.Visible = true;
+                EconomicOpportunitiesDashboard.Visible = true;
+                Component2TemplateImporting.Visible = true;
+                HouseholdGroupView.Visible = true;
+                HouseholdAndGroupIdMapping.Visible = true;
+                BeneficiaryRandomizationandEnrollment.Visible = true;
+                CourseEntity.Visible = true;
+                CourseDetails.Visible = true;
+                TrainingandAttendanceTracking.Visible = true;
+                BusinessPlanDevelopment.Visible = true;
+                LivelihoodGrantDisbursement.Visible = true;
+                FinancialServiceLinkageTracking.Visible = true;
+                CoachingSessionTracking.Visible = true;
+                AuditRecordDownload.Visible = true;
             }
             if (Session["user_type"].ToString() == "WB")
             {
@@ -511,7 +543,22 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 gbvNewMenu.Visible = true;
                 gbvNewMenuDashboard.Visible = true;
                 grmReport.Visible = false;
-                grmImporting.Visible = false;               
+                grmImporting.Visible = false;
+
+                EconomicOpportunities.Visible = true;
+                EconomicOpportunitiesDashboard.Visible = true;
+                Component2TemplateImporting.Visible = true;
+                HouseholdGroupView.Visible = true;
+                HouseholdAndGroupIdMapping.Visible = true;
+                BeneficiaryRandomizationandEnrollment.Visible = true;
+                CourseEntity.Visible = true;
+                CourseDetails.Visible = true;
+                TrainingandAttendanceTracking.Visible = true;
+                BusinessPlanDevelopment.Visible = true;
+                LivelihoodGrantDisbursement.Visible = true;
+                FinancialServiceLinkageTracking.Visible = true;
+                CoachingSessionTracking.Visible = true;
+                AuditRecordDownload.Visible = true;
             }
 
             if (Session["user_type"].ToString() == "Adm")
@@ -523,6 +570,21 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiTST8.Visible = true;
                 LiUM.Visible = true;
                 LiMNE.Visible = true;
+
+                EconomicOpportunities.Visible = true;
+                EconomicOpportunitiesDashboard.Visible = true;
+                Component2TemplateImporting.Visible = true;
+                HouseholdGroupView.Visible = true;
+                HouseholdAndGroupIdMapping.Visible = true;
+                BeneficiaryRandomizationandEnrollment.Visible = true;
+                CourseEntity.Visible = true;
+                CourseDetails.Visible = true;
+                TrainingandAttendanceTracking.Visible = true;
+                BusinessPlanDevelopment.Visible = true;
+                LivelihoodGrantDisbursement.Visible = true;
+                FinancialServiceLinkageTracking.Visible = true;
+                CoachingSessionTracking.Visible = true;
+                AuditRecordDownload.Visible = true;
             }
             if (Session["user_type"].ToString() == ConfigurationManager.AppSettings["PaymentCycleDocumentUploadRole"].ToString())
             {
@@ -537,6 +599,21 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiAlpha2.Visible = false;
                 liEnvSpec.Visible = true;
                 LiMNE.Visible = true;
+
+                EconomicOpportunities.Visible = true;
+                EconomicOpportunitiesDashboard.Visible = true;
+                Component2TemplateImporting.Visible = true;
+                HouseholdGroupView.Visible = true;
+                HouseholdAndGroupIdMapping.Visible = true;
+                BeneficiaryRandomizationandEnrollment.Visible = true;
+                CourseEntity.Visible = true;
+                CourseDetails.Visible = true;
+                TrainingandAttendanceTracking.Visible = true;
+                BusinessPlanDevelopment.Visible = true;
+                LivelihoodGrantDisbursement.Visible = true;
+                FinancialServiceLinkageTracking.Visible = true;
+                CoachingSessionTracking.Visible = true;
+                AuditRecordDownload.Visible = true;
             }
             if (Session["user_type"].ToString() == "QualEng")
             {

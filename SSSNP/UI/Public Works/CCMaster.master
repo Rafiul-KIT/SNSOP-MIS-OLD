@@ -570,7 +570,7 @@
                                                 </ul>
                                             </li>
 
-                                            <li id ="LiFSPInvoice" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-print"></i>FSP Invoice</a>
+                                            <li id ="LiFSPInvoice" runat="server" class='has-sub' visible="false"><a href='#'><i class="fa fa-fw fa-print"></i>FSP Invoice</a>
                                                 <ul class =" down_menu">
                                                     <li><a href ="FSPInvoiceUpload.aspx">FSP Invoice Upload</a></li>
                                                     <li><a href ="InvoiceAdminApproval.aspx">Invoice Admin Approval</a></li>
