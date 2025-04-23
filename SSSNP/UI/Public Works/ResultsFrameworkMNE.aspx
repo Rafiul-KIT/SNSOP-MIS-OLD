@@ -158,13 +158,23 @@
                                                 </tr>
                                                 <tr id="GrievanceCategoryTR" runat="server" visible="false">
                                                     <td style="padding: 5px; width: 66px;">
-                                                        <asp:Label ID="Label6" runat="server" CssClass="LBLBLACK" Width="165px">Grievance Category</asp:Label>
+                                                        <asp:Label ID="Label6" runat="server" CssClass="LBLBLACK" Width="165px">Grievance Category<span style="color:red">*</span></asp:Label>
                                                     </td>
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlGrievanceCategory" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True">
                                                             <asp:ListItem Value="">--Select--</asp:ListItem>
                                                         </asp:DropDownList>
+                                                        <br />
+                                                        <asp:RequiredFieldValidator
+                                                            ID="rfvGrievanceCategory"
+                                                            runat="server"
+                                                            ControlToValidate="ddlGrievanceCategory"
+                                                            InitialValue=""
+                                                            ErrorMessage="Please select a grievance category."
+                                                            ForeColor="Red"
+                                                            Display="Dynamic"
+                                                            CssClass="validation-error" />
                                                     </td>
                                                 </tr>
                                             </table>

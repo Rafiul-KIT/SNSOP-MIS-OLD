@@ -898,7 +898,7 @@
                                                                     class="form-control txtbox" Height="36px" AutoPostBack="True"
                                                                     OnSelectedIndexChanged="ddlEnvSpecStatus_SelectedIndexChanged">
                                                                     <asp:ListItem>ES-Approved</asp:ListItem>
-                                                                    <%--<asp:ListItem>QE-Approved</asp:ListItem>--%>
+                                                                    <asp:ListItem>QE-Approved</asp:ListItem>
                                                                     <%--<asp:ListItem>QE-Rejected</asp:ListItem>--%>
                                                                     <%--<asp:ListItem>TST-Rejected</asp:ListItem>--%>
                                                                     <asp:ListItem>ES-Rejected</asp:ListItem>
@@ -941,7 +941,7 @@
                                                                     <asp:ListItem>QE-Rejected</asp:ListItem>
                                                                     <%--<asp:ListItem>TST-Rejected</asp:ListItem>--%>
                                                                     <%--<asp:ListItem>ES-Rejected</asp:ListItem>--%>
-                                                                    <%--<asp:ListItem>IP-Submitted</asp:ListItem>--%>
+                                                                    <asp:ListItem>IP-Submitted</asp:ListItem>
                                                                     <%--<asp:ListItem>InProgress</asp:ListItem>--%>
                                                                 </asp:DropDownList>
                                                             </td>
