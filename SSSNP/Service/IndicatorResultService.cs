@@ -164,7 +164,7 @@ namespace SSSNP.Service
                 string sql = "select 'Total' as 'IndicatorKey'," +
                     " cast(round(sum(IIF(Status = 5, 1, 0))*100.0/count(*),2) as double precision) IndicatorValue" +
                     ((request.grievanceCategory != null && request.grievanceCategory.Equals("N")) ?
-                    " from NonGBVMain" : " from GBVMain");
+                    " from NonGBVMain where 1=1" : " from GBVMain where 1=1");
                 List<SqlParameter> list = new List<SqlParameter>();
 
                 sql = GBVmodify(request, sql, list);
