@@ -796,13 +796,13 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiTST7;
 
     /// <summary>
-    /// LiTST8 control.
+    /// InvoicePrintsMenu control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiTST8;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl InvoicePrintsMenu;
 
     /// <summary>
     /// LiFSPInvoice control.

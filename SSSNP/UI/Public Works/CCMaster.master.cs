@@ -101,7 +101,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         LiTST5.Visible = value;
         LiTST6.Visible = value;
         LiTST7.Visible = value;
-        LiTST8.Visible = value;
+        InvoicePrintsMenu.Visible = value;
 
         LiCO1.Visible = value;
         LiCO2.Visible = value;
@@ -197,7 +197,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         LiTST6.Visible = false;
         LiTST5.Visible = false;
         LiTST7.Visible = false;
-        LiTST8.Visible = false;
+        InvoicePrintsMenu.Visible = false;
         LiReviewVerify.Visible = false;
         LiCO1.Visible = false;
         LiSpeccialist1.Visible = false;
@@ -313,7 +313,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
                     LiIp10.Visible = true;
 
-                    LiTST8.Visible = true;
+                    InvoicePrintsMenu.Visible = true;
 
                     LiPayroll.Visible = true;
                     payrollDownload.Visible = true;
@@ -378,7 +378,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 WagePaidAbstractDISReportMenu.Visible = true;
                 WagePaidAbstractBiometricReportMenu.Visible = true;
 
-                LiTST8.Visible = true;
+                InvoicePrintsMenu.Visible = true;
             }
             if (Session["user_type"].ToString() == "MIS")
             {
@@ -414,7 +414,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiIp8.Visible = true;
                 LiPaymentReports.Visible = true;
                 LiIp10.Visible = true;
-                LiTST8.Visible = true;
+                InvoicePrintsMenu.Visible = true;
                 LiPayroll.Visible = true;
                 payrollDownload.Visible = true;
                 payrollReconcile.Visible = true;
@@ -459,7 +459,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiTST5.Visible = true;
                     LiTST6.Visible = true;
                     LiTST7.Visible = true;
-                    LiTST8.Visible = true;
+                    InvoicePrintsMenu.Visible = true;
 
                     LiMNE.Visible = true;
                     EconomicOpportunities.Visible = true;
@@ -482,7 +482,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
             {
                 LiReviewVerify.Visible = true;
                 LiCO1.Visible = true;
-                LiCO2.Visible = true;
+                //LiCO2.Visible = true;
                 LiMNE.Visible = true;
 
                 EconomicOpportunities.Visible = true;
@@ -503,14 +503,16 @@ public partial class CCMaster : System.Web.UI.MasterPage
             if (Session["user_type"].ToString() == "Specialist")
             {
                 LiSpeccialist1.Visible = true;
-                LiSpeccialist2.Visible = true;
+                //LiSpeccialist2.Visible = true;
                 LiReviewVerify.Visible = true;
                 LiMNE.Visible = true;
+
+                InvoicePrintsMenu.Visible = true;
             }
             if (Session["user_type"].ToString() == "Manager")
             {
                 LiManger1.Visible = true;
-                LiManger2.Visible = true;
+                //LiManger2.Visible = true;
                 LiReviewVerify.Visible = true;
                 LiMNE.Visible = true;
 
@@ -567,7 +569,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 //   Masters2.Visible = true;
                 LiTST6.Visible = true;
                 LiTST7.Visible = true;
-                LiTST8.Visible = true;
+                InvoicePrintsMenu.Visible = true;
                 LiUM.Visible = true;
                 LiMNE.Visible = true;
 

@@ -558,13 +558,10 @@
 
                                                 </ul>
                                             </li>
-                                            <li id="LiTST8" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-print"></i>Invoice Prints</a>
+                                            <li id="InvoicePrintsMenu" runat="server" class='has-sub'><a href='#'><i class="fa fa-fw fa-print"></i>Invoice Prints</a>
                                                 <ul class="down_menu">
                                                     <li><a href="WageAbstractReportsPaidAPI.aspx">Wage Paid and Invoice Print </a></li>
                                                     <li><a href="InvoicePrintView.aspx">Payment Cycle wise Invoice Print </a></li>
-                                                    <li><a href="FSP">Payment Cycle wise Invoice Print </a></li>
-
-
                                                     <%-- <li><a href="WagePaidInvoiceCyclewise.aspx">Wage Paid Wage Cycle wise Report </a> </li> --%>
                                                     <%-- <li><a href="BomaPaidInvoiceCyclewise.aspx">Boma wise Wage Cycle Abstract </a> </li> --%>
                                                 </ul>
