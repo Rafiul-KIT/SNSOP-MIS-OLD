@@ -11,23 +11,25 @@ public partial class WageDraftRejectedList : System.Web.UI.Page
     comFunctions cmf = new comFunctions();
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session.Count == 0)
-        {
-            Response.Redirect("../../frmuserlogin.aspx");
-        }
-        HttpContext.Current.Server.ScriptTimeout = 1000;
+        Response.Redirect("../../frmuserlogin.aspx"); // Boss wants us to not show this menu right now
 
-        this.btnSearch.Attributes.Add("onclick", DisableTheButton(this.Page, this.btnSearch, "group"));
-        if (!IsPostBack)
-        {
-            Gen.getStates(ddlState);
-            Gen.getIpDet(ddlIP);
-            if (Session["user_type"].ToString().Trim() == "IP")
-            {
-                ddlIP.SelectedValue = ddlIP.Items.FindByValue(Session["User_Code"].ToString().Trim()).Value;
-                ddlIP.Enabled = false;
-            }
-        }
+        //if (Session.Count == 0)
+        //{
+        //    Response.Redirect("../../frmuserlogin.aspx");
+        //}
+        //HttpContext.Current.Server.ScriptTimeout = 1000;
+
+        //this.btnSearch.Attributes.Add("onclick", DisableTheButton(this.Page, this.btnSearch, "group"));
+        //if (!IsPostBack)
+        //{
+        //    Gen.getStates(ddlState);
+        //    Gen.getIpDet(ddlIP);
+        //    if (Session["user_type"].ToString().Trim() == "IP")
+        //    {
+        //        ddlIP.SelectedValue = ddlIP.Items.FindByValue(Session["User_Code"].ToString().Trim()).Value;
+        //        ddlIP.Enabled = false;
+        //    }
+        //}
     }
 
     protected void BtnCancel_Click(object sender, EventArgs e)

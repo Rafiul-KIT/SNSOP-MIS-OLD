@@ -38,9 +38,6 @@ public partial class CCMaster : System.Web.UI.MasterPage
         lipwExportMenu.Visible = value;
         BeneficiaryListMenu.Visible = value;
 
-        RejectedWages.Visible = value;
-        WageRequestDraft.Visible = value;
-
         LiIp4.Visible = value;
 
         LiIp5.Visible = value;
@@ -295,7 +292,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiIp5.Visible = true;
                     WageRequestApplyLIPW.Visible = true;
                     WageRequestApplyDIS.Visible = true;
-                    RejectedWages.Visible = true;
+                    //RejectedWages.Visible = true;
 
                     LiIp6.Visible = true;
                     nongbvMenu.Visible = true;
