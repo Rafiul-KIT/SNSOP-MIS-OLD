@@ -385,6 +385,7 @@
     <Content Include="UI\Public Works\BeneficiaryRandomizationandEnrollment.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrint.aspx" />
     <Content Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx" />
+    <Content Include="UI\Public Works\CoachingDetails.aspx" />
     <Content Include="UI\Public Works\CourseDetails.aspx" />
     <Content Include="UI\Public Works\CourseEntity.aspx" />
     <Content Include="UI\Public Works\EconomicOpportunitiesDashboard.aspx" />
@@ -988,6 +989,13 @@
     </Compile>
     <Compile Include="UI\Public Works\BulkInvoicePrintAutoRec.aspx.designer.cs">
       <DependentUpon>BulkInvoicePrintAutoRec.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\CoachingDetails.aspx.cs">
+      <DependentUpon>CoachingDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\CoachingDetails.aspx.designer.cs">
+      <DependentUpon>CoachingDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\CourseDetails.aspx.cs">
       <DependentUpon>CourseDetails.aspx</DependentUpon>
