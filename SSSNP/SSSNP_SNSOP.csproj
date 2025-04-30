@@ -661,6 +661,7 @@
     <Content Include="UI\Public Works\PDCWorkProgress.aspx" />
     <Content Include="UI\Public Works\PDCWorkProgress12.aspx" />
     <Content Include="UI\Public Works\PublicWorksApproval.aspx" />
+    <Content Include="UI\Public Works\RejectedWagesDeletion.aspx" />
     <Content Include="UI\Public Works\ReportsDashboard.aspx" />
     <Content Include="UI\Public Works\ReportsMNE.aspx" />
     <Content Include="UI\Public Works\Result.aspx" />
@@ -1994,6 +1995,13 @@
     </Compile>
     <Compile Include="UI\Public Works\PublicWorksApproval.aspx.designer.cs">
       <DependentUpon>PublicWorksApproval.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\RejectedWagesDeletion.aspx.cs">
+      <DependentUpon>RejectedWagesDeletion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\RejectedWagesDeletion.aspx.designer.cs">
+      <DependentUpon>RejectedWagesDeletion.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\ReportsDashboard.aspx.designer.cs">
       <DependentUpon>ReportsDashboard.aspx</DependentUpon>
