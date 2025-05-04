@@ -204,7 +204,7 @@
                                                                     CssClass="GRD" ForeColor="#333333"
                                                                     OnPageIndexChanging="grdRejectedWagesDraft_PageIndexChanging" AutoGenerateColumns="false"
                                                                     OnRowDataBound="grdRejectedWagesDraft_RowDataBound"
-                                                                    OnSelectedIndexChanged="grdRejectedWagesDraft_SelectedIndexChanged" PageSize="50"
+                                                                    OnSelectedIndexChanged="grdRejectedWagesDraft_SelectedIndexChanged" PageSize="50" AllowPaging="True"
                                                                     Width="100%" OnPreRender="grdRejectedWagesDraft_PreRender">
                                                                     <FooterStyle BackColor="#013161" Font-Bold="True" ForeColor="White" />
                                                                     <RowStyle BackColor="#FFFFFF" CssClass="GRDITEM" HorizontalAlign="Left"
@@ -219,10 +219,15 @@
                                                                         </asp:TemplateField>
                                                                         <asp:TemplateField HeaderText="Beneficiaries">
                                                                             <ItemTemplate>
-                                                                                <asp:HyperLink runat="server" class="fa fa-edit" Target="_blank" ID="hlRedirect" NavigateUrl='<%# String.Format("ViewRejectedWage.aspx?WorkReqId={0}",  Eval("intWagePaymentReqid")) %>' Text='View'>
-                                                                                </asp:HyperLink>
+                                                                                <asp:HyperLink
+                                                                                    ID="hlRedirect"
+                                                                                    runat="server"
+                                                                                    CssClass="fa fa-edit"
+                                                                                    Target="_blank"
+                                                                                    NavigateUrl='<%# String.Format("ViewRejectedWage.aspx?WorkReqId={0}", Eval("intWagePaymentReqid")) %>'>View</asp:HyperLink>
                                                                             </ItemTemplate>
                                                                         </asp:TemplateField>
+
                                                                         <asp:BoundField DataField="Reqno" HeaderText="Request Number" />
                                                                         <asp:BoundField DataField="StateName" HeaderText="State" />
                                                                         <asp:BoundField DataField="CountieName" HeaderText="County" />
@@ -231,14 +236,9 @@
                                                                         <asp:BoundField DataField="WorkCode" HeaderText="Work Code" />
                                                                         <asp:BoundField DataField="reqFromDate" HeaderText="From Date" />
                                                                         <asp:BoundField DataField="reqToDate" HeaderText="To Date" />
-                                                             <%--           <asp:BoundField DataField="TotalMembers" HeaderText="Total Members" />
-                                                                        <asp:BoundField DataField="TotalWorkDays" HeaderText="Work Days" /> --%> 
                                                                         <asp:BoundField DataField="PaymentCycle" HeaderText="Payment Cycle" />
                                                                     </Columns>
                                                                     <PagerStyle BackColor="#013161" ForeColor="White" HorizontalAlign="Center" />
-                                                                    <EmptyDataTemplate>
-                                                                        No Request found
-                                                                    </EmptyDataTemplate>
                                                                     <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
                                                                     <HeaderStyle BackColor="#013161" CssClass="GRDHEADER" Font-Bold="True"
                                                                         ForeColor="White" />
@@ -273,8 +273,4 @@
         <Triggers>
         </Triggers>
     </asp:UpdatePanel>
-    <%--</div>
-       </td>
-        </tr>
-    </table>--%>
 </asp:Content>
