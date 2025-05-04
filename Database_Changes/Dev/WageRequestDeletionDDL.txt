@@ -1,0 +1,104 @@
+alter table td_WageReqTrans drop constraint FK_td_WageReqTrans_td_WorkWageRequest;
+
+create table dbo.td_WageReqBenDetAudit
+(
+    id int identity primary key,
+    intWagesReqBenTransid int,
+    intWagePaymentReqid   int,
+    intWorkid             int,
+    intBenid              int,
+    TotAttendance         int,
+    WageRateUSD           decimal(18, 2),
+    WageRateUSDTotal      decimal(18, 2),
+    traineealternate      varchar(8),
+    Status                varchar(15),
+    Created_by            int,
+    Created_dt            datetime,
+    Modified_by           int,
+    Modified_dt           datetime,
+    ExchangeRateOLD       decimal(18, 4),
+    ExchangeRateNew       decimal(18, 4),
+    CheckA                int,
+    ReInitiate            varchar,
+    AmountInSSP           decimal(37,4),
+    cashP_FLI             bit,
+    cashP_ECD             bit,
+    cashP_WASh            bit
+);
+
+create table dbo.td_WageReqTransAudit
+(
+    id int identity primary key,
+    intWagesReqTransid  int,
+    intWagePaymentReqid int,
+    intWorkid           int,
+    intFromid           int,
+    intToid             int,
+    Status              varchar(30),
+    TransDate           datetime,
+    Remarks             varchar(350),
+    Created_by          int,
+    Created_dt          datetime,
+    Modified_by         int,
+    Modified_dt         datetime
+);
+
+create table dbo.td_WorkWageRequestAudit
+(
+    deleted_at          datetime,
+    intWagePaymentReqid int,
+    intWorkid           int,
+    WageRateUSD         decimal(18, 2),
+    ReqFromDate         datetime,
+    ReqToDate           datetime,
+    ReqYear             varchar(5),
+    ReqMonth            varchar(10),
+    intPayingAgentid    int,
+    intCoOrdinatorid    int,
+    intSpecialistid     int,
+    intManagerid        int,
+    Exchangerateattime  decimal(18, 4),
+    ReqNo               varchar(40),
+    Status              int,
+    Remarks             varchar(350),
+    Created_by          int,
+    Created_dt          datetime,
+    Modified_by         int,
+    Modified_dt         datetime,
+    ExchangeRateOLD     decimal(18, 4),
+    CApproveDate        datetime,
+    SApproveDate        datetime,
+    MApproveDate        datetime,
+    PaymentCycle        int,
+    AmountInSSP         decimal(18, 2) default 0,
+    Component           nvarchar(200),
+    deleted_by          int
+        references dbo.tbl_Users,
+    deletion_cause      text
+);
+
+create table dbo.tr_BenAttendanceDetAudit
+(
+    id int identity primary key,
+    intAttendanceid   int,
+    intWorkActivityId int,
+    intBenid          int,
+    AttendanceDate    datetime,
+    Status            varchar(10),
+    Created_by        int,
+    Created_dt        datetime,
+    Modified_by       int,
+    Modified_dt       datetime,
+    AttendanceYear    int,
+    PortYear          int,
+    PortPhase         int,
+    PortedSheetName   varchar(180),
+    PaymentFlag       int,
+    WageApplyFlag     int,
+    intWageReqid      int,
+    cashP_FLI         bit,
+    cashP_ECD         bit,
+    cashP_WASH        bit
+);
+
+
