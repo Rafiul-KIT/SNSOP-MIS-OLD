@@ -496,6 +496,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 FinancialServiceLinkageTracking.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
+
+                InvoicePrintsMenu.Visible = true;
             }
             if (Session["user_type"].ToString() == "Specialist")
             {
@@ -527,6 +529,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 FinancialServiceLinkageTracking.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
+
+                InvoicePrintsMenu.Visible = true;
             }
             if (Session["user_type"].ToString() == "WB")
             {
@@ -558,6 +562,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 FinancialServiceLinkageTracking.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
+
+                InvoicePrintsMenu.Visible = true;
             }
 
             if (Session["user_type"].ToString() == "Adm")
