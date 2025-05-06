@@ -43,6 +43,32 @@
         }
     </script>
 
+    <script type="text/javascript">
+        function showDeletePopup(workReqId) {
+            document.getElementById('<%= hdnDeleteWorkReqId.ClientID %>').value = workReqId;
+            document.getElementById('<%= txtDeleteComment.ClientID %>').value = '';
+            document.getElementById('<%= lblDeleteWarning.ClientID %>').innerText = '';
+            document.getElementById('<%= pnlDeletePopup.ClientID %>').style.display = 'block';
+        }
+
+
+    function hideDeletePopup() {
+        document.getElementById('<%= pnlDeletePopup.ClientID %>').style.display = 'none';
+        }
+    </script>
+
+    <script type="text/javascript">
+        function validateDeleteComment() {
+            var comment = document.getElementById('<%= txtDeleteComment.ClientID %>').value.trim();
+        if (comment === "") {
+            document.getElementById('<%= lblDeleteWarning.ClientID %>').innerText = "Comment is required.";
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
     <asp:UpdatePanel ID="upd1" runat="server">
         <ContentTemplate>
             <div align="left">
@@ -137,7 +163,7 @@
                                         </td>
                                         <td valign="top">
                                             <table cellpadding="4" cellspacing="5" style="width: 100%">
-                                                <tr>
+                                                <%--<tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="Label303" runat="server" CssClass="LBLBLACK" Width="165px">Implementing Partner</asp:Label>
                                                     </td>
@@ -149,7 +175,7 @@
                                                         </asp:DropDownList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px; width: 10px;">&nbsp;</td>
-                                                </tr>
+                                                </tr>--%>
                                                 <tr runat="server">
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="Label401" runat="server" CssClass="LBLBLACK" Width="144px">Work Code</asp:Label>
@@ -237,6 +263,16 @@
                                                                         <asp:BoundField DataField="reqFromDate" HeaderText="From Date" />
                                                                         <asp:BoundField DataField="reqToDate" HeaderText="To Date" />
                                                                         <asp:BoundField DataField="PaymentCycle" HeaderText="Payment Cycle" />
+                                                                        <asp:BoundField DataField="Status" HeaderText ="Status" />
+                                                                        <asp:BoundField DataField="Remarks" HeaderText="Rejection Reason" />
+                                                                        <asp:TemplateField HeaderText="Delete">
+                                                                            <ItemTemplate>
+                                                                                <a href="javascript:void(0);"
+                                                                                    onclick='showDeletePopup("<%# Eval("intWagePaymentReqid") %>")'
+                                                                                    class="btn btn-danger btn-sm">Delete</a>
+                                                                            </ItemTemplate>
+                                                                            <ItemStyle Width="60px" />
+                                                                        </asp:TemplateField>
                                                                     </Columns>
                                                                     <PagerStyle BackColor="#013161" ForeColor="White" HorizontalAlign="Center" />
                                                                     <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
@@ -264,6 +300,26 @@
                                 <asp:HiddenField ID="hdfFlagID" runat="server" />
                                 <asp:ValidationSummary ID="ValidationSummary1" runat="server"
                                     ShowMessageBox="True" ShowSummary="False" ValidationGroup="group" />
+                                <asp:HiddenField ID="hdnDeleteWorkReqId" runat="server" />
+
+                                <asp:Panel ID="pnlDeletePopup" runat="server" CssClass="modalPopup" Style="display: none; position: fixed; top: 30%; left: 40%; z-index: 1000; background: white; padding: 20px; border: 1px solid #999;">
+                                    <asp:Label ID="lblPopupTitle" runat="server" Text="Add Comment Before Deletion" Font-Bold="true" Font-Size="14px" />
+                                    <br />
+                                    <br />
+                                    <asp:TextBox ID="txtDeleteComment" runat="server" TextMode="MultiLine" Rows="3" Width="300px" placeholder="Write your comment here..." CssClass="form-control" />
+                                    <br />
+                                    <asp:Label ID="lblDeleteWarning" runat="server" ForeColor="Red" />
+                                    <br />
+                                    <asp:Button ID="btnConfirmDelete" runat="server" Text="Confirm Delete"
+                                        CssClass="btn btn-danger"
+                                        OnClick="btnConfirmDelete_Click"
+                                        OnClientClick="return validateDeleteComment();" />
+
+                                    &nbsp;
+                                <asp:Button ID="btnCancelDelete" runat="server" Text="Cancel" CssClass="btn btn-default"
+                                    OnClientClick="hideDeletePopup(); return false;" />
+                                </asp:Panel>
+
                             </div>
                         </div>
                     </div>

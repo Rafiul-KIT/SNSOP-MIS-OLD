@@ -27,8 +27,8 @@ namespace SSSNP.UI.Public_Works
                 if (!IsPostBack)
                 {
                     Gen.getStates(ddlState);
-                    Gen.getIpDet(ddlIP);
-                    if (Session["user_type"]?.ToString().Trim() == "Adm")
+                    //Gen.getIpDet(ddlIP);
+                    /*if (Session["user_type"]?.ToString().Trim() == "Adm")
                     {
                         //ddlIP.SelectedValue = ddlIP.Items.FindByValue(Session["User_Code"]?.ToString().Trim()).Value;
                         var ipValue = Session["User_Code"]?.ToString().Trim();
@@ -37,7 +37,7 @@ namespace SSSNP.UI.Public_Works
                             ddlIP.SelectedValue = ipValue;
                         }
 
-                    }
+                    }*/
                 }
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace SSSNP.UI.Public_Works
             ddlCounties.SelectedIndex = 0;
             ddlPayam.SelectedIndex = 0;
             ddlBoma.SelectedIndex = 0;
-            ddlIP.SelectedIndex = 0;
+            //ddlIP.SelectedIndex = 0;
 
             grdRejectedWagesDraft.DataSource = null;
             grdRejectedWagesDraft.DataBind();
@@ -126,43 +126,44 @@ namespace SSSNP.UI.Public_Works
             {
                 string sql = @"
             SELECT DISTINCT
-                wwr.intwagepaymentreqid,
-                wwr.intworkid,
-                wwr.reqno,
-                wwr.reqfromdate,
-                wwr.reqtodate,
-                wwr.reqyear,
-                wwr.reqmonth,
-                wwr.status,
-                wwr.created_by,
-                wwr.created_dt,
-                wwr.modified_by,
-                wwr.modified_dt,
-                wwr.component,
-                pc.wagepaymentCycle AS PaymentCycle,
-                wm.workcode,
-                st.StateName,
-                co.CountieName,
-                p.PayamName,
-                b.BomaName
-            FROM td_WorkWageRequest wwr
-            INNER JOIN tbl_WorkMaster wm ON wwr.intWorkid = wm.intWorkid
-            INNER JOIN td_WageReqBenDet wrbt ON wwr.intwagepaymentreqid = wrbt.intwagepaymentreqid
-            INNER JOIN tbl_beneficiarydet ben ON wrbt.intbenid = ben.intbenid
-            INNER JOIN tm_states st ON st.intstateid = ben.intstateid
-            INNER JOIN tm_Counties co ON ben.intcountieid = co.intcountieid
-            INNER JOIN tm_payams p ON ben.intpayamid = p.intpayamid
-            INNER JOIN tm_bomas b ON ben.intbomasid = b.intbomasid
-            LEFT JOIN tm_WagePaymentCycle pc ON wwr.status = pc.intpaymentcycleid
-            WHERE 
-                wwr.status = 105
-                AND (@ReqNo IS NULL OR wwr.reqno = @ReqNo)
-                AND (@workCode IS NULL OR wm.workcode = @workCode)
-                AND (@intStateid IS NULL OR ben.intStateId = @intStateid)
-                AND (@IPid IS NULL OR ben.intip = @IPid)
-                AND (@intCountieid IS NULL OR ben.intCountieId = @intCountieid)
-                AND (@intPayamid IS NULL OR ben.intPayamId = @intPayamid)
-                AND (@intBomasid IS NULL OR ben.intBomasId = @intBomasid)";
+                    wwr.intWagePaymentReqid,
+                    wwr.intWorkid,
+                    wwr.ReqNo,
+                    wwr.ReqFromDate,
+                    wwr.ReqToDate,
+                    wwr.ReqYear,
+                    wwr.ReqMonth,
+                    ws.StageName AS Status,
+                    wwr.Created_by,
+                    wwr.Created_dt,
+                    wwr.Modified_by,
+                    wwr.Modified_dt,
+                    wwr.Component,
+                    wwr.Remarks,
+                    pc.WagePaymentCycle AS PaymentCycle,
+                    wm.WorkCode,
+                    st.StateName,
+                    co.CountieName,
+                    p.PayamName,
+                    b.BomaName
+                FROM td_WorkWageRequest wwr
+                INNER JOIN tbl_WorkMaster wm ON wwr.intWorkid = wm.intWorkid
+                INNER JOIN td_WageReqBenDet wrbt ON wwr.intWagePaymentReqid = wrbt.intWagePaymentReqid
+                INNER JOIN tbl_BeneficiaryDet ben ON wrbt.intBenid = ben.intBenid
+                INNER JOIN tm_States st ON st.intStateid = ben.intStateid
+                INNER JOIN tm_Counties co ON ben.intCountieid = co.intCountieid
+                INNER JOIN tm_Payams p ON ben.intPayamid = p.intPayamid
+                INNER JOIN tm_Bomas b ON ben.intBomasid = b.intBomasid
+                LEFT JOIN tm_WagePaymentCycle pc ON wwr.PaymentCycle = pc.intPaymentCycleID
+                LEFT JOIN tm_WageStages ws ON wwr.Status = ws.Stageid
+                WHERE 
+                    wwr.Status IN (100, 101, 102, 105)
+                    AND (@ReqNo IS NULL OR wwr.ReqNo = @ReqNo)
+                    AND (@workCode IS NULL OR wm.WorkCode = @workCode)
+                    AND (@intStateid IS NULL OR ben.intStateid = @intStateid)
+                    AND (@intCountieid IS NULL OR ben.intCountieid = @intCountieid)
+                    AND (@intPayamid IS NULL OR ben.intPayamid = @intPayamid)
+                    AND (@intBomasid IS NULL OR ben.intBomasid = @intBomasid)";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -173,7 +174,7 @@ namespace SSSNP.UI.Public_Works
                     cmd.Parameters.AddWithValue("@intCountieid", GetNullableInt(ddlCounties.SelectedValue));
                     cmd.Parameters.AddWithValue("@intPayamid", GetNullableInt(ddlPayam.SelectedValue));
                     cmd.Parameters.AddWithValue("@intBomasid", GetNullableInt(ddlBoma.SelectedValue));
-                    cmd.Parameters.AddWithValue("@IPid", GetNullableInt(ddlIP.SelectedValue));
+                    //cmd.Parameters.AddWithValue("@IPid", GetNullableInt(ddlIP.SelectedValue));
 
                     using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                     {
@@ -197,6 +198,42 @@ namespace SSSNP.UI.Public_Works
             grdRejectedWagesDraft.PageIndex = e.NewPageIndex;
             LoadGrid(e.NewPageIndex);
         }
+
+        protected void btnConfirmDelete_Click(object sender, EventArgs e)
+        {
+            lblDeleteWarning.Text = "";
+
+            int workReqId;
+            if (!int.TryParse(hdnDeleteWorkReqId.Value, out workReqId))
+            {
+                lblDeleteWarning.Text = "Invalid request ID.";
+                return;
+            }
+
+            string comment = txtDeleteComment.Text.Trim();
+            if (string.IsNullOrWhiteSpace(comment))
+            {
+                lblDeleteWarning.Text = "Comment is required.";
+                return;
+            }
+
+            
+            DeleteRejectedWageRequest(workReqId, comment);
+            lblmessage.Text = "Record deleted successfully.";
+
+            txtDeleteComment.Text = "";
+            hdnDeleteWorkReqId.Value = "";
+            lblDeleteWarning.Text = "";
+
+            LoadGrid(0);
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "HidePopup", "hideDeletePopup();", true);
+        }
+
+        private void DeleteRejectedWageRequest(int workReqId, string comment)
+        {
+        }
+
 
         protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
         {
