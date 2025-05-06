@@ -67,6 +67,13 @@
             return true;
         }
     </script>
+    <script type="text/javascript">
+        function updateCommentLength() {
+            var textbox = document.getElementById('<%= txtDeleteComment.ClientID %>');
+            var counter = document.getElementById('commentLength');
+            counter.innerText = textbox.value.length + "/255";
+        }
+    </script>
 
 
     <asp:UpdatePanel ID="upd1" runat="server">
@@ -306,20 +313,27 @@
                                     <asp:Label ID="lblPopupTitle" runat="server" Text="Add Comment Before Deletion" Font-Bold="true" Font-Size="14px" />
                                     <br />
                                     <br />
-                                    <asp:TextBox ID="txtDeleteComment" runat="server" TextMode="MultiLine" Rows="3" Width="300px" placeholder="Write your comment here..." CssClass="form-control" />
+
+                                    <asp:TextBox ID="txtDeleteComment" runat="server" TextMode="MultiLine" Rows="3" Width="300px" MaxLength="255"
+                                        placeholder="Write your comment here..." CssClass="form-control"
+                                        onkeyup="updateCommentLength()" />
+
                                     <br />
+                                    <span id="commentLength" style="font-size: 12px; color: gray;">0/255</span>
+                                    <br />
+
                                     <asp:Label ID="lblDeleteWarning" runat="server" ForeColor="Red" />
                                     <br />
+
                                     <asp:Button ID="btnConfirmDelete" runat="server" Text="Confirm Delete"
                                         CssClass="btn btn-danger"
                                         OnClick="btnConfirmDelete_Click"
                                         OnClientClick="return validateDeleteComment();" />
 
                                     &nbsp;
-                                <asp:Button ID="btnCancelDelete" runat="server" Text="Cancel" CssClass="btn btn-default"
-                                    OnClientClick="hideDeletePopup(); return false;" />
+                                    <asp:Button ID="btnCancelDelete" runat="server" Text="Cancel" CssClass="btn btn-default"
+                                        OnClientClick="hideDeletePopup(); return false;" />
                                 </asp:Panel>
-
                             </div>
                         </div>
                     </div>

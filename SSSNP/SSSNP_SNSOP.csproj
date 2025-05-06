@@ -853,6 +853,7 @@
     <Compile Include="Service\IndicatorResultQuery.cs" />
     <Compile Include="Service\IndicatorResultService.cs" />
     <Compile Include="Service\LookupManagerService.cs" />
+    <Compile Include="Service\RejectedWageRequestDeletionService.cs" />
     <Compile Include="Service\WageRequestApiManager.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Tools.aspx.cs">

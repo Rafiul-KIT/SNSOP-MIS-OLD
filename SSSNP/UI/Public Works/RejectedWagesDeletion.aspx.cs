@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SSSNP_SNSOP.Core.DbHandler;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -232,8 +233,14 @@ namespace SSSNP.UI.Public_Works
 
         private void DeleteRejectedWageRequest(int workReqId, string comment)
         {
-        }
+            string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+            IDbOperation db = new SqlDbOperation(connStr); 
+            var service = new Service.RejectedWageRequestDeletionService(db, connStr);
 
+            string deletedBy = Session["User_Code"]?.ToString();
+
+            service.DeleteRejectedWageRequest(workReqId, comment, deletedBy);
+        }
 
         protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
         {
