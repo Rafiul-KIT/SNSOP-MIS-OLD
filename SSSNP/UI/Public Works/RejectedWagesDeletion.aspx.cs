@@ -237,7 +237,7 @@ namespace SSSNP.UI.Public_Works
             IDbOperation db = new SqlDbOperation(connStr); 
             var service = new Service.RejectedWageRequestDeletionService(db, connStr);
 
-            string deletedBy = Session["User_Code"]?.ToString();
+            string deletedBy = Session["uid"]?.ToString();
 
             service.DeleteRejectedWageRequest(workReqId, comment, deletedBy);
         }
