@@ -48,11 +48,14 @@
             document.getElementById('<%= hdnDeleteWorkReqId.ClientID %>').value = workReqId;
             document.getElementById('<%= txtDeleteComment.ClientID %>').value = '';
             document.getElementById('<%= lblDeleteWarning.ClientID %>').innerText = '';
+            document.getElementById('commentLength').innerText = '0/255';
             document.getElementById('<%= pnlDeletePopup.ClientID %>').style.display = 'block';
         }
 
 
     function hideDeletePopup() {
+        document.getElementById('<%= pnlDeletePopup.ClientID %>').style.display = 'none';
+        document.getElementById('commentLength').innerText = '0/255';
         document.getElementById('<%= pnlDeletePopup.ClientID %>').style.display = 'none';
         }
     </script>
