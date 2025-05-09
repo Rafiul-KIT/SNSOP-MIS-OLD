@@ -40,7 +40,7 @@ public partial class ViewBenfWages : System.Web.UI.Page
         if (dsn.Tables[0].Rows.Count > 0)
         {
             strWageRequestStatus = dsn.Tables[0].Rows[0]["Status"].ToString();
-            if (strWageRequestStatus == "0")
+            if (strWageRequestStatus == "0" || strWageRequestStatus == "100") // 0 for generated, 100 for Initial Reviewer Rejected
             {
                 btnIPApprove.Visible = true;
                 btnIPReject.Visible = true;
@@ -191,7 +191,7 @@ public partial class ViewBenfWages : System.Web.UI.Page
             lblPaidCountValue.Text = iPaidCount.ToString();
             lblUnpaidCountValue.Text = iUnpaidCount.ToString();
 
-            if (strWageRequestStatus == "0")
+            if (strWageRequestStatus == "0" || strWageRequestStatus == "100")
             {
                 lblpayingagent.Visible = false;
                 lblcoordinator.Visible = false;

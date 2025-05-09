@@ -45,6 +45,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         WageRequestApplyDIS.Visible = value;
         WageRequestDraft.Visible = value;
         RejectedWages.Visible = value;
+        RejectedWagesDeletion.Visible = value;
 
         LiPaymentCycleDocument.Visible = value;
         liUploadPaymentCycleDoc.Visible = value;
@@ -590,6 +591,9 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 FinancialServiceLinkageTracking.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
+
+                LiIp5.Visible = true;
+                RejectedWagesDeletion.Visible = true;
             }
             if (Session["user_type"].ToString() == ConfigurationManager.AppSettings["PaymentCycleDocumentUploadRole"].ToString())
             {

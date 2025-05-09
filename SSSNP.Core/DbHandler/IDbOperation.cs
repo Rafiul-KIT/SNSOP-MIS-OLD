@@ -19,6 +19,7 @@ namespace SSSNP_SNSOP.Core.DbHandler
         DataTable GetDataTable(string sql);
         DataSet ExecuteCmdForSp(List<CmdParamModel> cmdParams, string spName);
         DataTable ExecuteDataTable(string query, CommandType commandType, List<SqlParameter> parameters);
+        DataTable ExecuteDataTable(string query, CommandType commandType, List<SqlParameter> parameters, SqlConnection connection, SqlTransaction transaction);
 
     }
 }
