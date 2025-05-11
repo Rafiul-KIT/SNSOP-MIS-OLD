@@ -115,6 +115,59 @@ namespace SSSNP.Asynch
             public string StateName { get; set; }
         }
 
+        private void StartDownloadingPayrollDownloadMock()
+        {
+            try
+            {
+                string sql1 = "select tS.intStateid, tS.StateName, tC.intCountieid, tC.CountieName, " +
+                    "tP.intPayamid, tP.PayamName, tB2.intBomasid, tB2.BomaName, tWWR2.PaymentCycle " +
+                    "from td_WorkWageRequest tWWR2 " +
+                    "join td_WageReqBenDet tWM on tWWR2.intWagePaymentReqid = tWM.intWagePaymentReqid " +
+                    "join tbl_BeneficiaryDet bd on tWM.intBenid = bd.intBenid " +
+                    "join tm_States tS on tS.intStateid = bd.intStateid " +
+                    "join tm_Counties tC on bd.intCountieid = tC.intCountieid " +
+                    "join tm_Payams tP on bd.intPayamid = tP.intPayamid " +
+                    "join tm_Bomas tB2 on bd.intBomasid = tB2.intBomasid " +
+                    "where tWWR2.Status in (4, 5, 6) and tB2.BomaName like '%/%' " +
+                    "group by tS.intStateid, tS.StateName, tC.intCountieid, tC.CountieName, " +
+                    "tP.intPayamid, tP.PayamName, tB2.intBomasid, tB2.BomaName, tWWR2.PaymentCycle " +
+                    "order by PaymentCycle, tS.intStateid, tC.intCountieid, tP.intPayamid, tB2.intBomasid";
+
+                DataTable dt1 = _dbOperation.GetDataTable(sql1);
+                if (dt1 != null && dt1.Rows != null && dt1.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt1.Rows)
+                    {
+                        try
+                        {
+                            GeolocationDto dto = new GeolocationDto();
+                            dto.StateName = row["StateName"] != null ? row["StateName"].ToString().Replace("/", "-") : null;
+                            dto.intStateId = row["intStateid"] != null ? Convert.ToInt32(row["intStateid"]) : 0;
+                            dto.CountyName = row["CountieName"] != null ? row["CountieName"].ToString().Replace("/", "-") : null;
+                            dto.intCountyId = row["intCountieid"] != null ? Convert.ToInt32(row["intCountieid"]) : 0;
+                            dto.PayamName = row["PayamName"] != null ? row["PayamName"].ToString().Replace("/", "-") : null;
+                            dto.intPayamId = row["intPayamid"] != null ? Convert.ToInt32(row["intPayamid"]) : 0;
+                            dto.BomaName = row["BomaName"] != null ? row["BomaName"].ToString().Replace("/", "-") : null;
+                            dto.intBomaId = row["intBomasid"] != null ? Convert.ToInt32(row["intBomasid"]) : 0;
+
+                            int paymentCycleId = row["PaymentCycle"] != null ? Convert.ToInt32(row["PaymentCycle"]) : 0;
+
+                            GetForThreeSupportTypes(dto, 1);
+                            GetForThreeSupportTypes(dto, 2);
+                            GetForThreeSupportTypes(dto, 3);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("There was an unexpexted error when processing id card download. Error details:\n" + ex.ToString());
+                        }
+                    }
+                }
+            } catch (Exception e)
+            {
+
+            }
+        }
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void StartDownloadingPayrollDownload()
         {
@@ -142,13 +195,13 @@ namespace SSSNP.Asynch
                         try
                         {
                             GeolocationDto dto = new GeolocationDto();
-                            dto.StateName = row["StateName"] != null ? row["StateName"].ToString() : null;
+                            dto.StateName = row["StateName"] != null ? row["StateName"].ToString().Replace("/","-") : null;
                             dto.intStateId = row["intStateid"] != null ? Convert.ToInt32(row["intStateid"]) : 0;
-                            dto.CountyName = row["CountieName"] != null ? row["CountieName"].ToString() : null;
+                            dto.CountyName = row["CountieName"] != null ? row["CountieName"].ToString().Replace("/", "-") : null;
                             dto.intCountyId = row["intCountieid"] != null ? Convert.ToInt32(row["intCountieid"]) : 0;
-                            dto.PayamName = row["PayamName"] != null ? row["PayamName"].ToString() : null;
+                            dto.PayamName = row["PayamName"] != null ? row["PayamName"].ToString().Replace("/", "-") : null;
                             dto.intPayamId = row["intPayamid"] != null ? Convert.ToInt32(row["intPayamid"]) : 0;
-                            dto.BomaName = row["BomaName"] != null ? row["BomaName"].ToString() : null;
+                            dto.BomaName = row["BomaName"] != null ? row["BomaName"].ToString().Replace("/", "-") : null;
                             dto.intBomaId = row["intBomasid"] != null ? Convert.ToInt32(row["intBomasid"]) : 0;
 
                             int paymentCycleId = row["PaymentCycle"] != null ? Convert.ToInt32(row["PaymentCycle"]) : 0;
