@@ -23,58 +23,62 @@ namespace SSSNP.Service
         public void DeleteRejectedWageRequest(int intWagePaymentReqid, string deletionCause, string deletedBy)
         {
             var queries = new List<string>
-            {
-                @"INSERT INTO td_WageReqBenDetAudit
-                    (intWagesReqBenTransid, intWagePaymentReqid, intWorkid, intBenid, TotAttendance,
-                    WageRateUSD, WageRateUSDTotal, traineealternate, Status, Created_by, Created_dt,
-                    Modified_by, Modified_dt, ExchangeRateOLD, ExchangeRateNew, CheckA, ReInitiate,
-                    AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh)
-                  SELECT * FROM td_WageReqBenDet WHERE intWagePaymentReqid = @intWagePaymentReqid",
+                {
+                    @"INSERT INTO td_WageReqBenDetAudit
+                      (intWagesReqBenTransid, intWagePaymentReqid, intWorkid, intBenid, TotAttendance,
+                       WageRateUSD, WageRateUSDTotal, traineealternate, Status, Created_by, Created_dt,
+                       Modified_by, Modified_dt, ExchangeRateOLD, ExchangeRateNew, CheckA, ReInitiate,
+                       AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh)
+                      SELECT * FROM td_WageReqBenDet WHERE intWagePaymentReqid = @intWagePaymentReqid",
 
-                @"INSERT INTO td_WageReqTransAudit
-                    (intWagesReqTransid, intWagePaymentReqid, intWorkid, intFromid, intToid, Status,
-                     TransDate, Remarks, Created_by, Created_dt, Modified_by, Modified_dt)
-                  SELECT * FROM td_WageReqTrans WHERE intWagePaymentReqid = @intWagePaymentReqid",
+                    @"INSERT INTO td_WageReqTransAudit
+                      (intWagesReqTransid, intWagePaymentReqid, intWorkid, intFromid, intToid, Status,
+                       TransDate, Remarks, Created_by, Created_dt, Modified_by, Modified_dt)
+                      SELECT * FROM td_WageReqTrans WHERE intWagePaymentReqid = @intWagePaymentReqid",
 
-                @"INSERT INTO td_WorkWageRequestAudit
-                    (deleted_at, intWagePaymentReqid, intWorkid, WageRateUSD, ReqFromDate, ReqToDate,
-                    ReqYear, ReqMonth, intPayingAgentid, intCoOrdinatorid, intSpecialistid, intManagerid,
-                    Exchangerateattime, ReqNo, Status, Remarks, Created_by, Created_dt, Modified_by,
-                    Modified_dt, ExchangeRateOLD, CApproveDate, SApproveDate, MApproveDate,
-                    PaymentCycle, AmountInSSP, Component, deleted_by, deletion_cause)
-                  SELECT GETDATE(), intWagePaymentReqid, intWorkid, WageRateUSD, ReqFromDate, ReqToDate,
-                    ReqYear, ReqMonth, intPayingAgentid, intCoOrdinatorid, intSpecialistid, intManagerid,
-                    Exchangerateattime, ReqNo, Status, Remarks, Created_by, Created_dt, Modified_by,
-                    Modified_dt, ExchangeRateOLD, CApproveDate, SApproveDate, MApproveDate,
-                    PaymentCycle, AmountInSSP, Component, @intUserid, @deletion_cause
-                  FROM td_WorkWageRequest WHERE intWagePaymentReqid = @intWagePaymentReqid",
+                    @"INSERT INTO td_WorkWageRequestAudit
+                      (deleted_at, intWagePaymentReqid, intWorkid, WageRateUSD, ReqFromDate, ReqToDate,
+                       ReqYear, ReqMonth, intPayingAgentid, intCoOrdinatorid, intSpecialistid, intManagerid,
+                       Exchangerateattime, ReqNo, Status, Remarks, Created_by, Created_dt, Modified_by,
+                       Modified_dt, ExchangeRateOLD, CApproveDate, SApproveDate, MApproveDate,
+                       PaymentCycle, AmountInSSP, Component, deleted_by, deletion_cause)
+                      SELECT GETDATE(), intWagePaymentReqid, intWorkid, WageRateUSD, ReqFromDate, ReqToDate,
+                       ReqYear, ReqMonth, intPayingAgentid, intCoOrdinatorid, intSpecialistid, intManagerid,
+                       Exchangerateattime, ReqNo, Status, Remarks, Created_by, Created_dt, Modified_by,
+                       Modified_dt, ExchangeRateOLD, CApproveDate, SApproveDate, MApproveDate,
+                       PaymentCycle, AmountInSSP, Component, @intUserid, @deletion_cause
+                      FROM td_WorkWageRequest WHERE intWagePaymentReqid = @intWagePaymentReqid",
 
-                @"INSERT INTO tr_BenAttendanceDetAudit
-                    (intAttendanceid, intWorkActivityId, intBenid, AttendanceDate, Status,
-                     Created_by, Created_dt, Modified_by, Modified_dt, AttendanceYear, PortYear,
-                     PortPhase, PortedSheetName, PaymentFlag, WageApplyFlag, intWageReqid,
-                     cashP_FLI, cashP_ECD, cashP_WASH)
-                  SELECT * FROM tr_BenAttendanceDet WHERE intWageReqid = @intWagePaymentReqid",
+                    @"INSERT INTO tr_BenAttendanceDetAudit
+                      (intAttendanceid, intWorkActivityId, intBenid, AttendanceDate, Status,
+                       Created_by, Created_dt, Modified_by, Modified_dt, AttendanceYear, PortYear,
+                       PortPhase, PortedSheetName, PaymentFlag, WageApplyFlag, intWageReqid,
+                       cashP_FLI, cashP_ECD, cashP_WASH)
+                      SELECT * FROM tr_BenAttendanceDet WHERE intWageReqid = @intWagePaymentReqid",
 
-                @"DELETE FROM td_WageReqTrans WHERE intWagePaymentReqid = @intWagePaymentReqid",
-                @"DELETE FROM td_WageReqBenDet WHERE intWagePaymentReqid = @intWagePaymentReqid",
-                @"UPDATE tr_BenAttendanceDet SET WageApplyFlag = NULL, intWageReqid = NULL
-                  WHERE intWageReqid = @intWagePaymentReqid",
-                @"DELETE FROM td_WorkWageRequest WHERE intWagePaymentReqid = @intWagePaymentReqid"
-            };
+                    @"DELETE FROM td_WageReqTrans WHERE intWagePaymentReqid = @intWagePaymentReqid",
+                    @"DELETE FROM td_WageReqBenDet WHERE intWagePaymentReqid = @intWagePaymentReqid",
+                    @"UPDATE tr_BenAttendanceDet SET WageApplyFlag = NULL, intWageReqid = NULL
+                      WHERE intWageReqid = @intWagePaymentReqid",
+                    @"DELETE FROM td_WorkWageRequest WHERE intWagePaymentReqid = @intWagePaymentReqId"
+                };
 
             using (var connection = new SqlConnection(_connStr))
             {
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
                 {
+                    //string currentQuery = string.Empty;
+
                     try
                     {
-                        foreach (var query in queries)
+                        foreach (var rawQuery in queries)
                         {
+                            string currentQuery = rawQuery; // this snapshot stays constant in this iteration
+
                             List<SqlParameter> paramList;
 
-                            if (query.Contains("@intWagePaymentReqid") && query.Contains("@intUserid") && query.Contains("@deletion_cause"))
+                            if (currentQuery.Contains("@intWagePaymentReqid") && currentQuery.Contains("@intUserid") && currentQuery.Contains("@deletion_cause"))
                             {
                                 paramList = new List<SqlParameter>
                                 {
@@ -83,7 +87,7 @@ namespace SSSNP.Service
                                     new SqlParameter("@deletion_cause", deletionCause)
                                 };
                             }
-                            else if (query.Contains("@intWagePaymentReqid"))
+                            else if (currentQuery.Contains("@intWagePaymentReqid"))
                             {
                                 paramList = new List<SqlParameter>
                                 {
@@ -95,15 +99,34 @@ namespace SSSNP.Service
                                 paramList = new List<SqlParameter>();
                             }
 
-                            _db.ExecuteDataTable(query, CommandType.Text, paramList, connection, transaction);
+                            try
+                            {
+                                int affected = _db.ExecuteNonQuery(currentQuery, CommandType.Text, paramList, connection, transaction);
+
+                                if ((currentQuery.StartsWith("DELETE", StringComparison.OrdinalIgnoreCase) ||
+                                     currentQuery.StartsWith("UPDATE", StringComparison.OrdinalIgnoreCase)) && affected == 0)
+                                {
+                                    throw new InvalidOperationException("Query executed but affected 0 rows:\n" + currentQuery);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception("Error executing query:\n" + currentQuery, ex);
+                            }
                         }
+
 
                         transaction.Commit();
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
-                        throw new Exception("Error during rejected wage deletion: " + ex.Message, ex);
+                        try { transaction.Rollback(); }
+                        catch (Exception rollbackEx)
+                        {
+                            throw new AggregateException("Rollback failed", ex, rollbackEx);
+                        }
+
+                        throw;
                     }
                     finally
                     {
@@ -111,7 +134,7 @@ namespace SSSNP.Service
                     }
                 }
             }
-
         }
+
     }
 }

@@ -459,5 +459,28 @@ namespace SSSNP_SNSOP.Core.DbHandler
         }
 
 
+        public int ExecuteNonQuery(string query, CommandType commandType, List<SqlParameter> parameters, SqlConnection connection, SqlTransaction transaction)
+        {
+            try
+            {
+                using (var sqlCommand = new SqlCommand(query, connection, transaction))
+                {
+                    sqlCommand.CommandType = commandType;
+
+                    if (parameters != null && parameters.Count > 0)
+                    {
+                        sqlCommand.Parameters.AddRange(parameters.ToArray());
+                    }
+
+                    return sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error executing non-query SQL command: {ex.Message}", ex);
+            }
+        }
+
+
     }
 }

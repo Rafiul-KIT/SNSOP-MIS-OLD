@@ -442,7 +442,7 @@
                                     <tr>
                                         <td align="center" colspan="3" style="padding: 5px; margin: 5px">
                                             <asp:Button ID="btnDelete" runat="server" CssClass="btn btn-danger"
-                                                Height="32px" OnClick="BtnDelete_Click" TabIndex="10" Text="Delete"
+                                                Height="32px" OnClick="BtnDelete_Click" TabIndex="10" Text="Delete" Visible ="False"
                                                 Width="120px" />
                                             &nbsp;&nbsp;&nbsp;
                                         </td>

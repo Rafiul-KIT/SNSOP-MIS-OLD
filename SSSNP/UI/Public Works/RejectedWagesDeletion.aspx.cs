@@ -218,17 +218,30 @@ namespace SSSNP.UI.Public_Works
                 return;
             }
 
-            
-            DeleteRejectedWageRequest(workReqId, comment);
-            lblmessage.Text = "Record deleted successfully.";
 
-            txtDeleteComment.Text = "";
-            hdnDeleteWorkReqId.Value = "";
-            lblDeleteWarning.Text = "";
+            try
+            {
+                DeleteRejectedWageRequest(workReqId, comment);
 
-            LoadGrid(0);
+                lblmessage.Text = "Record deleted successfully.";
+                lblmessage.ForeColor = System.Drawing.Color.Green;
 
-            ScriptManager.RegisterStartupScript(this, GetType(), "HidePopup", "hideDeletePopup();", true);
+                txtDeleteComment.Text = "";
+                hdnDeleteWorkReqId.Value = "";
+                lblDeleteWarning.Text = "";
+
+                LoadGrid(0);
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "HidePopup", "hideDeletePopup();", true);
+            }
+            catch (Exception ex)
+            {
+                lblDeleteWarning.Text = "Error during deletion: " + ex.Message;
+                lblDeleteWarning.ForeColor = System.Drawing.Color.Red;
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowPopup", "showDeletePopup();", true);
+            }
+
         }
 
         private void DeleteRejectedWageRequest(int workReqId, string comment)

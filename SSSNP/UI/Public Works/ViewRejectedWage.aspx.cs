@@ -217,7 +217,8 @@ public partial class ViewRejectedWage : System.Web.UI.Page
         DataTable dt = ds.Tables[0];
         DataTable dtFiltered = new DataTable();
 
-        rgDetails.DataSource = dtFiltered;
+        //rgDetails.DataSource = dtFiltered;
+        rgDetails.DataSource = dt;
         if (dsn.Tables[0].Rows[0]["intWorkid"].ToString().Trim() == "999")
         {
             rgDetails.MasterTableView.GetColumn("cnt").HeaderText = "No of Days To be Paid";
