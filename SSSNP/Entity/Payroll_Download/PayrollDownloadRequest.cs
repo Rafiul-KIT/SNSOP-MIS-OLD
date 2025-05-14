@@ -8,7 +8,7 @@ namespace SSSNP.Entity.Payroll_Download
         public int county { get; set; }
         public int payam { get; set; }
         public int boma { get; set; }
-
+        public string paymentCycle { get; set; }
         public string supportType { get; set; }
 
         /*public DateTime createdFrom { get; set; }

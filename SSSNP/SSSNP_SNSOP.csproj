@@ -826,6 +826,7 @@
     <Compile Include="App_Code\CUserContext.cs" />
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
+    <Compile Include="Asynch\AutoPayrollDownload.cs" />
     <Compile Include="Asynch\AutoReconcilePayrollAsync.cs" />
     <Compile Include="Asynch\BulkIdCardGenerationAsync.cs" />
     <Compile Include="Asynch\SendGrmNotificationAsynch.cs" />
