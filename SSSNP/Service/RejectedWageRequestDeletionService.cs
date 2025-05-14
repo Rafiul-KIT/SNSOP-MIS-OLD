@@ -60,7 +60,7 @@ namespace SSSNP.Service
                     @"DELETE FROM td_WageReqBenDet WHERE intWagePaymentReqid = @intWagePaymentReqid",
                     @"UPDATE tr_BenAttendanceDet SET WageApplyFlag = NULL, intWageReqid = NULL
                       WHERE intWageReqid = @intWagePaymentReqid",
-                    @"DELETE FROM td_WorkWageRequest WHERE intWagePaymentReqid = @intWagePaymentReqId"
+                    @"DELETE FROM td_WorkWageRequest WHERE intWagePaymentReqid = @intWagePaymentReqid"
                 };
 
             using (var connection = new SqlConnection(_connStr))
@@ -68,13 +68,11 @@ namespace SSSNP.Service
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
                 {
-                    //string currentQuery = string.Empty;
-
                     try
                     {
                         foreach (var rawQuery in queries)
                         {
-                            string currentQuery = rawQuery; // this snapshot stays constant in this iteration
+                            string currentQuery = rawQuery;
 
                             List<SqlParameter> paramList;
 

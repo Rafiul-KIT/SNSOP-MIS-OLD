@@ -47,7 +47,6 @@
         function showDeletePopup(workReqId) {
             document.getElementById('<%= hdnDeleteWorkReqId.ClientID %>').value = workReqId;
             document.getElementById('<%= txtDeleteComment.ClientID %>').value = '';
-            document.getElementById('<%= lblDeleteWarning.ClientID %>').innerText = '';
             document.getElementById('commentLength').innerText = '0/255';
             document.getElementById('<%= pnlDeletePopup.ClientID %>').style.display = 'block';
         }
@@ -56,7 +55,7 @@
     function hideDeletePopup() {
         document.getElementById('<%= pnlDeletePopup.ClientID %>').style.display = 'none';
         document.getElementById('commentLength').innerText = '0/255';
-        document.getElementById('<%= pnlDeletePopup.ClientID %>').style.display = 'none';
+        document.getElementById('<%= lblDeleteWarning.ClientID %>').innerText = '';
         }
     </script>
 
@@ -322,10 +321,9 @@
                                         onkeyup="updateCommentLength()" />
 
                                     <br />
-                                    <span id="commentLength" style="font-size: 12px; color: gray;">0/255</span>
-                                    <br />
-
                                     <asp:Label ID="lblDeleteWarning" runat="server" ForeColor="Red" />
+                                    <br />
+                                    <span id="commentLength" style="font-size: 12px; color: gray;">0/255</span>
                                     <br />
 
                                     <asp:Button ID="btnConfirmDelete" runat="server" Text="Confirm Delete"

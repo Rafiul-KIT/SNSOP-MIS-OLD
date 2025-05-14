@@ -203,6 +203,7 @@ namespace SSSNP.UI.Public_Works
         protected void btnConfirmDelete_Click(object sender, EventArgs e)
         {
             lblDeleteWarning.Text = "";
+            lblDeleteWarning.Text = "";
 
             int workReqId;
             if (!int.TryParse(hdnDeleteWorkReqId.Value, out workReqId))
@@ -236,7 +237,7 @@ namespace SSSNP.UI.Public_Works
             }
             catch (Exception ex)
             {
-                lblDeleteWarning.Text = "Error during deletion: " + ex.Message;
+                lblDeleteWarning.Text = "Something went wrong during deletion. Please try again or contact admin.";
                 lblDeleteWarning.ForeColor = System.Drawing.Color.Red;
 
                 ScriptManager.RegisterStartupScript(this, GetType(), "ShowPopup", "showDeletePopup();", true);
