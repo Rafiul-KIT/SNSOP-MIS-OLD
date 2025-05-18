@@ -9650,7 +9650,7 @@ public class General
     }
 
 
-    public int InsApprovalStatusDraft(string intWagePaymentReqid, string ReqStatus, string Created_by, string intPayingAgentId, string intCoordinatorId, string intSpecialistId, string intManagerId)
+    public int InsApprovalStatusDraft(string intWagePaymentReqid, string ReqStatus, string Created_by, string intPayingAgentId, string intCoordinatorId, string intSpecialistId, string intManagerId, string comment)
     {
         int value = 0;
 
@@ -9707,6 +9707,10 @@ public class General
             {
                 cmd.Parameters.Add("@intManagerid", SqlDbType.VarChar).Value = intManagerId.Trim();
             }
+            if (string.IsNullOrWhiteSpace(comment))
+                cmd.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = DBNull.Value;
+            else
+                cmd.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = comment.Trim();
 
 
             string val = cmd.ExecuteScalar().ToString();
@@ -9786,7 +9790,7 @@ public class General
     }
 
 
-    public int InsRejectedStatusWRDraft(string intWagePaymentReqid, string Created_by)
+    public int InsRejectedStatusWRDraft(string intWagePaymentReqid, string Created_by, string comment)
     {
         int value = 0;
 
@@ -9804,6 +9808,10 @@ public class General
                 cmd.Parameters.Add("@Created_by", SqlDbType.VarChar).Value = DBNull.Value;
             else
                 cmd.Parameters.Add("@Created_by", SqlDbType.VarChar).Value = Created_by.Trim();
+            if (string.IsNullOrWhiteSpace(comment))
+                cmd.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = DBNull.Value;
+            else
+                cmd.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = comment.Trim();
 
             string val = cmd.ExecuteScalar().ToString();
             if (val != string.Empty)
