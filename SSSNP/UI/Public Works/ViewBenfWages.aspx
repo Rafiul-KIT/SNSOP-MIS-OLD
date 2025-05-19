@@ -446,6 +446,13 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td colspan="3" align="center" style="padding: 5px; margin: 5px">
+                                            <asp:Label ID="lblComment" runat="server" Text="Comment:" CssClass="form-label"></asp:Label><br />
+                                            <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="3" Columns="50"
+                                                CssClass="form-control" Width="400px" placeholder="Enter your comment here..."></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td align="center" colspan="3" style="padding: 5px; margin: 5px">
                                             <asp:Button ID="btnIPApprove" runat="server" CssClass="btn btn-primary"
                                                 Height="32px" OnClick="btnIPApprove_Click" TabIndex="10" Text="IP Approved"

@@ -3,7 +3,8 @@
 CREATE procedure [dbo].[InsRejectStatusDraft]
 (
 @intWagePaymentReqid varchar(8),
-@Created_by varchar(8)
+@Created_by varchar(8),
+@Comment nvarchar(max)
 )
 As
 Begin
@@ -12,7 +13,8 @@ Update td_WorkWageRequest
 	set 
 		[Status]=105
 		,Modified_by=@Created_by
-		,Modified_dt=getdate() 
+		,Modified_dt=getdate()
+		,Remarks=@Comment
 where intWagePaymentReqid=@intWagePaymentReqid
 
 Declare @intWorkid as int

@@ -25,11 +25,16 @@ namespace SSSNP.Service
             var queries = new List<string>
                 {
                     @"INSERT INTO td_WageReqBenDetAudit
-                      (intWagesReqBenTransid, intWagePaymentReqid, intWorkid, intBenid, TotAttendance,
-                       WageRateUSD, WageRateUSDTotal, traineealternate, Status, Created_by, Created_dt,
-                       Modified_by, Modified_dt, ExchangeRateOLD, ExchangeRateNew, CheckA, ReInitiate,
-                       AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh)
-                      SELECT * FROM td_WageReqBenDet WHERE intWagePaymentReqid = @intWagePaymentReqid",
+                        (intWagesReqBenTransid, intWagePaymentReqid, intWorkid, intBenid, TotAttendance,
+                         WageRateUSD, WageRateUSDTotal, traineealternate, Status, Created_by, Created_dt,
+                         Modified_by, Modified_dt, ExchangeRateOLD, ExchangeRateNew, CheckA, ReInitiate,
+                         AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh, audit_cause)
+                    SELECT intWagesReqBenTransid, intWagePaymentReqid, intWorkid, intBenid, TotAttendance,
+                           WageRateUSD, WageRateUSDTotal, traineealternate, Status, Created_by, Created_dt,
+                           Modified_by, Modified_dt, ExchangeRateOLD, ExchangeRateNew, CheckA, ReInitiate,
+                           AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh, 2
+                    FROM td_WageReqBenDet
+                    WHERE intWagePaymentReqid = @intWagePaymentReqid;",
 
                     @"INSERT INTO td_WageReqTransAudit
                       (intWagesReqTransid, intWagePaymentReqid, intWorkid, intFromid, intToid, Status,
@@ -50,11 +55,16 @@ namespace SSSNP.Service
                       FROM td_WorkWageRequest WHERE intWagePaymentReqid = @intWagePaymentReqid",
 
                     @"INSERT INTO tr_BenAttendanceDetAudit
-                      (intAttendanceid, intWorkActivityId, intBenid, AttendanceDate, Status,
-                       Created_by, Created_dt, Modified_by, Modified_dt, AttendanceYear, PortYear,
-                       PortPhase, PortedSheetName, PaymentFlag, WageApplyFlag, intWageReqid,
-                       cashP_FLI, cashP_ECD, cashP_WASH)
-                      SELECT * FROM tr_BenAttendanceDet WHERE intWageReqid = @intWagePaymentReqid",
+                        (intAttendanceid, intWorkActivityId, intBenid, AttendanceDate, Status,
+                         Created_by, Created_dt, Modified_by, Modified_dt, AttendanceYear, PortYear,
+                         PortPhase, PortedSheetName, PaymentFlag, WageApplyFlag, intWageReqid,
+                         cashP_FLI, cashP_ECD, cashP_WASH, audit_cause)
+                    SELECT intAttendanceid, intWorkActivityId, intBenid, AttendanceDate, Status,
+                           Created_by, Created_dt, Modified_by, Modified_dt, AttendanceYear, PortYear,
+                           PortPhase, PortedSheetName, PaymentFlag, WageApplyFlag, intWageReqid,
+                           cashP_FLI, cashP_ECD, cashP_WASH, 2
+                    FROM tr_BenAttendanceDet
+                    WHERE intWageReqid = @intWagePaymentReqid;",
 
                     @"DELETE FROM td_WageReqTrans WHERE intWagePaymentReqid = @intWagePaymentReqid",
                     @"DELETE FROM td_WageReqBenDet WHERE intWagePaymentReqid = @intWagePaymentReqid",

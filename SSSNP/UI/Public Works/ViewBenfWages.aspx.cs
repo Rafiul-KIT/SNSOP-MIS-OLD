@@ -454,7 +454,13 @@ public partial class ViewBenfWages : System.Web.UI.Page
 
     protected void btnIPApprove_Click(object sender, EventArgs e)
     {
-
+        if (string.IsNullOrWhiteSpace(txtComment.Text))
+        {
+            lblmsg.Text = "Comment is required for approval.";
+            lblmsg.ForeColor = Color.Red;
+            lblmsg.Visible = true;
+            return;
+        }
         //Button BtnSave = (Button)sender;
 
         string strPayingagent = ddlPayingAgent.SelectedItem.Text;
@@ -466,7 +472,7 @@ public partial class ViewBenfWages : System.Web.UI.Page
             strPayingagent = "";
         }
 
-        int a = Gen.InsApprovalStatusDraft(Request.QueryString[0].ToString().Trim(), "1", Session["uid"].ToString().Trim(), ddlPayingAgent.SelectedValue, ddlCoordinator.SelectedValue, ddlSpecialist.SelectedValue, ddlManager.SelectedValue);
+        int a = Gen.InsApprovalStatusDraft(Request.QueryString[0].ToString().Trim(), "1", Session["uid"].ToString().Trim(), ddlPayingAgent.SelectedValue, ddlCoordinator.SelectedValue, ddlSpecialist.SelectedValue, ddlManager.SelectedValue, txtComment.Text.Trim());
 
 
         if (a >= 0)
@@ -479,6 +485,9 @@ public partial class ViewBenfWages : System.Web.UI.Page
             lblmsg.Visible = true;
             btnIPApprove.Visible = false;
             btnIPReject.Visible = false;
+            txtComment.Text = "";
+            txtComment.Visible = false;
+            lblComment.Visible = false;
             ddlPayingAgent.Visible = false;
             ddlSpecialist.Visible = false;
             ddlCoordinator.Visible = false;
@@ -509,7 +518,15 @@ public partial class ViewBenfWages : System.Web.UI.Page
 
     protected void btnIPReject_Click(object sender, EventArgs e)
     {
-        int a = Gen.InsRejectedStatusWRDraft(Request.QueryString[0].ToString().Trim(), Session["uid"].ToString().Trim());
+        if (string.IsNullOrWhiteSpace(txtComment.Text))
+        {
+            lblmsg.Text = "Comment is required for rejection.";
+            lblmsg.ForeColor = Color.Red;
+            lblmsg.Visible = true;
+            return;
+        }
+
+        int a = Gen.InsRejectedStatusWRDraft(Request.QueryString[0].ToString().Trim(), Session["uid"].ToString().Trim(), txtComment.Text.Trim());
 
 
         if (a >= 0)
@@ -522,6 +539,9 @@ public partial class ViewBenfWages : System.Web.UI.Page
             lblmsg.Visible = true;
             btnIPApprove.Visible = false;
             btnIPReject.Visible = false;
+            txtComment.Text = "";
+            txtComment.Visible = false;
+            lblComment.Visible = false;
             ddlPayingAgent.Visible = false;
             ddlSpecialist.Visible = false;
             ddlCoordinator.Visible = false;
