@@ -331,10 +331,10 @@ namespace SSSNP.UI.Public_Works
                             break;
                         case 12:
                         case 19:
-                            PaymentCycleTR.Visible = true;
+                            //PaymentCycleTR.Visible = true;
                             break;
                         case 13:
-                            PaymentCycleTR.Visible = true;
+                            //PaymentCycleTR.Visible = true;
                             AgeRangeTR.Visible = true;
                             SexTR.Visible = true;
                             LegalStatusTR.Visible = true;

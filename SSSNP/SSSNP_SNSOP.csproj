@@ -662,6 +662,7 @@
     <Content Include="UI\Public Works\PDCWorkProgress.aspx" />
     <Content Include="UI\Public Works\PDCWorkProgress12.aspx" />
     <Content Include="UI\Public Works\PublicWorksApproval.aspx" />
+    <Content Include="UI\Public Works\RejectedWagesDeletion.aspx" />
     <Content Include="UI\Public Works\ReportsDashboard.aspx" />
     <Content Include="UI\Public Works\ReportsMNE.aspx" />
     <Content Include="UI\Public Works\Result.aspx" />
@@ -826,6 +827,7 @@
     <Compile Include="App_Code\CUserContext.cs" />
     <Compile Include="App_Code\ErrorLogger.cs" />
     <Compile Include="App_Code\SSSNPHelper.cs" />
+    <Compile Include="Asynch\AutoPayrollDownload.cs" />
     <Compile Include="Asynch\AutoReconcilePayrollAsync.cs" />
     <Compile Include="Asynch\BulkIdCardGenerationAsync.cs" />
     <Compile Include="Asynch\SendGrmNotificationAsynch.cs" />
@@ -853,6 +855,7 @@
     <Compile Include="Service\IndicatorResultQuery.cs" />
     <Compile Include="Service\IndicatorResultService.cs" />
     <Compile Include="Service\LookupManagerService.cs" />
+    <Compile Include="Service\RejectedWageRequestDeletionService.cs" />
     <Compile Include="Service\WageRequestApiManager.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Tools.aspx.cs">
@@ -2002,6 +2005,13 @@
     </Compile>
     <Compile Include="UI\Public Works\PublicWorksApproval.aspx.designer.cs">
       <DependentUpon>PublicWorksApproval.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\RejectedWagesDeletion.aspx.cs">
+      <DependentUpon>RejectedWagesDeletion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\RejectedWagesDeletion.aspx.designer.cs">
+      <DependentUpon>RejectedWagesDeletion.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\ReportsDashboard.aspx.designer.cs">
       <DependentUpon>ReportsDashboard.aspx</DependentUpon>

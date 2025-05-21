@@ -7,11 +7,12 @@ CREATE procedure [dbo].[InsApprovalStatusDraft]
 @intPayingaAgent varchar(10),
 @intCoordinatorId varchar(10),
 @intSpecialistId  varchar(10),
-@intManagerId  varchar(10)
+@intManagerId  varchar(10),
+@Comment nvarchar(max)
 )
 As
 Begin
-Update td_WorkWageRequest set Status=@ReqStatus,intPayingAgentid=@intPayingaAgent,intCoOrdinatorid=@intCoordinatorId, intSpecialistid=@intSpecialistId,intManagerid=@intManagerId
+Update td_WorkWageRequest set Status=@ReqStatus,intPayingAgentid=@intPayingaAgent,intCoOrdinatorid=@intCoordinatorId, intSpecialistid=@intSpecialistId,intManagerid=@intManagerId, Remarks=@Comment
 ,Modified_by=@Created_by,Modified_dt=getdate() where intWagePaymentReqid=@intWagePaymentReqid
 
 Declare @intWorkid as int
