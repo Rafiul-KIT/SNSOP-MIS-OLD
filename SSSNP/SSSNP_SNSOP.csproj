@@ -388,6 +388,7 @@
     <Content Include="UI\Public Works\CoachingDetails.aspx" />
     <Content Include="UI\Public Works\CourseDetails.aspx" />
     <Content Include="UI\Public Works\CourseEntity.aspx" />
+    <Content Include="UI\Public Works\DeletedWageRequestReport.aspx" />
     <Content Include="UI\Public Works\EconomicOpportunitiesDashboard.aspx" />
     <Content Include="UI\Public Works\FinancialServiceLinkageTracking.aspx" />
     <Content Include="UI\Public Works\BusinessPlanDevelopment.aspx" />
@@ -1013,6 +1014,13 @@
     </Compile>
     <Compile Include="UI\Public Works\CourseEntity.aspx.designer.cs">
       <DependentUpon>CourseEntity.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\DeletedWageRequestReport.aspx.cs">
+      <DependentUpon>DeletedWageRequestReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\DeletedWageRequestReport.aspx.designer.cs">
+      <DependentUpon>DeletedWageRequestReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\EconomicOpportunitiesDashboard.aspx.cs">
       <DependentUpon>EconomicOpportunitiesDashboard.aspx</DependentUpon>
