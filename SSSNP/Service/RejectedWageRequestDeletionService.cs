@@ -28,18 +28,22 @@ namespace SSSNP.Service
                         (intWagesReqBenTransid, intWagePaymentReqid, intWorkid, intBenid, TotAttendance,
                          WageRateUSD, WageRateUSDTotal, traineealternate, Status, Created_by, Created_dt,
                          Modified_by, Modified_dt, ExchangeRateOLD, ExchangeRateNew, CheckA, ReInitiate,
-                         AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh, audit_cause)
+                         AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh, audit_cause, deleted_at)
                     SELECT intWagesReqBenTransid, intWagePaymentReqid, intWorkid, intBenid, TotAttendance,
                            WageRateUSD, WageRateUSDTotal, traineealternate, Status, Created_by, Created_dt,
                            Modified_by, Modified_dt, ExchangeRateOLD, ExchangeRateNew, CheckA, ReInitiate,
-                           AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh, 2
+                           AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh, 2, GETDATE()
                     FROM td_WageReqBenDet
                     WHERE intWagePaymentReqid = @intWagePaymentReqid;",
 
                     @"INSERT INTO td_WageReqTransAudit
-                      (intWagesReqTransid, intWagePaymentReqid, intWorkid, intFromid, intToid, Status,
-                       TransDate, Remarks, Created_by, Created_dt, Modified_by, Modified_dt)
-                      SELECT * FROM td_WageReqTrans WHERE intWagePaymentReqid = @intWagePaymentReqid",
+                        (deleted_at, intWagesReqTransid, intWagePaymentReqid, intWorkid, intFromid, intToid, Status,
+                         TransDate, Remarks, Created_by, Created_dt, Modified_by, Modified_dt)
+                    SELECT 
+                        GETDATE(), intWagesReqTransid, intWagePaymentReqid, intWorkid, intFromid, intToid, Status,
+                        TransDate, Remarks, Created_by, Created_dt, Modified_by, Modified_dt
+                    FROM td_WageReqTrans
+                    WHERE intWagePaymentReqid = @intWagePaymentReqid;",
 
                     @"INSERT INTO td_WorkWageRequestAudit
                       (deleted_at, intWagePaymentReqid, intWorkid, WageRateUSD, ReqFromDate, ReqToDate,
@@ -58,11 +62,11 @@ namespace SSSNP.Service
                         (intAttendanceid, intWorkActivityId, intBenid, AttendanceDate, Status,
                          Created_by, Created_dt, Modified_by, Modified_dt, AttendanceYear, PortYear,
                          PortPhase, PortedSheetName, PaymentFlag, WageApplyFlag, intWageReqid,
-                         cashP_FLI, cashP_ECD, cashP_WASH, audit_cause)
+                         cashP_FLI, cashP_ECD, cashP_WASH, audit_cause, deleted_at)
                     SELECT intAttendanceid, intWorkActivityId, intBenid, AttendanceDate, Status,
                            Created_by, Created_dt, Modified_by, Modified_dt, AttendanceYear, PortYear,
                            PortPhase, PortedSheetName, PaymentFlag, WageApplyFlag, intWageReqid,
-                           cashP_FLI, cashP_ECD, cashP_WASH, 2
+                           cashP_FLI, cashP_ECD, cashP_WASH, 2, GETDATE()
                     FROM tr_BenAttendanceDet
                     WHERE intWageReqid = @intWagePaymentReqid;",
 
