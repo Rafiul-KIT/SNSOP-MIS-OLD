@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -60,87 +62,102 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+        /* protected void BtnSave3_Click(object sender, EventArgs e)
+         {
+             LblResultA.Text = "";
+             LblResultA0.Text = "";
+             LblResultA.Text = "";
+
+             try
+             {
+                 DataSet ds = new DataSet();
+                 if (Session["user_type"].ToString().Trim() == "IP")
+                 {
+                     ds = Gen.getWageInvoiceAbstractReqNo(hdfID.Value.ToString(), "", "", ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, "All");
+                 }
+                 else
+                 {
+                     ds = Gen.getWageInvoiceAbstractReqNo(hdfID.Value.ToString(), "", "", ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, "All");
+                 }
+
+                 if (ds != null)
+                 {
+                     if (ds.Tables[0].Rows.Count > 0)
+                     {
+                         tblreport.Visible = true;
+                         ViewState["dt"] = ds;
+                         grdClosebatchdet.DataSource = ds.Tables[0];
+                         grdClosebatchdet.DataBind();
+                         if (Session["user_type"].ToString().Trim() == "IP")
+                         {
+                             LblResultA.Text = "Total Members: " + ds.Tables[1].Rows[0][0].ToString() + "  | Total Work Days : " + ds.Tables[1].Rows[0][1].ToString() + "  | Total Paid Amount in USD : " + ds.Tables[1].Rows[0][2].ToString();
+                         }
+                         else
+                         {
+                             LblResultA.Text = "Total Members: " + ds.Tables[1].Rows[0][0].ToString() + "  | Total Work Days : " + ds.Tables[1].Rows[0][1].ToString() + "  | Total Paid Amount in USD : " + ds.Tables[1].Rows[0][2].ToString() + "  | Total Paid Amount in SSP : " + ds.Tables[1].Rows[0][3].ToString() + "  | Exchange Rate : " + ds.Tables[1].Rows[0][4].ToString();
+                         }
+                         lblmessage.Text = "";
+                     }
+                     else
+                     {
+                         if (Session["user_type"].ToString().Trim() == "IP")
+                         {
+                             LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0";
+                         }
+                         else
+                         {
+                             LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0" + "  | Total Paid Amount in SSP : 0";
+                         }
+
+                         grdClosebatchdet.DataSource = null;
+                         grdClosebatchdet.DataBind();
+                     }
+                 }
+                 else
+                 {
+                     if (Session["user_type"].ToString().Trim() == "IP")
+                     {
+                         LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0";
+                     }
+                     else
+                     {
+                         LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0" + "  | Total Paid Amount in SSP : 0";
+                     }
+                     grdClosebatchdet.DataSource = null;
+                     grdClosebatchdet.DataBind();
+                 }
+             }
+             catch (Exception ex)
+             {
+                 grdClosebatchdet.DataSource = null;
+                 grdClosebatchdet.DataBind();
+                 LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0";
+                 lblmessage.Text = "There is no attendance/wages ";
+             }
+             finally
+             {
+             }
+         }*/
+
         protected void BtnSave3_Click(object sender, EventArgs e)
         {
-            LblResultA.Text = "";
-            LblResultA0.Text = "";
-            LblResultA.Text = "";
-
             try
             {
-                DataSet ds = new DataSet();
-                if (Session["user_type"].ToString().Trim() == "IP")
-                {
-                    ds = Gen.getWageInvoiceAbstractReqNo(hdfID.Value.ToString(), "", "", ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, "All");
-                }
-                else
-                {
-                    ds = Gen.getWageInvoiceAbstractReqNo(hdfID.Value.ToString(), "", "", ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, "All");
-                }
-
-                if (ds != null)
-                {
-                    if (ds.Tables[0].Rows.Count > 0)
-                    {
-                        tblreport.Visible = true;
-                        ViewState["dt"] = ds;
-                        grdClosebatchdet.DataSource = ds.Tables[0];
-                        grdClosebatchdet.DataBind();
-                        if (Session["user_type"].ToString().Trim() == "IP")
-                        {
-                            LblResultA.Text = "Total Members: " + ds.Tables[1].Rows[0][0].ToString() + "  | Total Work Days : " + ds.Tables[1].Rows[0][1].ToString() + "  | Total Paid Amount in USD : " + ds.Tables[1].Rows[0][2].ToString();
-                        }
-                        else
-                        {
-                            LblResultA.Text = "Total Members: " + ds.Tables[1].Rows[0][0].ToString() + "  | Total Work Days : " + ds.Tables[1].Rows[0][1].ToString() + "  | Total Paid Amount in USD : " + ds.Tables[1].Rows[0][2].ToString() + "  | Total Paid Amount in SSP : " + ds.Tables[1].Rows[0][3].ToString() + "  | Exchange Rate : " + ds.Tables[1].Rows[0][4].ToString();
-                        }
-                        lblmessage.Text = "";
-                    }
-                    else
-                    {
-                        if (Session["user_type"].ToString().Trim() == "IP")
-                        {
-                            LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0";
-                        }
-                        else
-                        {
-                            LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0" + "  | Total Paid Amount in SSP : 0";
-                        }
-
-                        grdClosebatchdet.DataSource = null;
-                        grdClosebatchdet.DataBind();
-                    }
-                }
-                else
-                {
-                    if (Session["user_type"].ToString().Trim() == "IP")
-                    {
-                        LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0";
-                    }
-                    else
-                    {
-                        LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0" + "  | Total Paid Amount in SSP : 0";
-                    }
-                    grdClosebatchdet.DataSource = null;
-                    grdClosebatchdet.DataBind();
-                }
+                fillgrid(); // Load deleted wage requests into grid
             }
             catch (Exception ex)
             {
                 grdClosebatchdet.DataSource = null;
                 grdClosebatchdet.DataBind();
-                LblResultA.Text = "Total Members : 0" + "  | Total Work Days : 0" + "  | Total Paid Amount in USD : 0";
-                lblmessage.Text = "There is no attendance/wages ";
-            }
-            finally
-            {
+                lblmessage.Text = "There was an error while loading data.";
             }
         }
 
-        protected void BtnSave2_Click(object sender, EventArgs e)
+
+        /*protected void BtnSave2_Click(object sender, EventArgs e)
         {
             Response.Redirect("WageInvoiceAbstractAPI.aspx");
-        }
+        }*/
 
         public string DisableTheButton(Control pge, Control btn, string vldGroup)
         {
@@ -166,7 +183,7 @@ namespace SSSNP.UI.Public_Works
 
         }
 
-        public void fillgrid()
+        /*public void fillgrid()
         {
             LblResultA.Text = "";
             LblResultA0.Text = "";
@@ -217,6 +234,92 @@ namespace SSSNP.UI.Public_Works
             }
             finally
             {
+            }
+        }*/
+
+        public void fillgrid()
+        {
+            LblResultA.Text = "";
+            lblmessage.Text = "";
+            tblreport.Visible = false;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(@"
+                SELECT DISTINCT
+                        wwa.intWagePaymentReqid,
+                        wwa.ReqNo,
+                        wwa.ReqFromDate,
+                        wwa.ReqToDate,
+                        wwa.WageRateUSD,
+                        pc.WagePaymentCycle AS PaymentCycle,
+                        wwa.AmountInSSP,
+                        wwa.Exchangerateattime AS ExchangeRate,
+                        wwa.Remarks,
+                        ws.StageName AS WageStatus,
+                        wm.WorkCode,
+                        st.StateName,
+                        co.CountieName,
+                        p.PayamName,
+                        b.BomaName,
+                        u.User_name AS DeletedBy,
+                        wwa.deleted_at,
+                        CAST(wwa.deletion_cause AS VARCHAR(MAX)) AS deletion_cause
+                    FROM td_WorkWageRequestAudit wwa
+                    INNER JOIN tbl_WorkMaster wm ON wwa.intWorkid = wm.intWorkid
+                    INNER JOIN td_WageReqBenDetAudit wrbt ON wwa.intWagePaymentReqid = wrbt.intWagePaymentReqid
+                    INNER JOIN tbl_BeneficiaryDet ben ON wrbt.intBenid = ben.intBenid
+                    INNER JOIN tm_States st ON ben.intStateid = st.intStateid
+                    INNER JOIN tm_Counties co ON ben.intCountieid = co.intCountieid
+                    INNER JOIN tm_Payams p ON ben.intPayamid = p.intPayamid
+                    INNER JOIN tm_Bomas b ON ben.intBomasid = b.intBomasid
+                    LEFT JOIN tm_WagePaymentCycle pc ON wwa.PaymentCycle = pc.intPaymentCycleID
+                    LEFT JOIN tm_WageStages ws ON wwa.Status = ws.Stageid
+                    LEFT JOIN tbl_Users u ON wwa.deleted_by = u.intUserid
+                    WHERE 
+                        (@ReqNo IS NULL OR wwa.ReqNo = @ReqNo)
+                        AND (@WorkCode IS NULL OR wm.WorkCode = @WorkCode)
+                        AND (@intStateid IS NULL OR ben.intStateid = @intStateid)
+                        AND (@intCountieid IS NULL OR ben.intCountieid = @intCountieid)
+                        AND (@intPayamid IS NULL OR ben.intPayamid = @intPayamid)
+                        AND (@intBomasid IS NULL OR ben.intBomasid = @intBomasid)
+                    ORDER BY wwa.deleted_at DESC;", conn);
+
+                    // Add parameters
+                    cmd.Parameters.AddWithValue("@ReqNo", string.IsNullOrEmpty(TxtRequestNo.Text) ? (object)DBNull.Value : TxtRequestNo.Text.Trim());
+                    cmd.Parameters.AddWithValue("@WorkCode", string.IsNullOrEmpty(txtWorkcode.Text) ? (object)DBNull.Value : txtWorkcode.Text.Trim());
+                    cmd.Parameters.AddWithValue("@intStateid", ddlState.SelectedIndex == 0 ? (object)DBNull.Value : ddlState.SelectedValue);
+                    cmd.Parameters.AddWithValue("@intCountieid", ddlCounties.SelectedIndex == 0 ? (object)DBNull.Value : ddlCounties.SelectedValue);
+                    cmd.Parameters.AddWithValue("@intPayamid", ddlPayam.SelectedIndex == 0 ? (object)DBNull.Value : ddlPayam.SelectedValue);
+                    cmd.Parameters.AddWithValue("@intBomasid", ddlBoma.SelectedIndex == 0 ? (object)DBNull.Value : ddlBoma.SelectedValue);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        tblreport.Visible = true;
+                        grdClosebatchdet.DataSource = dt;
+                        grdClosebatchdet.DataBind();
+                        lblmessage.Text = "Total Deleted Requests: " + dt.Rows.Count;
+                    }
+                    else
+                    {
+                        grdClosebatchdet.DataSource = null;
+                        grdClosebatchdet.DataBind();
+                        lblmessage.Text = "No deleted wage requests found.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                grdClosebatchdet.DataSource = null;
+                grdClosebatchdet.DataBind();
+                lblmessage.Text = "Error loading data: " + ex.Message;
             }
         }
 

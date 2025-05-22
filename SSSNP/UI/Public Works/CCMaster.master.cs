@@ -154,6 +154,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         MultipleWagesReportMenu.Visible = value;
         WagePaidCycleWiseReportMenu.Visible = value;
         PaidAlternateNotInMISReportMenu.Visible = value;
+        DeletedWageRequestReport.Visible = value;
     }
 
     protected void Page_Load(object sender, EventArgs e)

@@ -210,7 +210,7 @@
                                                                 <asp:Label ID="LblResultA0" runat="server" Font-Bold="True" Font-Size="12px"
                                                                     ForeColor="#CC3300"></asp:Label>
                                                                 <br />
-                                                                <asp:GridView ID="grdClosebatchdet" runat="server" CellPadding="4"
+                                                                <%--<asp:GridView ID="grdClosebatchdet" runat="server" CellPadding="4"
                                                                     CssClass="GRD" ForeColor="#333333"
                                                                     OnPageIndexChanging="grdClosebatchdet_PageIndexChanging" AutoGenerateColumns="false"
                                                                     OnRowDataBound="grdClosebatchdet_RowDataBound"
@@ -259,7 +259,58 @@
                                                                         ForeColor="White" />
                                                                     <EditRowStyle BackColor="#013161" />
                                                                     <AlternatingRowStyle BackColor="White" />
+                                                                </asp:GridView>--%>
+                                                                <asp:GridView ID="grdClosebatchdet" runat="server" CellPadding="4"
+                                                                    CssClass="GRD" ForeColor="#333333"
+                                                                    OnPageIndexChanging="grdClosebatchdet_PageIndexChanging" AutoGenerateColumns="false"
+                                                                    OnRowDataBound="grdClosebatchdet_RowDataBound"
+                                                                    OnSelectedIndexChanged="grdClosebatchdet_SelectedIndexChanged" PageSize="50"
+                                                                    Width="100%" OnPreRender="grdClosebatchdet_PreRender">
+
+                                                                    <FooterStyle BackColor="#013161" Font-Bold="True" ForeColor="White" />
+                                                                    <RowStyle BackColor="#FFFFFF" CssClass="GRDITEM" HorizontalAlign="Left" VerticalAlign="Middle" />
+                                                                    <PagerStyle BackColor="#013161" ForeColor="White" HorizontalAlign="Center" />
+                                                                    <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                                                    <HeaderStyle BackColor="#013161" CssClass="GRDHEADER" Font-Bold="True" ForeColor="White" />
+                                                                    <EditRowStyle BackColor="#013161" />
+                                                                    <AlternatingRowStyle BackColor="White" />
+                                                                    <EmptyDataTemplate>No deleted requests found.</EmptyDataTemplate>
+
+                                                                    <Columns>
+                                                                        <asp:TemplateField HeaderText="S.No">
+                                                                            <ItemTemplate><%# Container.DataItemIndex + 1 %></ItemTemplate>
+                                                                            <ItemStyle Width="30px" />
+                                                                        </asp:TemplateField>
+
+                                                                        <asp:TemplateField HeaderText="Beneficiaries">
+                                                                            <ItemTemplate>
+                                                                                <asp:HyperLink runat="server" CssClass="fa fa-edit" Target="_blank"
+                                                                                    ID="hlRedirect"
+                                                                                    NavigateUrl='<%# String.Format("ViewBenfWages.aspx?WorkReqId={0}", Eval("intWagePaymentReqid")) %>'
+                                                                                    Text='View'>
+                                                                                </asp:HyperLink>
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateField>
+                                                                        <asp:BoundField DataField="StateName" HeaderText="State" />
+                                                                        <asp:BoundField DataField="CountieName" HeaderText="County" />
+                                                                        <asp:BoundField DataField="PayamName" HeaderText="Payam" />
+                                                                        <asp:BoundField DataField="BomaName" HeaderText="Boma" />
+                                                                        <asp:BoundField DataField="WorkCode" HeaderText="Work Code" />
+                                                                        <asp:BoundField DataField="ReqNo" HeaderText="Request Number" />
+                                                                        <asp:BoundField DataField="ReqFromDate" HeaderText="From Date" DataFormatString="{0:dd-MMM-yyyy}" HtmlEncode="false" />
+                                                                        <asp:BoundField DataField="ReqToDate" HeaderText="To Date" DataFormatString="{0:dd-MMM-yyyy}" HtmlEncode="false" />
+                                                                        <asp:BoundField DataField="WageRateUSD" HeaderText="Wage Rate (USD)" />
+                                                                        <asp:BoundField DataField="AmountInSSP" HeaderText="Amount Paid in SSP" />
+                                                                        <asp:BoundField DataField="ExchangeRate" HeaderText="Exchange Rate" />
+                                                                        <asp:BoundField DataField="WageStatus" HeaderText="Wage Status" />
+                                                                        <asp:BoundField DataField="PaymentCycle" HeaderText="Payment Cycle" />
+                                                                        <asp:BoundField DataField="Remarks" HeaderText="Remarks" />
+                                                                        <asp:BoundField DataField="DeletedBy" HeaderText="Deleted By" />
+                                                                        <asp:BoundField DataField="deleted_at" HeaderText="Deleted At" DataFormatString="{0:dd-MMM-yyyy HH:mm}" HtmlEncode="false" />
+                                                                        <asp:BoundField DataField="deletion_cause" HeaderText="Reason for Deletion" />
+                                                                    </Columns>
                                                                 </asp:GridView>
+
                                                             </td>
                                                         </tr>
                                                     </table>
