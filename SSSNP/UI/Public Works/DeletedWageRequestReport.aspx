@@ -282,7 +282,7 @@
                                                                             <ItemStyle Width="30px" />
                                                                         </asp:TemplateField>
 
-                                                                        <asp:TemplateField HeaderText="Beneficiaries">
+                                                                        <%--<asp:TemplateField HeaderText="Beneficiaries" Visible ="false">
                                                                             <ItemTemplate>
                                                                                 <asp:HyperLink runat="server" CssClass="fa fa-edit" Target="_blank"
                                                                                     ID="hlRedirect"
@@ -290,7 +290,7 @@
                                                                                     Text='View'>
                                                                                 </asp:HyperLink>
                                                                             </ItemTemplate>
-                                                                        </asp:TemplateField>
+                                                                        </asp:TemplateField>--%>
                                                                         <asp:BoundField DataField="StateName" HeaderText="State" />
                                                                         <asp:BoundField DataField="CountieName" HeaderText="County" />
                                                                         <asp:BoundField DataField="PayamName" HeaderText="Payam" />

@@ -143,7 +143,7 @@ namespace SSSNP.UI.Public_Works
         {
             try
             {
-                fillgrid(); // Load deleted wage requests into grid
+                fillgrid();
             }
             catch (Exception ex)
             {
@@ -291,10 +291,20 @@ namespace SSSNP.UI.Public_Works
                     // Add parameters
                     cmd.Parameters.AddWithValue("@ReqNo", string.IsNullOrEmpty(TxtRequestNo.Text) ? (object)DBNull.Value : TxtRequestNo.Text.Trim());
                     cmd.Parameters.AddWithValue("@WorkCode", string.IsNullOrEmpty(txtWorkcode.Text) ? (object)DBNull.Value : txtWorkcode.Text.Trim());
-                    cmd.Parameters.AddWithValue("@intStateid", ddlState.SelectedIndex == 0 ? (object)DBNull.Value : ddlState.SelectedValue);
-                    cmd.Parameters.AddWithValue("@intCountieid", ddlCounties.SelectedIndex == 0 ? (object)DBNull.Value : ddlCounties.SelectedValue);
-                    cmd.Parameters.AddWithValue("@intPayamid", ddlPayam.SelectedIndex == 0 ? (object)DBNull.Value : ddlPayam.SelectedValue);
-                    cmd.Parameters.AddWithValue("@intBomasid", ddlBoma.SelectedIndex == 0 ? (object)DBNull.Value : ddlBoma.SelectedValue);
+                    int stateId;
+                    cmd.Parameters.AddWithValue("@intStateid",
+                        int.TryParse(ddlState.SelectedValue, out stateId) ? (object)stateId : DBNull.Value);
+                    int countyId;
+                    cmd.Parameters.AddWithValue("@intCountieid",
+                        int.TryParse(ddlCounties.SelectedValue, out countyId) ? (object)countyId : DBNull.Value);
+
+                    int payamId;
+                    cmd.Parameters.AddWithValue("@intPayamid",
+                        int.TryParse(ddlPayam.SelectedValue, out payamId) ? (object)payamId : DBNull.Value);
+
+                    int bomaId;
+                    cmd.Parameters.AddWithValue("@intBomasid",
+                        int.TryParse(ddlBoma.SelectedValue, out bomaId) ? (object)bomaId : DBNull.Value);
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
