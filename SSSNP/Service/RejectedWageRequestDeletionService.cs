@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Linq;
 using System.Transactions;
 using SSSNP_SNSOP.Core.DbHandler;
 
@@ -22,6 +24,25 @@ namespace SSSNP.Service
 
         public void DeleteRejectedWageRequest(int intWagePaymentReqid, string deletionCause, string deletedBy)
         {
+            bool isDirectIncomeSupport = false;
+
+            using (var checkConn = new SqlConnection(_connStr))
+            {
+                checkConn.Open();
+                using (var checkCmd = new SqlCommand(
+                    "SELECT Component FROM td_WorkWageRequest WHERE intWagePaymentReqid = @id", checkConn))
+                {
+                    checkCmd.Parameters.AddWithValue("@id", intWagePaymentReqid);
+                    var component = checkCmd.ExecuteScalar();
+                    if (component != null && component.ToString().Trim().Equals("Component 1 (Direct Income Support)", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isDirectIncomeSupport = true;
+                        Debug.WriteLine("⚠️ Wage request is Direct Income Support — attendance queries will be skipped.");
+                    }
+                }
+                checkConn.Close();
+            }
+
             var queries = new List<string>
                 {
                     @"INSERT INTO td_WageReqBenDetAudit
@@ -76,7 +97,7 @@ namespace SSSNP.Service
                       WHERE intWageReqid = @intWagePaymentReqid",
                     @"DELETE FROM td_WorkWageRequest WHERE intWagePaymentReqid = @intWagePaymentReqid"
                 };
-
+            
             using (var connection = new SqlConnection(_connStr))
             {
                 connection.Open();
@@ -87,54 +108,59 @@ namespace SSSNP.Service
                         foreach (var rawQuery in queries)
                         {
                             string currentQuery = rawQuery;
+                            if (isDirectIncomeSupport &&
+                            (currentQuery.IndexOf("tr_BenAttendanceDetAudit", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                             currentQuery.IndexOf("UPDATE tr_BenAttendanceDet", StringComparison.OrdinalIgnoreCase) >= 0))
+                            {
+                                continue;
+                            }
+
 
                             List<SqlParameter> paramList;
 
                             if (currentQuery.Contains("@intWagePaymentReqid") && currentQuery.Contains("@intUserid") && currentQuery.Contains("@deletion_cause"))
                             {
                                 paramList = new List<SqlParameter>
-                                {
-                                    new SqlParameter("@intWagePaymentReqid", intWagePaymentReqid),
-                                    new SqlParameter("@intUserid", deletedBy),
-                                    new SqlParameter("@deletion_cause", deletionCause)
-                                };
+                        {
+                            new SqlParameter("@intWagePaymentReqid", intWagePaymentReqid),
+                            new SqlParameter("@intUserid", deletedBy),
+                            new SqlParameter("@deletion_cause", deletionCause)
+                        };
                             }
                             else if (currentQuery.Contains("@intWagePaymentReqid"))
                             {
                                 paramList = new List<SqlParameter>
-                                {
-                                    new SqlParameter("@intWagePaymentReqid", intWagePaymentReqid)
-                                };
+                        {
+                            new SqlParameter("@intWagePaymentReqid", intWagePaymentReqid)
+                        };
                             }
                             else
                             {
                                 paramList = new List<SqlParameter>();
                             }
-
-                            try
-                            {
+               
                                 int affected = _db.ExecuteNonQuery(currentQuery, CommandType.Text, paramList, connection, transaction);
+
 
                                 if ((currentQuery.StartsWith("DELETE", StringComparison.OrdinalIgnoreCase) ||
                                      currentQuery.StartsWith("UPDATE", StringComparison.OrdinalIgnoreCase)) && affected == 0)
                                 {
                                     throw new InvalidOperationException("Query executed but affected 0 rows:\n" + currentQuery);
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception("Error executing query:\n" + currentQuery, ex);
-                            }
+                            
                         }
 
-
                         transaction.Commit();
+                       
                     }
                     catch (Exception ex)
-                    {
-                        try { transaction.Rollback(); }
-                        catch (Exception rollbackEx)
+                    {                        
+                        try
                         {
+                            transaction.Rollback();
+                        }
+                        catch (Exception rollbackEx)
+                        {                          
                             throw new AggregateException("Rollback failed", ex, rollbackEx);
                         }
 
