@@ -228,6 +228,11 @@ namespace SSSNP.UI.Public_Works
                 lblmessage.Text = "Record deleted successfully.";
                 lblmessage.ForeColor = System.Drawing.Color.Green;
 
+                var emailService = new SSSNP.Network.EmailService();
+                string subject = "Wage Request Deleted";
+                string body = $"Wage request ID {workReqId} was deleted by user {Session["uid"]} for reason: {comment}";
+                emailService.SendEmailToIPs(subject, body);
+
                 txtDeleteComment.Text = "";
                 hdnDeleteWorkReqId.Value = "";
                 lblDeleteWarning.Text = "";

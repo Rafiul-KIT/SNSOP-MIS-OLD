@@ -844,6 +844,7 @@
     <Compile Include="Entity\Payroll_Download\PayrollDownloadRequest.cs" />
     <Compile Include="Entity\Payroll_Download\PayrollResponseDto.cs" />
     <Compile Include="Entity\Payroll\SavePayrollResponse.cs" />
+    <Compile Include="Network\EmailNotificationModel.cs" />
     <Compile Include="Network\EmailService.cs" />
     <Compile Include="Entity\Payroll_Download\PDBiometricDto.cs" />
     <Compile Include="Entity\Payroll_Download\PDHouseholdDetailDto.cs" />
