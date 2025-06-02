@@ -168,16 +168,20 @@ namespace SSSNP.Asynch
                         for (iIndexBoma = 0; iIndexBoma < iCntBomas; iIndexBoma++)
                         {
                             string strBomaId = dsBomasWageApplied.Tables[0].Rows[iIndexBoma][0].ToString();
-                            
-                            string fromDate = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
+
+                            int lookBackDays = int.TryParse(ConfigurationManager.AppSettings["PaymentLookBackDays"], out int days) ? days : 30;
+
+                            string fromDate = DateTime.Now.AddDays(-lookBackDays).ToString("yyyy-MM-dd");
 
                             string URI = ConfigurationManager.AppSettings["AfisDevBaseUrl"]
                                 + ConfigurationManager.AppSettings["GetPayments"] + "/" + strBomaId + "?fromDate=" + HttpUtility.UrlEncode(fromDate);
+
                             if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
                             {
                                 URI = ConfigurationManager.AppSettings["AfisProdBaseUrl"]
-                                + ConfigurationManager.AppSettings["GetPayments"] + "/" + strBomaId + "?fromDate=" + HttpUtility.UrlEncode(fromDate);
+                                    + ConfigurationManager.AppSettings["GetPayments"] + "/" + strBomaId + "?fromDate=" + HttpUtility.UrlEncode(fromDate);
                             }
+
 
                             Uri urlCheck = new Uri(URI);
                             HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
