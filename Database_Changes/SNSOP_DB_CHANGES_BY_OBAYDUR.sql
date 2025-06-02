@@ -77,3 +77,58 @@ create table tbl_com2_Household_Enrollment_Data
 )
 go
 
+
+----01/06/2025-----
+alter table tbl_com2_Household_Group_View add VSLA_formed bit;
+
+alter table tbl_com2_Household_Enrollment_Data add ReasonForWhyNotEnrolled nvarchar(255);
+alter table tbl_com2_Household_Enrollment_Data_Audit add ReasonForWhyNotEnrolled nvarchar(255);
+
+alter table tbl_com2_course add CourseDuration int;
+
+alter table tbl_com2_Training_Attendance add ClassAttendanceDate datetime;
+alter table tbl_com2_Training_Attendance_Audit add ClassAttendanceDate datetime;
+
+alter table tbl_com2_Livelihood_Grant_Disbursement add ActualPaymentDate datetime;
+alter table tbl_com2_Livelihood_Grant_Disbursement_Audit add ActualPaymentDate datetime;
+
+ALTER TABLE tbl_com2_Financial_Services_Linkage_Tracking
+    ADD FinancialServiceConnectionDate datetime;
+
+ALTER TABLE tbl_com2_Financial_Services_Linkage_Tracking
+    ADD DepositAccountOpened bit;
+
+ALTER TABLE tbl_com2_Financial_Services_Linkage_Tracking
+    ADD DepositAccountOpeningDate datetime;
+
+ALTER TABLE tbl_com2_Financial_Services_Linkage_Tracking
+    ADD AccountLastActivityDate datetime;
+
+
+
+ALTER TABLE tbl_com2_Financial_Services_Linkage_Tracking_Audit
+    ADD FinancialServiceConnectionDate datetime;
+
+ALTER TABLE tbl_com2_Financial_Services_Linkage_Tracking_Audit
+    ADD DepositAccountOpened bit;
+
+ALTER TABLE tbl_com2_Financial_Services_Linkage_Tracking_Audit
+    ADD DepositAccountOpeningDate datetime;
+
+ALTER TABLE tbl_com2_Financial_Services_Linkage_Tracking_Audit
+    ADD AccountLastActivityDate datetime;
+
+
+
+ALTER TABLE tbl_com2_course
+    ADD CreatedBy int NOT NULL DEFAULT 0;
+
+ALTER TABLE tbl_com2_course
+    ADD CreatedDate datetime NOT NULL DEFAULT GETDATE();
+
+ALTER TABLE tbl_com2_course
+    ADD ModifiedBy int NULL;
+
+ALTER TABLE tbl_com2_course
+    ADD ModifiedDate datetime NULL;
+
