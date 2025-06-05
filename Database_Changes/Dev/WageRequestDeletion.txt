@@ -1,0 +1,41 @@
+
+insert into td_WageReqBenDetAudit (intWagesReqBenTransid, intWagePaymentReqid, intWorkid,
+                                   intBenid, TotAttendance, WageRateUSD, WageRateUSDTotal,
+                                   traineealternate, Status, Created_by, Created_dt, Modified_by,
+                                   Modified_dt, ExchangeRateOLD, ExchangeRateNew, CheckA, ReInitiate,
+                                   AmountInSSP, cashP_FLI, cashP_ECD, cashP_WASh)
+select *from td_WageReqBenDet where intWagePaymentReqid = @intWagePaymentReqid;
+
+insert into td_WageReqTransAudit (intWagesReqTransid, intWagePaymentReqid, intWorkid, intFromid,
+                                  intToid, Status, TransDate, Remarks, Created_by, Created_dt,
+                                  Modified_by, Modified_dt)
+select *from td_WageReqTrans where intWagePaymentReqid = @intWagePaymentReqid;
+
+insert into td_WorkWageRequestAudit (deleted_at, intWagePaymentReqid, intWorkid, WageRateUSD,
+                                     ReqFromDate, ReqToDate, ReqYear, ReqMonth, intPayingAgentid,
+                                     intCoOrdinatorid, intSpecialistid, intManagerid,
+                                     Exchangerateattime, ReqNo, Status, Remarks, Created_by,
+                                     Created_dt, Modified_by, Modified_dt, ExchangeRateOLD,
+                                     CApproveDate, SApproveDate, MApproveDate, PaymentCycle,
+                                     AmountInSSP, Component, deleted_by, deletion_cause)
+select getdate(), intWagePaymentReqid, intWorkid, WageRateUSD, ReqFromDate, ReqToDate, ReqYear, ReqMonth,
+intPayingAgentid, intCoOrdinatorid, intSpecialistid, intManagerid, Exchangerateattime, ReqNo, Status,
+Remarks, Created_by, Created_dt, Modified_by, Modified_dt, ExchangeRateOLD, CApproveDate, SApproveDate,
+MApproveDate, PaymentCycle, AmountInSSP, Component, @intUserid, @deletion_cause
+from td_WorkWageRequest where intWagePaymentReqid = @intWagePaymentReqid;
+
+insert into tr_BenAttendanceDetAudit (intAttendanceid, intWorkActivityId, intBenid, AttendanceDate,
+                                      Status, Created_by, Created_dt, Modified_by, Modified_dt,
+                                      AttendanceYear, PortYear, PortPhase, PortedSheetName, PaymentFlag,
+                                      WageApplyFlag, intWageReqid, cashP_FLI, cashP_ECD, cashP_WASH)
+select *from tr_BenAttendanceDet where intWageReqid = @intWagePaymentReqid;
+
+delete from td_WageReqTrans	where intWagePaymentReqid = @intWagePaymentReqid;
+
+delete from td_WageReqBenDet where intWagePaymentReqid = @intWagePaymentReqid;
+
+update tr_BenAttendanceDet set WageApplyFlag=NULL, intWageReqid=NULL where intWageReqid = @intWagePaymentReqid;
+
+delete from td_WorkWageRequest where intWagePaymentReqid  = @intWagePaymentReqid;
+
+

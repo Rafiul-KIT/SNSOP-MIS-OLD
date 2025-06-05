@@ -44,13 +44,20 @@ namespace SSSNP.Service
         {
             try
             {
-                string sql = "with cte as (select intBenid from tr_BenWagesPayment group by intBenid)" +
+                String sql = "with cte as (select intBenid from tr_BenWagesPayment bwp" +
+                    " inner join td_WorkWageRequest wwr on bwp.uuid = wwr.intWagePaymentReqid" +
+                    ((request.paymentCycle != null) ? " and wwr.PaymentCycle = " + request.paymentCycle : "") +
+                    " where " +
+                    ((lipw == false) ? "wwr.intWorkid = 999" : "wwr.intWorkid != 999") + " group by intBenid)," +
+                    " cte2 as (select intBenid from td_WageReqBenDet wrbd" +
+                    " inner join td_WorkWageRequest wwr on wrbd.intWagePaymentReqid = wwr.intWagePaymentReqid" +
+                    ((request.paymentCycle != null) ? " and wwr.PaymentCycle = "+request.paymentCycle : "") +
+                    " where " +
+                    ((lipw == false) ? "wwr.intWorkid = 999" : "wwr.intWorkid != 999" ) + " group by intBenid) " +
                     " select 'Total' as 'IndicatorKey', count(*) IndicatorValue " +
-                    " from tbl_BeneficiaryDet b" +
-                    " inner join cte on b.intBenid = cte.intBenid" +
-                    " inner join td_WageReqBenDet wrbd on b.intBenid = wrbd.intBenid" +
-                    ((lipw == false) ? " and wrbd.intWorkid = 999" : " and wrbd.intWorkid != 999") +
-                    " where 1=1";
+                    " from cte inner join tbl_BeneficiaryDet b on cte.intBenid = b.intBenid " +
+                    " inner join cte2 on cte.intBenid = cte2.intBenid";
+
                 List<SqlParameter> list = new List<SqlParameter>();
 
                 sql = modify(request, sql, list);

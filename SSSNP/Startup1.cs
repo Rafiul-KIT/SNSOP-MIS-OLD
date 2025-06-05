@@ -123,6 +123,7 @@ namespace SSSNP
             ThreadHandler.GetInstance(new SendGrmNotificationAsynch()).StartThread();
             ThreadHandler.GetInstance(new AutoReconcilePayrollAsync()).StartThread();
             ThreadHandler.GetInstance(new BulkIdCardGenerationAsync()).StartThread();
+            ThreadHandler.GetInstance(new AutoPayrollDownload()).StartThread();
             //// test code for thread management: END
 
 

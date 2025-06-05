@@ -47,8 +47,16 @@ namespace SSSNP.Network
             mail.Subject = subject;
             mail.Body = body;
             mail.IsBodyHtml = true;
-            mail.Priority = MailPriority.High;mail.BodyEncoding = System.Text.Encoding.UTF8;
+            mail.Priority = MailPriority.High; mail.BodyEncoding = System.Text.Encoding.UTF8;
             mail.SubjectEncoding = System.Text.Encoding.UTF8;
+
+            EmailNotificationModel emailNotification = new EmailNotificationModel
+            {
+                email_to = to,
+                subject = subject,
+                body = body,
+                sent_at = DateTime.Now
+            };
 
             try
             {
@@ -147,5 +155,88 @@ namespace SSSNP.Network
                 }
             }
         }
+
+        public void SendEmailToIPs(string subject, string body)
+        {
+            Task.Run(() => SendBulkEmailToIPsAsync(subject, body));
+        }
+
+        private async Task SendBulkEmailToIPsAsync(string subject, string body)
+        {
+            string sql = @"
+        SELECT Email 
+        FROM tbl_Users 
+        WHERE User_type = 'IP' 
+            AND IP_Approver IS NULL 
+            AND Status = 'Y' 
+            AND Email IS NOT NULL 
+            AND email_receiver = 1";
+
+            DataTable dt = _dbOperation.GetDataTable(sql);
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                List<Task> emailTasks = new List<Task>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    string email = row["Email"]?.ToString();
+                    if (!string.IsNullOrWhiteSpace(email))
+                    {
+                        emailTasks.Add(SendEmailAsync(email, subject, body));
+                    }
+                }
+
+                await Task.WhenAll(emailTasks);
+            }
+        }
+
+        private async Task SendEmailAsync(string to, string subject, string body)
+        {
+            string smtpserver = ConfigurationManager.AppSettings["SMTPSERVER"];
+
+            using (SmtpClient client = new SmtpClient
+            {
+                Port = 25,
+                Host = smtpserver,
+                EnableSsl = true,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential("no-reply@southsudansafetynet.info", "2sOQenMaTV-?")
+            })
+            {
+                MailMessage mail = new MailMessage(new MailAddress("no-reply@southsudansafetynet.info"), new MailAddress(to))
+                {
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true,
+                    Priority = MailPriority.High,
+                    BodyEncoding = System.Text.Encoding.UTF8,
+                    SubjectEncoding = System.Text.Encoding.UTF8
+                };
+
+                var emailNotification = new EmailNotificationModel
+                {
+                    email_to = to,
+                    subject = subject,
+                    body = body,
+                    sent_at = DateTime.Now
+                };
+
+                try
+                {
+                    await client.SendMailAsync(mail);
+                    emailNotification.send_status = true;
+                }
+                catch (Exception ex)
+                {
+                    emailNotification.send_status = false;
+                    emailNotification.send_result_message = ex.ToString();
+                }
+
+                _dbOperation.GenericInsertData(emailNotification, "email_notification");
+            }
+        }
+
+
     }
 }
