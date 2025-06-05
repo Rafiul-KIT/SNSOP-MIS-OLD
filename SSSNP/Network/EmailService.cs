@@ -34,7 +34,7 @@ namespace SSSNP.Network
             MailMessage mail = new MailMessage();
             string smtpserver = System.Configuration.ConfigurationManager.AppSettings["SMTPSERVER"]; // Config smtp
             SmtpClient client = new SmtpClient();
-            client.Port = 25;
+            client.Port = 465;
             client.Host = smtpserver;
             client.EnableSsl = true;
             client.UseDefaultCredentials = false;
