@@ -247,6 +247,15 @@ public partial class CCMaster
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl RejectedWagesDeletion;
 
     /// <summary>
+    /// DeletedWageRequestReport control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl DeletedWageRequestReport;
+
+    /// <summary>
     /// LiPaymentCycleDocument control.
     /// </summary>
     /// <remarks>
@@ -578,15 +587,6 @@ public partial class CCMaster
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl WageRequestAbstractDISReportMenu;
-
-    /// <summary>
-    /// DeletedWageRequestReport control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl DeletedWageRequestReport;
 
     /// <summary>
     /// UnpaidWageRequestAbstractReportMenu control.

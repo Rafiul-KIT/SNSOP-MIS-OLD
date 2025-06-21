@@ -46,6 +46,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         WageRequestDraft.Visible = value;
         RejectedWages.Visible = value;
         RejectedWagesDeletion.Visible = value;
+        DeletedWageRequestReport.Visible = value;
 
         LiPaymentCycleDocument.Visible = value;
         liUploadPaymentCycleDoc.Visible = value;
@@ -154,7 +155,6 @@ public partial class CCMaster : System.Web.UI.MasterPage
         MultipleWagesReportMenu.Visible = value;
         WagePaidCycleWiseReportMenu.Visible = value;
         PaidAlternateNotInMISReportMenu.Visible = value;
-        DeletedWageRequestReport.Visible = value;
     }
 
     protected void Page_Load(object sender, EventArgs e)
@@ -595,6 +595,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
 
                 LiIp5.Visible = true;
                 RejectedWagesDeletion.Visible = true;
+                DeletedWageRequestReport.Visible = true;
             }
             if (Session["user_type"].ToString() == ConfigurationManager.AppSettings["PaymentCycleDocumentUploadRole"].ToString())
             {
