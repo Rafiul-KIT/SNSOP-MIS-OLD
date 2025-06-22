@@ -47,7 +47,7 @@
 
 
     <asp:UpdatePanel ID="upd1" runat="server">
-        <Triggers>
+        <%--<Triggers>
             <asp:PostBackTrigger ControlID="BtnSave2" />
             <asp:PostBackTrigger ControlID="gvpractical0" />
             <asp:PostBackTrigger ControlID="BtnSave1" />
@@ -425,7 +425,7 @@
 <asp:PostBackTrigger ControlID="BtnSave2"></asp:PostBackTrigger>
 <asp:PostBackTrigger ControlID="gvpractical0"></asp:PostBackTrigger>
 <asp:PostBackTrigger ControlID="BtnSave1"></asp:PostBackTrigger>
-        </Triggers>
+        </Triggers>--%>
         <ContentTemplate>
             <div align="left">
                 <ol class="breadcrumb">
@@ -1056,7 +1056,7 @@
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                     <td style="padding: 5px; margin: 5px">
-                                                        <asp:DropDownList ID="ddlScreeningStatus" runat="server" AutoPostBack="True" class="form-control txtbox" Height="33px" Width="180px">
+                                                        <asp:DropDownList ID="ddlScreeningStatus" runat="server" AutoPostBack="false" class="form-control txtbox" Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
@@ -1370,7 +1370,7 @@
             <br />
             <br />
         </ContentTemplate>
-        <Triggers>
+        <%--<Triggers>
             <asp:PostBackTrigger ControlID="BtnSave2"></asp:PostBackTrigger>
             <asp:PostBackTrigger ControlID="gvpractical0"></asp:PostBackTrigger>
             <asp:PostBackTrigger ControlID="BtnSave1"></asp:PostBackTrigger>
@@ -1751,6 +1751,9 @@
 <asp:PostBackTrigger ControlID="BtnSave2"></asp:PostBackTrigger>
 <asp:PostBackTrigger ControlID="gvpractical0"></asp:PostBackTrigger>
 <asp:PostBackTrigger ControlID="BtnSave1"></asp:PostBackTrigger>
-        </Triggers>
+        </Triggers>--%>
+        <Triggers>
+    <asp:PostBackTrigger ControlID="BtnSave2" />
+</Triggers>
     </asp:UpdatePanel>
 </asp:Content>
