@@ -1059,7 +1059,7 @@ public partial class IPBeneficiaryRegistration1 : System.Web.UI.Page
         DataSet ds = new DataSet();
 
 
-        ds = Gen.getBomasCode(Convert.ToInt16(ddlBoma.SelectedValue.ToString()));
+        ds = Gen.getBomasCode(Convert.ToInt32(ddlBoma.SelectedValue.ToString()));
 
         if (ds.Tables[0].Rows.Count > 0)
         {
