@@ -661,7 +661,15 @@ namespace SSSNP_SNSOP
                     // Response.Clear();
                     Response.ClearHeaders();
                     Response.ContentType = "application/octet-stream";
-                    Response.AddHeader("Content-Disposition", "attachment; filename=encryptedPayrollData.bin");
+
+                    string bomaName = (Session["SelectedBomaName"] != null ? Session["SelectedBomaName"].ToString() : "UnknownBoma").Replace(" ", "_");
+                    string paymentCycle = (Session["SelectedPaymentCycle"] != null ? Session["SelectedPaymentCycle"].ToString() : "UnknownCycle").Replace(" ", "_");
+                    
+
+                    string fileName = $"{bomaName}_{paymentCycle}.bin";
+
+                    //Response.AddHeader("Content-Disposition", "attachment; filename=encryptedPayrollData.bin");
+                    Response.AddHeader("Content-Disposition", $"attachment; filename={fileName}");
                     Response.AddHeader("Content-Length", encryptedData.Length.ToString());
 
                 
@@ -1009,7 +1017,14 @@ namespace SSSNP_SNSOP
 
                 // Send the document to the client
                 Response.ContentType = "application/pdf";
-                Response.AddHeader("content-disposition", "attachment;filename=PayrollData.pdf");
+
+                string boma = (Session["SelectedBomaName"] != null ? Session["SelectedBomaName"].ToString() : "UnknownBoma").Replace(" ", "_");
+                string paymentCycle = (Session["SelectedPaymentCycle"] != null ? Session["SelectedPaymentCycle"].ToString() : "UnknownCycle").Replace(" ", "_");
+
+                string fileName = $"{boma}_{paymentCycle}.pdf";
+
+                //Response.AddHeader("content-disposition", "attachment;filename=PayrollData.pdf");
+                Response.AddHeader("Content-Disposition", $"attachment; filename={fileName}");
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.BinaryWrite(ms.ToArray());
                 Response.End();
