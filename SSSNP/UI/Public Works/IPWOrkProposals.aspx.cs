@@ -47,10 +47,10 @@ public partial class IPWOrkProposals : System.Web.UI.Page
             btnOrgLookup0.Attributes.Add("onclick", "javascript:return OpenPopup()");
 
             //Estimated Work Start date
-            CalendarExtender2.StartDate = DateTime.Now;
+            CalendarExtender2.StartDate = DateTime.Now.AddDays(-365);
 
             //Estimated Work End date
-            CalendarExtender3.StartDate = DateTime.Now;
+            CalendarExtender3.StartDate = DateTime.Now.AddDays(-365);
 
             ddlScreeningStatus.Items.Add("Accepted");
             ddlScreeningStatus.Items.Add("Rejected");
