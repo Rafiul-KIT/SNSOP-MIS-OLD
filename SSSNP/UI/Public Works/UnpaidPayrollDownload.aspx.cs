@@ -276,7 +276,19 @@ namespace SSSNP.UI.Public_Works
             Session["SelectedBomaId"] = ddlBoma.SelectedValue;
             Session["SelectedBomaName"] = ddlBoma.SelectedItem.Text;
 
-            Session["SelectedPaymentCycle"] = ddlPaymentCycle.SelectedValue;
+            if (!string.IsNullOrWhiteSpace(ddlPaymentCycle.SelectedValue))
+            {
+                string[] parts = ddlPaymentCycle.SelectedValue.Split(' ');
+                string cycleNumber = parts.Last();
+
+                Session["SelectedPaymentCycle"] = cycleNumber;
+            }
+            else
+            {
+                Session["SelectedPaymentCycle"] = null;
+            }
+
+            Session["SelectedSupportType"] = ddlSupportType.SelectedValue;
 
             // Hide the warning label if validation passes
             LblWarning.Visible = false;

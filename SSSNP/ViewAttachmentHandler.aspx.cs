@@ -655,20 +655,38 @@ namespace SSSNP_SNSOP
                 {
                     // Encrypt the data
                     byte[] encryptedData;
-                    encryptedData = EncryptData(json, key, iv);
-                    
-                    // Set the response headers and content
-                    // Response.Clear();
+                    encryptedData = EncryptData(json, key, iv);                    
+
+                    string SanitizeFileNamePart(string input)
+                    {
+                        var invalidChars = System.IO.Path.GetInvalidFileNameChars();
+                        return new string(input.Where(c => !invalidChars.Contains(c)).ToArray()).Replace(" ", "_");
+                    }
+
+                    // Get and sanitize boma
+                    string boma = Session["SelectedBomaName"]?.ToString();
+                    boma = !string.IsNullOrWhiteSpace(boma) ? SanitizeFileNamePart(boma) : null;
+
+                    // Get and sanitize paymentCycle
+                    string paymentCycle = Session["SelectedPaymentCycle"]?.ToString();
+                    paymentCycle = !string.IsNullOrWhiteSpace(paymentCycle) ? SanitizeFileNamePart(paymentCycle) : null;
+
+                    // Get and sanitize Support Type
+                    string supportType = Session["SelectedSupportType"]?.ToString();
+                    supportType = !string.IsNullOrWhiteSpace(supportType) ? SanitizeFileNamePart(supportType) : null;
+
+                    // Build filename parts
+                    List<string> parts = new List<string>();
+                    if (!string.IsNullOrEmpty(boma)) parts.Add(boma);
+                    if (!string.IsNullOrEmpty(paymentCycle)) parts.Add(paymentCycle);
+                    if (!string.IsNullOrEmpty(supportType)) parts.Add(supportType);
+
+                    // Combine parts + extension
+                    string fileName = (parts.Count > 0 ? string.Join("_", parts) : "PayrollData") + ".pdf";
+
+                    // Set header
                     Response.ClearHeaders();
                     Response.ContentType = "application/octet-stream";
-
-                    string bomaName = (Session["SelectedBomaName"] != null ? Session["SelectedBomaName"].ToString() : "UnknownBoma").Replace(" ", "_");
-                    string paymentCycle = (Session["SelectedPaymentCycle"] != null ? Session["SelectedPaymentCycle"].ToString() : "UnknownCycle").Replace(" ", "_");
-                    
-
-                    string fileName = $"{bomaName}_{paymentCycle}.bin";
-
-                    //Response.AddHeader("Content-Disposition", "attachment; filename=encryptedPayrollData.bin");
                     Response.AddHeader("Content-Disposition", $"attachment; filename={fileName}");
                     Response.AddHeader("Content-Length", encryptedData.Length.ToString());
 
@@ -1015,15 +1033,35 @@ namespace SSSNP_SNSOP
                 // Close the document
                 document.Close();
 
-                // Send the document to the client
+                string SanitizeFileNamePart(string input)
+                {
+                    var invalidChars = System.IO.Path.GetInvalidFileNameChars();
+                    return new string(input.Where(c => !invalidChars.Contains(c)).ToArray()).Replace(" ", "_");
+                }
+
+                // Get and sanitize boma
+                string boma = Session["SelectedBomaName"]?.ToString();
+                boma = !string.IsNullOrWhiteSpace(boma) ? SanitizeFileNamePart(boma) : null;
+
+                // Get and sanitize paymentCycle
+                string paymentCycle = Session["SelectedPaymentCycle"]?.ToString();
+                paymentCycle = !string.IsNullOrWhiteSpace(paymentCycle) ? SanitizeFileNamePart(paymentCycle) : null;
+
+                // Get and sanitize Support Type
+                string supportType = Session["SelectedSupportType"]?.ToString();
+                supportType = !string.IsNullOrWhiteSpace(supportType) ? SanitizeFileNamePart(supportType) : null;
+
+                // Build filename parts
+                List<string> parts = new List<string>();
+                if (!string.IsNullOrEmpty(boma)) parts.Add(boma);
+                if (!string.IsNullOrEmpty(paymentCycle)) parts.Add(paymentCycle);
+                if (!string.IsNullOrEmpty(supportType)) parts.Add(supportType);
+
+                // Combine parts + extension
+                string fileName = (parts.Count > 0 ? string.Join("_", parts) : "PayrollData") + ".pdf";
+
+                // Set header
                 Response.ContentType = "application/pdf";
-
-                string boma = (Session["SelectedBomaName"] != null ? Session["SelectedBomaName"].ToString() : "UnknownBoma").Replace(" ", "_");
-                string paymentCycle = (Session["SelectedPaymentCycle"] != null ? Session["SelectedPaymentCycle"].ToString() : "UnknownCycle").Replace(" ", "_");
-
-                string fileName = $"{boma}_{paymentCycle}.pdf";
-
-                //Response.AddHeader("content-disposition", "attachment;filename=PayrollData.pdf");
                 Response.AddHeader("Content-Disposition", $"attachment; filename={fileName}");
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.BinaryWrite(ms.ToArray());
