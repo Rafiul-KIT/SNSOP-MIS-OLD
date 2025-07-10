@@ -376,9 +376,7 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-
-
-        private void BindResultsToGrid(List<PDPayrollDataDto> data)
+        /*private void BindResultsToGrid(List<PDPayrollDataDto> data)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("EnrollmentNo");
@@ -426,7 +424,7 @@ namespace SSSNP.UI.Public_Works
 
             rgResults.DataSource = dt;
             rgResults.DataBind();
-        }
+        }*/
 
 
         protected void rgResults_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
