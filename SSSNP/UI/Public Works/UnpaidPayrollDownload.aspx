@@ -10,7 +10,43 @@
         });
 
     </script>
+    <script type="text/javascript">
+        function limitCheckboxSelection(sender) {
+            var checkboxes = document.querySelectorAll("#<%= cblCycles.ClientID %> input[type=checkbox]");
+            var checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            if (checkedCount > 2) {
+                sender.checked = false;
+                alert("You can select at most 2 payment cycles.");
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function togglePayrollOptions(rbl) {
+            const ddl = document.getElementById('<%= ddlPaymentCycle.ClientID %>');
+        const label = document.getElementById('<%= LabelPaymentCycle.ClientID %>');
+        const trMulti = document.getElementById('<%= trCycleMulti.ClientID %>');
+        const colon = document.getElementById('colonPaymentCycle');
 
+
+        if (rbl.value === 'Combined') {
+            ddl.style.display = 'none';
+            if (label) label.style.display = 'none';
+            if (colon) colon.style.display = 'none';
+            if (trMulti) trMulti.style.display = '';
+        } else {
+            ddl.style.display = '';
+            if (label) label.style.display = '';
+            if (colon) colon.style.display = '';
+            if (trMulti) trMulti.style.display = 'none';
+        }
+    }
+
+    // Ensure correct visibility on page load based on default radio selection
+    window.onload = function () {
+        const selected = document.querySelector('input[name="<%= rblPayrollType.UniqueID %>"]:checked');
+            if (selected) togglePayrollOptions({ value: selected.value });
+        };
+    </script>
     <asp:UpdatePanel ID="upd1" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
             <div align="left" style="vertical-align: top">
@@ -83,16 +119,10 @@
                                                             Height="33px" Width="180px" AutoPostBack="True"
                                                             OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
-
                                                         </asp:DropDownList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
-                                            </table>
-                                        </td>
-                                        <td style="width: 27px">&nbsp;</td>
-                                        <td valign="top">
-                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name</asp:Label>
@@ -102,11 +132,16 @@
                                                         <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox"
                                                             Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
-
                                                         </asp:DropDownList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 27px">&nbsp;</td>
+                                        <td valign="top">
+                                            <table cellpadding="4" cellspacing="5" style="width: 100%">
+                                                
                                                 <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelSupportType" runat="server" CssClass="LBLBLACK" Width="165px">Support Type</asp:Label>
@@ -122,18 +157,41 @@
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr>
+                                                    <td style="padding: 5px;" colspan="3">
+                                                        <asp:RadioButtonList ID="rblPayrollType" runat="server"
+                                                            RepeatDirection="Horizontal"
+                                                            AutoPostBack="true"
+                                                            OnSelectedIndexChanged="rblPayrollType_SelectedIndexChanged"
+                                                            onchange="togglePayrollOptions(this)">
+                                                            <asp:ListItem Text="Single Payroll" Value="Single" Selected="True" />
+                                                            <asp:ListItem Text="Combined Payroll" Value="Combined" />
+                                                        </asp:RadioButtonList>
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:Label ID="LabelPaymentCycle" runat="server" CssClass="LBLBLACK" Width="165px">Payment Cycle</asp:Label>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">:</td>
+                                                    <td style="padding: 5px; margin: 5px">
+                                                        <span id="colonPaymentCycle">:</span>
+                                                    </td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlPaymentCycle" runat="server" class="form-control txtbox"
                                                             Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
-
                                                         </asp:DropDownList>
                                                     </td>
                                                     <td style="padding: 5px; margin: 5px">&nbsp;</td>
+                                                </tr>
+                                                <tr id="trCycleMulti" runat="server" visible="false">
+                                                    <%--<td style="padding: 5px;">
+                                                        <asp:Label ID="LabelMultiCycle" runat="server" CssClass="LBLBLACK" Width="165px">Select Payment Cycles (Max 2)</asp:Label>
+                                                    </td>
+                                                    <td>:</td>--%>
+                                                    <td colspan="3">
+                                                        <asp:CheckBoxList ID="cblCycles" runat="server" RepeatDirection="Vertical" RepeatColumns="2" CssClass="form-check">
+                                                        </asp:CheckBoxList>
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </td>

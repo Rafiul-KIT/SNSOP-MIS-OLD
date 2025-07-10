@@ -682,7 +682,7 @@ namespace SSSNP_SNSOP
                     if (!string.IsNullOrEmpty(supportType)) parts.Add(supportType);
 
                     // Combine parts + extension
-                    string fileName = (parts.Count > 0 ? string.Join("_", parts) : "PayrollData") + ".pdf";
+                    string fileName = (parts.Count > 0 ? string.Join("_", parts) : "PayrollData") + ".bin";
 
                     // Set header
                     Response.ClearHeaders();
