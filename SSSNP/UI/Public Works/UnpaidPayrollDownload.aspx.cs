@@ -29,6 +29,13 @@ namespace SSSNP.UI.Public_Works
             if (!IsPostBack)
             {
                 LoadStates();
+                LoadPaymentCycle();
+                LoadCycleCheckboxList();
+
+                foreach (ListItem item in cblCycles.Items)
+                {
+                    item.Attributes["onclick"] = "limitCheckboxSelection(this)";
+                }
             }
 
             accessToken = "";
@@ -82,13 +89,6 @@ namespace SSSNP.UI.Public_Works
             ddlPayam.Items.Add(new ListItem("--Select--", ""));
             ddlBoma.Items.Add(new ListItem("--Select--", ""));
 
-            ddlSupportType.ClearSelection();
-            ddlSupportType.Items.Clear();
-            ddlSupportType.Items.Add(new ListItem("--Select--", ""));
-            ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
-            ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
-            ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
-
             if (!string.IsNullOrEmpty(ddlState.SelectedValue))
             {
                 try
@@ -118,6 +118,10 @@ namespace SSSNP.UI.Public_Works
             ddlPaymentCycle.ClearSelection();
             ddlPaymentCycle.Items.Clear();
             LoadPaymentCycle();
+            ddlSupportType.ClearSelection();
+            ddlSupportType.Items.Clear();
+            LoadSupportTypes();
+
         }
 
         protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
@@ -127,13 +131,6 @@ namespace SSSNP.UI.Public_Works
 
             ddlPayam.Items.Add(new ListItem("--Select--", ""));
             ddlBoma.Items.Add(new ListItem("--Select--", ""));
-
-            ddlSupportType.ClearSelection();
-            ddlSupportType.Items.Clear();
-            ddlSupportType.Items.Add(new ListItem("--Select--", ""));
-            ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
-            ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
-            ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
             if (!string.IsNullOrEmpty(ddlCounty.SelectedValue))
             {
@@ -164,19 +161,15 @@ namespace SSSNP.UI.Public_Works
             ddlPaymentCycle.ClearSelection();
             ddlPaymentCycle.Items.Clear();
             LoadPaymentCycle();
+            ddlSupportType.ClearSelection();
+            ddlSupportType.Items.Clear();
+            LoadSupportTypes();
         }
 
         protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlBoma.Items.Clear();
             ddlBoma.Items.Add(new ListItem("--Select--", ""));
-
-            ddlSupportType.ClearSelection();
-            ddlSupportType.Items.Clear();
-            ddlSupportType.Items.Add(new ListItem("--Select--", ""));
-            ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
-            ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
-            ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
 
 
             if (!string.IsNullOrEmpty(ddlPayam.SelectedValue))
@@ -208,22 +201,29 @@ namespace SSSNP.UI.Public_Works
             ddlPaymentCycle.ClearSelection();
             ddlPaymentCycle.Items.Clear();
             LoadPaymentCycle();
+            ddlSupportType.ClearSelection();
+            ddlSupportType.Items.Clear();
+            LoadSupportTypes();
         }
 
         protected void ddlBoma_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Reset the SupportType dropdown
             ddlSupportType.ClearSelection();
             ddlSupportType.Items.Clear();
-            ddlSupportType.Items.Add(new ListItem("--Select--", ""));
-            ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
-            ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
-            ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
+            LoadSupportTypes();
             ddlPaymentCycle.ClearSelection();
             ddlPaymentCycle.Items.Clear();
             LoadPaymentCycle();
         }
 
+        private void LoadSupportTypes()
+        {
+            ddlSupportType.Items.Clear();
+            ddlSupportType.Items.Add(new ListItem("--Select--", ""));
+            ddlSupportType.Items.Add(new ListItem("LIPW", "LIPW"));
+            ddlSupportType.Items.Add(new ListItem("DIS", "DIS"));
+            ddlSupportType.Items.Add(new ListItem("ALL", "ALL"));
+        }
 
         private void LoadPaymentCycle()
         {
@@ -243,6 +243,30 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+        private void LoadCycleCheckboxList()
+        {
+            cblCycles.Items.Clear();
+            for (int i = 1; i <= 9; i++)
+            {
+                string text = "Payment Cycle " + i;
+                cblCycles.Items.Add(new ListItem(text, text));
+            }
+        }
+
+        protected void rblPayrollType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bool isCombined = rblPayrollType.SelectedValue == "Combined";
+
+            ddlPaymentCycle.Visible = !isCombined;
+            LabelPaymentCycle.Visible = !isCombined;
+
+            trCycleMulti.Visible = isCombined;
+
+            if (isCombined)
+            {
+                LoadCycleCheckboxList();
+            }
+        }
 
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
@@ -255,8 +279,7 @@ namespace SSSNP.UI.Public_Works
             string.IsNullOrEmpty(ddlCounty.SelectedValue) || ddlCounty.SelectedValue == "0" ||
             string.IsNullOrEmpty(ddlPayam.SelectedValue) || ddlPayam.SelectedValue == "0" ||
             string.IsNullOrEmpty(ddlBoma.SelectedValue) || ddlBoma.SelectedValue == "0" ||
-            string.IsNullOrEmpty(ddlSupportType.SelectedValue) || ddlSupportType.SelectedValue == "" ||
-            string.IsNullOrEmpty(ddlPaymentCycle.SelectedValue) || ddlPaymentCycle.SelectedValue == "")
+            string.IsNullOrEmpty(ddlSupportType.SelectedValue) || ddlSupportType.SelectedValue == "")
             {
                 LblWarning.Text = "Please select all the Geo Location fields, Support Type and Payment Cycle";
                 LblWarning.Visible = true;
@@ -276,19 +299,71 @@ namespace SSSNP.UI.Public_Works
             Session["SelectedBomaId"] = ddlBoma.SelectedValue;
             Session["SelectedBomaName"] = ddlBoma.SelectedItem.Text;
 
-            if (!string.IsNullOrWhiteSpace(ddlPaymentCycle.SelectedValue))
-            {
-                string[] parts = ddlPaymentCycle.SelectedValue.Split(' ');
-                string cycleNumber = parts.Last();
 
-                Session["SelectedPaymentCycle"] = cycleNumber;
-            }
-            else
-            {
-                Session["SelectedPaymentCycle"] = null;
-            }
+            // Identify selected mode
+            bool isCombined = rblPayrollType.SelectedValue == "Combined";
+            Session["isCombined"] = isCombined;
 
-            Session["SelectedSupportType"] = ddlSupportType.SelectedValue;
+            // Handle single payroll mode
+            string selectedPaymentCycle = null;
+            List<string> selectedCycles = null;
+
+            if (!isCombined)
+            {
+                if (string.IsNullOrEmpty(ddlPaymentCycle.SelectedValue))
+                {
+                    LblWarning.Text = "Please select a Payment Cycle.";
+                    LblWarning.Visible = true;
+                    return;
+                }
+
+                selectedPaymentCycle = ddlPaymentCycle.SelectedValue;
+                Session["SelectedPaymentCycle"] = selectedPaymentCycle;
+
+                if (!string.IsNullOrWhiteSpace(ddlPaymentCycle.SelectedValue))
+                {
+                    string[] parts = ddlPaymentCycle.SelectedValue.Split(' ');
+                    string cycleNumber = parts.Last();
+
+                    Session["SelectedPaymentCycle"] = cycleNumber;
+                }
+                else
+                {
+                    Session["SelectedPaymentCycle"] = null;
+                }
+
+                Session["SelectedSupportType"] = ddlSupportType.SelectedValue;
+            }
+            else // Combined payroll mode
+            {
+                selectedCycles = cblCycles.Items.Cast<ListItem>()
+                    .Where(li => li.Selected)
+                    .Select(li => li.Value)
+                    .ToList();
+
+                if (selectedCycles.Count == 0)
+                {
+                    LblWarning.Text = "Please select at least one payment cycle.";
+                    LblWarning.Visible = true;
+                    return;
+                }
+
+                if (selectedCycles.Count > 2)
+                {
+                    LblWarning.Text = "You can select at most 2 payment cycles.";
+                    LblWarning.Visible = true;
+                    return;
+                }
+
+                var cycleShortString = string.Join("&", selectedCycles.Select(v =>
+                {
+                    var parts = v.Split(' ');
+                    return parts.Length > 2 ? parts[2] : parts.Last(); // Gets the number part
+                }));
+
+                Session["SelectedPaymentCycle"] = cycleShortString;
+            }
+           
 
             // Hide the warning label if validation passes
             LblWarning.Visible = false;
@@ -296,46 +371,74 @@ namespace SSSNP.UI.Public_Works
             pnlResults.Visible = true;
             tblResults.Visible = true;
 
-            var request = new PayrollDownloadRequest
+            PayrollDownloadRequest singleRequest = null;
+            PayrollMergeRequest mergeRequest = null;
+
+            if (!isCombined)
             {
-                state = int.Parse(ddlState.SelectedValue),
-                county = int.Parse(ddlCounty.SelectedValue),
-                payam = int.Parse(ddlPayam.SelectedValue),
-                boma = int.Parse(ddlBoma.SelectedValue),
-                supportType = ddlSupportType.SelectedValue,
-                paymentCycle = ddlPaymentCycle.SelectedValue
-            };
+                singleRequest = new PayrollDownloadRequest
+                {
+                    state = int.Parse(ddlState.SelectedValue),
+                    county = int.Parse(ddlCounty.SelectedValue),
+                    payam = int.Parse(ddlPayam.SelectedValue),
+                    boma = int.Parse(ddlBoma.SelectedValue),
+                    supportType = ddlSupportType.SelectedValue,
+                    paymentCycle = ddlPaymentCycle.SelectedValue
+                };
+            }
+            else
+            {
+                selectedCycles = cblCycles.Items.Cast<ListItem>()
+                .Where(li => li.Selected)
+                .Select(li => li.Value)
+                .ToList();
 
-            string uri = ConfigurationManager.AppSettings["GetPayrollV2"];
-            String token = ConfigurationManager.AppSettings["AfisApiAccessToken"].ToString();
+                mergeRequest = new PayrollMergeRequest
+                {
+                    state = int.Parse(ddlState.SelectedValue),
+                    county = int.Parse(ddlCounty.SelectedValue),
+                    payam = int.Parse(ddlPayam.SelectedValue),
+                    boma = int.Parse(ddlBoma.SelectedValue),
+                    supportType = ddlSupportType.SelectedValue,
+                    paymentCycleList = selectedCycles
+                };
+            }
 
-            uri = ConfigurationManager.AppSettings["AfisDevBaseUrl"] + ConfigurationManager.AppSettings["GetPayrollV2"];
+            string reqStr = isCombined
+            ? JsonConvert.SerializeObject(mergeRequest)
+            : JsonConvert.SerializeObject(singleRequest);
+
+            string apiPath = isCombined
+            ? ConfigurationManager.AppSettings["GetMergedPayroll"]
+            : ConfigurationManager.AppSettings["GetPayrollV2"];
+
+            string baseUrl = ConfigurationManager.AppSettings["AfisDevBaseUrl"];
             if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
             {
-                uri = ConfigurationManager.AppSettings["AfisProdBaseUrl"] + ConfigurationManager.AppSettings["GetPayrollV2"];
+                baseUrl = ConfigurationManager.AppSettings["AfisProdBaseUrl"];
             }
-            Uri urlCheck = new Uri(uri);
-            HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(urlCheck);
+
+            string uri = baseUrl + apiPath;
+            string token = ConfigurationManager.AppSettings["AfisApiAccessToken"];
+
+            HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(new Uri(uri));
             httpWReq.PreAuthenticate = true;
             httpWReq.Headers.Add("Authorization", "Bearer " + token);
             httpWReq.Headers.Add("DeviceId", "29feb6211b04-a56d-7d6a-e79e-018b2f19");
-
-            string reqStr = "";
+            httpWReq.Method = "POST";
+            httpWReq.ContentType = "application/json";
 
             try
             {
-                reqStr = JsonConvert.SerializeObject(request);
-                var data = Encoding.ASCII.GetBytes(reqStr);
-                httpWReq.Method = "POST";
-                httpWReq.ContentType = "application/json";
+                byte[] data = Encoding.UTF8.GetBytes(reqStr);
                 httpWReq.ContentLength = data.Length;
 
-                var newStream = httpWReq.GetRequestStream();
-                newStream.Write(data, 0, data.Length);
-                newStream.Flush();
-                newStream.Close();
+                using (var newStream = httpWReq.GetRequestStream())
+                {
+                    newStream.Write(data, 0, data.Length);
+                }
 
-                HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+                using (HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse())
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
                     string jsonResponse = reader.ReadToEnd();
@@ -343,24 +446,18 @@ namespace SSSNP.UI.Public_Works
                 }
 
                 Session["PDResponse"] = pdResponse;
-                
+
                 if (pdResponse != null && pdResponse.data != null && pdResponse.data.Count > 0)
                 {
-                    //Session["PayrollData"] = pdResponse.data.SelectMany(c => c.payrollData).ToList();
                     var allPayrollData = pdResponse.data.SelectMany(c => c.payrollData).ToList();
-                    int totalCount = allPayrollData.Count; // Get the total count from all payroll data
-
                     Session["PayrollData"] = allPayrollData;
-                    Session["TotalItemCount"] = totalCount;
-                    rgResults.Rebind();  // Trigger the NeedDataSource event
+                    Session["TotalItemCount"] = allPayrollData.Count;
+                    rgResults.Rebind();
                     BtnDownloadPdf.Visible = true;
                     BtnDownload.Visible = true;
-                    
                 }
-
                 else
                 {
-                    // If there is no data, clear the grid's data source
                     Session["PayrollData"] = null;
                     rgResults.DataSource = null;
                     rgResults.DataBind();
@@ -376,9 +473,7 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-
-
-        private void BindResultsToGrid(List<PDPayrollDataDto> data)
+        /*private void BindResultsToGrid(List<PDPayrollDataDto> data)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("EnrollmentNo");
@@ -426,7 +521,7 @@ namespace SSSNP.UI.Public_Works
 
             rgResults.DataSource = dt;
             rgResults.DataBind();
-        }
+        }*/
 
 
         protected void rgResults_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
@@ -454,21 +549,36 @@ namespace SSSNP.UI.Public_Works
         {
             if (Session["PDResponse"] != null)
             {
-                int userId = GetCurrentUserId(); // Retrieve the current user's ID from the session
+                int userId = GetCurrentUserId();
                 int stateId = int.Parse(ddlState.SelectedValue);
                 int countyId = int.Parse(ddlCounty.SelectedValue);
                 int payamId = int.Parse(ddlPayam.SelectedValue);
                 int bomaId = int.Parse(ddlBoma.SelectedValue);
-                string paymentCycle = ddlPaymentCycle.SelectedValue;
 
-                // Insert the audit record into the database
-                InsertAuditRecord(userId, stateId, countyId, payamId, bomaId, paymentCycle);
+                // Determine payroll mode
+                bool isCombined = rblPayrollType.SelectedValue == "Combined";
+
+                if (!isCombined)
+                {
+                    string paymentCycle = ddlPaymentCycle.SelectedValue;
+                    InsertAuditRecord(userId, stateId, countyId, payamId, bomaId, paymentCycle);
+                }
+                else
+                {
+                    var selectedCycles = Session["SelectedCombinedCycles"] as List<string>;
+                    if (selectedCycles != null && selectedCycles.Count > 0)
+                    {
+                        string combinedCycleText = string.Join(", ", selectedCycles);
+                        InsertAuditRecord(userId, stateId, countyId, payamId, bomaId, combinedCycleText);
+                    }
+                }
 
                 string redirectUrl = "~/ViewAttachmentHandler.aspx?AttachmentType=10";
                 Response.Redirect(redirectUrl, false); // Redirect to handler with the type for encrypted payroll data
                 HttpContext.Current.ApplicationInstance.CompleteRequest();
             }
         }
+
 
 
         protected void BtnDownloadPdf_Click(object sender, EventArgs e)

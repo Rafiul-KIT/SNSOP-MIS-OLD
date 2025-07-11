@@ -843,6 +843,7 @@
     <Compile Include="Entity\Payroll\PayrollDataDto.cs" />
     <Compile Include="Entity\Payroll\PayrollDto.cs" />
     <Compile Include="Entity\Payroll_Download\PayrollDownloadRequest.cs" />
+    <Compile Include="Entity\Payroll_Download\PayrollMergeRequest.cs" />
     <Compile Include="Entity\Payroll_Download\PayrollResponseDto.cs" />
     <Compile Include="Entity\Payroll\SavePayrollResponse.cs" />
     <Compile Include="Network\EmailNotificationModel.cs" />
