@@ -22,23 +22,16 @@
     </script>
     <script type="text/javascript">
         function togglePayrollOptions(rbl) {
-            const ddl = document.getElementById('<%= ddlPaymentCycle.ClientID %>');
-        const label = document.getElementById('<%= LabelPaymentCycle.ClientID %>');
-        const trMulti = document.getElementById('<%= trCycleMulti.ClientID %>');
-        const colon = document.getElementById('colonPaymentCycle');
+            const trSingleCycle = document.getElementById('<%= trSingleCycle.ClientID %>');
+            const trMulti = document.getElementById('<%= trCycleMulti.ClientID %>');
 
-
-        if (rbl.value === 'Combined') {
-            ddl.style.display = 'none';
-            if (label) label.style.display = 'none';
-            if (colon) colon.style.display = 'none';
-            if (trMulti) trMulti.style.display = '';
-        } else {
-            ddl.style.display = '';
-            if (label) label.style.display = '';
-            if (colon) colon.style.display = '';
-            if (trMulti) trMulti.style.display = 'none';
-        }
+            if (rbl.value === 'Combined') {
+                if (trSingleCycle) trSingleCycle.style.display = 'none';
+                if (trMulti) trMulti.style.display = '';
+            } else {
+                if (trSingleCycle) trSingleCycle.style.display = '';
+                if (trMulti) trMulti.style.display = 'none';
+            }
     }
 
     // Ensure correct visibility on page load based on default radio selection
@@ -168,26 +161,19 @@
                                                         </asp:RadioButtonList>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td style="padding: 5px; margin: 5px">
+                                                <tr id="trSingleCycle" runat="server">
+                                                    <td style="padding: 5px;">
                                                         <asp:Label ID="LabelPaymentCycle" runat="server" CssClass="LBLBLACK" Width="165px">Payment Cycle</asp:Label>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">
-                                                        <span id="colonPaymentCycle">:</span>
-                                                    </td>
-                                                    <td style="padding: 5px; margin: 5px">
+                                                    <td>:</td>
+                                                    <td>
                                                         <asp:DropDownList ID="ddlPaymentCycle" runat="server" class="form-control txtbox"
                                                             Height="33px" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
-                                                    <td style="padding: 5px; margin: 5px">&nbsp;</td>
                                                 </tr>
                                                 <tr id="trCycleMulti" runat="server" visible="false">
-                                                    <%--<td style="padding: 5px;">
-                                                        <asp:Label ID="LabelMultiCycle" runat="server" CssClass="LBLBLACK" Width="165px">Select Payment Cycles (Max 2)</asp:Label>
-                                                    </td>
-                                                    <td>:</td>--%>
                                                     <td colspan="3">
                                                         <asp:CheckBoxList ID="cblCycles" runat="server" RepeatDirection="Vertical" RepeatColumns="2" CssClass="form-check">
                                                         </asp:CheckBoxList>
