@@ -340,16 +340,9 @@ namespace SSSNP.UI.Public_Works
                     .Select(li => li.Value)
                     .ToList();
 
-                if (selectedCycles.Count == 0)
+                if (selectedCycles.Count < 2)
                 {
-                    LblWarning.Text = "Please select at least one payment cycle.";
-                    LblWarning.Visible = true;
-                    return;
-                }
-
-                if (selectedCycles.Count > 2)
-                {
-                    LblWarning.Text = "You can select at most 2 payment cycles.";
+                    LblWarning.Text = "Please select at least 2 payment cycles.";
                     LblWarning.Visible = true;
                     return;
                 }
