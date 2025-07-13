@@ -1009,8 +1009,18 @@ namespace SSSNP_SNSOP
                         }
                     }
 
-                    // Payment and Signature
-                    AddCellToPdfTableBody(table, payroll.paymentCycle, false, hasTwoAlternates);
+                    string displayCycle;
+
+                    if (Session["isCombined"] != null && (bool)Session["isCombined"])
+                    {
+                        displayCycle = Session["SelectedPaymentCycle"]?.ToString() ?? "";
+                    }
+                    else
+                    {
+                        displayCycle = payroll.paymentCycle;
+                    }
+
+                    AddCellToPdfTableBody(table, displayCycle, false, hasTwoAlternates);
                     AddCellToPdfTableBody(table, payroll.supportType);
                     AddCellToPdfTableBody(table, payroll.totAttendance.ToString() ?? "N/A", false, hasTwoAlternates);                   
                     AddCellToPdfTableBody(table, payroll.wageRateUSD.ToString(), false, hasTwoAlternates);

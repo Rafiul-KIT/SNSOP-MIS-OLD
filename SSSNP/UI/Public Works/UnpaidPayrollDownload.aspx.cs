@@ -302,6 +302,7 @@ namespace SSSNP.UI.Public_Works
 
             // Identify selected mode
             bool isCombined = rblPayrollType.SelectedValue == "Combined";
+            Session["isCombined"] = isCombined;
 
             // Handle single payroll mode
             string selectedPaymentCycle = null;
@@ -347,7 +348,13 @@ namespace SSSNP.UI.Public_Works
                     return;
                 }
 
-                Session["SelectedCombinedCycles"] = selectedCycles;
+                var cycleShortString = string.Join("&", selectedCycles.Select(v =>
+                {
+                    var parts = v.Split(' ');
+                    return parts.Length > 2 ? parts[2] : parts.Last(); // Gets the number part
+                }));
+
+                Session["SelectedPaymentCycle"] = cycleShortString;
             }
            
 
@@ -395,8 +402,8 @@ namespace SSSNP.UI.Public_Works
             : JsonConvert.SerializeObject(singleRequest);
 
             string apiPath = isCombined
-            ? ConfigurationManager.AppSettings["GetMergedPayroll"]  // e.g., "api/payroll/merge"
-            : ConfigurationManager.AppSettings["GetPayrollV2"];          // e.g., "api/payroll/single"
+            ? ConfigurationManager.AppSettings["GetMergedPayroll"]
+            : ConfigurationManager.AppSettings["GetPayrollV2"];
 
             string baseUrl = ConfigurationManager.AppSettings["AfisDevBaseUrl"];
             if (ConfigurationManager.AppSettings["build.profile.active"].Equals("prod"))
