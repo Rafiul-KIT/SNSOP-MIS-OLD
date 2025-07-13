@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SSSNP.Entity.Payroll;
 using SSSNP.Entity.Payroll_Download;
 using System;
 using System.Collections.Generic;
@@ -273,6 +274,8 @@ namespace SSSNP.UI.Public_Works
             // Clear session data before starting a new search
             Session["PayrollData"] = null;
             Session["TotalItemCount"] = null;
+            LblDownloadWarning.Text = null;
+            LblWarning.Text = null;
 
             // Validate dropdown selections
             if (string.IsNullOrEmpty(ddlState.SelectedValue) || ddlState.SelectedValue == "0" ||
@@ -299,7 +302,7 @@ namespace SSSNP.UI.Public_Works
             Session["SelectedBomaId"] = ddlBoma.SelectedValue;
             Session["SelectedBomaName"] = ddlBoma.SelectedItem.Text;
 
-
+            Session["SelectedSupportType"] = ddlSupportType.SelectedValue;
             // Identify selected mode
             bool isCombined = rblPayrollType.SelectedValue == "Combined";
             Session["isCombined"] = isCombined;
@@ -332,7 +335,6 @@ namespace SSSNP.UI.Public_Works
                     Session["SelectedPaymentCycle"] = null;
                 }
 
-                Session["SelectedSupportType"] = ddlSupportType.SelectedValue;
             }
             else // Combined payroll mode
             {
@@ -341,21 +343,14 @@ namespace SSSNP.UI.Public_Works
                     .Select(li => li.Value)
                     .ToList();
 
-                if (selectedCycles.Count == 0)
+                if (selectedCycles.Count < 2)
                 {
-                    LblWarning.Text = "Please select at least one payment cycle.";
+                    LblWarning.Text = "Please select at least 2 payment cycles.";
                     LblWarning.Visible = true;
                     return;
                 }
 
-                if (selectedCycles.Count > 2)
-                {
-                    LblWarning.Text = "You can select at most 2 payment cycles.";
-                    LblWarning.Visible = true;
-                    return;
-                }
-
-                var cycleShortString = string.Join("&", selectedCycles.Select(v =>
+                var cycleShortString = string.Join("_", selectedCycles.Select(v =>
                 {
                     var parts = v.Split(' ');
                     return parts.Length > 2 ? parts[2] : parts.Last(); // Gets the number part
@@ -447,6 +442,20 @@ namespace SSSNP.UI.Public_Works
 
                 Session["PDResponse"] = pdResponse;
 
+                if (pdResponse == null || !pdResponse.operationResult)
+                {
+                    LblDownloadWarning.Text = pdResponse?.errorMsg ?? "Unknown error occurred while retrieving payroll data.";
+                    LblDownloadWarning.Visible = true;
+
+                    Session["PayrollData"] = null;
+                    rgResults.DataSource = null;
+                    rgResults.DataBind();
+                    rgResults.Rebind();
+                    BtnDownload.Visible = false;
+                    BtnDownloadPdf.Visible = false;
+                    return;
+                }
+
                 if (pdResponse != null && pdResponse.data != null && pdResponse.data.Count > 0)
                 {
                     var allPayrollData = pdResponse.data.SelectMany(c => c.payrollData).ToList();
@@ -458,6 +467,9 @@ namespace SSSNP.UI.Public_Works
                 }
                 else
                 {
+                    LblDownloadWarning.Text = "No payroll data available for the selected filters.";
+                    LblDownloadWarning.Visible = true;
+
                     Session["PayrollData"] = null;
                     rgResults.DataSource = null;
                     rgResults.DataBind();
@@ -472,56 +484,6 @@ namespace SSSNP.UI.Public_Works
                 LogError(ex);
             }
         }
-
-        /*private void BindResultsToGrid(List<PDPayrollDataDto> data)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("EnrollmentNo");
-            dt.Columns.Add("DateOfCreation");
-            dt.Columns.Add("ExchangeRateAtTime");
-            dt.Columns.Add("IntBenId");
-            dt.Columns.Add("IntWagePaymentReqId");
-            dt.Columns.Add("IntWagesReqBenTransId");
-            dt.Columns.Add("IntWorkId");
-            dt.Columns.Add("PaymentCycle");
-            dt.Columns.Add("ReqFromDate");
-            dt.Columns.Add("ReqNo");
-            dt.Columns.Add("ReqToDate");
-            dt.Columns.Add("Status");
-            dt.Columns.Add("SupportType");
-            dt.Columns.Add("TotAttendance");
-            dt.Columns.Add("WageRateSSPTotal");
-            dt.Columns.Add("WageRateUSD");
-            dt.Columns.Add("WageRateUSDTotal");
-            dt.Columns.Add("WorkCode");
-
-            foreach (var item in data)
-            {
-                dt.Rows.Add(
-                    item.enrollmentNo,
-                    item.dateofCreation,
-                    item.exchangerateattime,
-                    item.intBenid,
-                    item.intWagePaymentReqid,
-                    item.intWagesReqBenTransid,
-                    item.intWorkid,
-                    item.paymentCycle,
-                    item.reqFromDate,
-                    item.reqNo,
-                    item.reqToDate,
-                    item.status,
-                    item.supportType,
-                    item.totAttendance,
-                    item.wageRateSSPTotal,
-                    item.wageRateUSD,
-                    item.wageRateUSDTotal,
-                    item.workCode
-                );
-            }
-
-            rgResults.DataSource = dt;
-            rgResults.DataBind();
-        }*/
 
 
         protected void rgResults_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)

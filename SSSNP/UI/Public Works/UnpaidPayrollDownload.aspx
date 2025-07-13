@@ -14,9 +14,9 @@
         function limitCheckboxSelection(sender) {
             var checkboxes = document.querySelectorAll("#<%= cblCycles.ClientID %> input[type=checkbox]");
             var checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-            if (checkedCount > 2) {
+            if (checkedCount < 2) {
                 sender.checked = false;
-                alert("You can select at most 2 payment cycles.");
+                alert("You must select at least 2 payment cycles.");
             }
         }
     </script>

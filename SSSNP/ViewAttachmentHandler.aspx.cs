@@ -1009,18 +1009,36 @@ namespace SSSNP_SNSOP
                         }
                     }
 
-                    string displayCycle;
+                    string cycleText = payroll.paymentCycle;
 
                     if (Session["isCombined"] != null && (bool)Session["isCombined"])
                     {
-                        displayCycle = Session["SelectedPaymentCycle"]?.ToString() ?? "";
-                    }
-                    else
-                    {
-                        displayCycle = payroll.paymentCycle;
+                        if (!string.IsNullOrEmpty(cycleText) && cycleText.StartsWith("Merge:"))
+                        {
+                            cycleText = cycleText.Substring(cycleText.IndexOf(":") + 1).Trim();
+
+                            var cycleParts = cycleText
+                                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(c => c.Trim())
+                                .OrderBy(c =>
+                                {
+                                    var tokens = c.Split(' ');
+                                    return int.TryParse(tokens.Last(), out int n) ? n : int.MaxValue;
+                                })
+                                .ToList();
+
+                            if (cycleParts.Count > 1)
+                            {
+                                cycleText = string.Join(",\n", cycleParts);
+                            }
+                            else
+                            {
+                                cycleText = cycleParts.FirstOrDefault() ?? "";
+                            }
+                        }
                     }
 
-                    AddCellToPdfTableBody(table, displayCycle, false, hasTwoAlternates);
+                    AddCellToPdfTableBody(table, cycleText, false, hasTwoAlternates);
                     AddCellToPdfTableBody(table, payroll.supportType);
                     AddCellToPdfTableBody(table, payroll.totAttendance.ToString() ?? "N/A", false, hasTwoAlternates);                   
                     AddCellToPdfTableBody(table, payroll.wageRateUSD.ToString(), false, hasTwoAlternates);
