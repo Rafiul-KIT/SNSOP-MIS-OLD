@@ -379,6 +379,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 WagePaidAbstractLIPWReportMenu.Visible = true;
                 WagePaidAbstractDISReportMenu.Visible = true;
                 WagePaidAbstractBiometricReportMenu.Visible = true;
+                TotalBeneficiryPaymentDetailsReportMenu.Visible = true;
 
                 InvoicePrintsMenu.Visible = true;
             }
