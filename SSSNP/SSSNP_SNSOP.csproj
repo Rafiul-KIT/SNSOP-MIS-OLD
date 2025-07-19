@@ -714,6 +714,7 @@
     <Content Include="UI\Public Works\TSTPDCReg.aspx" />
     <Content Include="UI\Public Works\TSTPhysicalMonitoring.aspx" />
     <Content Include="UI\Public Works\TypesOfWorksrReport.aspx" />
+    <Content Include="UI\Public Works\UnpaidPayrollDownload.aspx" />
     <Content Include="UI\Public Works\UnpaidWageInvoiceAbstractAPI.aspx" />
     <Content Include="UI\Public Works\UnpaidWageInvoiceAbstractAPI_DIS.aspx" />
     <Content Include="UI\Public Works\UnpaidWageInvoiceAbstractAPI_LIPW.aspx" />
@@ -842,6 +843,7 @@
     <Compile Include="Entity\Payroll\PayrollDataDto.cs" />
     <Compile Include="Entity\Payroll\PayrollDto.cs" />
     <Compile Include="Entity\Payroll_Download\PayrollDownloadRequest.cs" />
+    <Compile Include="Entity\Payroll_Download\PayrollMergeRequest.cs" />
     <Compile Include="Entity\Payroll_Download\PayrollResponseDto.cs" />
     <Compile Include="Entity\Payroll\SavePayrollResponse.cs" />
     <Compile Include="Network\EmailNotificationModel.cs" />
@@ -2186,6 +2188,13 @@
     </Compile>
     <Compile Include="UI\Public Works\TypesOfWorksrReport.aspx.designer.cs">
       <DependentUpon>TypesOfWorksrReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Public Works\UnpaidPayrollDownload.aspx.cs">
+      <DependentUpon>UnpaidPayrollDownload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Public Works\UnpaidPayrollDownload.aspx.designer.cs">
+      <DependentUpon>UnpaidPayrollDownload.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Public Works\UnpaidWageInvoiceAbstractAPI.aspx.designer.cs">
       <DependentUpon>UnpaidWageInvoiceAbstractAPI.aspx</DependentUpon>

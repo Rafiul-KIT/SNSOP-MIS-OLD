@@ -105,12 +105,12 @@ public partial class TotalBeneficiaryPaymentDetails : System.Web.UI.Page
         }
         else
         {
-            if (ddlState.SelectedIndex == 0)
+            /*if (ddlState.SelectedIndex == 0)
             {
                 lblmessage.Text = "Please select State";
             }
             else
-            {
+            {*/
                 LblResultA.Text = "";
                 LblResultA0.Text = "";
                 lblmessage.Text = "";
@@ -173,7 +173,7 @@ public partial class TotalBeneficiaryPaymentDetails : System.Web.UI.Page
                 finally
                 {
                 }
-            }
+            //}
         }
     }
 
@@ -249,12 +249,12 @@ public partial class TotalBeneficiaryPaymentDetails : System.Web.UI.Page
         }
         else
         {
-            if (ddlState.SelectedIndex == 0)
+            /*if (ddlState.SelectedIndex == 0)
             {
                 lblmessage.Text = "Please select State";
             }
             else
-            {
+            {*/
                 LblResultA.Text = "";
                 LblResultA0.Text = "";
                 lblmessage.Text = "";
@@ -316,7 +316,7 @@ public partial class TotalBeneficiaryPaymentDetails : System.Web.UI.Page
                 {
                 }
                 // lblmessage.Visible = false;
-            }
+            //}
         }
     }
 

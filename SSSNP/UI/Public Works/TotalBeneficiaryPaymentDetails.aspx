@@ -135,7 +135,7 @@
                                                         <table cellpadding="4" cellspacing="5" style="width: 100%">
                                                             <tr>
                                                                 <td style="padding: 5px; margin: 5px">
-                                                                    <asp:Label ID="Label443" runat="server" CssClass="LBLBLACK" Width="165px">State Name<font Color="red">*</font></asp:Label>
+                                                                    <asp:Label ID="Label443" runat="server" CssClass="LBLBLACK" Width="165px">State Name</asp:Label>
                                                                 </td>
                                                                 <td style="padding: 5px; margin: 5px">:</td>
                                                                 <td style="padding: 5px; margin: 5px; width: 192px;">

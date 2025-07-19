@@ -219,7 +219,7 @@
                                             &nbsp;<asp:Button ID="btnexp" runat="server" CausesValidation="False"
                                                 CssClass="btn btn-primary" Font-Size="12px" Height="32px"
                                                 OnClick="btnexp_Click" Style="position: static" Text="Export"
-                                                ValidationGroup="vg" Visible="false" />
+                                                ValidationGroup="vg" />
                                             &nbsp;<asp:Button ID="BtnPrint" runat="server" CssClass="btn btn-danger"
                                                 Height="32px" OnClick="BtnSave_Click" OnClientClick="return PrintPanel();" ToolTip="Export Excel Sheet" TabIndex="10" Text="Print"
                                                 ValidationGroup="group" Width="90px" />
