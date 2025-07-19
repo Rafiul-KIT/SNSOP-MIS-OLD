@@ -331,3 +331,8 @@ _Pvt_Extensions
 .idea/**
 
 SSSNP.Database/SSSNP_SNSOP.Database.jfm
+
+WorkProposalDoc/
+WorkProgressDoc/
+WageFile/
+GBVExcelImportingTemp/
