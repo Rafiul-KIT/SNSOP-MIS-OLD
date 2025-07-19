@@ -188,14 +188,14 @@
                                                     <td style="padding: 5px; margin: 5px" __designer:mapid="180e">
                                                         <asp:DropDownList ID="ddlstatus" runat="server" 
                                                             class="form-control txtbox" Height="28px" Width="180px">
-                                                            <asp:ListItem>--Select--</asp:ListItem>
-                                                            <asp:ListItem>New Proposal</asp:ListItem>
-                                                            <asp:ListItem>Approved</asp:ListItem>
-                                                            <asp:ListItem>Funds Allocation</asp:ListItem>
+                                                            <%--<asp:ListItem>--Select--</asp:ListItem>
+                                                            <asp:ListItem>New Proposal</asp:ListItem>--%>
+                                                            <asp:ListItem Selected="True">Approved</asp:ListItem>
+                                                            <%--<asp:ListItem>Funds Allocation</asp:ListItem>
                                                             <asp:ListItem>Fund Released</asp:ListItem>
                                                             <asp:ListItem>InProgress</asp:ListItem>
                                                             <asp:ListItem>Closed</asp:ListItem>
-                                                            <asp:ListItem>Rejected</asp:ListItem>
+                                                            <asp:ListItem>Rejected</asp:ListItem>--%>
                                                         </asp:DropDownList>
                                                             
                                                             
