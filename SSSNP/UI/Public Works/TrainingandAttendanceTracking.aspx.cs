@@ -79,7 +79,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Household Number", "Course Code", "Course Duration", "Class Attendance Date"
+                        "Household Number", "Course Code", "Class Attendance Date"
                     };
 
                     // Validate headers
@@ -101,12 +101,10 @@ namespace SSSNP_SNSOP.UI.Public_Works
                     {
                         // Handle null or empty values for each column
                         var courseCode = string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) ? null : worksheet.Cells[row, 2].Text;
-                        var courseDuration = string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 3].Text);
-                        var classAttendanceDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out DateTime parsedDate) ? (DateTime?)parsedDate: null;
+                        //var courseDuration = string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 3].Text);
+                        var classAttendanceDate = DateTime.TryParse(worksheet.Cells[row, 3].Text, out DateTime parsedDate) ? (DateTime?)parsedDate: null;
 
-                        if (string.IsNullOrWhiteSpace(courseCode) &&
-                            courseDuration == null &&
-                            classAttendanceDate == null)
+                        if (string.IsNullOrWhiteSpace(courseCode) && classAttendanceDate == null)
                         {
                             continue; // Skip this row
                         }
@@ -115,7 +113,6 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         {
                             HouseholdNumber = worksheet.Cells[row, 1].Text,
                             CourseCode = courseCode,
-                            CourseDuration = courseDuration ?? 0, // Default to 0 if null
                             ClassAttendanceDate = classAttendanceDate,
                             CreatedBy = userId,
                             ModifiedBy = userId
