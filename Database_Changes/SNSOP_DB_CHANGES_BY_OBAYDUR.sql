@@ -132,3 +132,60 @@ ALTER TABLE tbl_com2_course
 ALTER TABLE tbl_com2_course
     ADD ModifiedDate datetime NULL;
 
+
+----22/07/2025-----
+
+create table tbl_com2_Coaching_Entity
+(
+    Id                              int identity
+        primary key,
+    Name                            varchar(255) not null
+        unique,
+    NumberOfPlannedCoachingSessions int          not null
+)
+
+
+create table tbl_com2_Coaching_Details
+(
+    Id                             int identity
+        primary key,
+    CoachingId                     int not null
+        references tbl_com2_Coaching_Entity
+            on delete cascade,
+    CoachingSessionHoldingDate     date,
+    CoachingSessionDurationMinutes int
+)
+
+
+create table tbl_com2_Coaching_Session_Attendance
+(
+    Id                     int identity
+        primary key,
+    HouseholdNumber        varchar(50) not null,
+    CoachingDetailId       int         not null
+        references tbl_com2_Coaching_Details
+            on delete cascade,
+    CoachingAttendanceDate date,
+    CreatedBy              int,
+    CreatedDate            datetime,
+    ModifiedBy             int,
+    ModifiedDate           datetime
+)
+
+
+create table tbl_com2_Coaching_Session_Attendance_Audit
+(
+    Id                  int identity
+        primary key,
+    FileId              nvarchar(100)              not null,
+    UploadedBy          int                        not null,
+    UploadDate          datetime default getdate() not null,
+    Validity            bit                        not null,
+    InvalidReason       nvarchar(500),
+    HouseholdNumber     nvarchar(50)               not null,
+    CoachingDetailId    int                        not null,
+    ClassAttendanceDate datetime
+)
+
+
+alter table tbl_audit_payroll_download add PaymentCycle nvarchar(500);
