@@ -191,9 +191,9 @@
                                                             <%--<asp:ListItem>--Select--</asp:ListItem>
                                                             <asp:ListItem>New Proposal</asp:ListItem>--%>
                                                             <asp:ListItem Selected="True">Approved</asp:ListItem>
-                                                            <%--<asp:ListItem>Funds Allocation</asp:ListItem>
-                                                            <asp:ListItem>Fund Released</asp:ListItem>
                                                             <asp:ListItem>InProgress</asp:ListItem>
+                                                            <%--<asp:ListItem>Funds Allocation</asp:ListItem>
+                                                            <asp:ListItem>Fund Released</asp:ListItem>                                                            
                                                             <asp:ListItem>Closed</asp:ListItem>
                                                             <asp:ListItem>Rejected</asp:ListItem>--%>
                                                         </asp:DropDownList>
