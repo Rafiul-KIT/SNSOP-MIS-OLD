@@ -343,7 +343,6 @@ namespace SSSNP_SNSOP.Core.Repository
 
         public ResponseModel SaveBeneficiary(BeneficiaryRandomizationAndEnrollmentModel model)
         {
-            Debug.WriteLine(model.ToString());
             var response = new ResponseModel();
             int insertCount = 0; // Counter for successfully inserted records
             try
@@ -977,7 +976,7 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 string query = @"
             SELECT b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id as GroupId, g.GroupName
-            FROM tbl_BeneficiaryServiceDet b
+            FROM tbl_BeneficiaryDet b
             INNER JOIN tbl_Nominee n 
             ON b.household_number = n.application_id
             LEFT JOIN tbl_com2_Household_Group_Linkage l
@@ -987,7 +986,7 @@ namespace SSSNP_SNSOP.Core.Repository
             WHERE (@StateId IS NULL OR b.intStateid = @StateId)
             AND (@CountyId IS NULL OR b.intCountieid = @CountyId)
             AND (@PayamId IS NULL OR b.intPayamid = @PayamId)
-            AND (@BomaId IS NULL OR b.intBomasid = @BomaId) group by b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id, g.GroupName";
+            AND (@BomaId IS NULL OR b.intBomasid = @BomaId) GROUP BY b.household_number, b.NameofHousehold, b.Sex, b.Age, g.Id, g.GroupName";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
@@ -1352,14 +1351,20 @@ namespace SSSNP_SNSOP.Core.Repository
             Dictionary<string, int> CourseDetails = new Dictionary<string, int>();
             try
             {
-                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CourseCode FROM tbl_com2_Course_Details", CommandType.Text);
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CourseCode, ClassHoldingDate FROM tbl_com2_Course_Details", CommandType.Text);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
                     {
                         string courseCode = row["CourseCode"].ToString();
-                        int Id = Convert.ToInt32(row["Id"]);
-                        CourseDetails.Add(courseCode, Id);
+                        DateTime date = Convert.ToDateTime(row["ClassHoldingDate"]);
+                        int id = Convert.ToInt32(row["Id"]);
+
+                        string key = $"{courseCode}|{date:yyyy-MM-dd}";
+                        if (!CourseDetails.ContainsKey(key))
+                        {
+                            CourseDetails.Add(key, id);
+                        }
                     }
                 }
             }

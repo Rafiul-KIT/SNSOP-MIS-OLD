@@ -172,7 +172,6 @@ namespace SSSNP.UI.Public_Works
             {
                 LblWarning.Visible = false;  // Hide warning when valid template is selected
                 LblWarning.Text = "";  // Clear the warning text
-                System.Diagnostics.Debug.WriteLine("Template selection changed. Warning hidden.");
 
                 int val = ddlTemplate.SelectedValue?.ToString() != null ?
                     Convert.ToInt32(ddlTemplate.SelectedValue.ToString()) : 0;

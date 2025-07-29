@@ -2423,7 +2423,7 @@ namespace SSSNP_SNSOP
 
                     // Add headers to the worksheet (reflecting your table schema)
                     worksheet.Cells[1, 1].Value = "Course Code";
-                    worksheet.Cells[1, 2].Value = "Class Holding Date";
+                    worksheet.Cells[1, 2].Value = "Class Holding Date (mm/dd/yyyy)";
                     worksheet.Cells[1, 3].Value = "Duration of held class (Minutes)";
 
                     // Set headers to be bold

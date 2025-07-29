@@ -79,7 +79,7 @@ namespace SSSNP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Course Code", "Class Holding Date", "Duration of held class (Minutes)"
+                        "Course Code", "Class Holding Date (mm/dd/yyyy)", "Duration of held class (Minutes)"
                     };
 
                     // Validate headers
@@ -98,15 +98,19 @@ namespace SSSNP.UI.Public_Works
 
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                     {
-                        string courseCode = worksheet.Cells[row, 1].Text;
+                        string courseCode = worksheet.Cells[row, 1].Text?.Trim();
+                        string dateText = worksheet.Cells[row, 2].Text?.Trim();
+                        string durationText = worksheet.Cells[row, 3].Text?.Trim();
 
-                        DateTime classHoldingDate = worksheet.Cells[row, 2].GetValue<DateTime>();
+                        if (string.IsNullOrWhiteSpace(courseCode) && string.IsNullOrWhiteSpace(dateText) && string.IsNullOrWhiteSpace(durationText))
+                            continue;
 
-                        int classDurationMinutes;
-                        if (!int.TryParse(worksheet.Cells[row, 3].Text, out classDurationMinutes))
-                        {
-                            classDurationMinutes = 0;
-                        }
+                        DateTime classHoldingDate = DateTime.MinValue;
+                        DateTime.TryParse(dateText, out classHoldingDate);
+
+                        int classDurationMinutes = 0;
+                        int.TryParse(durationText, out classDurationMinutes);
+
 
                         Course.Add(new CourseDetailsModel
                         {
@@ -173,13 +177,14 @@ namespace SSSNP.UI.Public_Works
                     dr["ClassHoldingDate"] = course.ClassHoldingDate;
                     dr["ClassDurationMinutes"] = course.ClassDurationMinutes;
 
-                    if (!string.IsNullOrEmpty(course.CourseCode) && service.IsRecordExist_CourseDetails(course.CourseCode, course.ClassHoldingDate))
+                    string key = $"{course.CourseCode}|{course.ClassHoldingDate:yyyy-MM-dd}";
+                    if (existingCourseDetails.TryGetValue(key, out int existingId))
                     {
-                        dr["Id"] = existingCourseDetails[course.CourseCode];
+                        dr["Id"] = existingId;
                     }
                     else
                     {
-                        dr["Id"] = DBNull.Value; 
+                        dr["Id"] = DBNull.Value;
                     }
 
 
@@ -196,21 +201,6 @@ namespace SSSNP.UI.Public_Works
                     }
                     validCourse.Add(course);
                     dt.Rows.Add(dr);
-
-                    /*if (uniqueCourseCode.Contains(course.CourseCode))
-                    {
-                        // Skip this group because it's a duplicate in the uploaded Excel file
-                        skipCount++;
-                        continue;
-                    }
-                    else
-                    {
-                        // Add the groupName to the HashSet to track it as already added
-                        uniqueCourseCode.Add(course.CourseCode);
-                        validCourse.Add(course);
-                    }*/
-
-                    // dt.Rows.Add(dr);
                 }
 
                 // Bind the DataTable to the RadGrid for display

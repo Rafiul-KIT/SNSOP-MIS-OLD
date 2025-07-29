@@ -492,7 +492,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
 
                 if (householdsTable != null)
                 {
-                    householdsTable.DefaultView.Sort = "household_number ASC";
+                    //householdsTable.DefaultView.Sort = "household_number ASC";
                     rgResults.DataSource = householdsTable;
                 }
                 else
@@ -517,7 +517,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 if (householdsTable != null)
                 {
                     // Sort by household number to maintain the original order
-                    householdsTable.DefaultView.Sort = "household_number ASC";
+                    //householdsTable.DefaultView.Sort = "household_number ASC";
                     rgResults.DataSource = householdsTable;
                     rgResults.Rebind(); // Rebind the grid to reflect the changes
                 }
