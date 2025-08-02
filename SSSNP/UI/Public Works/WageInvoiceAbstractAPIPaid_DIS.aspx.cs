@@ -69,11 +69,11 @@ public partial class WageInvoiceAbstractAPIPaid_DIS : System.Web.UI.Page
             DataSet ds = new DataSet();
             if (Session["user_type"].ToString().Trim() == "IP")
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "", ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "DIS");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "", ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "DIS");
             }
             else
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "", ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "DIS");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "", ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "DIS");
             }
             if (ds != null)
             {
@@ -194,11 +194,11 @@ public partial class WageInvoiceAbstractAPIPaid_DIS : System.Web.UI.Page
 
             if (Session["user_type"].ToString().Trim() == "IP")
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "DIS", ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "DIS");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "DIS", ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "DIS");
             }
             else
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "DIS", ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "DIS");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, "DIS", ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "DIS");
             }
 
             if (ds != null)

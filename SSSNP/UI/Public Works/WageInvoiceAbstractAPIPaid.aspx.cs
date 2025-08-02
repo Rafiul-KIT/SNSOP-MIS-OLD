@@ -69,11 +69,11 @@ public partial class WageInvoiceAbstractAPIPaid : System.Web.UI.Page
             if (Session["user_type"].ToString().Trim() == "IP")
             {
 
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "All");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "All");
             }
             else
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "All");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "All");
             }
             if (ds != null)
             {
@@ -156,11 +156,11 @@ public partial class WageInvoiceAbstractAPIPaid : System.Web.UI.Page
 
             if (Session["user_type"].ToString().Trim() == "IP")
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "All");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "All");
             }
             else
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "All");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "All");
             }
 
             if (ds != null)

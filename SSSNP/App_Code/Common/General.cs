@@ -28439,7 +28439,7 @@ public class General
             if (paymentCycle.Trim() == "" || paymentCycle.Trim() == null || paymentCycle.Trim() == "--Select--")
                 da.SelectCommand.Parameters.Add("@paymentCycle", SqlDbType.VarChar).Value = "%";
             else
-                da.SelectCommand.Parameters.Add("@paymentCycle", SqlDbType.VarChar).Value = paymentCycle.ToString();
+                da.SelectCommand.Parameters.Add("@paymentCycle", SqlDbType.VarChar).Value = "%" + paymentCycle.ToString() + "%";
 
             da.SelectCommand.Parameters.Add("@reportType", SqlDbType.VarChar).Value = reportType;
 
