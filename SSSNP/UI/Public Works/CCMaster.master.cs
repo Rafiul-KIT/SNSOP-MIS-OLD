@@ -70,7 +70,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         LiPayroll.Visible = value;
         payrollDownload.Visible = value;
         unpaidPayrollDownload.Visible = value;
-        payrollReconcile.Visible = value;
+        payrollReconcile.Visible = false;
 
         LiMNE.Visible = value;
 
@@ -318,7 +318,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     LiPayroll.Visible = true;
                     payrollDownload.Visible = true;
                     unpaidPayrollDownload.Visible = true;
-                    payrollReconcile.Visible = true;
+                    payrollReconcile.Visible = false;
 
                     LiMNE.Visible = true;
                     EconomicOpportunities.Visible = true;
@@ -359,7 +359,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiPayroll.Visible = true;
                 payrollDownload.Visible = true;
                 unpaidPayrollDownload.Visible = true;
-                payrollReconcile.Visible = true;
+                payrollReconcile.Visible = false;
                 LiMNE.Visible = true;
                 LiPaymentCycleDocument.Visible = true;
                 liUploadPaymentCycleDoc.Visible = false;
@@ -421,7 +421,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 LiPayroll.Visible = true;
                 payrollDownload.Visible = true;
                 unpaidPayrollDownload.Visible = true;
-                payrollReconcile.Visible = true;
+                payrollReconcile.Visible = false;
                 LiMNE.Visible = true;
                 LiUM.Visible = true;
                 EconomicOpportunities.Visible = true;
