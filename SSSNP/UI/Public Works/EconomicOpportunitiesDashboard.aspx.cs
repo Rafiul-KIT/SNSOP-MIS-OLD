@@ -30,13 +30,13 @@ namespace SSSNP.UI.Public_Works
 
             string query = @"
     SELECT 
-        c.CountieName AS CountyName, 
-        ISNULL(COUNT(h.Id), 0) AS TotalEnrolled
-    FROM tm_Counties c
-    LEFT JOIN tbl_com2_Household_Enrollment_Data h ON h.CountyID = c.intCountieid 
-        AND h.HHEnrollmentStatus = 1
-    WHERE c.intCountieid IN (9202, 9311, 7301)
-    GROUP BY c.CountieName";
+    c.CountieName AS CountyName, 
+    ISNULL(COUNT(bd.household_number), 0) AS TotalEnrolled
+FROM tm_Counties c
+LEFT JOIN tbl_BeneficiaryDet bd ON bd.intCountieid = c.intCountieid
+    AND bd.household_number IS NOT NULL
+WHERE c.intCountieid IN (9202, 9311, 7301)
+GROUP BY c.CountieName";
 
 
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;

@@ -104,7 +104,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
                         //var courseDuration = string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) ? (int?)null : int.Parse(worksheet.Cells[row, 3].Text);
                         var classAttendanceDate = DateTime.TryParse(worksheet.Cells[row, 3].Text, out DateTime parsedDate) ? (DateTime?)parsedDate: null;
 
-                        if (string.IsNullOrWhiteSpace(courseCode) && classAttendanceDate == null)
+                        if (string.IsNullOrWhiteSpace(courseCode))
                         {
                             continue; // Skip this row
                         }
