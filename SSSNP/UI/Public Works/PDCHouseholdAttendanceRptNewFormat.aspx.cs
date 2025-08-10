@@ -6,6 +6,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using Telerik.Web.UI;
+using OfficeOpenXml;
+using System.Text.RegularExpressions;
 
 public partial class PDCHouseholdAttendanceRptNewFormat : System.Web.UI.Page
 {
@@ -136,20 +138,6 @@ public partial class PDCHouseholdAttendanceRptNewFormat : System.Web.UI.Page
     }
     protected void BtnSave3_Click(object sender, EventArgs e)
     {
-        //if (cmf.convertDateIndia(txtStartDate.Text) < cmf.convertDateIndia(lblWorkStartDate.Text))
-        //{
-        //    lblmsg0.Text = "Work Start Date should be greater than the paid date. ";
-        //    success.Visible = false;
-        //    Failure.Visible = true;
-        //    return;
-        //}
-        //if (cmf.convertDateIndia(txtStartDate.Text) > cmf.convertDateIndia(System.DateTime.Now.ToString("dd-MM-yyyy")))
-        //{
-        //    lblmsg0.Text = "Paid date should be less than the current date.";
-        //    success.Visible = false;
-        //    Failure.Visible = true;
-        //    return;
-        //}
 
         lblProject0.Text = lblProject.Text;
         lblState0.Text = lblState.Text;
@@ -171,33 +159,29 @@ public partial class PDCHouseholdAttendanceRptNewFormat : System.Web.UI.Page
                 {
                     tblreport.Visible = true;
                     ViewState["dt"] = ds;
-                    //grdClosebatchdet.DataSource = ds.Tables[0];
-                    //grdClosebatchdet.DataBind();
+                    
                     rgAttendanceReport.DataSource = ds.Tables[0];
                     rgAttendanceReport.DataBind();
-                    //    grdClosebatchdet.Rows[0].Visible = false;
+                    
                     lblmessage.Text = "";
                 }
                 else
                 {
                     tblreport.Visible = false;
 
-                    //grdClosebatchdet.DataSource = null;
-                    //grdClosebatchdet.DataBind();
+                    
                     lblmessage.Text = "There is no attendance in between days";
                 }
             }
             else
             {
-                //grdClosebatchdet.DataSource = null;
-                //grdClosebatchdet.DataBind();
+                
                 lblmessage.Text = "There is no attendance in between days";
             }
         }
         catch (Exception ex)
         {
-            //grdClosebatchdet.DataSource = null;
-            //grdClosebatchdet.DataBind();
+            
             lblmessage.Text = "There is no attendance in between days";
         }
         finally
@@ -231,54 +215,9 @@ public partial class PDCHouseholdAttendanceRptNewFormat : System.Web.UI.Page
         return sb.ToString();
     }
 
-    //protected void grdClosebatchdet_RowDataBound(object sender, GridViewRowEventArgs e)
-    //{
-    //    //if (e.Row.RowType == DataControlRowType.DataRow)
-    //    //{
-    //    //    cnt = cnt + 1;
-    //    //    e.Row.Cells[0].Text = cnt.ToString().Trim();
-    //    //DataSet ds = (DataSet)ViewState["dt"];
-    //    //int iPresentCount = 0, iAbsentCount = 0;
-    //    //for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
-    //    //{
 
-    //    //    if (e.Row.Cells[i].Text.Trim().ToLower() == "present")
-    //    //    {
-    //    //        iPresentCount = iPresentCount + 1;
-    //    //    }
-    //    //    if (e.Row.Cells[i].Text.Trim().ToLower() == "absent")
-    //    //    {
-    //    //        iAbsentCount = iAbsentCount + 1;
-    //    //    }
-    //    //}
-    //    //e.Row.Cells[ds.Tables[0].Columns.Count - 1].Text = iPresentCount.ToString().Trim();
-    //    //e.Row.Cells[ds.Tables[0].Columns.Count - 2].Text = iAbsentCount.ToString().Trim();
-    //    ////localhost.Himayatmis objUserDetails = new localhost.Himayatmis();
-    //    //DataSet dsresult = new DataSet();
-    //    ////dsresult = objUserDetails.getEmployeeDetbyIDDate(Convert.ToString(DataBinder.Eval(e.Row.DataItem, "intTraineeID")).Trim(), new comFunctions().convertDateIndia(txtAttendancedate.Text));
-    //    //dsresult = cmn.atdt(grdClosebatchdet.DataKeys[e.Row.RowIndex].Values[0].ToString(),grdClosebatchdet.DataKeys[e.Row.RowIndex].Values[1].ToString(), txtAttendancedate.Text);
-    //    //if (dsresult.Tables[0].Rows.Count > 0)
-    //    //{
-    //    //    e.Row.Cells[6].Text = dsresult.Tables[0].Rows[0]["Attendence"].ToString().Trim();
-    //    //}
-    //    //else
-    //    //{ e.Row.Cells[6].Text = "Absent"; }
-    //    //grdClosebatchdet.Rows[0].Visible = false;
-    //    //  }    
-    //}
 
-    //protected void grdClosebatchdet_SelectedIndexChanged(object sender, EventArgs e)
-    //{
-
-    //}
-
-    //protected void grdClosebatchdet_PageIndexChanging(object sender, GridViewPageEventArgs e)
-    //{
-    //    grdClosebatchdet.PageIndex = e.NewPageIndex;
-    //    fillgrid();
-    //}
-
-    protected void ExportToExcel()
+    /*protected void ExportToExcel()
     {
         //GridView Export = new GridView();
         Response.Clear();
@@ -293,100 +232,93 @@ public partial class PDCHouseholdAttendanceRptNewFormat : System.Web.UI.Page
 
         try
         {
-            // grdBReg.DataBind();
-            //  lblresult0.Visible = true;
-            //            Export.DataSource = FillBRegister();
-            //          Export.DataBind();
+            
             tblreport.Visible = true;
-            //ds = cmn.getpostplacedtraineedet(Request.QueryString["type"].ToString(), Request.QueryString["intPIAid"].ToString());
-            //GridView1.DataSource = ds.Tables[0];
-            //GridView1.DataBind();
-            //GridView1.DataSource = ds.Tables[0];
-            //GridView1.DataBind();
-            //   grdtraineedetails.AllowPaging = false;
-            //grdtraineedetails.DataBind();
-            // grdtraineedetails.PageSize = 100000;
-            //     grdtraineedetails0.Columns[1].Visible = false;
-            //grdDetails.DataSource = //((DataTable)Session["dtt_load"]).DefaultView; ;
-            // grdDetails.DataBind();
-            //cmn.fillhimayatsummary(grdDetails);
+            
             tblreport.RenderControl(htw);
-            // grdBReg.RenderControl(htw);
-            // ((DataTable)Session["dtt_load"]).Clear();
+            
         }
         catch (Exception eee)
         {
         }
 
-        //DataTable dt = new DataTable();
-        //print.RenderControl(htw);
+        
         Page.Response.Write(sw.ToString());
-        //   grdtraineedetails.PageSize = 20;
-        //   LinkButton1.PostBackUrl = Request.Url.ToString();
-        //   lblresult0.Visible = false;
+        
         Response.End();
-        //grdDetails.Columns[1].Visible = true;
-        // grdDetails.Visible = false;
-        // grdtraineedetails.AllowPaging = true;
-        //Response.Clear();
-        //Response.Buffer = true;
-        //Response.ContentType = "application/vnd.ms-excel";
-        //Response.AddHeader("content-disposition", "attachment;FileName=" + DateTime.Now.ToString("M/d/yyyy") + " Wage payment report.xls");
-        //Response.Charset = "";
-        //this.EnableViewState = false;
-        //Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        //System.IO.StringWriter sw = new System.IO.StringWriter();
-        //System.Web.UI.HtmlTextWriter htw = new System.Web.UI.HtmlTextWriter(sw);
-        //try
-        //{
-        //    grdDetails.Visible = true;
-        //    DataSet ds1 = new DataSet();
-        //    ds1 = Gen.getWagesReport(hdfID.Value.ToString());
-        //    if (ds1.Tables[0].Rows.Count > 0)
-        //    {
-        //        grdDetails.DataSource = ds1.Tables[0];
-        //        grdDetails.DataBind();
-        //        BtnSave1.Visible = true;
-        //    }
-        //    else
-        //    {
-        //        BtnSave1.Visible = false;
-        //        grdDetails.DataSource = null;
-        //        grdDetails.DataBind();
-        //    }
-        //    grdDetails.RenderControl(htw);
-        //}
-        //catch (Exception eee)
-        //{
-        //}
-        //Response.Clear();
-        //Response.Buffer = true;
-        //Response.ContentType = "application/vnd.ms-excel";
-        //Response.AddHeader("content-disposition", "attachment;FileName=ViewDetails.xls");
-        //Response.Charset = "";
-        //// this.EnableViewState = false;
-        //Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        //System.IO.StringWriter sw = new System.IO.StringWriter();
-        //System.Web.UI.HtmlTextWriter htw = new System.Web.UI.HtmlTextWriter(sw);
-        //try
-        //{
-        //    grdClosebatchdet.Visible = true;
-        //    //fillgrid1();
-        //    fillgrid();
+        
 
-        //    grdClosebatchdet.RenderControl(htw);
-        //}
-        //catch (Exception eee)
-        //{
-        //}
-        //Page.Response.Write(sw.ToString());
-        //Response.End();
-        //grdClosebatchdet.Visible = false;
+    }*/
 
+    protected void ExportToExcel()
+    {
+        // Try to reuse the DataSet already prepared in ViewState
+        var ds = ViewState["dt"] as DataSet;
+
+        // Fallback: if ViewState is empty, requery (keeps behavior consistent with your page)
+        if (ds == null)
+        {
+            ds = Gen.getAttendanceReportNewReport(
+                hdfID.Value.ToString(),
+                TxtFromDate.Text,
+                TxtToDate.Text,
+                ddlBeneficiary.SelectedValue,
+                hdGroupNo.Value
+            );
+        }
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            lblmessage.Text = "There is no attendance in between days";
+            return;
+        }
+
+        // Build the Excel package
+        using (var package = new ExcelPackage())
+        {
+            // Create a worksheet per DataTable
+            for (int t = 0; t < ds.Tables.Count; t++)
+            {
+                DataTable table = ds.Tables[t];
+                if (table == null) continue;
+
+                string sheetName = string.IsNullOrWhiteSpace(table.TableName)
+                    ? (t == 0 ? "Attendance" : $"Sheet{t + 1}")
+                    : table.TableName;
+
+                // EPPlus sheet name rules: max 31 chars, no []:*?/\
+                sheetName = Regex.Replace(sheetName, @"[\[\]\:\*\?\/\\]", "_");
+                if (sheetName.Length > 31) sheetName = sheetName.Substring(0, 31);
+
+                var ws = package.Workbook.Worksheets.Add(sheetName);
+
+                // Load data: true = print column names as header
+                ws.Cells["A1"].LoadFromDataTable(table, true);
+
+                // Optional: autosize columns (can be heavy for very large data)
+                // ws.Cells[ws.Dimension.Address].AutoFitColumns();
+            }
+
+            // Prepare HTTP response
+            string fileName = $"Attendance_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            var bytes = package.GetAsByteArray();
+
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", $"attachment; filename={fileName}");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.BinaryWrite(bytes);
+            Response.Flush();
+
+            // Avoid ThreadAbortException from Response.End()
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
     }
+
     public override void VerifyRenderingInServerForm(Control control)
     {
-        //base.VerifyRenderingInServerForm(control);
+        
     }
 
     protected void btnexp_Click(object sender, EventArgs e)
@@ -396,54 +328,18 @@ public partial class PDCHouseholdAttendanceRptNewFormat : System.Web.UI.Page
     }
 
 
-    //protected void ExportToExcel()
-    //{
-    //    Response.Clear();
-    //    Response.Buffer = true;
-    //    Response.ContentType = "application/vnd.ms-excel";
-    //    Response.AddHeader("content-disposition", "attachment;FileName=" + DateTime.Now.ToString("M/d/yyyy") + " Wage payment report.xls");
-    //    Response.Charset = "";
-    //    // this.EnableViewState = false;
-    //    Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-    //    System.IO.StringWriter sw = new System.IO.StringWriter();
-    //    System.Web.UI.HtmlTextWriter htw = new System.Web.UI.HtmlTextWriter(sw);
-    //    try
-    //   {
-
-    //        grdClosebatchdet.Visible = true;
-    //        //DataSet ds1 = new DataSet();
-    //        //ds1 = Gen.getWagesReport(hdfID.Value.ToString());
-    //        //if (ds1.Tables[0].Rows.Count > 0)
-    //        //{
-    //        //    grdClosebatchdet.DataSource = ds1.Tables[0];
-    //        //    grdClosebatchdet.DataBind();
-    //        //    //BtnSave1.Visible = true;
-    //        //}
-    //        //else
-    //        //{
-    //        //    // BtnSave1.Visible = false;
-    //        //    grdClosebatchdet.DataSource = null;
-    //        //    grdClosebatchdet.DataBind();
-    //        //}
-    //        fillgrid();
-    //        grdClosebatchdet.RenderControl(htw);
-    //    }
-    //    catch (Exception eee)
-    //    {
-    //    }
-    //}
-
+    
     protected void BeneficiarySelect(object sender, EventArgs e)
     {
         if (ddlBeneficiary.Text == "Group")
         {
             trGroup.Visible = true;
-            //hdBeneficiaryType.Value = "";
+            
         }
         else
         {
             trGroup.Visible = false;
-            // hdBeneficiaryType.Value = ddlBeneficiary.SelectedValue.ToString();
+            
             hdGroupNo.Value = "";
             ddlGroupList.SelectedValue = "";
         }

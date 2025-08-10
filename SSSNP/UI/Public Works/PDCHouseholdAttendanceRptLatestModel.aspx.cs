@@ -4,6 +4,10 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using Telerik.Web.UI;
+using OfficeOpenXml;
+using OfficeOpenXml.Table;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 public partial class PDCHouseholdAttendanceRptLatestModel : System.Web.UI.Page
 {
@@ -78,18 +82,12 @@ public partial class PDCHouseholdAttendanceRptLatestModel : System.Web.UI.Page
                     {
                         rgAttendanceReport.DataSource = ds.Tables[0];
                         rgAttendanceReport.DataBind();
-                        //  ViewState["dt"] = ds;
-                        //grdClosebatchdet.DataSource = ds.Tables[0];
-                        //grdClosebatchdet.DataBind();
-                        //grdClosebatchdet.Rows[0].Visible = false;
                         lblmessage.Text = "";
                     }
                     else
                     {
                         rgAttendanceReport.DataSource = null;
                         rgAttendanceReport.DataBind();
-                        //grdClosebatchdet.DataSource = null;
-                        //grdClosebatchdet.DataBind();
                         lblmessage.Text = "There is no attendance in between days";
                     }
                 }
@@ -97,8 +95,6 @@ public partial class PDCHouseholdAttendanceRptLatestModel : System.Web.UI.Page
                 {
                     rgAttendanceReport.DataSource = null;
                     rgAttendanceReport.DataBind();
-                    //grdClosebatchdet.DataSource = null;
-                    //grdClosebatchdet.DataBind();
                     lblmessage.Text = "There is no attendance in between days";
                 }
             }
@@ -107,9 +103,6 @@ public partial class PDCHouseholdAttendanceRptLatestModel : System.Web.UI.Page
         {
             rgAttendanceReport.DataSource = null;
             rgAttendanceReport.DataBind();
-            //grdClosebatchdet.DataSource = null;
-            //grdClosebatchdet.DataBind();
-            //lblmessage.Text = "There is no attendance in between days - Ex";
         }
         finally
         {
@@ -119,8 +112,6 @@ public partial class PDCHouseholdAttendanceRptLatestModel : System.Web.UI.Page
 
     void clear()
     {
-        //grdClosebatchdet.DataSource = null;
-        //grdClosebatchdet.DataBind();
         TxtFromDate.Text = "";
         //    ddlyear.SelectedIndex = 0;
         TxtToDate.Text = "";
@@ -168,32 +159,6 @@ public partial class PDCHouseholdAttendanceRptLatestModel : System.Web.UI.Page
 
     }
 
-
-    protected void grdDetails_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        if ((e.Row.RowType == DataControlRowType.DataRow))
-        {
-            //   cnt = cnt + 1;
-            //   e.Row.Cells[0].Text = cnt.ToString().Trim();
-            //   DataSet ds = (DataSet)ViewState["dt"];
-            //   int iPresentCount = 0, iAbsentCount = 0;
-            //   for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
-            //   {
-            //       if (e.Row.Cells[i].Text.Trim().ToLower() == "present")
-            //       {
-            //           iPresentCount = iPresentCount + 1;
-            //       }
-            //       if (e.Row.Cells[i].Text.Trim().ToLower() == "absent")
-            //       {
-            //           iAbsentCount = iAbsentCount + 1;
-            //       }
-            //   }
-            //   e.Row.Cells[4].Text = iPresentCount.ToString().Trim();
-            //   e.Row.Cells[5].Text = iAbsentCount.ToString().Trim();
-            //// e.Row.Cells[ds.Tables[0].Columns[0]].Text = cnt.ToString().Trim();
-        }
-    }
-
     protected void BtnSave3_Click(object sender, EventArgs e)
     {
        
@@ -226,158 +191,6 @@ public partial class PDCHouseholdAttendanceRptLatestModel : System.Web.UI.Page
         return sb.ToString();
     }
 
-    ////protected void grdClosebatchdet_RowDataBound(object sender, GridViewRowEventArgs e)
-    ////{
-    ////    if (e.Row.RowType == DataControlRowType.DataRow)
-    ////    {
-    ////        //DataSet dsn = new DataSet();
-    ////        //dsn = Gen.getAttendanceReportLatestPresent(hdfID.Value.ToString(), TxtFromDate.Text, TxtToDate.Text, Convert.ToString(DataBinder.Eval(e.Row.DataItem, "intBenid")).Trim());
-    ////        //if (dsn.Tables[0].Rows.Count > 0)
-    ////        //{
-    ////        //    e.Row.Cells[3].Text = dsn.Tables[1].Rows[0][0].ToString();
-    ////        //    e.Row.Cells[4].Text = dsn.Tables[0].Rows[0][0].ToString();
-    ////        //    e.Row.Cells[5].Text = Convert.ToString(Convert.ToInt32(e.Row.Cells[3].Text) + Convert.ToInt32(dsn.Tables[0].Rows[0][0].ToString()));
-    ////        //}
-
-    ////        cnt = cnt + 1;
-    ////        e.Row.Cells[0].Text = cnt.ToString().Trim();
-    ////        //DataSet ds = (DataSet)ViewState["dt"];
-    ////        int iPresentCount = 0, iAbsentCount = 0;
-
-    ////        for (int i = 0; i < Convert.ToInt32(hdfcounts.Value); i++)
-    ////        {
-    ////            if (e.Row.Cells[i].Text.Trim().ToLower() == "present")
-    ////            {
-    ////                iPresentCount = iPresentCount + 1;
-    ////            }
-    ////            if (i > 5)
-    ////            {
-    ////                if (e.Row.Cells[i].Text.Trim().ToLower() != "present")
-    ////                {
-    ////                    iAbsentCount = iAbsentCount + 1;
-    ////                }
-    ////            }
-    ////        }
-    ////        e.Row.Cells[4].Text = iPresentCount.ToString().Trim();
-    ////        e.Row.Cells[5].Text = iAbsentCount.ToString().Trim();
-    ////    }
-    ////}
-
-    //protected void grdClosebatchdet_SelectedIndexChanged(object sender, EventArgs e)
-    //{
-    //}
-
-    //protected void grdClosebatchdet_PageIndexChanging(object sender, GridViewPageEventArgs e)
-    //{
-    //    grdClosebatchdet.PageIndex = e.NewPageIndex;
-    //    fillgrid();
-    //}
-
-    //protected void ExportToExcel()
-    //{
-    //    //GridView Export = new GridView();
-    //    Response.Clear();
-    //    Response.Buffer = true;
-    //    Response.ContentType = "application/vnd.ms-excel";
-    //    Response.AddHeader("content-disposition", "attachment;FileName=ViewFiles.xls");
-    //    Response.Charset = "";
-    //    // this.EnableViewState = false;
-    //    Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-    //    System.IO.StringWriter sw = new System.IO.StringWriter();
-    //    System.Web.UI.HtmlTextWriter htw = new System.Web.UI.HtmlTextWriter(sw);
-
-    //    try
-    //    {
-    //        // grdBReg.DataBind();
-    //        //  lblresult0.Visible = true;
-    //        //            Export.DataSource = FillBRegister();
-    //        //          Export.DataBind();
-    //        grdClosebatchdet.Visible = true;
-    //        //ds = cmn.getpostplacedtraineedet(Request.QueryString["type"].ToString(), Request.QueryString["intPIAid"].ToString());
-    //        //GridView1.DataSource = ds.Tables[0];
-    //        //GridView1.DataBind();
-    //        //GridView1.DataSource = ds.Tables[0];
-    //        //GridView1.DataBind();
-    //        //   grdtraineedetails.AllowPaging = false;
-    //        //grdtraineedetails.DataBind();
-    //        // grdtraineedetails.PageSize = 100000;
-    //        //     grdtraineedetails0.Columns[1].Visible = false;
-    //        //grdDetails.DataSource = //((DataTable)Session["dtt_load"]).DefaultView; ;
-    //        // grdDetails.DataBind();
-    //        //cmn.fillhimayatsummary(grdDetails);
-    //        div_print.RenderControl(htw);
-    //        // grdBReg.RenderControl(htw);
-    //        // ((DataTable)Session["dtt_load"]).Clear();
-    //    }
-    //    catch (Exception eee)
-    //    {
-    //    }
-
-    //    //DataTable dt = new DataTable();
-    //    //print.RenderControl(htw);
-    //    Page.Response.Write(sw.ToString());
-    //    //   grdtraineedetails.PageSize = 20;
-    //    //   LinkButton1.PostBackUrl = Request.Url.ToString();
-    //    //   lblresult0.Visible = false;
-    //    Response.End();
-    //    //grdDetails.Columns[1].Visible = true;
-    //    // grdDetails.Visible = false;
-    //    // grdtraineedetails.AllowPaging = true;
-    //    //Response.Clear();
-    //    //Response.Buffer = true;
-    //    //Response.ContentType = "application/vnd.ms-excel";
-    //    //Response.AddHeader("content-disposition", "attachment;FileName=" + DateTime.Now.ToString("M/d/yyyy") + " Wage payment report.xls");
-    //    //Response.Charset = "";
-    //    //this.EnableViewState = false;
-    //    //Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-    //    //System.IO.StringWriter sw = new System.IO.StringWriter();
-    //    //System.Web.UI.HtmlTextWriter htw = new System.Web.UI.HtmlTextWriter(sw);
-    //    //try
-    //    //{
-    //    //    grdDetails.Visible = true;
-    //    //    DataSet ds1 = new DataSet();
-    //    //    ds1 = Gen.getWagesReport(hdfID.Value.ToString());
-    //    //    if (ds1.Tables[0].Rows.Count > 0)
-    //    //    {
-    //    //        grdDetails.DataSource = ds1.Tables[0];
-    //    //        grdDetails.DataBind();
-    //    //        BtnSave1.Visible = true;
-    //    //    }
-    //    //    else
-    //    //    {
-    //    //        BtnSave1.Visible = false;
-    //    //        grdDetails.DataSource = null;
-    //    //        grdDetails.DataBind();
-    //    //    }
-    //    //    grdDetails.RenderControl(htw);
-    //    //}
-    //    //catch (Exception eee)
-    //    //{
-    //    //}
-    //    //Response.Clear();
-    //    //Response.Buffer = true;
-    //    //Response.ContentType = "application/vnd.ms-excel";
-    //    //Response.AddHeader("content-disposition", "attachment;FileName=ViewDetails.xls");
-    //    //Response.Charset = "";
-    //    //// this.EnableViewState = false;
-    //    //Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-    //    //System.IO.StringWriter sw = new System.IO.StringWriter();
-    //    //System.Web.UI.HtmlTextWriter htw = new System.Web.UI.HtmlTextWriter(sw);
-    //    //try
-    //    //{
-    //    //    grdClosebatchdet.Visible = true;
-    //    //    //fillgrid1();
-    //    //    fillgrid();
-    //    //    grdClosebatchdet.RenderControl(htw);
-    //    //}
-    //    //catch (Exception eee)
-    //    //{
-    //    //}
-    //    //Page.Response.Write(sw.ToString());
-    //    //Response.End();
-    //    //grdClosebatchdet.Visible = false;
-    //}
-
     public override void VerifyRenderingInServerForm(Control control)
     {
     }
@@ -385,42 +198,117 @@ public partial class PDCHouseholdAttendanceRptLatestModel : System.Web.UI.Page
     protected void btnexp_Click(object sender, EventArgs e)
     {
         //ExportToExcel();
-        //ExportToExcel();
+        ExportToExcel();
     }
 
-    //protected void ExportToExcel()
-    //{
-    //    Response.Clear();
-    //    Response.Buffer = true;
-    //    Response.ContentType = "application/vnd.ms-excel";
-    //    Response.AddHeader("content-disposition", "attachment;FileName=" + DateTime.Now.ToString("M/d/yyyy") + " Wage payment report.xls");
-    //    Response.Charset = "";
-    //    // this.EnableViewState = false;
-    //    Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-    //    System.IO.StringWriter sw = new System.IO.StringWriter();
-    //    System.Web.UI.HtmlTextWriter htw = new System.Web.UI.HtmlTextWriter(sw);
-    //    try
-    //    {
-    //        grdClosebatchdet.Visible = true;
-    //        //DataSet ds1 = new DataSet();
-    //        //ds1 = Gen.getWagesReport(hdfID.Value.ToString());
-    //        //if (ds1.Tables[0].Rows.Count > 0)
-    //        //{
-    //        //    grdClosebatchdet.DataSource = ds1.Tables[0];
-    //        //    grdClosebatchdet.DataBind();
-    //        //    //BtnSave1.Visible = true;
-    //        //}
-    //        //else
-    //        //{
-    //        //    // BtnSave1.Visible = false;
-    //        //    grdClosebatchdet.DataSource = null;
-    //        //    grdClosebatchdet.DataBind();
-    //        //}
-    //        fillgrid();
-    //        grdClosebatchdet.RenderControl(htw);
-    //    }
-    //    catch (Exception eee)
-    //    {
-    //    }
-    //}
+    /*private void ExportToExcel()
+    {
+        // Make sure the grid has data (NeedDataSource will run on Rebind())
+        rgAttendanceReport.ExportSettings.FileName = "Attendance_" + DateTime.Now.ToString("yyyyMMdd_HHmm");
+        rgAttendanceReport.ExportSettings.ExportOnlyData = true;   // no buttons, etc.
+        rgAttendanceReport.ExportSettings.IgnorePaging = true;     // all rows
+        rgAttendanceReport.ExportSettings.OpenInNewWindow = true;  // nice UX
+        rgAttendanceReport.ExportSettings.Excel.Format = Telerik.Web.UI.GridExcelExportFormat.Xlsx;
+
+        rgAttendanceReport.Rebind();               // ensures DataSource is set
+        rgAttendanceReport.MasterTableView.ExportToExcel();
+    }*/
+
+    /*private void ExportToExcel()
+    {
+        var ds = Gen.getAttendanceReportLatestModel(
+            hdfID.Value, TxtFromDate.Text, TxtToDate.Text, "%", "%");
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            lblmessage.Text = "No data to export.";
+            return;
+        }
+
+        using (var package = new ExcelPackage())
+        {
+            // If you have multiple tables and want multiple sheets:
+            for (int t = 0; t < ds.Tables.Count; t++)
+            {
+                var dt = ds.Tables[t];
+                var ws = package.Workbook.Worksheets.Add(
+                    string.IsNullOrWhiteSpace(dt.TableName) ? $"Sheet{t + 1}" : dt.TableName);
+
+                // Load data (true => include column headers)
+                ws.Cells["A1"].LoadFromDataTable(dt, true, TableStyles.Medium9);
+
+                // Auto-fit columns
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+
+                // Optional: format header
+                using (var rng = ws.Cells[1, 1, 1, dt.Columns.Count])
+                {
+                    rng.Style.Font.Bold = true;
+                    rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    rng.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(1, 49, 97)); // dark blue
+                    rng.Style.Font.Color.SetColor(Color.White);
+                }
+
+                // Optional: set nice formats for typed columns
+                for (int c = 0; c < dt.Columns.Count; c++)
+                {
+                    var col = dt.Columns[c];
+                    var dataRange = ws.Cells[2, c + 1, dt.Rows.Count + 1, c + 1];
+                    if (col.DataType == typeof(DateTime))
+                        dataRange.Style.Numberformat.Format = "dd-mm-yyyy";
+                    else if (col.DataType == typeof(decimal) || col.DataType == typeof(double) || col.DataType == typeof(float))
+                        dataRange.Style.Numberformat.Format = "#,##0.00";
+                    else if (col.DataType == typeof(int) || col.DataType == typeof(long))
+                        dataRange.Style.Numberformat.Format = "0";
+                    // If your “date”/“number” columns are strings, either convert before binding
+                    // or force text: dataRange.Style.Numberformat.Format = "@";
+                }
+            }
+
+            var bytes = package.GetAsByteArray();
+
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", $"attachment;filename=Attendance_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
+            Response.BinaryWrite(bytes);
+            // Avoid ThreadAbortException:
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+    }*/
+
+    private void ExportToExcel()
+    {
+        // Get your data (same as grid)
+        var ds = Gen.getAttendanceReportLatestModel(
+            hdfID.Value, TxtFromDate.Text, TxtToDate.Text, "%", "%");
+
+        var dt = (ds != null && ds.Tables.Count > 0) ? ds.Tables[0] : null;
+        if (dt == null || dt.Rows.Count == 0)
+        {
+            lblmessage.Text = "No data to export.";
+            return;
+        }
+
+        // For EPPlus 5/6+: uncomment next line. For EPPlus 4.x: REMOVE it.
+        // ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        using (var package = new ExcelPackage())
+        {
+            var ws = package.Workbook.Worksheets.Add("Attendance");
+
+            // Plain dump with column headers, no styling, no formats
+            ws.Cells["A1"].LoadFromDataTable(dt, true);
+
+            var bytes = package.GetAsByteArray();
+
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition",
+                $"attachment;filename=Attendance_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
+            Response.BinaryWrite(bytes);
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+    }
 }

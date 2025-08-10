@@ -310,7 +310,7 @@ function OpenPopup()
                                             <asp:Button ID="btnexp" runat="server" CausesValidation="False" 
                                                 CssClass="btn btn-primary" Height="32px" 
                                                 onclick="btnexp_Click" Text="Export" 
-                                                ValidationGroup="vg" Width="90px" Visible="false" />
+                                                ValidationGroup="vg" Width="90px" />
                                             <asp:Button ID="BtnPrint" runat="server" CssClass="btn btn-danger" 
                                                 Height="32px" onclick="BtnSave_Click" OnClientClick="return PrintPanel();" ToolTip="Export Excel Sheet" TabIndex="10" Text="Print" 
                                                 ValidationGroup="group" Width="90px" />
