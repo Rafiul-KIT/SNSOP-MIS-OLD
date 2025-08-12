@@ -654,6 +654,14 @@ namespace SSSNP_SNSOP.Core.Repository
                         data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
                         data.Add("BusinessPlanStatus", obj.BusinessPlanStatus);
                         data.Add("BusinessType", obj.BusinessType);
+                        data.Add("PlanSubmitted", obj.PlanSubmitted);
+                        data.Add("PlanScreened", obj.PlanScreened);
+                        data.Add("PlanApproved", obj.PlanApproved);
+                        data.Add("WhyRejected", obj.WhyRejected ?? (object)DBNull.Value);
+                        data.Add("BusinessDescription", obj.BusinessDescription ?? (object)DBNull.Value);
+                        data.Add("HowSpent", obj.HowSpent ?? (object)DBNull.Value);
+                        data.Add("InPersonPercentage", obj.InPersonPercentage);
+                        data.Add("GroupPercentage", obj.GroupPercentage);
                         data.Add("StateID", denormalizedData.StateID);
                         data.Add("CountyID", denormalizedData.CountyID);
                         data.Add("PayamID", denormalizedData.PayamID);

@@ -71,9 +71,19 @@ namespace SSSNP.UI.Public_Works
                     //for checking headers
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Household Number", "Business Plan Status", "Business Type"
+                        "Household Number",
+                        "Business Plan Status",
+                        "Business Type",
+                        "Plan Submitted",
+                        "Plan Screened",
+                        "Plan Approved",
+                        "Why Rejected",
+                        "Business Description",
+                        "How Spent",
+                        "Proportions of Meetings in Person (%)",
+                        "Proportions of Meetings in Group (%)"
                     };
-                    
+
                     for (int col = 1; col <= expectedHeaders.Count; col++)
                     {
                         var header = worksheet.Cells[1, col].Text.Trim();
@@ -119,12 +129,43 @@ namespace SSSNP.UI.Public_Works
                                 }
                             }
 
-                            BusinessPlanDevelopmentModel businessPlanObj = new BusinessPlanDevelopmentModel
+                            Func<string, bool?> yesNoNullable = s =>
+                            string.IsNullOrWhiteSpace(s) ? (bool?)null :
+                            s.Trim().Equals("yes", StringComparison.OrdinalIgnoreCase) ? true :
+                            s.Trim().Equals("no", StringComparison.OrdinalIgnoreCase) ? false : (bool?)null;
+
+                            decimal? ParsePercent(string s)
                             {
-                                HouseholdNumber = worksheet.Cells[row, 1].Text,
-                                BusinessPlanStatus = (worksheet.Cells[row, 2].Text != null
-                                && (worksheet.Cells[row, 2].Text.ToLower().Equals("yes"))) ? true : false,
-                                BusinessType = BusinessTypeVal,
+                                if (string.IsNullOrWhiteSpace(s)) return null;
+                                if (decimal.TryParse(s.Trim(), out var v)) return v;
+                                return null;
+                            }
+
+                            /*// Percentages (allow blank). We’ll validate in Analyze.
+                            string inPersonText = worksheet.Cells[row, 10]?.Text?.Trim();
+                            string groupText = worksheet.Cells[row, 11]?.Text?.Trim();
+                            decimal inPersonPct = 0m, groupPct = 0m;
+                            bool hasInPerson = decimal.TryParse(inPersonText, out inPersonPct);
+                            bool hasGroup = decimal.TryParse(groupText, out groupPct);*/
+
+                            var businessPlanObj = new BusinessPlanDevelopmentModel
+                            {
+                                HouseholdNumber = worksheet.Cells[row, 1].Text?.Trim(),
+                                BusinessPlanStatus = yesNoNullable(worksheet.Cells[row, 2].Text),
+
+                                BusinessType = BusinessTypeVal == 0 ? (int?)null : BusinessTypeVal,
+
+                                PlanSubmitted = yesNoNullable(worksheet.Cells[row, 4].Text),
+                                PlanScreened = yesNoNullable(worksheet.Cells[row, 5].Text),
+                                PlanApproved = yesNoNullable(worksheet.Cells[row, 6].Text),
+
+                                WhyRejected = worksheet.Cells[row, 7]?.Text?.Trim(),
+                                BusinessDescription = worksheet.Cells[row, 8]?.Text?.Trim(),
+                                HowSpent = worksheet.Cells[row, 9]?.Text?.Trim(),
+
+                                InPersonPercentage = ParsePercent(worksheet.Cells[row, 10]?.Text),
+                                GroupPercentage = ParsePercent(worksheet.Cells[row, 11]?.Text),
+
                                 CreatedBy = userId,
                                 ModifiedBy = userId
                             };
@@ -165,6 +206,14 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("BusinessPlanStatus", typeof(string));
                 dt.Columns.Add("BusinessType", typeof(string));
                 dt.Columns.Add("ValidationStatus", typeof(string));
+                dt.Columns.Add("PlanSubmitted", typeof(string));
+                dt.Columns.Add("PlanScreened", typeof(string));
+                dt.Columns.Add("PlanApproved", typeof(string));
+                dt.Columns.Add("WhyRejected", typeof(string));
+                dt.Columns.Add("BusinessDescription", typeof(string));
+                dt.Columns.Add("HowSpent", typeof(string));
+                dt.Columns.Add("InPersonPercentage", typeof(string));
+                dt.Columns.Add("GroupPercentage", typeof(string));
 
                 // Populate DataTable with the data from the list
                 int serial = 1;
@@ -189,12 +238,34 @@ namespace SSSNP.UI.Public_Works
                         dr["Id"] = serial;
                         dr["HouseholdNumber"] = obj.HouseholdNumber;
                         dr["BusinessPlanStatus"] = (obj.BusinessPlanStatus == true) ? "YES" : "NO";
-                        dr["BusinessType"] = (obj.BusinessType == 1) ? "Farm" : "Non-farm";
+                        dr["BusinessType"] = (obj.BusinessType == 1) ? "Farm" : "Non-Farm";
+
+                        dr["PlanSubmitted"] = (obj.PlanSubmitted == true) ? "YES" : "NO";
+                        dr["PlanScreened"] = (obj.PlanScreened == true) ? "YES" : "NO";
+                        dr["PlanApproved"] = (obj.PlanApproved == true) ? "YES" : "NO";
+                        dr["WhyRejected"] = obj.WhyRejected;
+                        dr["BusinessDescription"] = obj.BusinessDescription;
+                        dr["HowSpent"] = obj.HowSpent;
+                        dr["InPersonPercentage"] = obj.InPersonPercentage.HasValue
+                            ? obj.InPersonPercentage.Value.ToString("0.##")
+                            : string.Empty;
+                        dr["GroupPercentage"] = obj.GroupPercentage.HasValue
+                            ? obj.GroupPercentage.Value.ToString("0.##")
+                            : string.Empty;
 
                         auditEntityObj.FileId = FileId;
                         auditEntityObj.HouseholdNumber = obj.HouseholdNumber;
-                        auditEntityObj.BusinessPlanStatus = obj.BusinessPlanStatus;
-                        auditEntityObj.BusinessType = obj.BusinessType;
+                        auditEntityObj.BusinessPlanStatus = obj.BusinessPlanStatus ?? false;
+                        auditEntityObj.BusinessType = obj.BusinessType ?? 0;
+
+                        auditEntityObj.PlanSubmitted = obj.PlanSubmitted ?? false;
+                        auditEntityObj.PlanScreened = obj.PlanScreened ?? false;
+                        auditEntityObj.PlanApproved = obj.PlanApproved ?? false;
+                        auditEntityObj.WhyRejected = obj.WhyRejected;
+                        auditEntityObj.BusinessDescription = obj.BusinessDescription;
+                        auditEntityObj.HowSpent = obj.HowSpent;
+                        auditEntityObj.InPersonPercentage = obj.InPersonPercentage ?? 0m;
+                        auditEntityObj.GroupPercentage = obj.GroupPercentage ?? 0m;
 
                         if (!validationResult.isValid)
                         {
@@ -359,11 +430,42 @@ namespace SSSNP.UI.Public_Works
 
         private DataTable GetBusinessPlanDevelopmentData(int pageIndex, int pageSize)
         {
-            string query = @"SELECT Id, HouseholdNumber, 
-            case when BusinessPlanStatus = 1 then 'YES' else 'NO' end as BusinessPlanStatus,
-            case when BusinessType = 1 then 'Farm' else 'Non-Farm' end as BusinessType 
-            FROM tbl_com2_Business_Plan_Development ORDER BY Id 
-            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
+            string query = @"SELECT 
+                                    Id,
+                                    HouseholdNumber,
+                                    CASE 
+                                        WHEN BusinessPlanStatus = 1 THEN 'YES'
+                                        WHEN BusinessPlanStatus = 0 THEN 'NO'
+                                        ELSE '' 
+                                    END AS BusinessPlanStatus,
+                                    CASE 
+                                        WHEN BusinessType = 1 THEN 'Farm'
+                                        WHEN BusinessType = 2 THEN 'Non-Farm'
+                                        ELSE '' 
+                                    END AS BusinessType,
+                                    CASE 
+                                        WHEN PlanSubmitted = 1 THEN 'YES'
+                                        WHEN PlanSubmitted = 0 THEN 'NO'
+                                        ELSE '' 
+                                    END AS PlanSubmitted,
+                                    CASE 
+                                        WHEN PlanScreened = 1 THEN 'YES'
+                                        WHEN PlanScreened = 0 THEN 'NO'
+                                        ELSE '' 
+                                    END AS PlanScreened,
+                                    CASE 
+                                        WHEN PlanApproved = 1 THEN 'YES'
+                                        WHEN PlanApproved = 0 THEN 'NO'
+                                        ELSE '' 
+                                    END AS PlanApproved,
+                                    WhyRejected,
+                                    BusinessDescription,
+                                    HowSpent,
+                                    InPersonPercentage,
+                                    GroupPercentage
+                                FROM dbo.tbl_com2_Business_Plan_Development
+                                ORDER BY Id
+                                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
             DataTable dt = new DataTable();
             string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;

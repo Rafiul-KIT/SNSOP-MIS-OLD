@@ -202,9 +202,17 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Business Plan Status";
                     worksheet.Cells[1, 3].Value = "Business Type";
+                    worksheet.Cells[1, 4].Value = "Plan Submitted";
+                    worksheet.Cells[1, 5].Value = "Plan Screened";
+                    worksheet.Cells[1, 6].Value = "Plan Approved";
+                    worksheet.Cells[1, 7].Value = "Why Rejected";
+                    worksheet.Cells[1, 8].Value = "Business Description";
+                    worksheet.Cells[1, 9].Value = "How Spent";
+                    worksheet.Cells[1, 10].Value = "Proportions of Meetings in Person (%)";
+                    worksheet.Cells[1, 11].Value = "Proportions of Meetings in Group (%)";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 3; col++)
+                    for (int col = 1; col <= 11; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -240,24 +248,59 @@ namespace SSSNP_SNSOP
                         businessTypeValidation.Formula.Values.Add(option);
                     }
 
+                    // Yes/No dropdowns for D, E, F
+                    var planSubmittedValidation = worksheet.DataValidations.AddListValidation("D2:D1000");
+                    foreach (var option in yesNoOptions) planSubmittedValidation.Formula.Values.Add(option);
+
+                    var planScreenedValidation = worksheet.DataValidations.AddListValidation("E2:E1000");
+                    foreach (var option in yesNoOptions) planScreenedValidation.Formula.Values.Add(option);
+
+                    var planApprovedValidation = worksheet.DataValidations.AddListValidation("F2:F1000");
+                    foreach (var option in yesNoOptions) planApprovedValidation.Formula.Values.Add(option);
+
+                    var whyRejectedValidation = worksheet.DataValidations.AddCustomValidation("G2:G1000");
+                    whyRejectedValidation.Formula.ExcelFormula = "OR($F2=\"No\",LEN($G2)=0)";
+                    whyRejectedValidation.ShowErrorMessage = true;
+                    whyRejectedValidation.ErrorTitle = "Invalid Entry";
+                    whyRejectedValidation.Error = "Only fill this if 'Plan Approved' = 'No'. Leave it blank otherwise.";
+                    whyRejectedValidation.ErrorStyle = OfficeOpenXml.DataValidation.ExcelDataValidationWarningStyle.stop;
+
+
+                    // Percentage validations for In-Person and Group columns
+                    var inPersonPercentageValidation = worksheet.DataValidations.AddDecimalValidation("J2:J1000");
+                    inPersonPercentageValidation.Operator = OfficeOpenXml.DataValidation.ExcelDataValidationOperator.between;
+                    inPersonPercentageValidation.Formula.Value = 0;
+                    inPersonPercentageValidation.Formula2.Value = 100;
+                    inPersonPercentageValidation.ShowErrorMessage = true;
+                    inPersonPercentageValidation.Error = "Enter a number between 0 and 100.";
+
+                    var groupPercentageValidation = worksheet.DataValidations.AddCustomValidation("K2:K1000");
+                    groupPercentageValidation.Formula.ExcelFormula =
+                        "OR(AND(ISNUMBER(J2),ISNUMBER(K2),J2>=0,J2<=100,K2>=0,K2<=100,J2+K2=100),AND(J2=\"\",K2=\"\"))";
+                    groupPercentageValidation.ShowErrorMessage = true;
+                    groupPercentageValidation.Error = "Enter 0–100 and ensure In-Person % + Group % = 100 (or leave both blank).";
+
+
+                    // Optional formatting
+                    worksheet.Cells["J2:J1000"].Style.Numberformat.Format = "0.00";
+                    worksheet.Cells["K2:K1000"].Style.Numberformat.Format = "0.00";
+
                     // Protect the worksheet so that locked cells (Household Number) are read-only
                     worksheet.Protection.IsProtected = true;
 
                     // Unlock other cells so they can be edited by the user
-                    worksheet.Cells["B2:C1000"].Style.Locked = false;
+                    worksheet.Cells["B2:K1000"].Style.Locked = false;
 
                     // Auto-fit columns to adjust the size
                     worksheet.Cells.AutoFitColumns();
 
                     // Set the content type and headers for the download
-                    Response.ClearHeaders();
+                    Response.Clear();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("Content-Disposition", "attachment; filename=BusinessPlanDevelopmentTemplate.xlsx");
-
-                    // Write the file to the response stream
                     Response.BinaryWrite(package.GetAsByteArray());
-                    Response.Flush();
-                    Response.Close();
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                    return;
                 }
             }
             catch (Exception ex)
