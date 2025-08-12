@@ -251,5 +251,140 @@ group by c.intCountieid, c.CountieName, cte.cou";
             return result;
         }
 
+        [WebMethod]
+        public static List<CountyEnrollmentData> GetNonFarmData()
+        {
+            List<CountyEnrollmentData> result = new List<CountyEnrollmentData>();
+
+            string query = @"
+    select c.CountieName CountyName, sum(case when bpd.BusinessPlanStatus=1 then 1 else 0 end) TotalEnrolled
+from tbl_com2_Business_Plan_Development bpd
+join tbl_BeneficiaryDet tbd on bpd.HouseholdNumber=tbd.household_number
+join tm_Counties c on tbd.intCountieid = c.intCountieid
+and c.intCountieid IN (9202, 9311, 7301)
+where bpd.BusinessType=2 group by c.CountieName";
+
+
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new CountyEnrollmentData
+                    {
+                        CountyName = reader["CountyName"].ToString(),
+                        TotalEnrolled = Convert.ToInt32(reader["TotalEnrolled"])
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        [WebMethod]
+        public static List<CountyEnrollmentData> GetFarmData()
+        {
+            List<CountyEnrollmentData> result = new List<CountyEnrollmentData>();
+
+            string query = @"
+    select c.CountieName CountyName, sum(case when bpd.BusinessPlanStatus=1 then 1 else 0 end) TotalEnrolled
+from tbl_com2_Business_Plan_Development bpd
+join tbl_BeneficiaryDet tbd on bpd.HouseholdNumber=tbd.household_number
+join tm_Counties c on tbd.intCountieid = c.intCountieid
+and c.intCountieid IN (9202, 9311, 7301)
+where bpd.BusinessType=1 group by c.CountieName";
+
+
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new CountyEnrollmentData
+                    {
+                        CountyName = reader["CountyName"].ToString(),
+                        TotalEnrolled = Convert.ToInt32(reader["TotalEnrolled"])
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        [WebMethod]
+        public static List<CountyEnrollmentData> GetInstallment1Data()
+        {
+            List<CountyEnrollmentData> result = new List<CountyEnrollmentData>();
+
+            string query = @"
+    select c.CountieName CountyName, sum(case when bpd.PaymentCycle=1 then 1 else 0 end) TotalEnrolled
+from tbl_com2_Livelihood_Grant_Disbursement bpd
+join tbl_BeneficiaryDet tbd on bpd.HouseholdNumber=tbd.household_number
+join tm_Counties c on tbd.intCountieid = c.intCountieid
+and c.intCountieid IN (9202, 9311, 7301)
+group by c.CountieName";
+
+
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new CountyEnrollmentData
+                    {
+                        CountyName = reader["CountyName"].ToString(),
+                        TotalEnrolled = Convert.ToInt32(reader["TotalEnrolled"])
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        [WebMethod]
+        public static List<CountyEnrollmentData> GetInstallment2Data()
+        {
+            List<CountyEnrollmentData> result = new List<CountyEnrollmentData>();
+
+            string query = @"
+    select c.CountieName CountyName, sum(case when bpd.PaymentCycle=2 then 1 else 0 end) TotalEnrolled
+from tbl_com2_Livelihood_Grant_Disbursement bpd
+join tbl_BeneficiaryDet tbd on bpd.HouseholdNumber=tbd.household_number
+join tm_Counties c on tbd.intCountieid = c.intCountieid
+and c.intCountieid IN (9202, 9311, 7301)
+group by c.CountieName";
+
+
+            string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new CountyEnrollmentData
+                    {
+                        CountyName = reader["CountyName"].ToString(),
+                        TotalEnrolled = Convert.ToInt32(reader["TotalEnrolled"])
+                    });
+                }
+            }
+
+            return result;
+        }
     }
 }

@@ -244,6 +244,166 @@
                     }
                 });
             });
+
+        fetch('EconomicOpportunitiesDashboard.aspx/GetNonFarmData', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        })
+            .then(response => response.json())
+            .then(data => {
+                const result = data.d;
+                const labels = result.map(item => item.CountyName);
+                const values = result.map(item => item.TotalEnrolled);
+
+                const ctx = document.getElementById('nonFarmChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Count: ',
+                            data: values,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            maxBarThickness: 60
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+
+        fetch('EconomicOpportunitiesDashboard.aspx/GetFarmData', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        })
+            .then(response => response.json())
+            .then(data => {
+                const result = data.d;
+                const labels = result.map(item => item.CountyName);
+                const values = result.map(item => item.TotalEnrolled);
+
+                const ctx = document.getElementById('farmChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Count: ',
+                            data: values,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            maxBarThickness: 60
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+
+        fetch('EconomicOpportunitiesDashboard.aspx/GetInstallment1Data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        })
+            .then(response => response.json())
+            .then(data => {
+                const result = data.d;
+                const labels = result.map(item => item.CountyName);
+                const values = result.map(item => item.TotalEnrolled);
+
+                const ctx = document.getElementById('installment1Chart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Count: ',
+                            data: values,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            maxBarThickness: 60
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+
+        fetch('EconomicOpportunitiesDashboard.aspx/GetInstallment2Data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        })
+            .then(response => response.json())
+            .then(data => {
+                const result = data.d;
+                const labels = result.map(item => item.CountyName);
+                const values = result.map(item => item.TotalEnrolled);
+
+                const ctx = document.getElementById('installment2Chart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Count: ',
+                            data: values,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            maxBarThickness: 60
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
     }
 
     window.onload = loadEnrollmentChart;
@@ -295,6 +455,7 @@
                                 </div>
 
                                 <div class="row">
+                                    <h4 class="text-primary">BENEFICIARY TRAINING AND ATTENDANCE (% ATTENDANCE OF CLASSES THAT HAVE BEEN HELD)</h4>
                                     <div class="col-md-6">
                                         <div class="card shadow p-3 mb-4 bg-white rounded">
                                             <h4 class="text-primary">Livelihood Training</h4>
@@ -322,7 +483,6 @@
                                             <div style="height: 200px; max-width: 600px; margin: auto;">
                                                 <canvas id="lifeskillsTrainingChart" style="height: 100%; width: 100%;"></canvas>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -331,7 +491,48 @@
                                             <div style="height: 200px; max-width: 600px; margin: auto;">
                                                 <canvas id="savingsChart" style="height: 100%; width: 100%;"></canvas>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="row">
+                                    <h4 class="text-primary">BUSINESS PLAN DEVELOPMENT – HAVE RESPONDENTS DEVELOPED A BUSINESS PLAN?</h4>
+                                    <div class="col-md-6">
+                                        <div class="card shadow p-3 mb-4 bg-white rounded">
+                                            <h4 class="text-primary">Non-farm</h4>
+                                            <div style="height: 200px; max-width: 600px; margin: auto;">
+                                                <canvas id="nonFarmChart" style="height: 100%; width: 100%;"></canvas>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card shadow p-3 mb-4 bg-white rounded">
+                                            <h4 class="text-primary">Farm</h4>
+                                            <div style="height: 200px; max-width: 600px; margin: auto;">
+                                                <canvas id="farmChart" style="height: 100%; width: 100%;"></canvas>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <h4 class="text-primary">LIVELIHOOD GRANT DISBURSEMENT</h4>
+                                    <div class="col-md-6">
+                                        <div class="card shadow p-3 mb-4 bg-white rounded">
+                                            <h4 class="text-primary">Installment One</h4>
+                                            <div style="height: 200px; max-width: 600px; margin: auto;">
+                                                <canvas id="installment1Chart" style="height: 100%; width: 100%;"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card shadow p-3 mb-4 bg-white rounded">
+                                            <h4 class="text-primary">Installment Two</h4>
+                                            <div style="height: 200px; max-width: 600px; margin: auto;">
+                                                <canvas id="installment2Chart" style="height: 100%; width: 100%;"></canvas>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
