@@ -64,6 +64,7 @@ public partial class CCMaster : System.Web.UI.MasterPage
         BusinessPlanDevelopment.Visible = value;
         LivelihoodGrantDisbursement.Visible = value;
         FinancialServiceLinkageTracking.Visible = value;
+        CoachingDeatils.Visible = true;
         CoachingSessionTracking.Visible = value;
         AuditRecordDownload.Visible = value;
 

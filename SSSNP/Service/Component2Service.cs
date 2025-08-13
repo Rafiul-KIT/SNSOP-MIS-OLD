@@ -185,6 +185,63 @@ namespace SSSNP.Service
             }
         }
 
+        public ResponseModel SaveCoachingDetails(List<CoachingDetailsModel> request)
+        {
+            var response = new ResponseModel();
+            var errorMessages = new List<string>();
+
+            try
+            {
+                if (request == null || request.Count == 0)
+                {
+                    return new ResponseModel
+                    {
+                        IsSuccess = false,
+                        Message = "No coaching detail records to save."
+                    };
+                }
+
+                foreach (var obj in request)
+                {
+                    // Validate the coaching details data (all fields present per your latest rule)
+                    var validationResult = IsValidData(obj);
+
+                    if (!validationResult.isValid)
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        continue;
+                    }
+
+                    // Save the valid coaching detail record
+                    var saveResult = _component2Repository.SaveCoachingDetails(obj);
+
+                    if (!saveResult.IsSuccess)
+                    {
+                        errorMessages.Add(saveResult.Message);
+                    }
+                }
+
+                // Set aggregated response
+                if (errorMessages.Count > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = string.Join("; ", errorMessages);
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "All coaching detail records saved successfully.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when saving Coaching Details data. Error: " + ex.ToString());
+            }
+        }
+
+
 
         public (bool isValid, string errorMessage) IsValidData(CoachingSessionTrackingModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
         {
@@ -212,6 +269,21 @@ namespace SSSNP.Service
 
             return (true, string.Empty);
         }
+
+        public (bool isValid, string errorMessage) IsValidData(CoachingDetailsModel obj)
+        {
+            if (obj.CoachingId <= 0)
+                return (false, "Coaching Id is required.");
+
+            if (obj.CoachingSessionHoldingDate == null)
+                return (false, "Coaching Session Holding Date is required.");
+
+            if (obj.CoachingSessionDurationMinutes == null || obj.CoachingSessionDurationMinutes <= 0)
+                return (false, "Coaching Session Duration (Minutes) is required and must be greater than 0.");
+
+            return (true, string.Empty);
+        }
+
 
 
         public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)

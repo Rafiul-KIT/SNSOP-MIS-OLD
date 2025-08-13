@@ -79,43 +79,46 @@ namespace SSSNP.UI.Public_Works
                     }
 
                     // Create a list to hold the parsed data
-                    List<CoachingSessionTrackingModel> attendanceList = new List<CoachingSessionTrackingModel>();
+                    List<CoachingDetailsModel> coachingList = new List<CoachingDetailsModel>();
 
                     // Loop through the worksheet rows and populate the list
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
                         // Handle null or empty values for each column
-                        int coachingId = int.TryParse(worksheet.Cells[row, 2].Text, out int parsed)
+                        int coachingId = int.TryParse(worksheet.Cells[row, 1].Text, out int parsed)
                         ? parsed
                         : 0;
 
-                        DateTime? classAttendanceDate = null;
-                        if (!string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) &&
-                            DateTime.TryParse(worksheet.Cells[row, 3].Text, out DateTime parsedDate))
+                        DateTime? coachingSessionHoldingDate = null;
+                        if (!string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) &&
+                            DateTime.TryParse(worksheet.Cells[row, 2].Text, out DateTime parsedDate))
                         {
-                            classAttendanceDate = parsedDate;
+                            coachingSessionHoldingDate = parsedDate;
                         }
 
+                        int coachingSessionDuration = int.TryParse(worksheet.Cells[row, 3].Text, out int parsedDuration)
+                        ? parsedDuration
+                        : 0;
 
-                        if (coachingId == 0 && classAttendanceDate == null)
+                        if (coachingId == 0 && coachingSessionHoldingDate == null && coachingSessionDuration == 0)
                         {
                             continue; // Skip this row
                         }
 
-                        CoachingSessionTrackingModel attendance = new CoachingSessionTrackingModel
+                        CoachingDetailsModel coachingDetails = new CoachingDetailsModel
                         {
-                            HouseholdNumber = worksheet.Cells[row, 1].Text,
-                            CoachingDetailId = coachingId,
-                            ClassAttendanceDate = classAttendanceDate,
+                            CoachingId = coachingId,
+                            CoachingSessionHoldingDate = coachingSessionHoldingDate,
+                            CoachingSessionDurationMinutes = coachingSessionDuration,
                             CreatedBy = userId,
                             ModifiedBy = userId
                         };
 
-                        attendanceList.Add(attendance);
+                        coachingList.Add(coachingDetails);
                     }
 
                     // Store the list in session for further processing
-                    Session["UploadedAttendanceData"] = attendanceList;
+                    Session["UploadedCoachingDetails"] = coachingList;
 
                     AddSuccessMessage("File uploaded and data parsed successfully. You can now analyze it.");
                     btnAnalyze.Enabled = true;
@@ -136,8 +139,8 @@ namespace SSSNP.UI.Public_Works
             Session["IsAnalyzing"] = true;
             try
             {
-                var attendanceList = Session["UploadedAttendanceData"] as List<CoachingSessionTrackingModel>;
-                if (attendanceList == null || attendanceList.Count == 0)
+                var coachingList = Session["UploadedCoachingDetails"] as List<CoachingDetailsModel>;
+                if (coachingList == null || coachingList.Count == 0)
                 {
                     AddErrorMessage("No file found for analysis.");
                     return;
@@ -146,62 +149,44 @@ namespace SSSNP.UI.Public_Works
                 // Create a DataTable to hold the analyzed data (for RadGrid display)
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));
-                dt.Columns.Add("HouseholdNumber", typeof(string));
                 dt.Columns.Add("CoachingId", typeof(string));
-                dt.Columns.Add("ClassAttendanceDate", typeof(DateTime)); // Change to object to support null values
-                dt.Columns.Add("ValidationStatus", typeof(string)); // For error messages
+                dt.Columns.Add("CoachingSessionHoldingDate", typeof(string));
+                dt.Columns.Add("CoachingSessionDuration", typeof(DateTime)); 
+                dt.Columns.Add("ValidationStatus", typeof(string)); 
 
                 // Store error messages for rows with validation issues
-                int serial = 1;
+                int serial = 1;                
 
-                // Fetch valid household numbers for validation
-                var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
-                var validAttendanceList = attendanceList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
-
-                var uploadedDataList = new List<CoachingSessionTrackingAuditModel>();
+                var uploadedDataList = new List<CoachingDetailsModel>();
                 int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
                 Guid myuuid = Guid.NewGuid();
                 string FileId = myuuid.ToString().Replace("-", "").Substring(0, 10);
 
                 // Iterate over attendanceList and validate each entry
-                foreach (var attendance in validAttendanceList)
+                foreach (var coaching in coachingList)
                 {
-                    var validationResult = _component2Service.IsValidData(attendance, validHouseholdNumbers); // Call validation
+                    var validationResult = _component2Service.IsValidData(coaching); // Call validation
 
                     // Populate DataTable with the data
                     DataRow dr = dt.NewRow();
                     dr["Id"] = serial;
-                    dr["HouseholdNumber"] = attendance.HouseholdNumber;
-                    dr["CoachingId"] = attendance.CoachingDetailId;
-                    dr["ClassAttendanceDate"] = attendance.ClassAttendanceDate;
-
-                    CoachingSessionTrackingAuditModel auditEntityObj = new CoachingSessionTrackingAuditModel();
-                    auditEntityObj.FileId = FileId;
-                    auditEntityObj.HouseholdNumber = attendance.HouseholdNumber;
-                    auditEntityObj.CoachingDetailId = attendance.CoachingDetailId;
-                    auditEntityObj.ClassAttendanceDate = attendance.ClassAttendanceDate;
+                    dr["CoachingId"] = coaching.CoachingId;
+                    dr["CoachingSessionHoldingDate"] = coaching.CoachingSessionHoldingDate;
+                    dr["CoachingSessionDuration"] = coaching.CoachingSessionDurationMinutes;
 
                     // Collect error messages to display in the ValidationStatus column
                     if (!validationResult.isValid)
                     {
-                        auditEntityObj.Validity = false;
-                        auditEntityObj.InvalidReason = validationResult.errorMessage;
                         dr["ValidationStatus"] = validationResult.errorMessage;
                     }
                     else
                     {
-                        auditEntityObj.Validity = true;
                         dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
                     }
-
-                    auditEntityObj.UploadedBy = userId;
-                    uploadedDataList.Add(auditEntityObj);
 
                     dt.Rows.Add(dr);
                     serial++;
                 }
-
-                Session["UploadedCoachingSessionAttendanceAllData"] = uploadedDataList;
 
                 // Bind the data to RadGrid for display
                 Session["AnalyzedData"] = dt;
@@ -232,22 +217,15 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 // Retrieve the list of TrainingAttendance objects from session
-                var attendanceList = Session["UploadedAttendanceData"] as List<CoachingSessionTrackingModel>;
-                if (attendanceList == null || attendanceList.Count == 0)
+                var coachingList = Session["AnalyzedData"] as List<CoachingDetailsModel>;
+                if (coachingList == null || coachingList.Count == 0)
                 {
                     AddErrorMessage("No data available for import.");
                     return;
                 }
 
-                var allDataList = Session["UploadedCoachingSessionAttendanceAllData"] as List<CoachingSessionTrackingAuditModel>;
-                if (allDataList != null && allDataList.Count > 0)
-                {
-                    _component2Service.SaveAuditLog(allDataList, "tbl_com2_Coaching_Session_Attendance_Audit");
-                }
-                Session["UploadedCoachingSessionAttendanceAllData"] = null;
-
                 // Filter valid entries from the attendance list
-                var validEntries = attendanceList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
+                var validEntries = coachingList.Where(a => _component2Service.IsValidData(a).isValid).ToList();
 
                 if (validEntries.Count == 0)
                 {
@@ -256,7 +234,7 @@ namespace SSSNP.UI.Public_Works
                 }
 
                 // Save the valid data using the service layer
-                var response = _component2Service.SaveCoachingSessionTracking(validEntries);
+                var response = _component2Service.SaveCoachingDetails(validEntries);
 
                 if (response.IsSuccess)
                 {
@@ -355,7 +333,7 @@ namespace SSSNP.UI.Public_Works
                 {
                     conn.Open(); // Ensure the connection is opened
 
-                    string query = @"SELECT COUNT(*) FROM tbl_com2_Coaching_Session_Attendance WHERE 1=1;";
+                    string query = @"SELECT COUNT(*) FROM tbl_com2_Coaching_Details WHERE 1=1;";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {

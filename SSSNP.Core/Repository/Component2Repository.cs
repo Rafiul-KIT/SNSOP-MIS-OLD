@@ -171,7 +171,6 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-
         private bool IsRecordExistInCoachingSessionAttendance(string householdNumber)
         {
             try
@@ -190,6 +189,95 @@ namespace SSSNP_SNSOP.Core.Repository
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public ResponseModel SaveCoachingDetails(CoachingDetailsModel obj)
+        {
+            var response = new ResponseModel();
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if a record already exists for this CoachingId + Date
+                    bool isExist = IsRecordExistInCoachingDetails(obj.CoachingId, obj.CoachingSessionHoldingDate?.Date);
+
+                    var data = new Dictionary<string, object>
+                    {
+                        ["CoachingId"] = obj.CoachingId,
+                        ["CoachingSessionHoldingDate"] = obj.CoachingSessionHoldingDate ?? (object)DBNull.Value,
+                        ["CoachingSessionDurationMinutes"] = obj.CoachingSessionDurationMinutes ?? (object)DBNull.Value
+                    };
+
+                    if (!isExist)
+                    {
+                        // Audit fields if you have them in the table
+                        data["CreatedBy"] = obj.CreatedBy;
+                        data["CreatedDate"] = obj.CreatedDate;
+
+                        _dbOperation.InsertData("tbl_com2_Coaching_Details", data);
+                    }
+                    else
+                    {
+                        // Audit fields if you have them in the table
+                        data["ModifiedBy"] = obj.ModifiedBy;
+                        data["ModifiedDate"] = obj.ModifiedDate;
+
+                        // Handle NULL date properly in WHERE
+                        string where =
+                            obj.CoachingSessionHoldingDate.HasValue
+                            ? $"CoachingId = {obj.CoachingId} AND CoachingSessionHoldingDate = '{obj.CoachingSessionHoldingDate.Value:yyyy-MM-dd}'"
+                            : $"CoachingId = {obj.CoachingId} AND CoachingSessionHoldingDate IS NULL";
+
+                        _dbOperation.UpdateData("tbl_com2_Coaching_Details", data, @where);
+                    }
+
+                    response.IsSuccess = true;
+                    response.Message = "Coaching Details saved successfully.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error when saving Coaching Details data. Error: " + ex);
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Error when saving Coaching Details."
+                };
+            }
+        }
+
+        private bool IsRecordExistInCoachingDetails(int coachingId, DateTime? sessionDate)
+        {
+            try
+            {
+                var sql = @"
+            SELECT TOP 1 CoachingId
+            FROM tbl_com2_Coaching_Details
+            WHERE CoachingId = @coachingId
+              AND (
+                    (@sessionDate IS NULL AND CoachingSessionHoldingDate IS NULL)
+                    OR (CoachingSessionHoldingDate = @sessionDate)
+                  );";
+
+                var parameters = new List<SqlParameter>
+        {
+            new SqlParameter("@coachingId", coachingId),
+            new SqlParameter
+            {
+                ParameterName = "@sessionDate",
+                SqlDbType = SqlDbType.Date,
+                Value = sessionDate.HasValue ? (object)sessionDate.Value : DBNull.Value
+            }
+        };
+
+                var dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
+                return dt != null && dt.Rows.Count > 0;
+            }
+            catch
+            {
+                throw;
             }
         }
 
