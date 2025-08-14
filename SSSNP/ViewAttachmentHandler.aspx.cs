@@ -66,7 +66,9 @@ namespace SSSNP_SNSOP
             ID_CARD_DOWNLOAD = 24,
             PAYROLL_RECONCILE = 30,
             COURSE_ENTITY_TEMPLATE = 31,
-            COURSE_DETAILS_TEMPLATE = 32
+            COURSE_DETAILS_TEMPLATE = 32,
+            COACHING_DETAILS_TEMPLATE = 50,
+            COACHING_SESSION_TRACKING = 51
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -176,9 +178,147 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.COURSE_DETAILS_TEMPLATE:
                     CourseDetailsTemplate();
                     return "OK";
+                case HandlerAttachment.COACHING_DETAILS_TEMPLATE:
+                    CoachingDetailsTemplate();
+                    return "OK";
+                case HandlerAttachment.COACHING_SESSION_TRACKING:
+                    CoachingSessionTracking();
+                    return "OK";
             }
 
             return "";
+        }
+
+        private void CoachingSessionTracking()
+        {
+            try
+            {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+                Component2Service service = new Component2Service();
+
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+                Dictionary<int, string> existingCoachingId = service.GetExistingCoachingId();
+                List<CoachingDetailsModel> coachingList = existingCoachingId
+                    .Select(kvp => new CoachingDetailsModel
+                    {
+                        CoachingId = kvp.Key
+                    })
+                    .ToList();
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Coaching Session Tracking Template");
+
+                    // Adding the three columns
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Coaching Id";
+                    worksheet.Cells[1, 3].Value = "Coaching Attendance Date(mm/dd/yyyy)";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Pre-fill the Household Number column with the fetched household numbers
+                    var householdNumberList = householdNumbers.ToList();
+                    if (householdNumberList.Count > 0)
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;
+                    }
+                    var validation = worksheet.DataValidations.AddListValidation("B2:B1000");
+                    foreach (var coaching in coachingList)
+                    {
+                        validation.Formula.Values.Add(coaching.CoachingId.ToString());
+                    }                    
+
+                    // Protect the worksheet so that locked cells (Household Number) are read-only
+                    worksheet.Protection.IsProtected = true;
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["C2:C1000"].Style.Locked = false;
+
+                    // Auto-fit columns to adjust the size
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=CoachingSessionTrackingTemplate.xlsx");
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+        private void CoachingDetailsTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Coaching Details Template");
+
+                    Component2Service service = new Component2Service();
+                    Dictionary<int, string> existingCoachingId = service.GetExistingCoachingId();
+                    List<CoachingDetailsModel> coachingList = existingCoachingId
+                        .Select(kvp => new CoachingDetailsModel
+                        {
+                            CoachingId = kvp.Key
+                        })
+                        .ToList();
+                    var validation = worksheet.DataValidations.AddListValidation("A2:A1000"); // Adjust the range as needed
+
+                    foreach (var coaching in coachingList)
+                    {
+                        validation.Formula.Values.Add(coaching.CoachingId.ToString());
+                    }
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Coaching Id";
+                    worksheet.Cells[1, 2].Value = "Coaching Session Holding Date(mm/dd/yyyy)";
+                    worksheet.Cells[1, 3].Value = "Coaching Session Duration (Minutes)";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    worksheet.Cells.AutoFitColumns();
+                    // Set the content type and headers for the download
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=CoachingDetailsTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
         }
 
         private void BusinessPlanDevelopmentTemplate()

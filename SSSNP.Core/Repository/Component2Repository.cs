@@ -1511,22 +1511,22 @@ namespace SSSNP_SNSOP.Core.Repository
             return validDates;
         }
 
-        public Dictionary<string, int> GetExistingCoachingId()
+        public Dictionary<int, string> GetExistingCoachingId()
         {
-            Dictionary<string, int> coachingDetailId = new Dictionary<string, int>();
+            Dictionary<int, string> coachingDetailId = new Dictionary<int, string>();
             try
             {
                 // Assuming CoachingId is the business identifier and Id is the primary key
-                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CoachingId FROM tbl_com2_Coaching_Details", CommandType.Text);
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, Name FROM tbl_com2_Coaching_Entity", CommandType.Text);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
                     {
-                        string coachingId = row["CoachingId"].ToString();
                         int id = Convert.ToInt32(row["Id"]);
-                        if (!coachingDetailId.ContainsKey(coachingId))
+                        string coachingName = (string)row["Name"];
+                        if (!coachingDetailId.ContainsKey(id))
                         {
-                            coachingDetailId.Add(coachingId, id);
+                            coachingDetailId.Add(id, coachingName);
                         }
                     }
                 }

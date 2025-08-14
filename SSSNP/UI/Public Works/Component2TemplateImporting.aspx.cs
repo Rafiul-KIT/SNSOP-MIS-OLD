@@ -29,7 +29,7 @@ namespace SSSNP.UI.Public_Works
                 string connectionString = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    throw new Exception("Connection string 'SNSDPSkils' is not found or empty.");
+                    throw new Exception("Connection string is not found or empty.");
                 }
 
                 _lookupManagerService = new LookupManagerService(connectionString);

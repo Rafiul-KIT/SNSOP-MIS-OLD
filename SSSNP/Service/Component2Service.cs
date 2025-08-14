@@ -1006,5 +1006,10 @@ namespace SSSNP.Service
         {
             return _component2Repository.GetExistingCourseDetails();
         }
+
+        public Dictionary<int, string> GetExistingCoachingId()
+        {
+            return _component2Repository.GetExistingCoachingId();
+        }
     }
 }

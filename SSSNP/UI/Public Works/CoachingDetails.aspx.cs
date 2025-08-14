@@ -65,7 +65,7 @@ namespace SSSNP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Coaching Id", "Coaching Session Holding Date", "Coaching Session Duration (Minutes)"
+                        "Coaching Id", "Coaching Session Holding Date(mm/dd/yyyy)", "Coaching Session Duration (Minutes)"
                     };
 
                     for (int col = 1; col <= expectedHeaders.Count; col++)
@@ -150,8 +150,8 @@ namespace SSSNP.UI.Public_Works
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));
                 dt.Columns.Add("CoachingId", typeof(string));
-                dt.Columns.Add("CoachingSessionHoldingDate", typeof(string));
-                dt.Columns.Add("CoachingSessionDuration", typeof(DateTime)); 
+                dt.Columns.Add("CoachingSessionHoldingDate", typeof(DateTime));
+                dt.Columns.Add("CoachingSessionDuration", typeof(int)); 
                 dt.Columns.Add("ValidationStatus", typeof(string)); 
 
                 // Store error messages for rows with validation issues
@@ -359,8 +359,8 @@ namespace SSSNP.UI.Public_Works
             {
                 // Construct the query with parameters for pagination
                 string query = @"
-                SELECT Id, HouseholdNumber, CoachingDetailId, CoachingAttendanceDate 
-                FROM tbl_com2_Coaching_Session_Attendance 
+                SELECT Id, CoachingId, CoachingSessionHoldingDate, CoachingSessionDurationMinutes 
+                FROM tbl_com2_Coaching_Details 
                 ORDER BY Id 
                 OFFSET @Offset ROWS 
                 FETCH NEXT @PageSize ROWS ONLY;";
@@ -398,12 +398,8 @@ namespace SSSNP.UI.Public_Works
 
                     if (analyzedData != null)
                     {
-                        // Get the current row's HouseholdNumber or any identifier
-                        string householdNumber = dataItem["HouseholdNumber"].Text;
-
                         // Find the row in the analyzedData DataTable that matches the current row
-                        var rows = analyzedData.AsEnumerable()
-                                               .Where(r => r.Field<string>("HouseholdNumber") == householdNumber);
+                        var rows = analyzedData.AsEnumerable();
 
                         // Check if there's an invalid entry
                         if (rows.Any(r => r.Field<string>("ValidationStatus") != "Valid"))

@@ -65,7 +65,7 @@ namespace SSSNP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Household Number", "Coaching Id", "Coaching Attendance Date"
+                        "Household Number", "Coaching Id", "Coaching Attendance Date(mm/dd/yyyy)"
                     };
 
                     for (int col = 1; col <= expectedHeaders.Count; col++)
