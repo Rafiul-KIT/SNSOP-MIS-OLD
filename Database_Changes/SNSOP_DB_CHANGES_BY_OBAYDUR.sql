@@ -356,9 +356,298 @@ begin
 end
 go
 
+<<<<<<< HEAD
 -----17/08/2025----
 ALTER TABLE dbo.td_WageReqTrans
     DROP CONSTRAINT FK_td_WageReqTrans_td_WorkWageRequest;
 
 only in dev
+=======
+------15/08/2025------
+
+-----previous sp Retrieve_getWageReportAbstractAPIInvoicebyReqNoPaid-----
+
+CREATE procedure [dbo].[Retrieve_getWageReportAbstractAPIInvoicebyReqNoPaid] -- '05/23/2016','05/30/2016',1015
+(  
+@workCode varchar(120),
+@intStateid varchar(8),
+@intCountieid varchar(8),
+@intPayamid varchar(8),
+@intBomasid varchar(10) ,
+@IPid varchar(8)  ,
+@ReqNo varchar(30),
+@paymentCycle varchar(30),
+@reportType varchar(10), -- "All", "DIS", "LIPW" (non-DIS)
+@fromDate as datetime,
+@toDate as datetime
+)  
+as  
+begin  
+select *
+, ExchangeRate * AmountPaidUSD as AmountPaidSSP
+from WagePaidResultDetails_tblTemp
+where 
+	workcode like @workcode
+	and intip  like @IPid
+	and intstateid  like @intstateid
+	and intCountyId  like @intCountieid
+	and intPayamid like  @intPayamid
+	and intbomaid like  @intbomasid
+	and RequestNo like @reqno
+	and PaymentCycle like @paymentCycle
+	and
+	(
+	--(@reportType = 'DIS' and workcode='DIS - Direct Income Support')
+	--or (@reportType = 'LIPW' and workcode<>'DIS - Direct Income Support')
+	(@reportType = 'DIS' and (workcode='DIS - Direct Income Support' or workremarks like '%DIS%' ))
+	or (@reportType = 'LIPW' and workcode<>'DIS - Direct Income Support' and workremarks not like '%DIS%')
+	or (@reportType <> 'DIS' and @reportType <> 'LIPW')
+	)
+	and (@fromdate is null or (@fromDate <= fromDate and @fromDate <todate))
+	and (@fromdate is null or (@toDate >= fromDate and @toDate >= todate))
+
+select
+	SUM(TotalMembers) AS TotalMembers
+	,SUM(TotalWorkDays) AS TotalWorkDays
+	--,SUM(TotalAmount) AS AmountPaidUSD --Total
+	,ISNULL(null, 
+			(select SUM(b.wagerateusdtotal) as TotalAmount from td_WorkWageRequest a
+			inner join td_WageReqBenDet b on a.intWagePaymentReqid=b.intWagePaymentReqid
+			inner join tbl_BeneficiaryDet c on b.intBenid=c.intBenid
+			where a.Status in (4,5,6)
+			and intStateId like @intStateid
+			and intCountieid like @intCountieid
+			and intPayamId like @intPayamid
+			and intBomasId like @intBomasid
+			and PaymentCycle like @paymentCycle)
+		) as AmountPaidUSD
+	
+	,SUM(TotalMembersPaid) AS TotalMembersPaid
+
+	,SUM(AmountPaidUSD) AS TotalMembersPaidMain --Paid
+		,SUM(TotalMembers)-SUM(TotalMembersPaid) as TotalMembersUnPaid
+	--,SUM(TotalAmount)-SUM(AmountPaidUSD) as TotalAmountUnPaid --unpaid
+	,ISNULL(null, 
+			(select SUM(b.wagerateusdtotal) as TotalAmount from td_WorkWageRequest a
+			inner join td_WageReqBenDet b on a.intWagePaymentReqid=b.intWagePaymentReqid
+			inner join tbl_BeneficiaryDet c on b.intBenid=c.intBenid
+			where a.Status in (4,5,6)
+			and intStateId like @intStateid
+			and intCountieid like @intCountieid
+			and intPayamId like @intPayamid
+			and intBomasId like @intBomasid
+			and PaymentCycle like @paymentCycle)
+			-SUM(AmountPaidUSD)) as TotalAmountUnPaid --unpaid
+			,SUM(AmountPaidUSD*exchangerate) AS TotalMembersPaidMainSSP --PaidSSP
+from WagePaidResultDetails_tblTemp
+where intStateId like @intStateid
+and intCountyId like @intCountieid
+and intPayamId like @intPayamid
+and intBomaId like @intBomasid
+and PaymentCycle like @paymentCycle
+and
+	(
+	(@reportType = 'DIS' and workcode='DIS - Direct Income Support')
+	or (@reportType = 'LIPW' and workcode<>'DIS - Direct Income Support')
+	or (@reportType <> 'DIS' and @reportType <> 'LIPW')
+	)
+and (@fromdate is null or (@fromDate <= fromDate and @fromDate <todate))
+and (@fromdate is null or (@toDate >= fromDate and @toDate >= todate))
+
+
+declare @TotalBeneficiariesPaid as int
+declare @TotalBeneficiariesUnpaid as int
+
+
+set @TotalBeneficiariesPaid=( select count (distinct a.intbenid) from tr_BenWagesPayment a
+inner join tbl_BeneficiaryDet b on a.intbenid=b.intBenid
+inner join td_WorkWageRequest wwr
+on a.uuid=wwr.intWagePaymentReqid
+where intStateId like @intStateid
+and intCountieid like @intCountieid
+and intPayamId like @intPayamid
+and intBomasId like @intBomasid
+and PaymentCycle like @paymentCycle
+	and (@fromdate is null or (@fromDate <= fromDate and @fromDate <todate))
+	and (@fromdate is null or (@toDate >= fromDate and @toDate >= todate))
+)
+set @TotalBeneficiariesUnPaid= (select count (distinct intbenid) from tbl_BeneficiaryDet 
+where intStateId like @intStateid
+and intCountieid like @intCountieid
+and intPayamId like @intPayamid
+and intBomasId like @intBomasid
+and intbenid not in (select distinct intbenid from tr_BenWagesPayment))
+
+select @TotalBeneficiariesPaid,@TotalBeneficiariesUnpaid 
+
+end
+go
+
+
+-----new sp Retrieve_getWageReportAbstractAPIInvoicebyReqNoPaid----
+ALTER procedure [dbo].[Retrieve_getWageReportAbstractAPIInvoicebyReqNoPaid] -- '05/23/2016','05/30/2016',1015
+(
+    @workCode varchar(120),
+    @intStateid varchar(8),
+    @intCountieid varchar(8),
+    @intPayamid varchar(8),
+    @intBomasid varchar(10) ,
+    @IPid varchar(8)  ,
+    @ReqNo varchar(30),
+    @paymentCycle varchar(30),
+    @reportType varchar(10), -- "All", "DIS", "LIPW" (non-DIS)
+    @fromDate as datetime,
+    @toDate as datetime
+)
+as
+begin
+    select *
+         , ExchangeRate * AmountPaidUSD as AmountPaidSSP
+    from WagePaidResultDetails_tblTemp
+    where
+        workcode like @workcode
+      and intip  like @IPid
+      and intstateid  like @intstateid
+      and intCountyId  like @intCountieid
+      and intPayamid like  @intPayamid
+      and intbomaid like  @intbomasid
+      and RequestNo like @reqno
+      and PaymentCycle like @paymentCycle
+      and
+        (
+            --(@reportType = 'DIS' and workcode='DIS - Direct Income Support')
+            --or (@reportType = 'LIPW' and workcode<>'DIS - Direct Income Support')
+            (@reportType = 'DIS' and (workcode='DIS - Direct Income Support' or workremarks like '%DIS%' ))
+                or (@reportType = 'LIPW' and workcode<>'DIS - Direct Income Support' and workremarks not like '%DIS%')
+                or (@reportType <> 'DIS' and @reportType <> 'LIPW')
+            )
+      and (@fromdate is null or (@fromDate <= fromDate and @fromDate <todate))
+      and (@fromdate is null or (@toDate >= fromDate and @toDate >= todate))
+
+    select
+        SUM(TotalMembers) AS TotalMembers
+         ,SUM(TotalWorkDays) AS TotalWorkDays
+         --,SUM(TotalAmount) AS AmountPaidUSD --Total
+         ,ISNULL(null,
+                 (select SUM(b.wagerateusdtotal) as TotalAmount from td_WorkWageRequest a
+                                                                         inner join td_WageReqBenDet b on a.intWagePaymentReqid=b.intWagePaymentReqid
+                                                                         inner join tbl_BeneficiaryDet c on b.intBenid=c.intBenid
+                  where a.Status in (4,5,6)
+                    and intStateId like @intStateid
+                    and intCountieid like @intCountieid
+                    and intPayamId like @intPayamid
+                    and intBomasId like @intBomasid
+                    and PaymentCycle like @paymentCycle)
+          ) as AmountPaidUSD
+
+         ,SUM(TotalMembersPaid) AS TotalMembersPaid
+
+         ,SUM(AmountPaidUSD) AS TotalMembersPaidMain --Paid
+         ,SUM(TotalMembers)-SUM(TotalMembersPaid) as TotalMembersUnPaid
+         --,SUM(TotalAmount)-SUM(AmountPaidUSD) as TotalAmountUnPaid --unpaid
+         ,ISNULL(null,
+                 (select SUM(b.wagerateusdtotal) as TotalAmount from td_WorkWageRequest a
+                                                                         inner join td_WageReqBenDet b on a.intWagePaymentReqid=b.intWagePaymentReqid
+                                                                         inner join tbl_BeneficiaryDet c on b.intBenid=c.intBenid
+                  where a.Status in (4,5,6)
+                    and intStateId like @intStateid
+                    and intCountieid like @intCountieid
+                    and intPayamId like @intPayamid
+                    and intBomasId like @intBomasid
+                    and PaymentCycle like @paymentCycle)
+                     -SUM(AmountPaidUSD)) as TotalAmountUnPaid --unpaid
+         ,SUM(AmountPaidUSD*exchangerate) AS TotalMembersPaidMainSSP --PaidSSP
+    from WagePaidResultDetails_tblTemp
+    where intStateId like @intStateid
+      and intCountyId like @intCountieid
+      and intPayamId like @intPayamid
+      and intBomaId like @intBomasid
+      and PaymentCycle like @paymentCycle
+      and WorkCode like @workCode  --changed here
+      and RequestNo like @ReqNo --changed here
+      and
+        (
+            (@reportType = 'DIS' and workcode='DIS - Direct Income Support')
+                or (@reportType = 'LIPW' and workcode<>'DIS - Direct Income Support')
+                or (@reportType <> 'DIS' and @reportType <> 'LIPW')
+            )
+      and (@fromdate is null or (@fromDate <= fromDate and @fromDate <todate))
+      and (@fromdate is null or (@toDate >= fromDate and @toDate >= todate))
+
+
+    declare @TotalBeneficiariesPaid as int
+    declare @TotalBeneficiariesUnpaid as int
+
+
+    /*set @TotalBeneficiariesPaid=( select count (distinct a.intbenid) from tr_BenWagesPayment a
+                                                                              inner join tbl_BeneficiaryDet b on a.intbenid=b.intBenid
+                                                                              inner join td_WorkWageRequest wwr
+                                                                                         on a.uuid=wwr.intWagePaymentReqid
+                                  where intStateId like @intStateid
+                                    and intCountieid like @intCountieid
+                                    and intPayamId like @intPayamid
+                                    and intBomasId like @intBomasid
+                                    and PaymentCycle like @paymentCycle
+                                    and (@fromdate is null or (@fromDate <= fromDate and @fromDate <todate))
+                                    and (@fromdate is null or (@toDate >= fromDate and @toDate >= todate))
+    )
+    set @TotalBeneficiariesUnPaid= (SELECT COUNT(DISTINCT b.intBenid)
+                                    FROM td_WageReqBenDet wrbd
+                                             INNER JOIN td_WorkWageRequest wwr ON wrbd.intWagePaymentReqid = wwr.intWagePaymentReqid
+                                             INNER JOIN tbl_BeneficiaryDet b ON wrbd.intBenid = b.intBenid
+                                    WHERE b.intStateId LIKE @intStateid
+                                      AND b.intCountieid LIKE @intCountieid
+                                      AND b.intPayamId LIKE @intPayamid
+                                      AND b.intBomasId LIKE @intBomasid
+                                      AND wwr.PaymentCycle LIKE @paymentCycle
+                                      AND (@ReqNo IS NULL OR wwr.ReqNo LIKE @ReqNo)
+                                      AND (@workCode IS NULL OR b.WorkCode LIKE @workCode)
+                                      AND (@fromDate IS NULL OR (@fromDate <= wwr.ReqFromDate AND @fromDate < wwr.ReqToDate))
+                                      AND (@toDate IS NULL OR (@toDate >= wwr.ReqFromDate AND @toDate >= wwr.ReqToDate))
+                                      AND NOT EXISTS (
+                                        SELECT 1
+                                        FROM tr_BenWagesPayment p
+                                        WHERE p.intBenid = b.intBenid
+                                          AND p.uuid = wwr.intWagePaymentReqid
+                                          AND (@fromDate IS NULL OR (@fromDate <= p.fromDate AND @fromDate < p.toDate))
+                                          AND (@toDate IS NULL OR (@toDate >= p.fromDate AND @toDate >= p.toDate))
+                                    ))*/
+
+    set @TotalBeneficiariesPaid = (
+        select sum(TotalMembersPaid)
+        from WagePaidResultDetails_tblTemp
+        where intStateId like @intStateid
+          and intCountyId like @intCountieid
+          and intPayamId like @intPayamid
+          and intBomaId like @intBomasid
+          and PaymentCycle like @paymentCycle
+          and workCode like @workCode  -- Filter by work code
+          and RequestNo like @ReqNo   -- Filter by request number
+          and TotalMembersPaid > 0    -- Only include paid beneficiaries
+          and (@fromDate is null or (@fromDate <= FromDate and @fromDate < ToDate))
+          and (@toDate is null or (@toDate >= FromDate and @toDate >= ToDate))
+    )
+
+-- Modify TotalBeneficiariesUnPaid to calculate from the temp table
+    set @TotalBeneficiariesUnPaid = (
+        select sum(TotalMembers) - sum(TotalMembersPaid)  -- Unpaid = Total - Paid
+        from WagePaidResultDetails_tblTemp
+        where intStateId like @intStateid
+          and intCountyId like @intCountieid
+          and intPayamId like @intPayamid
+          and intBomaId like @intBomasid
+          and PaymentCycle like @paymentCycle
+          and workCode like @workCode  -- Filter by work code
+          and RequestNo like @ReqNo   -- Filter by request number
+          and (@fromDate is null or (@fromDate <= FromDate and @fromDate < ToDate))
+          and (@toDate is null or (@toDate >= FromDate and @toDate >= ToDate))
+    )
+
+    select @TotalBeneficiariesPaid,@TotalBeneficiariesUnpaid
+
+end
+go
+
+
+>>>>>>> ad7d043a031569d94251a23ba258a701108d5749
 
