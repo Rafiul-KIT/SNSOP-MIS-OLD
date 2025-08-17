@@ -193,6 +193,7 @@
     <Compile Include="Model\Component2\BusinessPlanDevelopmentAuditModel.cs" />
     <Compile Include="Model\Component2\BusinessPlanDevelopmentModel.cs" />
     <Compile Include="Model\Component2\CoachingDetailsModel.cs" />
+    <Compile Include="Model\Component2\CoachingEntityModel.cs" />
     <Compile Include="Model\Component2\CoachingSessionTrackingAuditModel.cs" />
     <Compile Include="Model\Component2\CoachingSessionTrackingModel.cs" />
     <Compile Include="Model\Component2\CourseDetailsModel.cs" />

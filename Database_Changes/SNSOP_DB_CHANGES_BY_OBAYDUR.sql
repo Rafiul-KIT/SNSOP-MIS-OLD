@@ -356,3 +356,9 @@ begin
 end
 go
 
+-----17/08/2025----
+ALTER TABLE dbo.td_WageReqTrans
+    DROP CONSTRAINT FK_td_WageReqTrans_td_WorkWageRequest;
+
+only in dev
+
