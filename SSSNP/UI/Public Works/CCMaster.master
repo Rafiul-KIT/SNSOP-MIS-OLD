@@ -340,6 +340,7 @@
                                                      <li id="BusinessPlanDevelopment" runat="server"><a href="BusinessPlanDevelopment.aspx">Business Plan Development</a></li>
                                                      <li id="LivelihoodGrantDisbursement" runat="server"><a href="LivelihoodGrantDisbursement.aspx">Livelihood Grant Disbursement</a></li>
                                                      <li id="FinancialServiceLinkageTracking" runat="server"><a href="FinancialServiceLinkageTracking.aspx">Financial Service Linkage Tracking</a></li>
+                                                     <li id="CoachingEntity" runat="server"><a href="CoachingEntity.aspx">Coaching Entity</a></li>
                                                      <li id="CoachingDeatils" runat="server"><a href="CoachingDetails.aspx">Coaching Details</a></li>
                                                      <li id="CoachingSessionTracking" runat="server"><a href="CoachingSessionTracking.aspx">Coaching Session Tracking</a></li>
                                                      <li id="AuditRecordDownload" runat="server"><a href="AuditRecordDownload.aspx">Audit Download</a></li>

@@ -284,7 +284,58 @@ namespace SSSNP.Service
             return (true, string.Empty);
         }
 
+        public ResponseModel SaveCoachingEntity(List<CoachingEntityModel> coachings)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0;
+            int skipCount = 0;
 
+            try
+            {
+                foreach (var coaching in coachings)
+                {
+                    var validation = IsValidData(coaching);
+                    if (!validation.isValid)
+                    {
+                        skipCount++;
+                        continue;
+                    }
+
+                    response = _component2Repository.SaveCoachingEntity(coaching);
+
+                    if (response.IsSuccess)
+                    {
+                        insertCount++;
+                    }
+                }
+
+                response.Message = $"{insertCount} records inserted/updated successfully.";
+                if (skipCount > 0)
+                {
+                    response.Message += $" {skipCount} records were skipped due to incomplete data.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error saving Coaching Entity data: " + ex.Message;
+                return response;
+            }
+        }
+
+
+        public (bool isValid, string errorMessage) IsValidData(CoachingEntityModel obj)
+        {
+            if (string.IsNullOrWhiteSpace(obj.CoachingName))
+                return (false, "Coaching Name is required.");
+
+            if (obj.NoOfPlannedCoachingSession <= 0)
+                return (false, "Number of Planned Coaching Sessions must be greater than 0.");
+
+            return (true, string.Empty);
+        }
 
         public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)
         {

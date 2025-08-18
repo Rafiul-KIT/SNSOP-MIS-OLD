@@ -42,6 +42,7 @@
                                                             <asp:ListItem Value="32">Course Details Template</asp:ListItem>
                                                             <asp:ListItem Value="17">Training Attendance Tracking Template</asp:ListItem>
                                                             <asp:ListItem Value="18">Business Plan Development Template</asp:ListItem>
+                                                            <asp:ListItem Value="52">Coaching Entity Template</asp:ListItem>
                                                             <asp:ListItem Value="50">Coaching Details Template</asp:ListItem>
                                                             <asp:ListItem Value="51">Coaching Session tracking Template</asp:ListItem>
                                                             <asp:ListItem Value="19">Livelihood Grant Disbursement Template</asp:ListItem>

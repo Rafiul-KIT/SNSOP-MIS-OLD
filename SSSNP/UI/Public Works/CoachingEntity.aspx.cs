@@ -97,7 +97,7 @@ namespace SSSNP.UI.Public_Works
 
 
 
-                        coaching.Add(new CoachingEntityModel
+                        coaching.Add(new CoachingEntityModel 
                         {
                             CoachingName = coachingName,
                             NoOfPlannedCoachingSession = noOfPlannedCoachingSession,
@@ -166,10 +166,10 @@ namespace SSSNP.UI.Public_Works
                     }
                     else
                     {
-                        dr["Id"] = DBNull.Value; // Not redundant, no GroupId
+                        dr["Id"] = DBNull.Value;
                     }
 
-                    var validationResult = service.IsValidData(course);
+                    var validationResult = service.IsValidData(coaching);
 
 
                     if (!validationResult.isValid)
@@ -183,25 +183,22 @@ namespace SSSNP.UI.Public_Works
 
                     dt.Rows.Add(dr);
 
-                    if (uniqueCourseCode.Contains(course.CourseCode))
+                    if (uniqueCoachingName.Contains(coaching.CoachingName))
                     {
-                        // Skip this group because it's a duplicate in the uploaded Excel file
                         skipCount++;
                         continue;
                     }
                     else
                     {
                         // Add the groupName to the HashSet to track it as already added
-                        uniqueCourseCode.Add(course.CourseCode);
-                        validCourse.Add(course);
+                        uniqueCoachingName.Add(coaching.CoachingName);
+                        validCoaching.Add(coaching);
                     }
-
-                    // dt.Rows.Add(dr);
                 }
 
                 // Bind the DataTable to the RadGrid for display
                 Session["AnalyzedData"] = dt;
-                Session["ValidCourse"] = validCourse;
+                Session["ValidCoaching"] = validCoaching;
                 Session["skipCount"] = skipCount;
                 RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = true;
 
@@ -235,9 +232,9 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 Component2Service service = new Component2Service();
-                List<CourseEntityModel> Course = Session["ValidCourse"] as List<CourseEntityModel>;
+                List<CoachingEntityModel> Coaching = Session["ValidCoaching"] as List<CoachingEntityModel>;
 
-                if (Course == null || Course.Count == 0)
+                if (Coaching == null || Coaching.Count == 0)
                 {
                     AddErrorMessage("No data available for import.");
                     return;
@@ -246,7 +243,7 @@ namespace SSSNP.UI.Public_Works
                 int skipCount = Session["skipCount"] != null ? (int)Session["skipCount"] : 0;
 
                 // Pass the entire list to the service for processing
-                var response = service.SaveCourseEntity(Course);
+                var response = service.SaveCoachingEntity(Coaching);
                 if (!response.IsSuccess)
                 {
                     AddErrorMessage(response.Message);
@@ -271,7 +268,7 @@ namespace SSSNP.UI.Public_Works
             RadGrid.MasterTableView.GetColumn("ValidationStatus").Visible = false;
             try
             {
-                int totalRecordCount = GetCourseEntityCount();
+                int totalRecordCount = GetCoachingEntityCount();
                 Session["TotalRecordCount"] = totalRecordCount;
                 RadGrid.CurrentPageIndex = 0;
                 RadGrid.VirtualItemCount = totalRecordCount; // Set total item count for pagination
@@ -286,7 +283,7 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
-        private int GetCourseEntityCount()
+        private int GetCoachingEntityCount()
         {
             int totalRecords = 0;
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -297,7 +294,7 @@ namespace SSSNP.UI.Public_Works
                 {
                     conn.Open(); // Ensure the connection is opened
 
-                    string query = @"SELECT COUNT(*) FROM tbl_com2_course WHERE 1=1;";
+                    string query = @"SELECT COUNT(*) FROM tbl_com2_Coaching_Entity WHERE 1=1;";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -312,10 +309,10 @@ namespace SSSNP.UI.Public_Works
 
             return totalRecords;
         }
-        private DataTable GetCourseEntityData(int pageIndex, int pageSize)
+        private DataTable GetCoachingEntityData(int pageIndex, int pageSize)
         {
-            string query = @"SELECT Id, CourseCode, CourseName, CourseDuration
-                     FROM tbl_com2_course 
+            string query = @"SELECT Id, Name, NumberOfPlannedCoachingSessions
+                     FROM tbl_com2_Coaching_Entity 
                      ORDER BY Id 
                      OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
@@ -359,7 +356,7 @@ namespace SSSNP.UI.Public_Works
                 else
                 {
                     // Fetch the data for search result
-                    dt = GetCourseEntityData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
+                    dt = GetCoachingEntityData(RadGrid.CurrentPageIndex, RadGrid.PageSize);
                 }
 
                 RadGrid.DataSource = dt;

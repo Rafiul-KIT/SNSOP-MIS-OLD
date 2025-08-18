@@ -68,7 +68,8 @@ namespace SSSNP_SNSOP
             COURSE_ENTITY_TEMPLATE = 31,
             COURSE_DETAILS_TEMPLATE = 32,
             COACHING_DETAILS_TEMPLATE = 50,
-            COACHING_SESSION_TRACKING = 51
+            COACHING_SESSION_TRACKING = 51,
+            COACHING_ENTITY_TEMPLATE = 52
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -183,6 +184,9 @@ namespace SSSNP_SNSOP
                     return "OK";
                 case HandlerAttachment.COACHING_SESSION_TRACKING:
                     CoachingSessionTracking();
+                    return "OK";
+                case HandlerAttachment.COACHING_ENTITY_TEMPLATE:
+                    CoachingEntityTemplate();
                     return "OK";
             }
 
@@ -2634,6 +2638,46 @@ namespace SSSNP_SNSOP
             }
 
         }
+
+        private void CoachingEntityTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Coaching Entity Template");
+
+                    // Add headers to the worksheet (reflecting your CoachingEntityModel schema)
+                    worksheet.Cells[1, 1].Value = "Coaching Name";
+                    worksheet.Cells[1, 2].Value = "No Of Planned Coaching Session";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 2; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=CoachingEntityTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
         private void LogError(string v, Exception ex)
         {
             throw new NotImplementedException();

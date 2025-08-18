@@ -1576,7 +1576,104 @@ namespace SSSNP_SNSOP.Core.Repository
             return validDates;
         }
 
+        public ResponseModel SaveCoachingEntity(CoachingEntityModel coaching)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0;  // Counter for successfully inserted records
 
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if the record already exists (by CoachingName)
+                    var isExist = IsRecordExist_CoachingName(coaching.CoachingName?.Trim());
+
+                    // Prepare data to insert/update
+                    Dictionary<string, object> data = new Dictionary<string, object>
+                    {
+                        { "Name", coaching.CoachingName?.Trim() },
+                        { "NumberOfPlannedCoachingSessions", coaching.NoOfPlannedCoachingSession }
+                    };
+
+                    // Add audit information
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", coaching.CreatedBy);
+                        data.Add("CreatedDate", coaching.CreatedDate);
+                    }
+                    else
+                    {
+                        data.Add("ModifiedBy", coaching.ModifiedBy);
+                        data.Add("ModifiedDate", coaching.ModifiedDate);
+                    }
+
+                    try
+                    {
+                        if (isExist)
+                        {
+                            // Update existing by CoachingName
+                            string key = coaching.CoachingName?.Trim()?.Replace("'", "''");
+                            _dbOperation.UpdateData(
+                                "tbl_com2_Coaching_Entity",
+                                data,
+                                "Name = '" + key + "'"
+                            );
+                        }
+                        else
+                        {
+                            // Insert new
+                            _dbOperation.InsertData("tbl_com2_Coaching_Entity", data);
+                            insertCount++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Error occurred while processing the coaching data: " + ex.Message);
+                        throw;
+                    }
+
+                    response.IsSuccess = true;
+                    if (insertCount > 0)
+                    {
+                        response.Message = $"Coaching Entity data saved successfully. {insertCount} new records were inserted.";
+                    }
+                    else
+                    {
+                        response.Message = "Coaching Entity data updated successfully.";
+                    }
+
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error when saving Coaching Entity data: " + ex.Message;
+                return response;
+            }
+        }
+
+
+        public bool IsRecordExist_CoachingName(string coachingName)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@coachingName", coachingName);
+                var dt = _dbOperation.ExecuteDataTable(
+                    "SELECT CoachingName FROM tbl_com2_Coaching_Entity WHERE Name = @coachingName",
+                    CommandType.Text, param);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true; // The record exists
+                }
+                return false; // No matching record
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if Coaching Entity exists: " + ex.Message);
+            }
+        }
 
     }
 

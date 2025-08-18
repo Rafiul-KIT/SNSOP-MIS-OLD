@@ -175,7 +175,7 @@ namespace SSSNP.UI.Public_Works
 
                 int val = ddlTemplate.SelectedValue?.ToString() != null ?
                     Convert.ToInt32(ddlTemplate.SelectedValue.ToString()) : 0;
-                if (val == 16 || val == 31 || val == 32)
+                if (val == 16 || val == 31 || val == 32 || val == 50 || val == 52)
                 {
                     LabelState.Visible = false;
                     ddlState.Visible = false;
