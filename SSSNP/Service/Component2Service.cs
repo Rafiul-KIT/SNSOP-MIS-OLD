@@ -50,13 +50,13 @@ namespace SSSNP.Service
                 foreach (var obj in request)
                 {
                     // Pass valid household numbers to IsValidData
-                    var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
+                    /*var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
 
                     if (!validationResult.isValid) // If not valid, store the error message and skip saving
                     {
                         errorMessages.Add(validationResult.errorMessage);
                         continue;
-                    }
+                    }*/
 
                     // Save the valid record
                     response = _component2Repository.SaveTrainingAndAttendanceTracking(obj);
@@ -204,13 +204,13 @@ namespace SSSNP.Service
                 foreach (var obj in request)
                 {
                     // Validate the coaching details data (all fields present per your latest rule)
-                    var validationResult = IsValidData(obj);
+                    /*var validationResult = IsValidData(obj);
 
                     if (!validationResult.isValid)
                     {
                         errorMessages.Add(validationResult.errorMessage);
                         continue;
-                    }
+                    }*/
 
                     // Save the valid coaching detail record
                     var saveResult = _component2Repository.SaveCoachingDetails(obj);
@@ -272,7 +272,7 @@ namespace SSSNP.Service
 
         public (bool isValid, string errorMessage) IsValidData(CoachingDetailsModel obj)
         {
-            if (obj.CoachingId <= 0)
+            if (obj.CoachingName == null)
                 return (false, "Coaching Id is required.");
 
             if (obj.CoachingSessionHoldingDate == null)
@@ -281,7 +281,7 @@ namespace SSSNP.Service
             if (obj.CoachingSessionDurationMinutes == null || obj.CoachingSessionDurationMinutes <= 0)
                 return (false, "Coaching Session Duration (Minutes) is required and must be greater than 0.");
 
-            return (true, string.Empty);
+            return (true, "Valid");
         }
 
         public ResponseModel SaveCoachingEntity(List<CoachingEntityModel> coachings)
@@ -294,12 +294,12 @@ namespace SSSNP.Service
             {
                 foreach (var coaching in coachings)
                 {
-                    var validation = IsValidData(coaching);
+                    /*var validation = IsValidData(coaching);
                     if (!validation.isValid)
                     {
                         skipCount++;
                         continue;
-                    }
+                    }*/
 
                     response = _component2Repository.SaveCoachingEntity(coaching);
 
@@ -334,7 +334,7 @@ namespace SSSNP.Service
             if (obj.NoOfPlannedCoachingSession <= 0)
                 return (false, "Number of Planned Coaching Sessions must be greater than 0.");
 
-            return (true, string.Empty);
+            return (true, "Valid");
         }
 
         public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)
@@ -350,13 +350,13 @@ namespace SSSNP.Service
                 foreach (var obj in request)
                 {
                     // Pass valid household numbers to IsValidData
-                    var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
+                    /*var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
 
                     if (!validationResult.isValid) // If not valid, store the error message and skip saving
                     {
                         errorMessages.Add(validationResult.errorMessage);
                         continue;
-                    }
+                    }*/
 
                     // Save the valid record
                     response = _component2Repository.SaveLivelihoodGrantDisbursement(obj);
@@ -1058,9 +1058,9 @@ namespace SSSNP.Service
             return _component2Repository.GetExistingCourseDetails();
         }
 
-        public Dictionary<int, string> GetExistingCoachingId()
+        public Dictionary<int, string> GetExistingCoachingName()
         {
-            return _component2Repository.GetExistingCoachingId();
+            return _component2Repository.GetExistingCoachingName();
         }
     }
 }

@@ -206,11 +206,11 @@ namespace SSSNP_SNSOP
                 Component2Service service = new Component2Service();
 
                 HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
-                Dictionary<int, string> existingCoachingId = service.GetExistingCoachingId();
+                Dictionary<int, string> existingCoachingId = service.GetExistingCoachingName();
                 List<CoachingDetailsModel> coachingList = existingCoachingId
                     .Select(kvp => new CoachingDetailsModel
                     {
-                        CoachingId = kvp.Key
+                        CoachingName = kvp.Value
                     })
                     .ToList();
                 using (ExcelPackage package = new ExcelPackage())
@@ -243,7 +243,7 @@ namespace SSSNP_SNSOP
                     var validation = worksheet.DataValidations.AddListValidation("B2:B1000");
                     foreach (var coaching in coachingList)
                     {
-                        validation.Formula.Values.Add(coaching.CoachingId.ToString());
+                        validation.Formula.Values.Add(coaching.CoachingName.ToString());
                     }                    
 
                     // Protect the worksheet so that locked cells (Household Number) are read-only
@@ -281,22 +281,22 @@ namespace SSSNP_SNSOP
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Coaching Details Template");
 
                     Component2Service service = new Component2Service();
-                    Dictionary<int, string> existingCoachingId = service.GetExistingCoachingId();
-                    List<CoachingDetailsModel> coachingList = existingCoachingId
+                    Dictionary<int, string> existingCoachingName = service.GetExistingCoachingName();
+                    List<CoachingDetailsModel> coachingList = existingCoachingName
                         .Select(kvp => new CoachingDetailsModel
                         {
-                            CoachingId = kvp.Key
+                            CoachingName = kvp.Value
                         })
                         .ToList();
                     var validation = worksheet.DataValidations.AddListValidation("A2:A1000"); // Adjust the range as needed
 
                     foreach (var coaching in coachingList)
                     {
-                        validation.Formula.Values.Add(coaching.CoachingId.ToString());
+                        validation.Formula.Values.Add(coaching.CoachingName.ToString());
                     }
 
                     // Add headers to the worksheet (reflecting your table schema)
-                    worksheet.Cells[1, 1].Value = "Coaching Id";
+                    worksheet.Cells[1, 1].Value = "Coaching Name";
                     worksheet.Cells[1, 2].Value = "Coaching Session Holding Date(mm/dd/yyyy)";
                     worksheet.Cells[1, 3].Value = "Coaching Session Duration (Minutes)";
 
@@ -2145,7 +2145,7 @@ namespace SSSNP_SNSOP
 
                     // Suppose we know the number of data rows to be inserted
                     // In this example, assume we are inserting 10 rows of data dynamically
-                    int dataRows = 20; // Replace this with the actual number of data rows to be inserted
+                    int dataRows = 1000; // Replace this with the actual number of data rows to be inserted
 
                     // Add a dropdown for "Payment Cycle" (column 2)
                     var paymentCycleValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 2, dataRows + 1, 2].Address);  // Apply to data rows only
@@ -2556,7 +2556,7 @@ namespace SSSNP_SNSOP
                     // Add headers to the worksheet (reflecting your table schema)
                     worksheet.Cells[1, 1].Value = "Course Code";
                     worksheet.Cells[1, 2].Value = "Course Name";
-                    worksheet.Cells[1, 3].Value = "Course Duration";
+                    worksheet.Cells[1, 3].Value = "Course Duration (Hour)";
 
                     // Set headers to be bold
                     for (int col = 1; col <= 3; col++)

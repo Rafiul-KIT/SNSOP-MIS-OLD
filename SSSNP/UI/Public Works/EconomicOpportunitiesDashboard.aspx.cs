@@ -325,7 +325,7 @@ where bpd.BusinessType=1 group by c.CountieName";
             List<CountyEnrollmentData> result = new List<CountyEnrollmentData>();
 
             string query = @"
-    select c.CountieName CountyName, sum(case when bpd.PaymentCycle=1 then 1 else 0 end) TotalEnrolled
+    select c.CountieName CountyName, sum(case when bpd.PaymentCycle='Installment 1' then 1 else 0 end) TotalEnrolled
 from tbl_com2_Livelihood_Grant_Disbursement bpd
 join tbl_BeneficiaryDet tbd on bpd.HouseholdNumber=tbd.household_number
 join tm_Counties c on tbd.intCountieid = c.intCountieid
@@ -359,7 +359,7 @@ group by c.CountieName";
             List<CountyEnrollmentData> result = new List<CountyEnrollmentData>();
 
             string query = @"
-    select c.CountieName CountyName, sum(case when bpd.PaymentCycle=2 then 1 else 0 end) TotalEnrolled
+    select c.CountieName CountyName, sum(case when bpd.PaymentCycle='Installment 2' then 1 else 0 end) TotalEnrolled
 from tbl_com2_Livelihood_Grant_Disbursement bpd
 join tbl_BeneficiaryDet tbd on bpd.HouseholdNumber=tbd.household_number
 join tm_Counties c on tbd.intCountieid = c.intCountieid

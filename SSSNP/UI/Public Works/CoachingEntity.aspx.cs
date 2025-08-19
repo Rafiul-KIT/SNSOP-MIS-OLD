@@ -69,7 +69,7 @@ namespace SSSNP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Coaching Name", "No of Planned Coaching session"
+                        "Coaching Name", "No Of Planned Coaching Session"
                     };
 
                     // Validate headers
@@ -90,7 +90,7 @@ namespace SSSNP.UI.Public_Works
                     {
                         string coachingName = worksheet.Cells[row, 1].Text;
                         int noOfPlannedCoachingSession;
-                        if (!int.TryParse(worksheet.Cells[row, 3].Text, out noOfPlannedCoachingSession))
+                        if (!int.TryParse(worksheet.Cells[row, 2].Text, out noOfPlannedCoachingSession))
                         {
                             noOfPlannedCoachingSession = 0;
                         }
@@ -106,7 +106,7 @@ namespace SSSNP.UI.Public_Works
                         });
                     }
 
-                    Session["CourseEntity"] = coaching;
+                    Session["CoachingEntity"] = coaching;
                     AddSuccessMessage("File uploaded successfully. You can now analyze the data.");
                     btnAnalyze.Enabled = true;
                 }
@@ -133,7 +133,7 @@ namespace SSSNP.UI.Public_Works
                     return;
                 }
 
-                Dictionary<int, string> existingCoaching = service.GetExistingCoachingId();
+                Dictionary<int, string> existingCoaching = service.GetExistingCoachingName();
 
                 HashSet<string> uniqueCoachingName = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 var validCoaching = new List<CoachingEntityModel>();
@@ -146,8 +146,8 @@ namespace SSSNP.UI.Public_Works
                 // Create a DataTable to hold the data for display in the grid
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));
-                dt.Columns.Add("CoachingName", typeof(string));
-                dt.Columns.Add("NoOFPlannedCoachingSession", typeof(int));
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("NumberOfPlannedCoachingSessions", typeof(int));
                 dt.Columns.Add("ValidationStatus", typeof(string));
 
                 int skipCount = 0;
@@ -155,8 +155,8 @@ namespace SSSNP.UI.Public_Works
                 foreach (var coaching in Coaching)
                 {
                     DataRow dr = dt.NewRow();
-                    dr["CoachingName"] = coaching.CoachingName;
-                    dr["NoOFPlannedCoachingSession"] = coaching.NoOfPlannedCoachingSession;
+                    dr["Name"] = coaching.CoachingName;
+                    dr["NumberOfPlannedCoachingSessions"] = coaching.NoOfPlannedCoachingSession;
 
                     var name = coaching.CoachingName?.Trim();
                     // Check if the group is redundant

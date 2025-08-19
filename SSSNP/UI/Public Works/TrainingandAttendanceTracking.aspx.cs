@@ -255,20 +255,20 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 Session["UploadedTrainingAndAttendanceAllData"] = null;
 
                 // Filter valid entries from the attendance list
-                var validEntries = attendanceList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
+                /*var validEntries = attendanceList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
 
                 if (validEntries.Count == 0)
                 {
                     AddErrorMessage("No valid data available for import.");
                     return;
-                }
+                }*/
 
                 // Save the valid data using the service layer
-                var response = _component2Service.SaveTrainingAndAttendanceTracking(validEntries);
+                var response = _component2Service.SaveTrainingAndAttendanceTracking(attendanceList);
 
                 if (response.IsSuccess)
                 {
-                    AddSuccessMessage($"{validEntries.Count} valid entries imported successfully.");
+                    AddSuccessMessage($"{attendanceList.Count} valid entries imported successfully.");
                     btnImport.Enabled = false;
                     btnAnalyze.Enabled = false;
                 }

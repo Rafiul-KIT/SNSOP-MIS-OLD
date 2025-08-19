@@ -651,3 +651,23 @@ go
 
 >>>>>>> ad7d043a031569d94251a23ba258a701108d5749
 
+
+------19/08/2025-----
+EXEC sp_help 'dbo.tbl_com2_Training_Attendance';
+
+ALTER TABLE dbo.tbl_com2_Training_Attendance
+    DROP CONSTRAINT UK_Training_Attendance;
+
+ALTER TABLE dbo.tbl_com2_Training_Attendance
+    ADD CONSTRAINT UK_Training_Attendance UNIQUE (HouseholdNumber, CourseCode, ClassAttendanceDate);
+
+
+EXEC sp_help 'dbo.tbl_com2_Livelihood_Grant_Disbursement';
+
+ALTER TABLE dbo.tbl_com2_Livelihood_Grant_Disbursement
+    DROP CONSTRAINT UK_Livelihood_Grant_Disbursement;
+
+ALTER TABLE dbo.tbl_com2_Livelihood_Grant_Disbursement
+    ADD CONSTRAINT UK_LivelihoodGrantDisbursement
+        UNIQUE (HouseholdNumber, PaymentCycle);
+

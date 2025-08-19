@@ -142,7 +142,7 @@
                                     <MasterTableView AutoGenerateColumns="False" DataKeyNames="Id" AllowPaging="True" PagerStyle-AlwaysVisible="True" AllowCustomPaging="True">
                                         <Columns>
                                             <telerik:GridBoundColumn DataField="Id" HeaderText="ID" />
-                                            <telerik:GridBoundColumn DataField="CoachingId" HeaderText="Coaching Id" />
+                                            <telerik:GridBoundColumn DataField="CoachingName" HeaderText="Coaching Name" />
                                             <telerik:GridBoundColumn DataField="CoachingSessionHoldingDate" HeaderText="Coaching Session Holding Date" />
                                             <telerik:GridBoundColumn DataField="CoachingSessionDurationMinutes" HeaderText="Coaching Session Duration Minutes" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />

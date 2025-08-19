@@ -65,7 +65,7 @@ namespace SSSNP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Coaching Id", "Coaching Session Holding Date(mm/dd/yyyy)", "Coaching Session Duration (Minutes)"
+                        "Coaching Name", "Coaching Session Holding Date(mm/dd/yyyy)", "Coaching Session Duration (Minutes)"
                     };
 
                     for (int col = 1; col <= expectedHeaders.Count; col++)
@@ -85,9 +85,7 @@ namespace SSSNP.UI.Public_Works
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
                         // Handle null or empty values for each column
-                        int coachingId = int.TryParse(worksheet.Cells[row, 1].Text, out int parsed)
-                        ? parsed
-                        : 0;
+                        string coachingName = worksheet.Cells[row, 1].Text;
 
                         DateTime? coachingSessionHoldingDate = null;
                         if (!string.IsNullOrWhiteSpace(worksheet.Cells[row, 2].Text) &&
@@ -100,14 +98,14 @@ namespace SSSNP.UI.Public_Works
                         ? parsedDuration
                         : 0;
 
-                        if (coachingId == 0 && coachingSessionHoldingDate == null && coachingSessionDuration == 0)
+                        if (coachingName == null && coachingSessionHoldingDate == null && coachingSessionDuration == 0)
                         {
                             continue; // Skip this row
                         }
 
                         CoachingDetailsModel coachingDetails = new CoachingDetailsModel
                         {
-                            CoachingId = coachingId,
+                            CoachingName = coachingName,
                             CoachingSessionHoldingDate = coachingSessionHoldingDate,
                             CoachingSessionDurationMinutes = coachingSessionDuration,
                             CreatedBy = userId,
@@ -149,9 +147,9 @@ namespace SSSNP.UI.Public_Works
                 // Create a DataTable to hold the analyzed data (for RadGrid display)
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));
-                dt.Columns.Add("CoachingId", typeof(string));
+                dt.Columns.Add("CoachingName", typeof(string));
                 dt.Columns.Add("CoachingSessionHoldingDate", typeof(DateTime));
-                dt.Columns.Add("CoachingSessionDuration", typeof(int)); 
+                dt.Columns.Add("CoachingSessionDurationMinutes", typeof(int)); 
                 dt.Columns.Add("ValidationStatus", typeof(string)); 
 
                 // Store error messages for rows with validation issues
@@ -170,9 +168,9 @@ namespace SSSNP.UI.Public_Works
                     // Populate DataTable with the data
                     DataRow dr = dt.NewRow();
                     dr["Id"] = serial;
-                    dr["CoachingId"] = coaching.CoachingId;
+                    dr["CoachingName"] = coaching.CoachingName;
                     dr["CoachingSessionHoldingDate"] = coaching.CoachingSessionHoldingDate;
-                    dr["CoachingSessionDuration"] = coaching.CoachingSessionDurationMinutes;
+                    dr["CoachingSessionDurationMinutes"] = coaching.CoachingSessionDurationMinutes;
 
                     // Collect error messages to display in the ValidationStatus column
                     if (!validationResult.isValid)
@@ -182,10 +180,11 @@ namespace SSSNP.UI.Public_Works
                     else
                     {
                         dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
+                        dt.Rows.Add(dr);
+                        serial++;
                     }
 
-                    dt.Rows.Add(dr);
-                    serial++;
+                    
                 }
 
                 // Bind the data to RadGrid for display
@@ -225,20 +224,20 @@ namespace SSSNP.UI.Public_Works
                 }
 
                 // Filter valid entries from the attendance list
-                var validEntries = coachingList.Where(a => _component2Service.IsValidData(a).isValid).ToList();
+                /*var validEntries = coachingList.Where(a => _component2Service.IsValidData(a).isValid).ToList();
 
                 if (validEntries.Count == 0)
                 {
                     AddErrorMessage("No valid data available for import.");
                     return;
-                }
+                }*/
 
                 // Save the valid data using the service layer
-                var response = _component2Service.SaveCoachingDetails(validEntries);
+                var response = _component2Service.SaveCoachingDetails(coachingList);
 
                 if (response.IsSuccess)
                 {
-                    AddSuccessMessage($"{validEntries.Count} valid entries imported successfully.");
+                    AddSuccessMessage($"{coachingList.Count} valid entries imported successfully.");
                     btnImport.Enabled = false;
                     btnAnalyze.Enabled = false;
                 }

@@ -455,7 +455,11 @@
                                 </div>
 
                                 <div class="row">
-                                    <h4 class="text-primary">BENEFICIARY TRAINING AND ATTENDANCE (% ATTENDANCE OF CLASSES THAT HAVE BEEN HELD)</h4>
+                                    <%--<h4 class="text-primary">BENEFICIARY TRAINING AND ATTENDANCE (% ATTENDANCE OF CLASSES THAT HAVE BEEN HELD)</h4>--%>
+                                    <div class="col-xs-12">
+                                        <h4 class="text-primary">BENEFICIARY TRAINING AND ATTENDANCE (% ATTENDANCE OF CLASSES THAT HAVE BEEN HELD)
+                                        </h4>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="card shadow p-3 mb-4 bg-white rounded">
                                             <h4 class="text-primary">Livelihood Training</h4>
@@ -495,7 +499,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <%--<div class="row">
                                     <h4 class="text-primary">BUSINESS PLAN DEVELOPMENT – HAVE RESPONDENTS DEVELOPED A BUSINESS PLAN?</h4>
                                     <div class="col-md-6">
                                         <div class="card shadow p-3 mb-4 bg-white rounded">
@@ -515,9 +519,9 @@
 
                                         </div>
                                     </div>
-                                </div>
+                                </div>--%>
 
-                                <div class="row">
+                                <%--<div class="row">
                                     <h4 class="text-primary">LIVELIHOOD GRANT DISBURSEMENT</h4>
                                     <div class="col-md-6">
                                         <div class="card shadow p-3 mb-4 bg-white rounded">
@@ -535,10 +539,61 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>--%>
+                                <!-- BUSINESS PLAN DEVELOPMENT -->
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4 class="text-primary">BUSINESS PLAN DEVELOPMENT – HAVE RESPONDENTS DEVELOPED A BUSINESS PLAN?
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card shadow p-3 mb-4 bg-white rounded">
+                                            <h4 class="text-primary">Non-farm</h4>
+                                            <div style="height: 200px; max-width: 600px; margin: auto;">
+                                                <canvas id="nonFarmChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card shadow p-3 mb-4 bg-white rounded">
+                                            <h4 class="text-primary">Farm</h4>
+                                            <div style="height: 200px; max-width: 600px; margin: auto;">
+                                                <canvas id="farmChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
+                                <!-- LIVELIHOOD GRANT DISBURSEMENT -->
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4 class="text-primary">LIVELIHOOD GRANT DISBURSEMENT</h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card shadow p-3 mb-4 bg-white rounded">
+                                            <h4 class="text-primary">Installment One</h4>
+                                            <div style="height: 200px; max-width: 600px; margin: auto;">
+                                                <canvas id="installment1Chart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card shadow p-3 mb-4 bg-white rounded">
+                                            <h4 class="text-primary">Installment Two</h4>
+                                            <div style="height: 200px; max-width: 600px; margin: auto;">
+                                                <canvas id="installment2Chart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
-                        </div>   
+                        </div>
                     </div>
                 </div>
             </div>

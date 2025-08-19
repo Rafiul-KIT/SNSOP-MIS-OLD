@@ -69,7 +69,7 @@ namespace SSSNP.UI.Public_Works
 
                     List<string> expectedHeaders = new List<string>
                     {
-                        "Course Code", "Course Name", "Course Duration"
+                        "Course Code", "Course Name", "Course Duration (Hour)"
                     };
 
                     // Validate headers

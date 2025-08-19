@@ -30,7 +30,7 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 lock (_locker)
                 {
-                    var isExist = IsRecordExistInTrainingAndAttendence(obj.HouseholdNumber?.Trim());
+                    var isExist = IsRecordExistInTrainingAndAttendence(obj.HouseholdNumber?.Trim(), obj.CourseCode?.Trim(), obj.ClassAttendanceDate);
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
                     if (denormalizedData == null)
@@ -88,18 +88,26 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-        private bool IsRecordExistInTrainingAndAttendence(string householdNumber)
+        private bool IsRecordExistInTrainingAndAttendence(string householdNumber, string courseCode, DateTime? classDate)
         {
             try
             {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber",
-                    CommandType.Text, param);
-                if (dt != null && dt.Rows.Count > 0)
+                const string sql = @"
+                                    SELECT 1
+                                    FROM tbl_com2_Training_Attendance
+                                    WHERE HouseholdNumber = @householdNumber
+                                      AND CourseCode      = @courseCode
+                                      AND CAST(ClassAttendanceDate AS date) = @classDate";
+
+                var parameters = new List<SqlParameter>
                 {
-                    return true;
-                }
-                return false;
+                    new SqlParameter("@householdNumber", (object)householdNumber ?? DBNull.Value),
+                    new SqlParameter("@courseCode",      (object)courseCode      ?? DBNull.Value),
+                    new SqlParameter("@classDate",       classDate?.Date)
+                };
+
+                var dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
+                return dt != null && dt.Rows.Count > 0;
             }
             catch (Exception ex)
             {
@@ -200,11 +208,11 @@ namespace SSSNP_SNSOP.Core.Repository
                 lock (_locker)
                 {
                     // Check if a record already exists for this CoachingId + Date
-                    bool isExist = IsRecordExistInCoachingDetails(obj.CoachingId, obj.CoachingSessionHoldingDate?.Date);
+                    bool isExist = IsRecordExistInCoachingDetails(obj.CoachingName, obj.CoachingSessionHoldingDate?.Date);
 
                     var data = new Dictionary<string, object>
                     {
-                        ["CoachingId"] = obj.CoachingId,
+                        ["CoachingId"] = obj.CoachingName,
                         ["CoachingSessionHoldingDate"] = obj.CoachingSessionHoldingDate ?? (object)DBNull.Value,
                         ["CoachingSessionDurationMinutes"] = obj.CoachingSessionDurationMinutes ?? (object)DBNull.Value
                     };
@@ -226,8 +234,8 @@ namespace SSSNP_SNSOP.Core.Repository
                         // Handle NULL date properly in WHERE
                         string where =
                             obj.CoachingSessionHoldingDate.HasValue
-                            ? $"CoachingId = {obj.CoachingId} AND CoachingSessionHoldingDate = '{obj.CoachingSessionHoldingDate.Value:yyyy-MM-dd}'"
-                            : $"CoachingId = {obj.CoachingId} AND CoachingSessionHoldingDate IS NULL";
+                            ? $"CoachingId = {obj.CoachingName} AND CoachingSessionHoldingDate = '{obj.CoachingSessionHoldingDate.Value:yyyy-MM-dd}'"
+                            : $"CoachingId = {obj.CoachingName} AND CoachingSessionHoldingDate IS NULL";
 
                         _dbOperation.UpdateData("tbl_com2_Coaching_Details", data, @where);
                     }
@@ -248,7 +256,7 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-        private bool IsRecordExistInCoachingDetails(int coachingId, DateTime? sessionDate)
+        private bool IsRecordExistInCoachingDetails(string coachingId, DateTime? sessionDate)
         {
             try
             {
@@ -290,7 +298,10 @@ namespace SSSNP_SNSOP.Core.Repository
                 lock (_locker)
                 {
                     // Check if the record already exists
-                    var isExist = IsRecordExistLivelihoodDisbursement(obj.HouseholdNumber?.Trim());
+                    var isExist = IsRecordExistLivelihoodDisbursement(
+                        obj.HouseholdNumber?.Trim(),
+                        obj.PaymentCycle?.Trim()
+                    );
 
                     // Retrieve denormalized data associated with the household number
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
@@ -335,7 +346,9 @@ namespace SSSNP_SNSOP.Core.Repository
                     bool isAdded;
                     if (isExist)
                     {
-                        isAdded = _dbOperation.UpdateData("tbl_com2_Livelihood_Grant_Disbursement", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                        string where = $"HouseholdNumber = '{obj.HouseholdNumber?.Trim()}' " +
+                                        $"AND PaymentCycle = '{obj.PaymentCycle?.Trim()}'";
+                        isAdded = _dbOperation.UpdateData("tbl_com2_Livelihood_Grant_Disbursement", data, where);
                     }
                     else
                     {
@@ -359,18 +372,24 @@ namespace SSSNP_SNSOP.Core.Repository
                 };
             }
         }
-        private bool IsRecordExistLivelihoodDisbursement(string householdNumber)
+        private bool IsRecordExistLivelihoodDisbursement(string householdNumber, string paymentCycle)
         {
             try
             {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Livelihood_Grant_Disbursement WHERE HouseholdNumber = @householdNumber",
-                    CommandType.Text, param);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    return true;
-                }
-                return false;
+                const string sql = @"
+                        SELECT 1
+                        FROM dbo.tbl_com2_Livelihood_Grant_Disbursement
+                        WHERE HouseholdNumber = @householdNumber
+                            AND PaymentCycle    = @paymentCycle;";
+
+                                var parameters = new List<SqlParameter>
+                    {
+                        new SqlParameter("@householdNumber", (object)householdNumber ?? DBNull.Value),
+                        new SqlParameter("@paymentCycle",    (object)paymentCycle    ?? DBNull.Value)
+                    };
+
+                var dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
+                return dt != null && dt.Rows.Count > 0;
             }
             catch (Exception ex)
             {
@@ -1511,7 +1530,7 @@ namespace SSSNP_SNSOP.Core.Repository
             return validDates;
         }
 
-        public Dictionary<int, string> GetExistingCoachingId()
+        public Dictionary<int, string> GetExistingCoachingName()
         {
             Dictionary<int, string> coachingDetailId = new Dictionary<int, string>();
             try
@@ -1660,7 +1679,7 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 SqlParameter param = new SqlParameter("@coachingName", coachingName);
                 var dt = _dbOperation.ExecuteDataTable(
-                    "SELECT CoachingName FROM tbl_com2_Coaching_Entity WHERE Name = @coachingName",
+                    "SELECT Name FROM tbl_com2_Coaching_Entity WHERE Name = @coachingName",
                     CommandType.Text, param);
 
                 if (dt != null && dt.Rows.Count > 0)
