@@ -67,7 +67,13 @@ namespace SSSNP_SNSOP.Core.Repository
                     }
                     if (isExist)
                     {
-                        var isAdded = _dbOperation.UpdateData("tbl_com2_Training_Attendance", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                        var isAdded = _dbOperation.UpdateData(
+                            "tbl_com2_Training_Attendance",
+                            data,
+                            " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'" +
+                            " AND CourseCode = '" + obj.CourseCode?.Trim() + "'" +
+                            " AND CONVERT(date, ClassAttendanceDate) = '" + obj.ClassAttendanceDate?.ToString("yyyy-MM-dd") + "'"
+                        );
                     }
                     else
                     {
@@ -122,7 +128,11 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 lock (_locker)
                 {
-                    var isExist = IsRecordExistInCoachingSessionAttendance(obj.HouseholdNumber?.Trim());
+                    var hh = obj.HouseholdNumber?.Trim();
+                    var cname = obj.CoachingName?.Trim();
+                    var attDate = obj.ClassAttendanceDate;
+
+                    var isExist = IsRecordExistInCoachingSessionAttendance(hh, cname, attDate);
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
                     if (denormalizedData == null)
@@ -135,7 +145,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     Dictionary<string, object> data = new Dictionary<string, object>
                     {
                         ["HouseholdNumber"] = obj.HouseholdNumber?.Trim(),
-                        ["CoachingDetailId"] = obj.CoachingDetailId,
+                        ["CoachingName"] = obj.CoachingName,
                         ["CoachingAttendanceDate"] = obj.ClassAttendanceDate ?? (object)DBNull.Value
                     };
 
@@ -152,11 +162,28 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     if (isExist)
                     {
-                        _dbOperation.UpdateData(
-                            "tbl_com2_Coaching_Session_Attendance",
-                            data,
-                            $"HouseholdNumber = '{obj.HouseholdNumber?.Trim()}' AND CoachingDetailId = {obj.CoachingDetailId}"
-                        );
+                        // use ExecuteNonQuery with parameters because UpdateData takes a raw where string
+                        const string sql = @"
+                        UPDATE tbl_com2_Coaching_Session_Attendance
+                        SET ModifiedBy = @modifiedBy,
+                            ModifiedDate = @modifiedDate
+                        WHERE HouseholdNumber = @householdNumber
+                          AND CoachingName = @coachingName
+                          AND (
+                                (@attendanceDate IS NULL AND CoachingAttendanceDate IS NULL)
+                             OR (@attendanceDate IS NOT NULL AND CAST(CoachingAttendanceDate AS date) = CAST(@attendanceDate AS date))
+                              );";
+
+                        var parameters = new List<SqlParameter>
+                        {
+                            new SqlParameter("@householdNumber", (object)hh ?? DBNull.Value),
+                            new SqlParameter("@coachingName", (object)cname ?? DBNull.Value),
+                            new SqlParameter("@attendanceDate", (object)attDate ?? DBNull.Value),
+                            new SqlParameter("@modifiedBy", (object)obj.ModifiedBy ?? DBNull.Value),
+                            new SqlParameter("@modifiedDate", (object)obj.ModifiedDate ?? DBNull.Value)
+                        };
+
+                        _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
                     }
                     else
                     {
@@ -179,25 +206,27 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-        private bool IsRecordExistInCoachingSessionAttendance(string householdNumber)
+        private bool IsRecordExistInCoachingSessionAttendance(string householdNumber, string coachingname, DateTime? attendanceDate)
         {
-            try
-            {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable(
-                    "SELECT HouseholdNumber FROM tbl_com2_Coaching_Session_Attendance WHERE HouseholdNumber = @householdNumber",
-                    CommandType.Text, param);
+            const string sql = @"
+            SELECT TOP 1 1
+            FROM tbl_com2_Coaching_Session_Attendance
+            WHERE HouseholdNumber = @householdNumber
+              AND CoachingName = @coachingname
+              AND (
+                    (@attendanceDate IS NULL AND CoachingAttendanceDate IS NULL)
+                 OR (@attendanceDate IS NOT NULL AND CAST(CoachingAttendanceDate AS date) = CAST(@attendanceDate AS date))
+                  );";
 
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
+            var parameters = new List<SqlParameter>
             {
-                throw ex;
-            }
+                new SqlParameter("@householdNumber", (object)householdNumber ?? DBNull.Value),
+                new SqlParameter("@coachingname",    (object)coachingname    ?? DBNull.Value),
+                new SqlParameter("@attendanceDate",  (object)attendanceDate ?? DBNull.Value)
+            };
+
+            var dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
+            return dt != null && dt.Rows.Count > 0;
         }
 
         public ResponseModel SaveCoachingDetails(CoachingDetailsModel obj)
@@ -232,12 +261,17 @@ namespace SSSNP_SNSOP.Core.Repository
                         data["ModifiedDate"] = obj.ModifiedDate;
 
                         // Handle NULL date properly in WHERE
-                        string where =
-                            obj.CoachingSessionHoldingDate.HasValue
-                            ? $"CoachingId = {obj.CoachingName} AND CoachingSessionHoldingDate = '{obj.CoachingSessionHoldingDate.Value:yyyy-MM-dd}'"
-                            : $"CoachingId = {obj.CoachingName} AND CoachingSessionHoldingDate IS NULL";
+                        string coachingIdWhere = obj.CoachingName == null
+                    ? "CoachingId IS NULL"
+                    : $"CoachingId = '{obj.CoachingName.Replace("'", "''")}'";
 
-                        _dbOperation.UpdateData("tbl_com2_Coaching_Details", data, @where);
+                        string dateWhere = obj.CoachingSessionHoldingDate.HasValue
+                            ? $"CAST(CoachingSessionHoldingDate AS date) = '{obj.CoachingSessionHoldingDate.Value:yyyy-MM-dd}'"
+                            : "CoachingSessionHoldingDate IS NULL";
+
+                        string where = $"{coachingIdWhere} AND {dateWhere}";
+
+                        _dbOperation.UpdateData("tbl_com2_Coaching_Details", data, where);
                     }
 
                     response.IsSuccess = true;
@@ -1558,7 +1592,7 @@ namespace SSSNP_SNSOP.Core.Repository
             return coachingDetailId;
         }
 
-        public List<DateTime> GetValidCoachingDates(int coachingDetailId)
+        public List<DateTime> GetValidCoachingDates(string coachingName)
         {
             List<DateTime> validDates = new List<DateTime>();
 
@@ -1567,11 +1601,11 @@ namespace SSSNP_SNSOP.Core.Repository
                 string query = @"
             SELECT CoachingSessionHoldingDate 
             FROM tbl_com2_Coaching_Details 
-            WHERE CoachingId = @CoachingDetailId";
+            WHERE CoachingId = @CoachingName";
 
                 var parameters = new List<SqlParameter>
         {
-            new SqlParameter("@CoachingDetailId", coachingDetailId)
+            new SqlParameter("@CoachingName", coachingName)
         };
 
                 var dt = _dbOperation.ExecuteDataTable(query, CommandType.Text, parameters);
@@ -1589,7 +1623,7 @@ namespace SSSNP_SNSOP.Core.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching valid coaching session dates for CoachingDetailId '{coachingDetailId}': {ex.Message}");
+                throw new Exception($"Error fetching valid coaching session dates for CoachingDetailId '{coachingName}': {ex.Message}");
             }
 
             return validDates;

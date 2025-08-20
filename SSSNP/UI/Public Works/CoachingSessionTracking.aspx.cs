@@ -85,27 +85,25 @@ namespace SSSNP.UI.Public_Works
                     for (int row = 2; row <= worksheet.Dimension.End.Row; row++) // Assuming row 1 contains headers
                     {
                         // Handle null or empty values for each column
-                        int coachingId = int.TryParse(worksheet.Cells[row, 2].Text, out int parsed)
-                        ? parsed
-                        : 0;
+                        string household = worksheet.Cells[row, 1].Text?.Trim();
+                        string coachingId = worksheet.Cells[row, 2].Text?.Trim();
 
+                        // Parse date (accept common mm/dd/yyyy variants)
                         DateTime? classAttendanceDate = null;
                         if (!string.IsNullOrWhiteSpace(worksheet.Cells[row, 3].Text) &&
                             DateTime.TryParse(worksheet.Cells[row, 3].Text, out DateTime parsedDate))
                         {
                             classAttendanceDate = parsedDate;
                         }
-
-
-                        if (coachingId == 0 && classAttendanceDate == null)
+                        if (string.IsNullOrWhiteSpace(coachingId) && !classAttendanceDate.HasValue)
                         {
-                            continue; // Skip this row
+                            continue;
                         }
 
                         CoachingSessionTrackingModel attendance = new CoachingSessionTrackingModel
                         {
-                            HouseholdNumber = worksheet.Cells[row, 1].Text,
-                            CoachingDetailId = coachingId,
+                            HouseholdNumber = household,
+                            CoachingName = coachingId,
                             ClassAttendanceDate = classAttendanceDate,
                             CreatedBy = userId,
                             ModifiedBy = userId
@@ -147,38 +145,37 @@ namespace SSSNP.UI.Public_Works
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id", typeof(int));
                 dt.Columns.Add("HouseholdNumber", typeof(string));
-                dt.Columns.Add("CoachingId", typeof(string));
-                dt.Columns.Add("ClassAttendanceDate", typeof(DateTime)); // Change to object to support null values
-                dt.Columns.Add("ValidationStatus", typeof(string)); // For error messages
+                dt.Columns.Add("CoachingName", typeof(string));
+                dt.Columns.Add("CoachingAttendanceDate", typeof(DateTime)); 
+                dt.Columns.Add("ValidationStatus", typeof(string)); 
 
                 // Store error messages for rows with validation issues
                 int serial = 1;
-
-                // Fetch valid household numbers for validation
-                var validHouseholdNumbers = _component2Service.GetValidHouseholdNumbers();
-                var validAttendanceList = attendanceList.Where(grant => !string.IsNullOrWhiteSpace(grant.HouseholdNumber)).ToList();
+                
 
                 var uploadedDataList = new List<CoachingSessionTrackingAuditModel>();
                 int userId = Session["uid"] != null ? Convert.ToInt32(Session["uid"].ToString()) : 0;
                 Guid myuuid = Guid.NewGuid();
                 string FileId = myuuid.ToString().Replace("-", "").Substring(0, 10);
 
+                var validEntries = new List<CoachingSessionTrackingModel>();
+
                 // Iterate over attendanceList and validate each entry
-                foreach (var attendance in validAttendanceList)
+                foreach (var attendance in attendanceList)
                 {
-                    var validationResult = _component2Service.IsValidData(attendance, validHouseholdNumbers); // Call validation
+                    var validationResult = _component2Service.IsValidData(attendance); // Call validation
 
                     // Populate DataTable with the data
                     DataRow dr = dt.NewRow();
                     dr["Id"] = serial;
                     dr["HouseholdNumber"] = attendance.HouseholdNumber;
-                    dr["CoachingId"] = attendance.CoachingDetailId;
-                    dr["ClassAttendanceDate"] = attendance.ClassAttendanceDate;
+                    dr["CoachingName"] = attendance.CoachingName;
+                    dr["CoachingAttendanceDate"] = attendance.ClassAttendanceDate;
 
                     CoachingSessionTrackingAuditModel auditEntityObj = new CoachingSessionTrackingAuditModel();
                     auditEntityObj.FileId = FileId;
                     auditEntityObj.HouseholdNumber = attendance.HouseholdNumber;
-                    auditEntityObj.CoachingDetailId = attendance.CoachingDetailId;
+                    auditEntityObj.CoachingName = attendance.CoachingName;
                     auditEntityObj.ClassAttendanceDate = attendance.ClassAttendanceDate;
 
                     // Collect error messages to display in the ValidationStatus column
@@ -192,6 +189,7 @@ namespace SSSNP.UI.Public_Works
                     {
                         auditEntityObj.Validity = true;
                         dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
+                        validEntries.Add(attendance);
                     }
 
                     auditEntityObj.UploadedBy = userId;
@@ -202,7 +200,7 @@ namespace SSSNP.UI.Public_Works
                 }
 
                 Session["UploadedCoachingSessionAttendanceAllData"] = uploadedDataList;
-
+                Session["ValidAttendanceData"] = validEntries;
                 // Bind the data to RadGrid for display
                 Session["AnalyzedData"] = dt;
                 int totalRecordCount = dt.Rows.Count;
@@ -232,10 +230,10 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 // Retrieve the list of TrainingAttendance objects from session
-                var attendanceList = Session["UploadedAttendanceData"] as List<CoachingSessionTrackingModel>;
-                if (attendanceList == null || attendanceList.Count == 0)
+                var validEntries = Session["ValidAttendanceData"] as List<CoachingSessionTrackingModel>;
+                if (validEntries == null || validEntries.Count == 0)
                 {
-                    AddErrorMessage("No data available for import.");
+                    AddErrorMessage("No valid data available for import. Please analyze and ensure there are valid rows.");
                     return;
                 }
 
@@ -247,13 +245,13 @@ namespace SSSNP.UI.Public_Works
                 Session["UploadedCoachingSessionAttendanceAllData"] = null;
 
                 // Filter valid entries from the attendance list
-                var validEntries = attendanceList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
+                /*var validEntries = attendanceList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
 
                 if (validEntries.Count == 0)
                 {
                     AddErrorMessage("No valid data available for import.");
                     return;
-                }
+                }*/
 
                 // Save the valid data using the service layer
                 var response = _component2Service.SaveCoachingSessionTracking(validEntries);
@@ -381,7 +379,7 @@ namespace SSSNP.UI.Public_Works
             {
                 // Construct the query with parameters for pagination
                 string query = @"
-                SELECT Id, HouseholdNumber, CoachingDetailId, CoachingAttendanceDate 
+                SELECT Id, HouseholdNumber, CoachingName, CoachingAttendanceDate 
                 FROM tbl_com2_Coaching_Session_Attendance 
                 ORDER BY Id 
                 OFFSET @Offset ROWS 

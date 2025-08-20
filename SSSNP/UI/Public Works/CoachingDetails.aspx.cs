@@ -150,7 +150,9 @@ namespace SSSNP.UI.Public_Works
                 dt.Columns.Add("CoachingName", typeof(string));
                 dt.Columns.Add("CoachingSessionHoldingDate", typeof(DateTime));
                 dt.Columns.Add("CoachingSessionDurationMinutes", typeof(int)); 
-                dt.Columns.Add("ValidationStatus", typeof(string)); 
+                dt.Columns.Add("ValidationStatus", typeof(string));
+
+                var validList = new List<CoachingDetailsModel>();
 
                 // Store error messages for rows with validation issues
                 int serial = 1;                
@@ -182,6 +184,7 @@ namespace SSSNP.UI.Public_Works
                         dr["ValidationStatus"] = "Valid"; // Set to "Valid" if no errors
                         dt.Rows.Add(dr);
                         serial++;
+                        validList.Add(coaching);
                     }
 
                     
@@ -189,6 +192,7 @@ namespace SSSNP.UI.Public_Works
 
                 // Bind the data to RadGrid for display
                 Session["AnalyzedData"] = dt;
+                Session["AnalyzedValidList"] = validList;
                 int totalRecordCount = dt.Rows.Count;
                 Session["TotalRecordCount"] = totalRecordCount;
                 RadGrid.VirtualItemCount = totalRecordCount;
@@ -216,7 +220,7 @@ namespace SSSNP.UI.Public_Works
             try
             {
                 // Retrieve the list of TrainingAttendance objects from session
-                var coachingList = Session["AnalyzedData"] as List<CoachingDetailsModel>;
+                var coachingList = Session["AnalyzedValidList"] as List<CoachingDetailsModel>;
                 if (coachingList == null || coachingList.Count == 0)
                 {
                     AddErrorMessage("No data available for import.");

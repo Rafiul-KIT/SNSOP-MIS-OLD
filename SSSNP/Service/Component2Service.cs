@@ -148,13 +148,13 @@ namespace SSSNP.Service
                 foreach (var obj in request)
                 {
                     // Validate the coaching session tracking data
-                    var validationResult = IsValidData(obj, validHouseholdNumbers);
+                    /*var validationResult = IsValidData(obj, validHouseholdNumbers);
 
                     if (!validationResult.isValid)
                     {
                         errorMessages.Add(validationResult.errorMessage);
                         continue;
-                    }
+                    }*/
 
                     // Save the valid coaching session tracking record
                     response = _component2Repository.SaveCoachingSessionTracking(obj);
@@ -243,28 +243,23 @@ namespace SSSNP.Service
 
 
 
-        public (bool isValid, string errorMessage) IsValidData(CoachingSessionTrackingModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
+        public (bool isValid, string errorMessage) IsValidData(CoachingSessionTrackingModel obj)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return (false, "Household Number is required.");
             }
 
-            if (!validHouseholdNumbers.Any(hh => hh.HouseholdNumber.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
-            {
-                return (false, "Household Number is not valid.");
-            }
-
-            if (obj.CoachingDetailId == 0)
+            if (obj.CoachingName == null)
             {
                 return (false, "Coaching Detail ID is required.");
             }
 
-            var validSessionDates = _component2Repository.GetValidCoachingDates(obj.CoachingDetailId);
+            var validSessionDates = _component2Repository.GetValidCoachingDates(obj.CoachingName);
 
             if (!validSessionDates.Contains(obj.ClassAttendanceDate?.Date ?? DateTime.MinValue))
             {
-                return (false, $"Class Attendance Date '{obj.ClassAttendanceDate?.ToShortDateString()}' is not valid for Coaching Detail ID '{obj.CoachingDetailId}'.");
+                return (false, $"Class Attendance Date '{obj.ClassAttendanceDate?.ToShortDateString()}' is not valid for Coaching Detail ID '{obj.CoachingName}'.");
             }
 
             return (true, string.Empty);

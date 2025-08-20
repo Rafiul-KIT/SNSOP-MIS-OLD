@@ -25,6 +25,7 @@ using System.Data.SqlClient;
 using SSSNP_SNSOP.Core.Model;
 using System.Configuration;
 using SSSNP_SNSOP.Core.Model.Component2;
+using OfficeOpenXml.DataValidation;
 
 namespace SSSNP_SNSOP
 {
@@ -244,12 +245,23 @@ namespace SSSNP_SNSOP
                     foreach (var coaching in coachingList)
                     {
                         validation.Formula.Values.Add(coaching.CoachingName.ToString());
-                    }                    
+                    }
+
+                    var dateValidation = worksheet.DataValidations.AddDateTimeValidation("C2:C1000");
+                    dateValidation.Operator = ExcelDataValidationOperator.between;   // ✅ correct enum
+                    dateValidation.Formula.Value = new DateTime(2000, 1, 1);
+                    dateValidation.Formula2.Value = new DateTime(2100, 12, 31);
+                    dateValidation.ShowErrorMessage = true;
+                    dateValidation.ErrorTitle = "Invalid date";
+                    dateValidation.Error = "Please enter a valid date (mm/dd/yyyy) between 2000 and 2100.";
+                    worksheet.Cells["C2:C1000"].Style.Numberformat.Format = "mm-dd-yyyy";
+
 
                     // Protect the worksheet so that locked cells (Household Number) are read-only
                     worksheet.Protection.IsProtected = true;
 
                     // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:B1000"].Style.Locked = false;
                     worksheet.Cells["C2:C1000"].Style.Locked = false;
 
                     // Auto-fit columns to adjust the size
