@@ -29,14 +29,16 @@ namespace SSSNP.UI.Public_Works
             List<CountyEnrollmentData> result = new List<CountyEnrollmentData>();
 
             string query = @"
-    SELECT 
-    c.CountieName AS CountyName, 
-    ISNULL(COUNT(bd.household_number), 0) AS TotalEnrolled
-FROM tm_Counties c
-LEFT JOIN tbl_BeneficiaryDet bd ON bd.intCountieid = c.intCountieid
-    AND bd.household_number IS NOT NULL
-WHERE c.intCountieid IN (9202, 9311, 7301)
-GROUP BY c.CountieName";
+                            SELECT 
+                            c.intCountieid,
+                            c.CountieName AS CountyName,
+                            COUNT(DISTINCT bd.household_number) AS TotalEnrolled
+                        FROM tm_Counties c
+                        JOIN tbl_BeneficiaryDet bd
+                          ON bd.intCountieid = c.intCountieid
+                        WHERE c.intCountieid IN (9202, 9311, 7301)
+                          AND bd.household_number IS NOT NULL
+                        GROUP BY c.intCountieid, c.CountieName";
 
 
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
@@ -65,14 +67,18 @@ GROUP BY c.CountieName";
             List<CountyEnrollmentData> result = new List<CountyEnrollmentData>();
 
             string query = @"
-    SELECT
-c.CountieName AS CountyName,
-ISNULL(COUNT(h.Id), 0) AS TotalEnrolled
-FROM tm_Counties c
-left join tbl_BeneficiaryDet bd  on c.intCountieid = bd.intCountieid
-LEFT JOIN tbl_com2_Household_Group_Linkage h ON h.HouseholdNumber = bd.household_number
-WHERE c.intCountieid IN (9202, 9311, 7301)
-GROUP BY c.CountieName";
+                            SELECT
+                            c.intCountieid,
+                            c.CountieName AS CountyName,
+                            COUNT(DISTINCT h.Id) AS TotalEnrolled
+                        FROM tm_Counties c
+                        JOIN tbl_BeneficiaryDet bd
+                          ON bd.intCountieid = c.intCountieid
+                        JOIN tbl_com2_Household_Group_Linkage h
+                          ON h.HouseholdNumber = bd.household_number
+                        WHERE c.intCountieid IN (9202, 9311, 7301)
+                        GROUP BY c.intCountieid, c.CountieName
+                        ";
 
 
             string connStr = ConfigurationManager.ConnectionStrings["SNSDPSkils"].ConnectionString;
