@@ -1226,14 +1226,26 @@ namespace SSSNP_SNSOP
                                 })
                                 .ToList();
 
-                            if (cycleParts.Count > 1)
+                            /*if (cycleParts.Count > 1)
                             {
                                 cycleText = string.Join(",\n", cycleParts);
                             }
                             else
                             {
                                 cycleText = cycleParts.FirstOrDefault() ?? "";
+                            }*/
+                            if (cycleParts.Count > 1)
+                            {
+                                var cycleNumbers = cycleParts
+                                    .Select(c => c.Replace("Payment Cycle", "").Trim())
+                                    .ToList();
+                                cycleText = $"Payment Cycle {string.Join(",", cycleNumbers)}";
                             }
+                            else
+                            {
+                                cycleText = cycleParts.FirstOrDefault()?.Trim() ?? "";
+                            }
+
                         }
                     }
 
