@@ -28,11 +28,13 @@
                                             <table cellpadding="10" cellspacing="5" style="width: 100%;">
                                                 <tr>
                                                     <td style="padding: 5px; width: 66px;">
-                                                        <asp:Label ID="LabelTemplate" runat="server" CssClass="LBLBLACK" Width="165px">Select Template</asp:Label>
-                                                        <span style="color: red">*</span>
+                                                        <asp:Label ID="LabelTemplate" runat="server" CssClass="LBLBLACK" Width="165px">Select Template :</asp:Label>
+                                                        
                                                         <!-- Add a red asterisk to indicate mandatory field -->
                                                     </td>
-                                                    <td>:</td>
+                                                    <%--<td>:</td>--%>
+                                                    
+
                                                     <td>
                                                         <asp:DropDownList ID="ddlTemplate" runat="server" class="form-control txtbox" Width="260px" AutoPostBack="True"  OnSelectedIndexChanged="ddlTemplate_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
@@ -42,16 +44,23 @@
                                                             <asp:ListItem Value="32">Course Details Template</asp:ListItem>
                                                             <asp:ListItem Value="17">Training Attendance Tracking Template</asp:ListItem>
                                                             <asp:ListItem Value="18">Business Plan Development Template</asp:ListItem>
+                                                            <asp:ListItem Value="52">Coaching Entity Template</asp:ListItem>
+                                                            <asp:ListItem Value="50">Coaching Details Template</asp:ListItem>
+                                                            <asp:ListItem Value="51">Coaching Session tracking Template</asp:ListItem>
                                                             <asp:ListItem Value="19">Livelihood Grant Disbursement Template</asp:ListItem>
                                                             <asp:ListItem Value="21">Financial Service Linkage Tracking Template</asp:ListItem>
                                                         </asp:DropDownList>
+                                                        &nbsp;
+                                                        <span style="color: red">*</span>
                                                     </td>
                                                     </tr>
+                                               
+                                                
                                                 <tr>
                                                     <td style="padding: 5px; width: 66px;">
-                                                        <asp:Label ID="LabelState" runat="server" CssClass="LBLBLACK" Width="165px">State Name</asp:Label>
+                                                        <asp:Label ID="LabelState" runat="server" CssClass="LBLBLACK" Width="165px">State Name :</asp:Label>
                                                     </td>
-                                                    <td>:</td>
+                                                    <%--<td>:</td>--%>
                                                     <td>
                                                         <asp:DropDownList ID="ddlState" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True" OnSelectedIndexChanged="ddlState_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
@@ -61,9 +70,9 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px; width: 66px;">
-                                                        <asp:Label ID="LabelCounty" runat="server" CssClass="LBLBLACK" Width="165px">County / Municipality Name</asp:Label>
+                                                        <asp:Label ID="LabelCounty" runat="server" CssClass="LBLBLACK" Width="165px">County / Municipality Name :</asp:Label>
                                                     </td>
-                                                    <td>:</td>
+                                                    <%--<td>:</td>--%>
                                                     <td>
                                                         <asp:DropDownList ID="ddlCounty" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True" OnSelectedIndexChanged="ddlCounty_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
@@ -78,9 +87,9 @@
                                             <table cellpadding="10" cellspacing="5" style="width: 100%;">
                                                 <tr>
                                                     <td style="padding: 5px;">
-                                                        <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name</asp:Label>
+                                                        <asp:Label ID="LabelPayam" runat="server" CssClass="LBLBLACK" Width="165px">Payam / Block Name :</asp:Label>
                                                     </td>
-                                                    <td>:</td>
+                                                    <%--<td>:</td>--%>
                                                     <td>
                                                         <asp:DropDownList ID="ddlPayam" runat="server" class="form-control txtbox" Width="180px" AutoPostBack="True" OnSelectedIndexChanged="ddlPayam_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
@@ -89,9 +98,9 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 5px;">
-                                                        <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name</asp:Label>
+                                                        <asp:Label ID="LabelBoma" runat="server" CssClass="LBLBLACK" Width="165px">Boma / Quarter Council Name :</asp:Label>
                                                     </td>
-                                                    <td>:</td>
+                                                    <%--<td>:</td>--%>
                                                     <td>
                                                         <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox" Width="180px">
                                                             <asp:ListItem>--Select--</asp:ListItem>
@@ -100,12 +109,12 @@
                                                 </tr>
                                                 <tr id="trTrainingDate" runat="server" style="display: none;">
                                                     <td style="padding: 5px;">
-                                                        <asp:Label ID="LabelTrainingDate" runat="server" CssClass="LBLBLACK" Width="165px">Training Date</asp:Label>
-                                                        <span style="color: red">*</span>
+                                                        <asp:Label ID="LabelTrainingDate" runat="server" CssClass="LBLBLACK" Width="165px">Training Date :</asp:Label>
+                                                        
                                                     </td>
-                                                    <td>:</td>
+                                                    <%--<td>:</td>--%>
                                                     <td>
-                                                        <asp:TextBox ID="txtTrainingDate" runat="server" CssClass="form-control txtbox" Width="180px"></asp:TextBox>
+                                                        <asp:TextBox ID="txtTrainingDate" runat="server" CssClass="form-control txtbox" Width="180px"></asp:TextBox> &nbsp; <span style="color: red">*</span>
                                                         <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" TargetControlID="txtTrainingDate" Format="yyyy-MM-dd" />
                                                     </td>
                                                 </tr>

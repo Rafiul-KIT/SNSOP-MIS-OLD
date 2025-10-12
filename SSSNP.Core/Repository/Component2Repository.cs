@@ -30,7 +30,7 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 lock (_locker)
                 {
-                    var isExist = IsRecordExistInTrainingAndAttendence(obj.HouseholdNumber?.Trim());
+                    var isExist = IsRecordExistInTrainingAndAttendence(obj.HouseholdNumber?.Trim(), obj.CourseCode?.Trim(), obj.ClassAttendanceDate);
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
                     if (denormalizedData == null)
@@ -67,7 +67,13 @@ namespace SSSNP_SNSOP.Core.Repository
                     }
                     if (isExist)
                     {
-                        var isAdded = _dbOperation.UpdateData("tbl_com2_Training_Attendance", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                        var isAdded = _dbOperation.UpdateData(
+                            "tbl_com2_Training_Attendance",
+                            data,
+                            " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'" +
+                            " AND CourseCode = '" + obj.CourseCode?.Trim() + "'" +
+                            " AND CONVERT(date, ClassAttendanceDate) = '" + obj.ClassAttendanceDate?.ToString("yyyy-MM-dd") + "'"
+                        );
                     }
                     else
                     {
@@ -88,18 +94,26 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-        private bool IsRecordExistInTrainingAndAttendence(string householdNumber)
+        private bool IsRecordExistInTrainingAndAttendence(string householdNumber, string courseCode, DateTime? classDate)
         {
             try
             {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Training_Attendance WHERE HouseholdNumber = @householdNumber",
-                    CommandType.Text, param);
-                if (dt != null && dt.Rows.Count > 0)
+                const string sql = @"
+                                    SELECT 1
+                                    FROM tbl_com2_Training_Attendance
+                                    WHERE HouseholdNumber = @householdNumber
+                                      AND CourseCode      = @courseCode
+                                      AND CAST(ClassAttendanceDate AS date) = @classDate";
+
+                var parameters = new List<SqlParameter>
                 {
-                    return true;
-                }
-                return false;
+                    new SqlParameter("@householdNumber", (object)householdNumber ?? DBNull.Value),
+                    new SqlParameter("@courseCode",      (object)courseCode      ?? DBNull.Value),
+                    new SqlParameter("@classDate",       classDate?.Date)
+                };
+
+                var dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
+                return dt != null && dt.Rows.Count > 0;
             }
             catch (Exception ex)
             {
@@ -114,7 +128,11 @@ namespace SSSNP_SNSOP.Core.Repository
             {
                 lock (_locker)
                 {
-                    var isExist = IsRecordExistInCoachingSessionAttendance(obj.HouseholdNumber?.Trim());
+                    var hh = obj.HouseholdNumber?.Trim();
+                    var cname = obj.CoachingName?.Trim();
+                    var attDate = obj.ClassAttendanceDate;
+
+                    var isExist = IsRecordExistInCoachingSessionAttendance(hh, cname, attDate);
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
 
                     if (denormalizedData == null)
@@ -127,7 +145,7 @@ namespace SSSNP_SNSOP.Core.Repository
                     Dictionary<string, object> data = new Dictionary<string, object>
                     {
                         ["HouseholdNumber"] = obj.HouseholdNumber?.Trim(),
-                        ["CoachingDetailId"] = obj.CoachingDetailId,
+                        ["CoachingName"] = obj.CoachingName,
                         ["CoachingAttendanceDate"] = obj.ClassAttendanceDate ?? (object)DBNull.Value
                     };
 
@@ -144,11 +162,28 @@ namespace SSSNP_SNSOP.Core.Repository
 
                     if (isExist)
                     {
-                        _dbOperation.UpdateData(
-                            "tbl_com2_Coaching_Session_Attendance",
-                            data,
-                            $"HouseholdNumber = '{obj.HouseholdNumber?.Trim()}' AND CoachingDetailId = {obj.CoachingDetailId}"
-                        );
+                        // use ExecuteNonQuery with parameters because UpdateData takes a raw where string
+                        const string sql = @"
+                        UPDATE tbl_com2_Coaching_Session_Attendance
+                        SET ModifiedBy = @modifiedBy,
+                            ModifiedDate = @modifiedDate
+                        WHERE HouseholdNumber = @householdNumber
+                          AND CoachingName = @coachingName
+                          AND (
+                                (@attendanceDate IS NULL AND CoachingAttendanceDate IS NULL)
+                             OR (@attendanceDate IS NOT NULL AND CAST(CoachingAttendanceDate AS date) = CAST(@attendanceDate AS date))
+                              );";
+
+                        var parameters = new List<SqlParameter>
+                        {
+                            new SqlParameter("@householdNumber", (object)hh ?? DBNull.Value),
+                            new SqlParameter("@coachingName", (object)cname ?? DBNull.Value),
+                            new SqlParameter("@attendanceDate", (object)attDate ?? DBNull.Value),
+                            new SqlParameter("@modifiedBy", (object)obj.ModifiedBy ?? DBNull.Value),
+                            new SqlParameter("@modifiedDate", (object)obj.ModifiedDate ?? DBNull.Value)
+                        };
+
+                        _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
                     }
                     else
                     {
@@ -171,25 +206,120 @@ namespace SSSNP_SNSOP.Core.Repository
             }
         }
 
-
-        private bool IsRecordExistInCoachingSessionAttendance(string householdNumber)
+        private bool IsRecordExistInCoachingSessionAttendance(string householdNumber, string coachingname, DateTime? attendanceDate)
         {
+            const string sql = @"
+            SELECT TOP 1 1
+            FROM tbl_com2_Coaching_Session_Attendance
+            WHERE HouseholdNumber = @householdNumber
+              AND CoachingName = @coachingname
+              AND (
+                    (@attendanceDate IS NULL AND CoachingAttendanceDate IS NULL)
+                 OR (@attendanceDate IS NOT NULL AND CAST(CoachingAttendanceDate AS date) = CAST(@attendanceDate AS date))
+                  );";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@householdNumber", (object)householdNumber ?? DBNull.Value),
+                new SqlParameter("@coachingname",    (object)coachingname    ?? DBNull.Value),
+                new SqlParameter("@attendanceDate",  (object)attendanceDate ?? DBNull.Value)
+            };
+
+            var dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
+            return dt != null && dt.Rows.Count > 0;
+        }
+
+        public ResponseModel SaveCoachingDetails(CoachingDetailsModel obj)
+        {
+            var response = new ResponseModel();
             try
             {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable(
-                    "SELECT HouseholdNumber FROM tbl_com2_Coaching_Session_Attendance WHERE HouseholdNumber = @householdNumber",
-                    CommandType.Text, param);
-
-                if (dt != null && dt.Rows.Count > 0)
+                lock (_locker)
                 {
-                    return true;
+                    // Check if a record already exists for this CoachingId + Date
+                    bool isExist = IsRecordExistInCoachingDetails(obj.CoachingName, obj.CoachingSessionHoldingDate?.Date);
+
+                    var data = new Dictionary<string, object>
+                    {
+                        ["CoachingId"] = obj.CoachingName,
+                        ["CoachingSessionHoldingDate"] = obj.CoachingSessionHoldingDate ?? (object)DBNull.Value,
+                        ["CoachingSessionDurationMinutes"] = obj.CoachingSessionDurationMinutes ?? (object)DBNull.Value
+                    };
+
+                    if (!isExist)
+                    {
+                        // Audit fields if you have them in the table
+                        data["CreatedBy"] = obj.CreatedBy;
+                        data["CreatedDate"] = obj.CreatedDate;
+
+                        _dbOperation.InsertData("tbl_com2_Coaching_Details", data);
+                    }
+                    else
+                    {
+                        // Audit fields if you have them in the table
+                        data["ModifiedBy"] = obj.ModifiedBy;
+                        data["ModifiedDate"] = obj.ModifiedDate;
+
+                        // Handle NULL date properly in WHERE
+                        string coachingIdWhere = obj.CoachingName == null
+                    ? "CoachingId IS NULL"
+                    : $"CoachingId = '{obj.CoachingName.Replace("'", "''")}'";
+
+                        string dateWhere = obj.CoachingSessionHoldingDate.HasValue
+                            ? $"CAST(CoachingSessionHoldingDate AS date) = '{obj.CoachingSessionHoldingDate.Value:yyyy-MM-dd}'"
+                            : "CoachingSessionHoldingDate IS NULL";
+
+                        string where = $"{coachingIdWhere} AND {dateWhere}";
+
+                        _dbOperation.UpdateData("tbl_com2_Coaching_Details", data, where);
+                    }
+
+                    response.IsSuccess = true;
+                    response.Message = "Coaching Details saved successfully.";
+                    return response;
                 }
-                return false;
             }
             catch (Exception ex)
             {
-                throw ex;
+                Console.WriteLine("Error when saving Coaching Details data. Error: " + ex);
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Error when saving Coaching Details."
+                };
+            }
+        }
+
+        private bool IsRecordExistInCoachingDetails(string coachingId, DateTime? sessionDate)
+        {
+            try
+            {
+                var sql = @"
+            SELECT TOP 1 CoachingId
+            FROM tbl_com2_Coaching_Details
+            WHERE CoachingId = @coachingId
+              AND (
+                    (@sessionDate IS NULL AND CoachingSessionHoldingDate IS NULL)
+                    OR (CoachingSessionHoldingDate = @sessionDate)
+                  );";
+
+                var parameters = new List<SqlParameter>
+        {
+            new SqlParameter("@coachingId", coachingId),
+            new SqlParameter
+            {
+                ParameterName = "@sessionDate",
+                SqlDbType = SqlDbType.Date,
+                Value = sessionDate.HasValue ? (object)sessionDate.Value : DBNull.Value
+            }
+        };
+
+                var dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
+                return dt != null && dt.Rows.Count > 0;
+            }
+            catch
+            {
+                throw;
             }
         }
 
@@ -202,7 +332,10 @@ namespace SSSNP_SNSOP.Core.Repository
                 lock (_locker)
                 {
                     // Check if the record already exists
-                    var isExist = IsRecordExistLivelihoodDisbursement(obj.HouseholdNumber?.Trim());
+                    var isExist = IsRecordExistLivelihoodDisbursement(
+                        obj.HouseholdNumber?.Trim(),
+                        obj.PaymentCycle?.Trim()
+                    );
 
                     // Retrieve denormalized data associated with the household number
                     var denormalizedData = GetDenormalizedBeneficiaryDataByHouseholdNumber(obj.HouseholdNumber?.Trim());
@@ -247,7 +380,9 @@ namespace SSSNP_SNSOP.Core.Repository
                     bool isAdded;
                     if (isExist)
                     {
-                        isAdded = _dbOperation.UpdateData("tbl_com2_Livelihood_Grant_Disbursement", data, " HouseholdNumber = '" + obj.HouseholdNumber?.Trim() + "'");
+                        string where = $"HouseholdNumber = '{obj.HouseholdNumber?.Trim()}' " +
+                                        $"AND PaymentCycle = '{obj.PaymentCycle?.Trim()}'";
+                        isAdded = _dbOperation.UpdateData("tbl_com2_Livelihood_Grant_Disbursement", data, where);
                     }
                     else
                     {
@@ -271,18 +406,24 @@ namespace SSSNP_SNSOP.Core.Repository
                 };
             }
         }
-        private bool IsRecordExistLivelihoodDisbursement(string householdNumber)
+        private bool IsRecordExistLivelihoodDisbursement(string householdNumber, string paymentCycle)
         {
             try
             {
-                SqlParameter param = new SqlParameter("@householdNumber", householdNumber);
-                var dt = _dbOperation.ExecuteDataTable("SELECT HouseholdNumber FROM tbl_com2_Livelihood_Grant_Disbursement WHERE HouseholdNumber = @householdNumber",
-                    CommandType.Text, param);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    return true;
-                }
-                return false;
+                const string sql = @"
+                        SELECT 1
+                        FROM dbo.tbl_com2_Livelihood_Grant_Disbursement
+                        WHERE HouseholdNumber = @householdNumber
+                            AND PaymentCycle    = @paymentCycle;";
+
+                                var parameters = new List<SqlParameter>
+                    {
+                        new SqlParameter("@householdNumber", (object)householdNumber ?? DBNull.Value),
+                        new SqlParameter("@paymentCycle",    (object)paymentCycle    ?? DBNull.Value)
+                    };
+
+                var dt = _dbOperation.ExecuteDataTable(sql, CommandType.Text, parameters);
+                return dt != null && dt.Rows.Count > 0;
             }
             catch (Exception ex)
             {
@@ -654,6 +795,14 @@ namespace SSSNP_SNSOP.Core.Repository
                         data.Add("HouseholdNumber", obj.HouseholdNumber?.Trim());
                         data.Add("BusinessPlanStatus", obj.BusinessPlanStatus);
                         data.Add("BusinessType", obj.BusinessType);
+                        data.Add("PlanSubmitted", obj.PlanSubmitted);
+                        data.Add("PlanScreened", obj.PlanScreened);
+                        data.Add("PlanApproved", obj.PlanApproved);
+                        data.Add("WhyRejected", obj.WhyRejected ?? (object)DBNull.Value);
+                        data.Add("BusinessDescription", obj.BusinessDescription ?? (object)DBNull.Value);
+                        data.Add("HowSpent", obj.HowSpent ?? (object)DBNull.Value);
+                        data.Add("InPersonPercentage", obj.InPersonPercentage);
+                        data.Add("GroupPercentage", obj.GroupPercentage);
                         data.Add("StateID", denormalizedData.StateID);
                         data.Add("CountyID", denormalizedData.CountyID);
                         data.Add("PayamID", denormalizedData.PayamID);
@@ -1415,22 +1564,22 @@ namespace SSSNP_SNSOP.Core.Repository
             return validDates;
         }
 
-        public Dictionary<string, int> GetExistingCoachingId()
+        public Dictionary<int, string> GetExistingCoachingName()
         {
-            Dictionary<string, int> coachingDetailId = new Dictionary<string, int>();
+            Dictionary<int, string> coachingDetailId = new Dictionary<int, string>();
             try
             {
                 // Assuming CoachingId is the business identifier and Id is the primary key
-                var dt = _dbOperation.ExecuteDataTable("SELECT Id, CoachingId FROM tbl_com2_Coaching_Details", CommandType.Text);
+                var dt = _dbOperation.ExecuteDataTable("SELECT Id, Name FROM tbl_com2_Coaching_Entity", CommandType.Text);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
                     {
-                        string coachingId = row["CoachingId"].ToString();
                         int id = Convert.ToInt32(row["Id"]);
-                        if (!coachingDetailId.ContainsKey(coachingId))
+                        string coachingName = (string)row["Name"];
+                        if (!coachingDetailId.ContainsKey(id))
                         {
-                            coachingDetailId.Add(coachingId, id);
+                            coachingDetailId.Add(id, coachingName);
                         }
                     }
                 }
@@ -1443,7 +1592,7 @@ namespace SSSNP_SNSOP.Core.Repository
             return coachingDetailId;
         }
 
-        public List<DateTime> GetValidCoachingDates(int coachingDetailId)
+        public List<DateTime> GetValidCoachingDates(string coachingName)
         {
             List<DateTime> validDates = new List<DateTime>();
 
@@ -1452,11 +1601,11 @@ namespace SSSNP_SNSOP.Core.Repository
                 string query = @"
             SELECT CoachingSessionHoldingDate 
             FROM tbl_com2_Coaching_Details 
-            WHERE CoachingId = @CoachingDetailId";
+            WHERE CoachingId = @CoachingName";
 
                 var parameters = new List<SqlParameter>
         {
-            new SqlParameter("@CoachingDetailId", coachingDetailId)
+            new SqlParameter("@CoachingName", coachingName)
         };
 
                 var dt = _dbOperation.ExecuteDataTable(query, CommandType.Text, parameters);
@@ -1474,13 +1623,110 @@ namespace SSSNP_SNSOP.Core.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching valid coaching session dates for CoachingDetailId '{coachingDetailId}': {ex.Message}");
+                throw new Exception($"Error fetching valid coaching session dates for CoachingDetailId '{coachingName}': {ex.Message}");
             }
 
             return validDates;
         }
 
+        public ResponseModel SaveCoachingEntity(CoachingEntityModel coaching)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0;  // Counter for successfully inserted records
 
+            try
+            {
+                lock (_locker)
+                {
+                    // Check if the record already exists (by CoachingName)
+                    var isExist = IsRecordExist_CoachingName(coaching.CoachingName?.Trim());
+
+                    // Prepare data to insert/update
+                    Dictionary<string, object> data = new Dictionary<string, object>
+                    {
+                        { "Name", coaching.CoachingName?.Trim() },
+                        { "NumberOfPlannedCoachingSessions", coaching.NoOfPlannedCoachingSession }
+                    };
+
+                    // Add audit information
+                    if (!isExist)
+                    {
+                        data.Add("CreatedBy", coaching.CreatedBy);
+                        data.Add("CreatedDate", coaching.CreatedDate);
+                    }
+                    else
+                    {
+                        data.Add("ModifiedBy", coaching.ModifiedBy);
+                        data.Add("ModifiedDate", coaching.ModifiedDate);
+                    }
+
+                    try
+                    {
+                        if (isExist)
+                        {
+                            // Update existing by CoachingName
+                            string key = coaching.CoachingName?.Trim()?.Replace("'", "''");
+                            _dbOperation.UpdateData(
+                                "tbl_com2_Coaching_Entity",
+                                data,
+                                "Name = '" + key + "'"
+                            );
+                        }
+                        else
+                        {
+                            // Insert new
+                            _dbOperation.InsertData("tbl_com2_Coaching_Entity", data);
+                            insertCount++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Error occurred while processing the coaching data: " + ex.Message);
+                        throw;
+                    }
+
+                    response.IsSuccess = true;
+                    if (insertCount > 0)
+                    {
+                        response.Message = $"Coaching Entity data saved successfully. {insertCount} new records were inserted.";
+                    }
+                    else
+                    {
+                        response.Message = "Coaching Entity data updated successfully.";
+                    }
+
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error when saving Coaching Entity data: " + ex.Message;
+                return response;
+            }
+        }
+
+
+        public bool IsRecordExist_CoachingName(string coachingName)
+        {
+            try
+            {
+                SqlParameter param = new SqlParameter("@coachingName", coachingName);
+                var dt = _dbOperation.ExecuteDataTable(
+                    "SELECT Name FROM tbl_com2_Coaching_Entity WHERE Name = @coachingName",
+                    CommandType.Text, param);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    return true; // The record exists
+                }
+                return false; // No matching record
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if Coaching Entity exists: " + ex.Message);
+            }
+        }
 
     }
 

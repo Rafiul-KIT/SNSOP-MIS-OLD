@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace SSSNP_SNSOP.Core.Model.Component2
 {
-    class CoachingDetailsModel
+    public class CoachingDetailsModel : CommonModel
     {
+        public int Id { get; set; }
+        public string CoachingName { get; set; }
+        public DateTime? CoachingSessionHoldingDate { get; set; }
+        public int? CoachingSessionDurationMinutes { get; set; }
     }
 }

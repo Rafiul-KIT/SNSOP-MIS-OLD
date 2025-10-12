@@ -237,6 +237,7 @@ namespace SSSNP_SNSOP.UI.Public_Works
             ClearMessages();
             try
             {
+                Component2Service service = new Component2Service();
                 var grantList = Session["UploadedGrantData"] as List<LivelihoodGrantDisbursementModel>;
                 if (grantList == null || grantList.Count == 0)
                 {
@@ -251,24 +252,25 @@ namespace SSSNP_SNSOP.UI.Public_Works
                 }
                 Session["UploadedLivelihoodGrantDisbursementAllData"] = null;
 
-                var validEntries = grantList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
+                /*var validEntries = grantList.Where(a => _component2Service.IsValidData(a, _component2Service.GetValidHouseholdNumbers()).isValid).ToList();
                 if (validEntries.Count == 0)
                 {
                     AddErrorMessage("No valid data available for import.");
                     return;
-                }
-                var response = _component2Service.SaveLivelihoodGrantDisbursement(validEntries);
+                }*/
+                var response = _component2Service.SaveLivelihoodGrantDisbursement(grantList);
 
                 if (response.IsSuccess)
                 {
-                    AddSuccessMessage($"{validEntries.Count} valid entries imported successfully.");
-                    btnImport.Enabled = false;
-                    btnAnalyze.Enabled = false;
+                    AddSuccessMessage($"{grantList.Count} valid entries imported successfully.");
+                    
                 }
                 else
                 {
                     AddErrorMessage("Import failed: " + response.Message);
                 }
+                btnImport.Enabled = false;
+                btnAnalyze.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -424,8 +426,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             DivSuccess.Visible = true;
             lblMessageSuccess.Text = message;
 
-            ScriptManager.RegisterStartupScript(this, GetType(), "HideSuccess",
-                "setTimeout(function() { document.getElementById('" + DivSuccess.ClientID + "').style.display = 'none'; }, 10000);", true);
+            /*ScriptManager.RegisterStartupScript(this, GetType(), "HideSuccess",
+                "setTimeout(function() { document.getElementById('" + DivSuccess.ClientID + "').style.display = 'none'; }, 10000);", true);*/
         }
 
         private void AddErrorMessage(string message)
@@ -433,8 +435,8 @@ namespace SSSNP_SNSOP.UI.Public_Works
             DivFailure.Visible = true;
             lblMessageError.Text = message;
 
-            ScriptManager.RegisterStartupScript(this, GetType(), "HideError",
-                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 10000);", true);
+            /*ScriptManager.RegisterStartupScript(this, GetType(), "HideError",
+                "setTimeout(function() { document.getElementById('" + DivFailure.ClientID + "').style.display = 'none'; }, 10000);", true);*/
         }
 
         protected void ClearMessages()

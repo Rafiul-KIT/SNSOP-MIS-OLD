@@ -1,5 +1,5 @@
 ﻿<%@ Page Title=":: :: SNSOP : : Livelihood Grant Disbursement" Language="C#" MasterPageFile="~/UI/Public Works/CCMaster.master" AutoEventWireup="true" CodeBehind="LivelihoodGrantDisbursement.aspx.cs" Inherits="SSSNP_SNSOP.UI.Public_Works.LivelihoodGrantDisbursement" %>
-
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">

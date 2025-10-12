@@ -64,6 +64,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
         BusinessPlanDevelopment.Visible = value;
         LivelihoodGrantDisbursement.Visible = value;
         FinancialServiceLinkageTracking.Visible = value;
+        CoachingEntity.Visible = value;
+        CoachingDeatils.Visible = value;
         CoachingSessionTracking.Visible = value;
         AuditRecordDownload.Visible = value;
 
@@ -333,6 +335,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     BusinessPlanDevelopment.Visible = true;
                     LivelihoodGrantDisbursement.Visible = true;
                     FinancialServiceLinkageTracking.Visible = true;
+                    CoachingEntity.Visible = true;
+                    CoachingDeatils.Visible = true;
                     CoachingSessionTracking.Visible = true;
                     AuditRecordDownload.Visible = true;
                     //LiUM.Visible = true;
@@ -436,6 +440,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 BusinessPlanDevelopment.Visible = true;
                 LivelihoodGrantDisbursement.Visible = true;
                 FinancialServiceLinkageTracking.Visible = true;
+                CoachingEntity.Visible = true;
+                CoachingDeatils.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
 
@@ -478,6 +484,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                     BusinessPlanDevelopment.Visible = true;
                     LivelihoodGrantDisbursement.Visible = true;
                     FinancialServiceLinkageTracking.Visible = true;
+                    CoachingEntity.Visible = true;
+                    CoachingDeatils.Visible = true;
                     CoachingSessionTracking.Visible = true;
                     AuditRecordDownload.Visible = true;
                 }
@@ -501,6 +509,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 BusinessPlanDevelopment.Visible = true;
                 LivelihoodGrantDisbursement.Visible = true;
                 FinancialServiceLinkageTracking.Visible = true;
+                CoachingEntity.Visible = true;
+                CoachingDeatils.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
 
@@ -534,6 +544,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 BusinessPlanDevelopment.Visible = true;
                 LivelihoodGrantDisbursement.Visible = true;
                 FinancialServiceLinkageTracking.Visible = true;
+                CoachingEntity.Visible = true;
+                CoachingDeatils.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
 
@@ -567,6 +579,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 BusinessPlanDevelopment.Visible = true;
                 LivelihoodGrantDisbursement.Visible = true;
                 FinancialServiceLinkageTracking.Visible = true;
+                CoachingEntity.Visible = true;
+                CoachingDeatils.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
 
@@ -595,6 +609,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 BusinessPlanDevelopment.Visible = true;
                 LivelihoodGrantDisbursement.Visible = true;
                 FinancialServiceLinkageTracking.Visible = true;
+                CoachingEntity.Visible = true;
+                CoachingDeatils.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
 
@@ -628,6 +644,8 @@ public partial class CCMaster : System.Web.UI.MasterPage
                 BusinessPlanDevelopment.Visible = true;
                 LivelihoodGrantDisbursement.Visible = true;
                 FinancialServiceLinkageTracking.Visible = true;
+                CoachingEntity.Visible = true;
+                CoachingDeatils.Visible = true;
                 CoachingSessionTracking.Visible = true;
                 AuditRecordDownload.Visible = true;
             }

@@ -25,6 +25,7 @@ using System.Data.SqlClient;
 using SSSNP_SNSOP.Core.Model;
 using System.Configuration;
 using SSSNP_SNSOP.Core.Model.Component2;
+using OfficeOpenXml.DataValidation;
 
 namespace SSSNP_SNSOP
 {
@@ -66,7 +67,10 @@ namespace SSSNP_SNSOP
             ID_CARD_DOWNLOAD = 24,
             PAYROLL_RECONCILE = 30,
             COURSE_ENTITY_TEMPLATE = 31,
-            COURSE_DETAILS_TEMPLATE = 32
+            COURSE_DETAILS_TEMPLATE = 32,
+            COACHING_DETAILS_TEMPLATE = 50,
+            COACHING_SESSION_TRACKING = 51,
+            COACHING_ENTITY_TEMPLATE = 52
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -176,9 +180,161 @@ namespace SSSNP_SNSOP
                 case HandlerAttachment.COURSE_DETAILS_TEMPLATE:
                     CourseDetailsTemplate();
                     return "OK";
+                case HandlerAttachment.COACHING_DETAILS_TEMPLATE:
+                    CoachingDetailsTemplate();
+                    return "OK";
+                case HandlerAttachment.COACHING_SESSION_TRACKING:
+                    CoachingSessionTracking();
+                    return "OK";
+                case HandlerAttachment.COACHING_ENTITY_TEMPLATE:
+                    CoachingEntityTemplate();
+                    return "OK";
             }
 
             return "";
+        }
+
+        private void CoachingSessionTracking()
+        {
+            try
+            {
+                int? stateId = _location?.StateId;
+                int? countyId = _location?.CountyId;
+                int? payamId = _location?.PayamId;
+                int? bomaId = _location?.BomaId;
+
+
+                Component2Service service = new Component2Service();
+
+                HashSet<string> householdNumbers = service.GetValidHouseholdNumberValues(stateId, countyId, payamId, bomaId);
+                Dictionary<int, string> existingCoachingId = service.GetExistingCoachingName();
+                List<CoachingDetailsModel> coachingList = existingCoachingId
+                    .Select(kvp => new CoachingDetailsModel
+                    {
+                        CoachingName = kvp.Value
+                    })
+                    .ToList();
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Coaching Session Tracking Template");
+
+                    // Adding the three columns
+                    worksheet.Cells[1, 1].Value = "Household Number";
+                    worksheet.Cells[1, 2].Value = "Coaching Id";
+                    worksheet.Cells[1, 3].Value = "Coaching Attendance Date(mm/dd/yyyy)";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    // Pre-fill the Household Number column with the fetched household numbers
+                    var householdNumberList = householdNumbers.ToList();
+                    if (householdNumberList.Count > 0)
+                    {
+                        for (int row = 0; row < householdNumberList.Count; row++)
+                        {
+                            worksheet.Cells[row + 2, 1].Value = householdNumberList[row]; // +2 to skip the header row
+                        }
+
+                        // Lock the first column (Household Number) and make it read-only
+                        worksheet.Cells["A2:A" + (householdNumberList.Count + 1)].Style.Locked = true;
+                    }
+                    var validation = worksheet.DataValidations.AddListValidation("B2:B1000");
+                    foreach (var coaching in coachingList)
+                    {
+                        validation.Formula.Values.Add(coaching.CoachingName.ToString());
+                    }
+
+                    var dateValidation = worksheet.DataValidations.AddDateTimeValidation("C2:C1000");
+                    dateValidation.Operator = ExcelDataValidationOperator.between;   // ✅ correct enum
+                    dateValidation.Formula.Value = new DateTime(2000, 1, 1);
+                    dateValidation.Formula2.Value = new DateTime(2100, 12, 31);
+                    dateValidation.ShowErrorMessage = true;
+                    dateValidation.ErrorTitle = "Invalid date";
+                    dateValidation.Error = "Please enter a valid date (mm/dd/yyyy) between 2000 and 2100.";
+                    worksheet.Cells["C2:C1000"].Style.Numberformat.Format = "mm-dd-yyyy";
+
+
+                    // Protect the worksheet so that locked cells (Household Number) are read-only
+                    worksheet.Protection.IsProtected = true;
+
+                    // Unlock other cells so they can be edited by the user
+                    worksheet.Cells["B2:B1000"].Style.Locked = false;
+                    worksheet.Cells["C2:C1000"].Style.Locked = false;
+
+                    // Auto-fit columns to adjust the size
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=CoachingSessionTrackingTemplate.xlsx");
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
+        private void CoachingDetailsTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Coaching Details Template");
+
+                    Component2Service service = new Component2Service();
+                    Dictionary<int, string> existingCoachingName = service.GetExistingCoachingName();
+                    List<CoachingDetailsModel> coachingList = existingCoachingName
+                        .Select(kvp => new CoachingDetailsModel
+                        {
+                            CoachingName = kvp.Value
+                        })
+                        .ToList();
+                    var validation = worksheet.DataValidations.AddListValidation("A2:A1000"); // Adjust the range as needed
+
+                    foreach (var coaching in coachingList)
+                    {
+                        validation.Formula.Values.Add(coaching.CoachingName.ToString());
+                    }
+
+                    // Add headers to the worksheet (reflecting your table schema)
+                    worksheet.Cells[1, 1].Value = "Coaching Name";
+                    worksheet.Cells[1, 2].Value = "Coaching Session Holding Date(mm/dd/yyyy)";
+                    worksheet.Cells[1, 3].Value = "Coaching Session Duration (Minutes)";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 3; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    worksheet.Cells.AutoFitColumns();
+                    // Set the content type and headers for the download
+                    Response.Clear();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=CoachingDetailsTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
         }
 
         private void BusinessPlanDevelopmentTemplate()
@@ -202,9 +358,17 @@ namespace SSSNP_SNSOP
                     worksheet.Cells[1, 1].Value = "Household Number";
                     worksheet.Cells[1, 2].Value = "Business Plan Status";
                     worksheet.Cells[1, 3].Value = "Business Type";
+                    worksheet.Cells[1, 4].Value = "Plan Submitted";
+                    worksheet.Cells[1, 5].Value = "Plan Screened";
+                    worksheet.Cells[1, 6].Value = "Plan Approved";
+                    worksheet.Cells[1, 7].Value = "Why Rejected";
+                    worksheet.Cells[1, 8].Value = "Business Description";
+                    worksheet.Cells[1, 9].Value = "How Spent";
+                    worksheet.Cells[1, 10].Value = "Proportions of Meetings in Person (%)";
+                    worksheet.Cells[1, 11].Value = "Proportions of Meetings in Group (%)";
 
                     // Set headers to be bold
-                    for (int col = 1; col <= 3; col++)
+                    for (int col = 1; col <= 11; col++)
                     {
                         worksheet.Cells[1, col].Style.Font.Bold = true;
                     }
@@ -240,24 +404,59 @@ namespace SSSNP_SNSOP
                         businessTypeValidation.Formula.Values.Add(option);
                     }
 
+                    // Yes/No dropdowns for D, E, F
+                    var planSubmittedValidation = worksheet.DataValidations.AddListValidation("D2:D1000");
+                    foreach (var option in yesNoOptions) planSubmittedValidation.Formula.Values.Add(option);
+
+                    var planScreenedValidation = worksheet.DataValidations.AddListValidation("E2:E1000");
+                    foreach (var option in yesNoOptions) planScreenedValidation.Formula.Values.Add(option);
+
+                    var planApprovedValidation = worksheet.DataValidations.AddListValidation("F2:F1000");
+                    foreach (var option in yesNoOptions) planApprovedValidation.Formula.Values.Add(option);
+
+                    var whyRejectedValidation = worksheet.DataValidations.AddCustomValidation("G2:G1000");
+                    whyRejectedValidation.Formula.ExcelFormula = "OR($F2=\"No\",LEN($G2)=0)";
+                    whyRejectedValidation.ShowErrorMessage = true;
+                    whyRejectedValidation.ErrorTitle = "Invalid Entry";
+                    whyRejectedValidation.Error = "Only fill this if 'Plan Approved' = 'No'. Leave it blank otherwise.";
+                    whyRejectedValidation.ErrorStyle = OfficeOpenXml.DataValidation.ExcelDataValidationWarningStyle.stop;
+
+
+                    // Percentage validations for In-Person and Group columns
+                    var inPersonPercentageValidation = worksheet.DataValidations.AddDecimalValidation("J2:J1000");
+                    inPersonPercentageValidation.Operator = OfficeOpenXml.DataValidation.ExcelDataValidationOperator.between;
+                    inPersonPercentageValidation.Formula.Value = 0;
+                    inPersonPercentageValidation.Formula2.Value = 100;
+                    inPersonPercentageValidation.ShowErrorMessage = true;
+                    inPersonPercentageValidation.Error = "Enter a number between 0 and 100.";
+
+                    var groupPercentageValidation = worksheet.DataValidations.AddCustomValidation("K2:K1000");
+                    groupPercentageValidation.Formula.ExcelFormula =
+                        "OR(AND(ISNUMBER(J2),ISNUMBER(K2),J2>=0,J2<=100,K2>=0,K2<=100,J2+K2=100),AND(J2=\"\",K2=\"\"))";
+                    groupPercentageValidation.ShowErrorMessage = true;
+                    groupPercentageValidation.Error = "Enter 0–100 and ensure In-Person % + Group % = 100 (or leave both blank).";
+
+
+                    // Optional formatting
+                    worksheet.Cells["J2:J1000"].Style.Numberformat.Format = "0.00";
+                    worksheet.Cells["K2:K1000"].Style.Numberformat.Format = "0.00";
+
                     // Protect the worksheet so that locked cells (Household Number) are read-only
                     worksheet.Protection.IsProtected = true;
 
                     // Unlock other cells so they can be edited by the user
-                    worksheet.Cells["B2:C1000"].Style.Locked = false;
+                    worksheet.Cells["B2:K1000"].Style.Locked = false;
 
                     // Auto-fit columns to adjust the size
                     worksheet.Cells.AutoFitColumns();
 
                     // Set the content type and headers for the download
-                    Response.ClearHeaders();
+                    Response.Clear();
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("Content-Disposition", "attachment; filename=BusinessPlanDevelopmentTemplate.xlsx");
-
-                    // Write the file to the response stream
                     Response.BinaryWrite(package.GetAsByteArray());
-                    Response.Flush();
-                    Response.Close();
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                    return;
                 }
             }
             catch (Exception ex)
@@ -1970,7 +2169,7 @@ namespace SSSNP_SNSOP
 
                     // Suppose we know the number of data rows to be inserted
                     // In this example, assume we are inserting 10 rows of data dynamically
-                    int dataRows = 20; // Replace this with the actual number of data rows to be inserted
+                    int dataRows = 1000; // Replace this with the actual number of data rows to be inserted
 
                     // Add a dropdown for "Payment Cycle" (column 2)
                     var paymentCycleValidation = worksheet.DataValidations.AddListValidation(worksheet.Cells[2, 2, dataRows + 1, 2].Address);  // Apply to data rows only
@@ -2381,7 +2580,7 @@ namespace SSSNP_SNSOP
                     // Add headers to the worksheet (reflecting your table schema)
                     worksheet.Cells[1, 1].Value = "Course Code";
                     worksheet.Cells[1, 2].Value = "Course Name";
-                    worksheet.Cells[1, 3].Value = "Course Duration";
+                    worksheet.Cells[1, 3].Value = "Course Duration (Hour)";
 
                     // Set headers to be bold
                     for (int col = 1; col <= 3; col++)
@@ -2463,6 +2662,46 @@ namespace SSSNP_SNSOP
             }
 
         }
+
+        private void CoachingEntityTemplate()
+        {
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Create a new worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Coaching Entity Template");
+
+                    // Add headers to the worksheet (reflecting your CoachingEntityModel schema)
+                    worksheet.Cells[1, 1].Value = "Coaching Name";
+                    worksheet.Cells[1, 2].Value = "No Of Planned Coaching Session";
+
+                    // Set headers to be bold
+                    for (int col = 1; col <= 2; col++)
+                    {
+                        worksheet.Cells[1, col].Style.Font.Bold = true;
+                    }
+
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Set the content type and headers for the download
+                    Response.ClearHeaders();
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=CoachingEntityTemplate.xlsx");
+
+                    // Write the file to the response stream
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    Response.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                System.Diagnostics.Debug.WriteLine($"Error: {ex}");
+            }
+        }
+
         private void LogError(string v, Exception ex)
         {
             throw new NotImplementedException();

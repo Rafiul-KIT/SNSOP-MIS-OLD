@@ -50,13 +50,13 @@ namespace SSSNP.Service
                 foreach (var obj in request)
                 {
                     // Pass valid household numbers to IsValidData
-                    var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
+                    /*var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
 
                     if (!validationResult.isValid) // If not valid, store the error message and skip saving
                     {
                         errorMessages.Add(validationResult.errorMessage);
                         continue;
-                    }
+                    }*/
 
                     // Save the valid record
                     response = _component2Repository.SaveTrainingAndAttendanceTracking(obj);
@@ -148,13 +148,13 @@ namespace SSSNP.Service
                 foreach (var obj in request)
                 {
                     // Validate the coaching session tracking data
-                    var validationResult = IsValidData(obj, validHouseholdNumbers);
+                    /*var validationResult = IsValidData(obj, validHouseholdNumbers);
 
                     if (!validationResult.isValid)
                     {
                         errorMessages.Add(validationResult.errorMessage);
                         continue;
-                    }
+                    }*/
 
                     // Save the valid coaching session tracking record
                     response = _component2Repository.SaveCoachingSessionTracking(obj);
@@ -185,34 +185,152 @@ namespace SSSNP.Service
             }
         }
 
+        public ResponseModel SaveCoachingDetails(List<CoachingDetailsModel> request)
+        {
+            var response = new ResponseModel();
+            var errorMessages = new List<string>();
 
-        public (bool isValid, string errorMessage) IsValidData(CoachingSessionTrackingModel obj, List<ValidHouseholdNumberModel> validHouseholdNumbers)
+            try
+            {
+                if (request == null || request.Count == 0)
+                {
+                    return new ResponseModel
+                    {
+                        IsSuccess = false,
+                        Message = "No coaching detail records to save."
+                    };
+                }
+
+                foreach (var obj in request)
+                {
+                    // Validate the coaching details data (all fields present per your latest rule)
+                    /*var validationResult = IsValidData(obj);
+
+                    if (!validationResult.isValid)
+                    {
+                        errorMessages.Add(validationResult.errorMessage);
+                        continue;
+                    }*/
+
+                    // Save the valid coaching detail record
+                    var saveResult = _component2Repository.SaveCoachingDetails(obj);
+
+                    if (!saveResult.IsSuccess)
+                    {
+                        errorMessages.Add(saveResult.Message);
+                    }
+                }
+
+                // Set aggregated response
+                if (errorMessages.Count > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = string.Join("; ", errorMessages);
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "All coaching detail records saved successfully.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error when saving Coaching Details data. Error: " + ex.ToString());
+            }
+        }
+
+
+
+        public (bool isValid, string errorMessage) IsValidData(CoachingSessionTrackingModel obj)
         {
             if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
             {
                 return (false, "Household Number is required.");
             }
 
-            if (!validHouseholdNumbers.Any(hh => hh.HouseholdNumber.Equals(obj.HouseholdNumber?.Trim(), StringComparison.OrdinalIgnoreCase)))
-            {
-                return (false, "Household Number is not valid.");
-            }
-
-            if (obj.CoachingDetailId == 0)
+            if (obj.CoachingName == null)
             {
                 return (false, "Coaching Detail ID is required.");
             }
 
-            var validSessionDates = _component2Repository.GetValidCoachingDates(obj.CoachingDetailId);
+            var validSessionDates = _component2Repository.GetValidCoachingDates(obj.CoachingName);
 
             if (!validSessionDates.Contains(obj.ClassAttendanceDate?.Date ?? DateTime.MinValue))
             {
-                return (false, $"Class Attendance Date '{obj.ClassAttendanceDate?.ToShortDateString()}' is not valid for Coaching Detail ID '{obj.CoachingDetailId}'.");
+                return (false, $"Class Attendance Date '{obj.ClassAttendanceDate?.ToShortDateString()}' is not valid for Coaching Detail ID '{obj.CoachingName}'.");
             }
 
             return (true, string.Empty);
         }
 
+        public (bool isValid, string errorMessage) IsValidData(CoachingDetailsModel obj)
+        {
+            if (obj.CoachingName == null)
+                return (false, "Coaching Id is required.");
+
+            if (obj.CoachingSessionHoldingDate == null)
+                return (false, "Coaching Session Holding Date is required.");
+
+            if (obj.CoachingSessionDurationMinutes == null || obj.CoachingSessionDurationMinutes <= 0)
+                return (false, "Coaching Session Duration (Minutes) is required and must be greater than 0.");
+
+            return (true, "Valid");
+        }
+
+        public ResponseModel SaveCoachingEntity(List<CoachingEntityModel> coachings)
+        {
+            var response = new ResponseModel();
+            int insertCount = 0;
+            int skipCount = 0;
+
+            try
+            {
+                foreach (var coaching in coachings)
+                {
+                    /*var validation = IsValidData(coaching);
+                    if (!validation.isValid)
+                    {
+                        skipCount++;
+                        continue;
+                    }*/
+
+                    response = _component2Repository.SaveCoachingEntity(coaching);
+
+                    if (response.IsSuccess)
+                    {
+                        insertCount++;
+                    }
+                }
+
+                response.Message = $"{insertCount} records inserted/updated successfully.";
+                if (skipCount > 0)
+                {
+                    response.Message += $" {skipCount} records were skipped due to incomplete data.";
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error saving Coaching Entity data: " + ex.Message;
+                return response;
+            }
+        }
+
+
+        public (bool isValid, string errorMessage) IsValidData(CoachingEntityModel obj)
+        {
+            if (string.IsNullOrWhiteSpace(obj.CoachingName))
+                return (false, "Coaching Name is required.");
+
+            if (obj.NoOfPlannedCoachingSession <= 0)
+                return (false, "Number of Planned Coaching Sessions must be greater than 0.");
+
+            return (true, "Valid");
+        }
 
         public ResponseModel SaveLivelihoodGrantDisbursement(List<LivelihoodGrantDisbursementModel> request)
         {
@@ -227,13 +345,13 @@ namespace SSSNP.Service
                 foreach (var obj in request)
                 {
                     // Pass valid household numbers to IsValidData
-                    var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
+                    /*var validationResult = IsValidData(obj, validHouseholdNumbers); // Get validation result
 
                     if (!validationResult.isValid) // If not valid, store the error message and skip saving
                     {
                         errorMessages.Add(validationResult.errorMessage);
                         continue;
-                    }
+                    }*/
 
                     // Save the valid record
                     response = _component2Repository.SaveLivelihoodGrantDisbursement(obj);
@@ -437,26 +555,59 @@ namespace SSSNP.Service
             }
         }
 
-        public (bool isValid, string errorMessage) IsValidData(BusinessPlanDevelopmentModel obj, HashSet<string> validList)
+        public (bool isValid, string errorMessage) IsValidData(
+    BusinessPlanDevelopmentModel obj,
+    HashSet<string> validHouseholdNumbers)
         {
-            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber?.Trim()))
-            {
-                return (false, "Household Number is required");
-            }
-            if (!validList.Contains(obj.HouseholdNumber))
-            {
-                return (false, "Household Number is not valid");
-            }
+            // Household Number check
+            if (string.IsNullOrWhiteSpace(obj?.HouseholdNumber))
+                return (false, "Household Number is required.");
+
+            if (!validHouseholdNumbers.Contains(obj.HouseholdNumber))
+                return (false, "Household Number is not valid.");
+
+            // Business Plan Status check
             if (obj?.BusinessPlanStatus == null)
-            {
-                return (false, "Business Plan Status is required");
-            }
+                return (false, "Business Plan Status is required.");
+
+            // Business Type check
             if (obj?.BusinessType == null)
+                return (false, "Business Type is required.");
+
+            if (obj.BusinessType != 1 && obj.BusinessType != 2)
+                return (false, "Business Type must be Farm or Non-Farm.");
+
+            // Plan Approved + WhyRejected rule
+            if (obj?.PlanApproved == null)
+                return (false, "Plan Approved is required.");
+
+            if (obj.PlanApproved == false && string.IsNullOrWhiteSpace(obj.WhyRejected))
+                return (false, "Why Rejected is required when Plan Approved = No.");
+
+            if (obj.PlanApproved == true && !string.IsNullOrWhiteSpace(obj.WhyRejected))
+                return (false, "Why Rejected must be blank when Plan Approved = Yes.");
+
+            // Percentages: both blank OK; else both present, valid range, sum = 100
+            bool anyPctProvided = obj.InPersonPercentage.HasValue || obj.GroupPercentage.HasValue;
+            if (anyPctProvided)
             {
-                return (false, "Business Type is required");
+                if (!obj.InPersonPercentage.HasValue || !obj.GroupPercentage.HasValue)
+                    return (false, "Both In-Person % and Group % are required when one is provided.");
+
+                var j = obj.InPersonPercentage.Value;
+                var k = obj.GroupPercentage.Value;
+
+                if (j < 0 || j > 100 || k < 0 || k > 100)
+                    return (false, "In-Person % and Group % must be between 0 and 100.");
+
+                // Small tolerance in case of entries like 33.33 + 66.67
+                if (Math.Abs((j + k) - 100m) > 0.01m)
+                    return (false, "In-Person % + Group % must equal 100.");
             }
+
             return (true, null);
         }
+
 
         public ResponseModel SaveFinancialServiceLinkage(List<FinancialServiceLinkageTrackingModel> request, HashSet<string> validList)
         {
@@ -900,6 +1051,11 @@ namespace SSSNP.Service
         public Dictionary<string, int> GetExistingCourseDetails()
         {
             return _component2Repository.GetExistingCourseDetails();
+        }
+
+        public Dictionary<int, string> GetExistingCoachingName()
+        {
+            return _component2Repository.GetExistingCoachingName();
         }
     }
 }

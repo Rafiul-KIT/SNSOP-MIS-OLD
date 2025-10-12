@@ -118,6 +118,14 @@
                                             <telerik:GridBoundColumn DataField="HouseholdNumber" HeaderText="Household Number" UniqueName="HouseholdNumber" />
                                             <telerik:GridBoundColumn DataField="BusinessPlanStatus" HeaderText="Business Plan Status" />
                                             <telerik:GridBoundColumn DataField="BusinessType" HeaderText="Business Type" />
+                                            <telerik:GridBoundColumn DataField="PlanSubmitted" HeaderText="Plan Submitted" />
+                                            <telerik:GridBoundColumn DataField="PlanScreened" HeaderText="Plan Screened" />
+                                            <telerik:GridBoundColumn DataField="PlanApproved" HeaderText="Plan Approved" />
+                                            <telerik:GridBoundColumn DataField="WhyRejected" HeaderText="Why Rejected" />
+                                            <telerik:GridBoundColumn DataField="BusinessDescription" HeaderText="Business Description" />
+                                            <telerik:GridBoundColumn DataField="HowSpent" HeaderText="How Spent" />
+                                            <telerik:GridBoundColumn DataField="InPersonPercentage" HeaderText="In-Person %" DataFormatString="{0:N2}" />
+                                            <telerik:GridBoundColumn DataField="GroupPercentage" HeaderText="Group %" DataFormatString="{0:N2}" />
                                             <telerik:GridBoundColumn DataField="ValidationStatus" HeaderText="Validation Status" UniqueName="ValidationStatus" Visible="false" />
                                         </Columns>
                                     </MasterTableView>

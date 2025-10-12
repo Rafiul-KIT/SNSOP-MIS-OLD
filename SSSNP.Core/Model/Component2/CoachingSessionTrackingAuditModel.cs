@@ -9,7 +9,7 @@ namespace SSSNP_SNSOP.Core.Model.Component2
     public class CoachingSessionTrackingAuditModel : GenericAuditModel
     {
         public string HouseholdNumber { get; set; }
-        public int CoachingDetailId { get; set; }
+        public string CoachingName { get; set; }
         public DateTime? ClassAttendanceDate { get; set; }
     }
 }

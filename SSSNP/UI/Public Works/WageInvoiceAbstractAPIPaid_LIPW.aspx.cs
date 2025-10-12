@@ -69,11 +69,11 @@ public partial class WageInvoiceAbstractAPIPaid_LIPW : System.Web.UI.Page
             DataSet ds = new DataSet();
             if (Session["user_type"].ToString().Trim() == "IP")
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "LIPW");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "LIPW");
             }
             else
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "LIPW");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "LIPW");
             }
             if (ds != null)
             {
@@ -193,11 +193,11 @@ public partial class WageInvoiceAbstractAPIPaid_LIPW : System.Web.UI.Page
 
             if (Session["user_type"].ToString().Trim() == "IP")
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "LIPW");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "LIPW");
             }
             else
             {
-                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Text, "LIPW");
+                ds = Gen.getWageInvoiceAbstractReqNoPaidNewLatest(hdfID.Value.ToString(), ddlState.SelectedValue, ddlCounties.SelectedValue, ddlPayam.SelectedValue, ddlBoma.SelectedValue, txtWorkcode.Text, ddlIP.SelectedValue, TxtRequestNo.Text, TxtFromDate.Text, TxtToDate.Text, ddlPaymentCycle.SelectedItem.Value, "LIPW");
             }
 
             if (ds != null)
