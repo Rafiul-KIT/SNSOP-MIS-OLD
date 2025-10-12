@@ -82,6 +82,9 @@ namespace SSSNP.UI.Public_Works
 
         protected void ddlState_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+
             ddlCounty.Items.Clear();
             ddlPayam.Items.Clear();
             ddlBoma.Items.Clear();
@@ -127,6 +130,9 @@ namespace SSSNP.UI.Public_Works
 
         protected void ddlCounty_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+
             ddlPayam.Items.Clear();
             ddlBoma.Items.Clear();
 
@@ -169,6 +175,9 @@ namespace SSSNP.UI.Public_Works
 
         protected void ddlPayam_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+
             ddlBoma.Items.Clear();
             ddlBoma.Items.Add(new ListItem("--Select--", ""));
 
@@ -209,6 +218,9 @@ namespace SSSNP.UI.Public_Works
 
         protected void ddlBoma_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+
             ddlSupportType.ClearSelection();
             ddlSupportType.Items.Clear();
             LoadSupportTypes();
@@ -256,6 +268,9 @@ namespace SSSNP.UI.Public_Works
 
         protected void rblPayrollType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+
             bool isCombined = rblPayrollType.SelectedValue == "Combined";
 
             ddlPaymentCycle.Visible = !isCombined;
@@ -269,6 +284,24 @@ namespace SSSNP.UI.Public_Works
             }
         }
 
+        protected void ddlSupportType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+        }
+
+        protected void ddlPaymentCycle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+        }
+
+        protected void cblCycles_Changed(object sender, EventArgs e)
+        {
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
+        }
+
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
             // Clear session data before starting a new search
@@ -276,6 +309,9 @@ namespace SSSNP.UI.Public_Works
             Session["TotalItemCount"] = null;
             LblDownloadWarning.Text = null;
             LblWarning.Text = null;
+
+            BtnDownload.Visible = false;
+            BtnDownloadPdf.Visible = false;
 
             // Validate dropdown selections
             if (string.IsNullOrEmpty(ddlState.SelectedValue) || ddlState.SelectedValue == "0" ||
@@ -422,6 +458,8 @@ namespace SSSNP.UI.Public_Works
             httpWReq.Headers.Add("DeviceId", "29feb6211b04-a56d-7d6a-e79e-018b2f19");
             httpWReq.Method = "POST";
             httpWReq.ContentType = "application/json";
+            httpWReq.Timeout = int.Parse(ConfigurationManager.AppSettings["AfisRequestTimeout"]);
+            httpWReq.ReadWriteTimeout = int.Parse(ConfigurationManager.AppSettings["AfisRequestReadTimeout"]);
 
             try
             {

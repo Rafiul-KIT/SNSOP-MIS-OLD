@@ -123,7 +123,8 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlBoma" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
+                                                            Height="33px" Width="180px" AutoPostBack="true"
+                                                            OnSelectedIndexChanged="ddlBoma_SelectedIndexChanged">
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
@@ -142,7 +143,9 @@
                                                     <td style="padding: 5px; margin: 5px">:</td>
                                                     <td style="padding: 5px; margin: 5px">
                                                         <asp:DropDownList ID="ddlSupportType" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
+                                                            Height="33px" Width="180px"
+                                                            AutoPostBack="true" OnSelectedIndexChanged="ddlSupportType_SelectedIndexChanged"
+                                                            >
                                                             <asp:ListItem>--Select--</asp:ListItem>
 
                                                         </asp:DropDownList>
@@ -168,14 +171,18 @@
                                                     <td>:</td>
                                                     <td>
                                                         <asp:DropDownList ID="ddlPaymentCycle" runat="server" class="form-control txtbox"
-                                                            Height="33px" Width="180px">
+                                                            Height="33px" Width="180px"
+                                                            AutoPostBack="true" OnSelectedIndexChanged="ddlPaymentCycle_SelectedIndexChanged"
+                                                            >
                                                             <asp:ListItem>--Select--</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </td>
                                                 </tr>
                                                 <tr id="trCycleMulti" runat="server" visible="false">
                                                     <td colspan="3">
-                                                        <asp:CheckBoxList ID="cblCycles" runat="server" RepeatDirection="Vertical" RepeatColumns="2" CssClass="form-check">
+                                                        <asp:CheckBoxList ID="cblCycles" runat="server" RepeatDirection="Vertical" RepeatColumns="2" CssClass="form-check"
+                                                            AutoPostBack="true" OnSelectedIndexChanged="cblCycles_Changed"
+                                                            >
                                                         </asp:CheckBoxList>
                                                     </td>
                                                 </tr>
