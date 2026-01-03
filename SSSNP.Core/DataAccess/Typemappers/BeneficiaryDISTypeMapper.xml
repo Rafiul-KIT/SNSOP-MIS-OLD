@@ -48,6 +48,7 @@
 				inner join tm_Counties as c on c.intCountieid = b.intCountieid
 				inner join tm_Payams as P on p.intPayamid = b.intPayamid
 				inner join tm_Bomas as BO on bo.intBomasid = b.intBomasid
+				inner join p2_beneficiary ben on b.household_number = ben.household_number
 				where intbenid not in(
 				select a.intbenid from td_WageReqBenDet a
 				inner join td_WorkWageRequest c on c.intWagePaymentReqid= a.intWagePaymentReqid
@@ -61,6 +62,7 @@
 				where a.intworkid=999 and c.PaymentCycle = @PaymentCycle
 				)
 				and B.SelectionCriteria = 'Component 1 (Direct Income Support)'
+				and ben.registration_phase = 0
 
 			</query>
 		</operation>
